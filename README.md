@@ -8,16 +8,16 @@ Selections, brushes, shapes, shared kits, and builder profiles — with a comman
 
 ## Overview
 
-Bayzyl gives builders a complete editing workflow on Paper servers — selections, shapes, brushes, clipboards, history, shared kits, and builder profiles — through a command set designed to be readable at a glance and consistent across operations.
+Bayzyl is a full editing workflow for Paper servers — selections, shapes, brushes, clipboards, history, shared kits, and builder profiles — packaged as a consistent, builder-friendly command set.
 
-Bayzyl is built in deep appreciation of [WorldEdit](https://enginehub.org/worldedit/) and [FastAsyncWorldEdit](https://www.spigotmc.org/resources/fastasyncworldedit.13932/), which have shaped how an entire generation of builders learned to make things in Minecraft. Bayzyl runs happily alongside them — softdepending on FAWE for accelerated large-region work — and aims to complement that ecosystem rather than replace it. On servers without WorldEdit or FAWE installed, Bayzyl falls back to native implementations for every core editing, selection, shape, brush, and clipboard feature.
+Bayzyl is designed to play nicely with [WorldEdit](https://enginehub.org/worldedit/) and [FastAsyncWorldEdit](https://www.spigotmc.org/resources/fastasyncworldedit.13932/) — both are great tools and Bayzyl is happy sitting alongside them. It softdepends on FAWE so large-region operations get FAWE's speed when it's installed. If your server doesn't run either, Bayzyl falls back to its own implementations for every core editing, selection, shape, brush, and clipboard feature.
 
 **What Bayzyl focuses on**
 
-- **A consistent command surface** — every option uses `option:value` syntax, tab-completion is aware of selections, masks, distributions, and player context, and `/bzlhelp` indexes everything.
-- **Forgiving by default** — confirmation prompts on large operations, persistent per-player undo history that survives restarts, and `/oops` to undo with a broadcast so your teammates know.
-- **Built for teams** — shared builder kits with themes, icons, aliases, and inline notes; named profiles for full loadout switching; server-side selection bookmarks.
-- **Quality-of-life polish** — auto-unstick, ghost-hand mode, ruler, surface/ascend/descend teleports, snap-to-cardinal alignment, RAM alerts, and a builder-focused tab info panel.
+- **Consistent command syntax** — every option uses `option:value` form, and tab-completion is aware of selections, masks, distributions, and player context. `/bzlhelp` indexes everything.
+- **Forgiving by default** — confirmations on large operations, per-player undo history that persists across restarts, and `/oops` to undo with a broadcast so your teammates know.
+- **Built for teams** — shared builder kits with themes, icons, aliases, and notes; named profiles for full loadout switching; server-side selection bookmarks.
+- **Quality of life** — auto-unstick, ghost-hand mode, ruler, surface/ascend/descend teleports, snap-to-cardinal alignment, RAM alerts, and a tab info panel.
 
 ---
 
