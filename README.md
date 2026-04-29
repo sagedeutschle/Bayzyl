@@ -1,21 +1,23 @@
 # Bayzyl
 
-**A fast, ergonomic in-game building toolkit for Paper servers.**
+**An in-game building toolkit for Paper servers.**
 
-Selections, brushes, shapes, shared kits, and builder profiles — with a polished command surface designed to be approachable for newer people in the Minecraft building space, while retaining professional command depth for those familiar with WorldEdit/FAWE.
+Selections, brushes, shapes, shared kits, and builder profiles — with a command surface that aims to be approachable for newer builders while staying useful for those already comfortable in WorldEdit or FAWE.
 
 ---
 
-## Why Bayzyl
+## Overview
 
-WorldEdit and FAWE are the gold standard for Minecraft world editing, but their command surface has accumulated a decade of cruft. Bayzyl is built around a single question: *what would the builder's day-to-day toolkit look like if you designed it from scratch in 2026?*
+Bayzyl gives builders a complete editing workflow on Paper servers — selections, shapes, brushes, clipboards, history, shared kits, and builder profiles — through a command set designed to be readable at a glance and consistent across operations.
 
-- **Discoverable** — every command uses consistent option syntax (`option:value`), tab-completion that knows your context, and `/bzlhelp` topics for everything.
-- **Forgiving** — confirmation prompts on large operations, persistent undo history that survives restarts, and `/oops` to undo with a broadcast so your teammates know.
-- **Built for teams** — shared builder kits with theming and notes, named profiles you can save and load, server-side selection bookmarks.
-- **Quality of life** — auto-unstick, ghost-hand mode, ruler tool, surface/ascend/descend teleports, snap-to-cardinal alignment, RAM alerts, a builder-focused tab info panel, and dozens more small affordances.
+Bayzyl is built in deep appreciation of [WorldEdit](https://enginehub.org/worldedit/) and [FastAsyncWorldEdit](https://www.spigotmc.org/resources/fastasyncworldedit.13932/), which have shaped how an entire generation of builders learned to make things in Minecraft. Bayzyl runs happily alongside them — softdepending on FAWE for accelerated large-region work — and aims to complement that ecosystem rather than replace it. On servers without WorldEdit or FAWE installed, Bayzyl falls back to native implementations for every core editing, selection, shape, brush, and clipboard feature.
 
-Bayzyl runs alongside WorldEdit/FAWE (and softdepends on FAWE for performance on large operations) or stands on its own with native fallbacks for every core feature.
+**What Bayzyl focuses on**
+
+- **A consistent command surface** — every option uses `option:value` syntax, tab-completion is aware of selections, masks, distributions, and player context, and `/bzlhelp` indexes everything.
+- **Forgiving by default** — confirmation prompts on large operations, persistent per-player undo history that survives restarts, and `/oops` to undo with a broadcast so your teammates know.
+- **Built for teams** — shared builder kits with themes, icons, aliases, and inline notes; named profiles for full loadout switching; server-side selection bookmarks.
+- **Quality-of-life polish** — auto-unstick, ghost-hand mode, ruler, surface/ascend/descend teleports, snap-to-cardinal alignment, RAM alerts, and a builder-focused tab info panel.
 
 ---
 
