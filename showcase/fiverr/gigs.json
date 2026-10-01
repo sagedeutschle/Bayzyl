@@ -1,0 +1,455 @@
+{
+  "_readme": "Source of truth for the Fiverr kit. `node showcase/fiverr/kit.mjs` validates every field against Fiverr's limits and regenerates FIVERR-KIT.md + kit.html. Prices are starting points: adjust before publishing.",
+  "profile": {
+    "displayName": "Sage",
+    "oneLiner": "I build iOS apps, Minecraft plugins & AI agent setups",
+    "about": "I'm Sage, a developer who ships. My game app Prismet is live on the App Store with 19 games on iPhone, iPad, and Mac. I wrote Bayzyl, a 99-command building toolkit for Minecraft Paper servers, and I run my own Velocity server network. I also build custom KDE Plasma desktops with hand-made widgets, set up Claude Code and Codex to work as a team, and make small web tools that never phone home. I scope honestly, talk before big orders, and hand over full source. See it all at prismet.xyz.",
+    "skills": [
+      "Swift",
+      "SwiftUI",
+      "iOS Development",
+      "macOS Development",
+      "Java",
+      "Minecraft Plugin Development",
+      "Minecraft Server Setup",
+      "Docker",
+      "JavaScript",
+      "HTML & CSS",
+      "TypeScript",
+      "Electron",
+      "QML",
+      "Linux",
+      "Python",
+      "AI Agents",
+      "Prompt Engineering"
+    ],
+    "languages": [
+      "English (Native/Bilingual)"
+    ],
+    "links": [
+      "prismet.xyz",
+      "github.com/sagedeutschle",
+      "linkedin.com/in/sagedeutschle"
+    ]
+  },
+  "gigs": [
+    {
+      "id": "mc-plugin",
+      "beam": "minecraft",
+      "title": "develop a custom Minecraft plugin for your Paper or Spigot server",
+      "category": "Programming & Tech → Game Development (choose the Minecraft option if listed)",
+      "tags": [
+        "minecraft plugin",
+        "spigot plugin",
+        "paper plugin",
+        "minecraft java",
+        "minecraft server"
+      ],
+      "images": [
+        "gig-mc-plugin.png",
+        "portfolio-mc-builds.png",
+        "portfolio-bayzyl-help.png"
+      ],
+      "packages": [
+        {
+          "name": "Small plugin",
+          "desc": "One feature: a command, an event hook, or a gameplay tweak. Source included.",
+          "price": 40,
+          "days": 3,
+          "revisions": 1
+        },
+        {
+          "name": "Feature plugin",
+          "desc": "Up to 5 commands with permissions, tab-complete, and a readable config file.",
+          "price": 120,
+          "days": 7,
+          "revisions": 2
+        },
+        {
+          "name": "Full system",
+          "desc": "Multi-feature plugin with GUIs, saved data, and a setup guide.",
+          "price": 350,
+          "days": 14,
+          "revisions": 3
+        }
+      ],
+      "description": "Need a feature no existing plugin gets quite right? I build custom plugins for Paper and Spigot (Java 21, Minecraft 1.21+).\n\nI'm the author of Bayzyl, an open-source building toolkit for Paper with 99 commands, 25+ brush types, per-player undo that survives restarts, and a 15-page in-game help guide. Your plugin gets the same care:\n• Consistent commands with permissions and tab-completion\n• A config file you can actually read\n• Confirmations before anything destructive\n• Built to sit alongside WorldEdit and FastAsyncWorldEdit\n\nWhat you get:\n• A compiled .jar, ready to drop in\n• Full source code, yours to keep\n• A short setup guide\n\nMessage me before ordering with what the plugin should do. I'll confirm scope and timeline up front.",
+      "faq": [
+        [
+          "Which versions do you support?",
+          "Paper and Spigot on Minecraft 1.21+ with Java 21 by default. Older versions are possible, so ask first."
+        ],
+        [
+          "Do I get the source code?",
+          "Yes. Every package includes the full source and the compiled .jar."
+        ],
+        [
+          "Can you fix or update an existing plugin?",
+          "Usually, if you have its source. Send me the plugin and a description of the problem."
+        ]
+      ],
+      "requirements": [
+        "What should the plugin do? Describe it like you'd explain it to a player.",
+        "Server software and version (for example Paper 1.21.4).",
+        "Which other plugins are installed?"
+      ]
+    },
+    {
+      "id": "mc-server",
+      "beam": "minecraft",
+      "title": "set up your Minecraft server or Velocity network with Docker",
+      "category": "Programming & Tech → Game Development (or the server setup option if listed)",
+      "tags": [
+        "minecraft server",
+        "velocity proxy",
+        "minecraft network",
+        "paper server",
+        "server setup"
+      ],
+      "images": [
+        "gig-mc-server.png",
+        "portfolio-mc-network.png",
+        "portfolio-mc-builds.png"
+      ],
+      "packages": [
+        {
+          "name": "Single server",
+          "desc": "One Paper server with core plugins, permissions, and automatic backups.",
+          "price": 35,
+          "days": 2,
+          "revisions": 1
+        },
+        {
+          "name": "Proxy network",
+          "desc": "Velocity proxy plus 2 Paper backends with whitelist, bans, and worlds.",
+          "price": 110,
+          "days": 5,
+          "revisions": 2
+        },
+        {
+          "name": "Run-it-yourself",
+          "desc": "Full network in Docker, an admin command for daily tasks, and a runbook.",
+          "price": 260,
+          "days": 10,
+          "revisions": 3
+        }
+      ],
+      "description": "I run my own Minecraft network: a Velocity proxy in front of Paper backends in Docker (a multi-world survival server and a public hub), with network-wide bans, a whitelist gate, and Multiverse worlds. One admin command sends every task to the layer where it belongs, so an IP ban never locks out the whole proxy.\n\nI'll set up yours the same way:\n• Paper server tuned for your player count\n• Velocity proxy with secure player forwarding\n• Whitelist, bans, and permissions at the right layer\n• Multiverse worlds and per-world gamerules\n• Docker containers, so restarts and moves are painless\n• Automatic backups\n• A plain-English runbook so you can run it without me\n\nYou provide the machine: a VPS, a home server, or a panel host. I do the setup and walk you through it.",
+      "faq": [
+        [
+          "Do you provide hosting?",
+          "No. I set up on your VPS, dedicated server, home machine, or panel host, and can suggest options if you don't have one yet."
+        ],
+        [
+          "What access do you need?",
+          "SSH or panel access to the machine for the duration of the order. Change the password when we're done."
+        ],
+        [
+          "Can you migrate my existing server?",
+          "Yes. Your worlds and plugin data move over, and I'll test before switching."
+        ]
+      ],
+      "requirements": [
+        "Where will it run (VPS, home server, panel host) and its specs?",
+        "Expected player count and game style (survival, creative, minigames).",
+        "Any plugins or worlds you already use."
+      ]
+    },
+    {
+      "id": "ios-app",
+      "beam": "apps",
+      "title": "build your iPhone, iPad, or Mac app in SwiftUI",
+      "category": "Programming & Tech → Mobile App Development → iOS",
+      "tags": [
+        "swiftui",
+        "ios app",
+        "iphone app",
+        "macos app",
+        "app store"
+      ],
+      "images": [
+        "gig-ios-app.png",
+        "portfolio-prismet-spread.png",
+        "portfolio-prismet-tiles.png"
+      ],
+      "packages": [
+        {
+          "name": "Feature or fix",
+          "desc": "One SwiftUI screen, feature, or bug fix in your existing app.",
+          "price": 80,
+          "days": 4,
+          "revisions": 1
+        },
+        {
+          "name": "Focused app",
+          "desc": "A focused app with up to 5 screens, local data, and polished UI.",
+          "price": 600,
+          "days": 21,
+          "revisions": 2
+        },
+        {
+          "name": "Ship it",
+          "desc": "Full app with sync or accounts, plus App Store listing and submission.",
+          "price": 1500,
+          "days": 45,
+          "revisions": 3
+        }
+      ],
+      "description": "I build native apps in SwiftUI and ship them. My app Prismet is live on the App Store: 19 classic games and 3 live-data lenses on iPhone, iPad, and Mac. It has a tunable Stockfish chess engine in 2D and 3D, a real SceneKit Rubik's Cube, online friend games, Game Center, and light, parchment, and dark themes, backed by hundreds of tests.\n\nWhat I can do for you:\n• New apps, from idea to App Store review\n• Features and fixes in an existing SwiftUI codebase\n• iPhone-to-Mac ports with real feature parity\n• Polish passes: animation, haptics, sound, and accessibility\n• App Store listing: screenshots, keywords, and submission\n\nYou get the full Xcode project and source. Message me first with your idea so I can quote scope and timeline honestly.",
+      "faq": [
+        [
+          "Do I need a Mac or a developer account?",
+          "You'll need an Apple Developer account to publish. I build and test on my own Macs."
+        ],
+        [
+          "Can you work on my existing app?",
+          "Yes, if it's Swift or SwiftUI. Share the repo and I'll review it before quoting."
+        ],
+        [
+          "Do you do Android too?",
+          "No. I focus on Apple platforms so the result feels native."
+        ]
+      ],
+      "requirements": [
+        "What does the app do, and who is it for?",
+        "Screens or sketches you already have, even rough ones.",
+        "Existing repo link, if any."
+      ]
+    },
+    {
+      "id": "web-tool",
+      "beam": "web",
+      "title": "build a fast, private web tool or landing page with no bloat",
+      "category": "Programming & Tech → Website Development",
+      "tags": [
+        "landing page",
+        "web tool",
+        "javascript",
+        "html css",
+        "website"
+      ],
+      "images": [
+        "gig-web-tool.png",
+        "portfolio-qr-suite.png"
+      ],
+      "packages": [
+        {
+          "name": "Single page",
+          "desc": "One responsive page or small tool, plus help getting it hosted.",
+          "price": 60,
+          "days": 3,
+          "revisions": 1
+        },
+        {
+          "name": "Web tool",
+          "desc": "An interactive tool that saves on-device, works on phones and offline.",
+          "price": 180,
+          "days": 7,
+          "revisions": 2
+        },
+        {
+          "name": "Site + tool",
+          "desc": "A multi-page site built from your content, plus one interactive tool.",
+          "price": 450,
+          "days": 14,
+          "revisions": 3
+        }
+      ],
+      "description": "Most pages load megabytes of scripts to show a few paragraphs. Mine don't.\n\nMy QR scanner is a single HTML file with no backend and no build step. It uses the browser's built-in barcode detector with a fallback for older browsers, works offline, and never sends anything off your device. Its siblings, a phone declutter checklist, a home-screen planner with a 300+ app catalog, and an Apple Music playlist maker, follow the same rules. My own site, prismet.xyz, serves live data with a tiny footprint.\n\nI'll build you:\n• Landing pages and personal sites that load fast on any phone\n• Calculators, checklists, planners, and other small tools\n• Data pages that pull from a public API\n• Light and dark themes, keyboard and screen-reader friendly\n\nYou get clean HTML, CSS, and JavaScript you can host anywhere: GitHub Pages, Netlify, Fly.io, or your own server.",
+      "faq": [
+        [
+          "Will I need a server?",
+          "Usually not. Most of what I build runs as static files on free hosting like GitHub Pages."
+        ],
+        [
+          "Can you use React or a page builder?",
+          "I can, but I'll recommend plain HTML when it does the job faster and lasts longer."
+        ],
+        [
+          "Do you write the copy?",
+          "I'll polish what you give me. For full copywriting, send notes and I'll draft it."
+        ]
+      ],
+      "requirements": [
+        "What should the page or tool do?",
+        "Text, logo, and images you want used.",
+        "Any site you like the feel of."
+      ]
+    },
+    {
+      "id": "ai-agents",
+      "beam": "ai",
+      "title": "set up Claude Code and Codex agents to build your project as a team",
+      "category": "Programming & Tech → AI Development (or AI Agents)",
+      "tags": [
+        "claude code",
+        "ai agents",
+        "ai automation",
+        "codex",
+        "ai coding"
+      ],
+      "images": [
+        "gig-ai-agents.png",
+        "portfolio-oracle.png"
+      ],
+      "packages": [
+        {
+          "name": "Agent setup",
+          "desc": "CLAUDE.md, AGENTS.md, and permission rules tuned for one repo.",
+          "price": 60,
+          "days": 2,
+          "revisions": 1
+        },
+        {
+          "name": "Team workflow",
+          "desc": "Multi-agent lanes, a coordination ledger, hooks, and a recorded walkthrough.",
+          "price": 180,
+          "days": 5,
+          "revisions": 2
+        },
+        {
+          "name": "Custom tooling",
+          "desc": "Custom agent tooling: scripts, an MCP server, or an LLM pipeline with tests.",
+          "price": 480,
+          "days": 10,
+          "revisions": 3
+        }
+      ],
+      "description": "I use AI coding agents every day, and I've built the tooling to run them well.\n\n• PrismCode: a desktop IDE that runs Claude Code, Codex, and DeepSeek side by side and races two agents on the same prompt in separate git worktrees, so you keep the better result.\n• Agent Ops: a written protocol that let several Claude and Codex agents, run by two people, ship an App Store release without stepping on each other's work.\n• The Wizard King's Decree: an LLM council that forecasts the news, graded by a separate search-grounded model, with 237 offline tests.\n\nI'll set up your repo so agents help instead of making a mess:\n• CLAUDE.md and AGENTS.md written for your codebase\n• Permission rules, hooks, and safe defaults\n• Lanes and hand-off rules for multiple agents\n• Custom scripts or MCP servers where they pay off\n\nI explain every choice so your team can maintain it.",
+      "faq": [
+        [
+          "Which tools do you support?",
+          "Claude Code and OpenAI Codex first. I can wire in local models through Ollama too."
+        ],
+        [
+          "Do you need access to my code?",
+          "Read access to the repo is enough for the setup packages. Nothing is shared outside the order."
+        ],
+        [
+          "Will this work for a solo developer?",
+          "Yes. The Agent setup package is built for one person and one repo."
+        ]
+      ],
+      "requirements": [
+        "Repo link or a description of the codebase and stack.",
+        "Which agents and plans you use today.",
+        "What goes wrong now when you use them."
+      ]
+    },
+    {
+      "id": "linux-desktop",
+      "beam": "desktop",
+      "title": "customize your KDE Plasma desktop with custom widgets and themes",
+      "category": "Programming & Tech → Desktop Applications (or Customization)",
+      "tags": [
+        "kde plasma",
+        "linux rice",
+        "linux desktop",
+        "qml widget",
+        "arch linux"
+      ],
+      "images": [
+        "gig-linux-desktop.png",
+        "portfolio-helm-wall.png",
+        "portfolio-helm-arcade.png"
+      ],
+      "packages": [
+        {
+          "name": "Theme pass",
+          "desc": "Colors, fonts, panels, and wallpaper set up as one cohesive look.",
+          "price": 40,
+          "days": 3,
+          "revisions": 1
+        },
+        {
+          "name": "Custom widgets",
+          "desc": "Theme plus 3 custom QML widgets, like system stats, clocks, or launchers.",
+          "price": 140,
+          "days": 7,
+          "revisions": 2
+        },
+        {
+          "name": "Full system",
+          "desc": "Multi-monitor layout, custom widgets, scripts, and a one-command installer.",
+          "price": 380,
+          "days": 14,
+          "revisions": 3
+        }
+      ],
+      "description": "My daily driver is THE HELM: a red-on-black command bridge across three monitors on Arch Linux and KDE Plasma 6. It has 28 hand-built QML widgets (CPU, GPU, network, storage, a fleet radar, a world clock, even Breakout and Minesweeper), fullscreen app overlays, floating toys, a live packet scope, and one command that installs and manages all of it.\n\nI'll build yours:\n• A cohesive theme: palette, fonts, panels, window rules, wallpapers\n• Custom Plasma 6 widgets in QML that show what you care about\n• Multi-monitor layouts that restore themselves\n• Scripts and shortcuts for the things you do every day\n• Dotfiles in a git repo with an installer, so you can rebuild it anywhere\n\nWorks on any distro that ships KDE Plasma 6.",
+      "faq": [
+        [
+          "Do you need remote access?",
+          "Not always. I can deliver a dotfiles repo with an installer you run yourself, or work over SSH if you prefer."
+        ],
+        [
+          "What about GNOME or Hyprland?",
+          "My focus is KDE Plasma 6. Ask about others before ordering."
+        ],
+        [
+          "Can I undo it?",
+          "Yes. I back up your current config first and include a restore step."
+        ]
+      ],
+      "requirements": [
+        "Distro, Plasma version, and monitor setup.",
+        "Screenshots or descriptions of looks you like.",
+        "What you want to see at a glance (stats, calendar, media, etc.)."
+      ]
+    }
+  ],
+  "portfolio": [
+    {
+      "title": "Prismet: 19 games on the App Store",
+      "gig": "ios-app",
+      "images": [
+        "portfolio-prismet-spread.png",
+        "portfolio-prismet-tiles.png"
+      ],
+      "desc": "A SwiftUI games app live on the App Store for iPhone, iPad, and Mac: chess with a tunable engine in 2D and 3D, a SceneKit Rubik's Cube, online friend games, Game Center, and three live-data lenses."
+    },
+    {
+      "title": "THE HELM: a custom KDE Plasma desktop",
+      "gig": "linux-desktop",
+      "images": [
+        "portfolio-helm-wall.png",
+        "portfolio-helm-arcade.png"
+      ],
+      "desc": "A three-monitor command-bridge desktop with 28 hand-built QML widgets, overlays, floating toys, and a one-command installer. Every widget shown here was rendered from its source."
+    },
+    {
+      "title": "Bayzyl: a 99-command Paper plugin",
+      "gig": "mc-plugin",
+      "images": [
+        "portfolio-mc-builds.png",
+        "portfolio-bayzyl-help.png",
+        "portfolio-bayzyl-commands.png"
+      ],
+      "desc": "An open-source building toolkit for Paper servers: selections, shapes, 25+ brushes, persistent undo, shared kits, and a 15-page in-game guide."
+    },
+    {
+      "title": "A Velocity network in Docker",
+      "gig": "mc-server",
+      "images": [
+        "portfolio-mc-network.png"
+      ],
+      "desc": "A Velocity proxy with network-wide bans and a whitelist gate in front of Dockerized Paper backends, run day to day with a single admin command."
+    },
+    {
+      "title": "Four one-file web tools",
+      "gig": "web-tool",
+      "images": [
+        "portfolio-qr-suite.png"
+      ],
+      "desc": "A QR scanner, phone declutter checklist, home-screen planner, and Apple Music playlist maker. Each is one HTML file with no backend that keeps data on the device."
+    },
+    {
+      "title": "The Wizard King's Decree",
+      "gig": "ai-agents",
+      "images": [
+        "portfolio-oracle.png"
+      ],
+      "desc": "An LLM forecasting experiment: a Claude + GPT council commits to news predictions, a search-grounded Gemini judge grades them with sources, and 237 offline tests keep it honest."
+    }
+  ]
+}

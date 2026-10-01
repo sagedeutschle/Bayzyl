@@ -1,0 +1,534 @@
+{
+  "_readme": "Project DATA (images, links, categories) and page LAYOUT. All WORDING lives in content/site.md and content/work/<slug>.md. Grid order = order of `projects`. `featuredOrder` = the Selected work rows. Per project: \"wide\": true (double-width card), \"hidden\": true (left off the site). `layout.sections` orders the home page sections; `layout.hiddenSections` hides them. The preview's Edit mode changes all of these; apply-edits.mjs writes them back here.",
+  "owner": {
+    "name": "Sage Deutschle",
+    "handle": "gtrktscrb",
+    "site": "https://prismet.xyz",
+    "github": "https://github.com/sagedeutschle",
+    "linkedin": "https://www.linkedin.com/in/sagedeutschle",
+    "fiverr": "https://www.fiverr.com/bayzyl"
+  },
+  "layout": {
+    "sections": [
+      "lenses",
+      "selected",
+      "work",
+      "about"
+    ],
+    "hiddenSections": []
+  },
+  "featuredOrder": [
+    "bayzyl",
+    "prismet-app",
+    "the-helm",
+    "the-long-now"
+  ],
+  "beams": [
+    {
+      "id": "apps",
+      "hue": "#E68C33",
+      "short": "Apps"
+    },
+    {
+      "id": "minecraft",
+      "hue": "#4D8C6B",
+      "short": "Minecraft"
+    },
+    {
+      "id": "worlds",
+      "hue": "#CCA838",
+      "short": "Worlds"
+    },
+    {
+      "id": "web",
+      "hue": "#3D75A8",
+      "short": "Web"
+    },
+    {
+      "id": "ai",
+      "hue": "#75579E",
+      "short": "AI"
+    },
+    {
+      "id": "desktop",
+      "hue": "#DB4757",
+      "short": "Desktop"
+    }
+  ],
+  "lenses": [
+    {
+      "id": "steam-rewind",
+      "href": "/steam"
+    },
+    {
+      "id": "debt-clock",
+      "href": "/debt"
+    }
+  ],
+  "projects": [
+    {
+      "slug": "prismet-app",
+      "beam": "apps",
+      "stack": [
+        "SwiftUI",
+        "SceneKit",
+        "Game Center",
+        "Supabase",
+        "XcodeGen",
+        "Python"
+      ],
+      "links": [
+        {
+          "label": "App Store",
+          "href": "https://apps.apple.com/us/app/kaleidescope/id6785993194"
+        }
+      ],
+      "cover": "assets/prismet/store-01_home.webp",
+      "gallery": [
+        "assets/prismet/store-01_home.webp",
+        "assets/prismet/store-03_chess.webp",
+        "assets/prismet/store-04_seabattle.webp",
+        "assets/prismet/store-02_wordgame.webp",
+        "assets/prismet/store-05_2048.webp",
+        "assets/prismet/store-06_solitaire.webp",
+        "assets/prismet/store-07_sudoku.webp",
+        "assets/live/prismet-5.webp"
+      ],
+      "fiverrGig": "ios-app",
+      "wideCover": "assets/live/prismet-5.webp",
+      "wide": true
+    },
+    {
+      "slug": "the-helm",
+      "beam": "desktop",
+      "stack": [
+        "KDE Plasma 6",
+        "QML",
+        "SwiftUI",
+        "Bash",
+        "Arch Linux"
+      ],
+      "links": [],
+      "cover": "assets/helm/chronos.webp",
+      "gallery": [
+        "assets/live/helm-1.webp",
+        "assets/live/helm-2.webp",
+        "assets/live/helm-3.webp",
+        "assets/helm/chronos.webp",
+        "assets/helm/cpu.webp",
+        "assets/helm/gpu.webp",
+        "assets/helm/reactor.webp",
+        "assets/helm/fleet.webp",
+        "assets/helm/transit.webp",
+        "assets/helm/worldclock.webp",
+        "assets/helm/orbital.webp"
+      ],
+      "fiverrGig": "linux-desktop",
+      "wideCover": "assets/helm/worldclock.webp",
+      "wide": true
+    },
+    {
+      "slug": "bayzyl",
+      "beam": "minecraft",
+      "stack": [
+        "Java 21",
+        "Paper 1.21",
+        "Gradle",
+        "FAWE-aware"
+      ],
+      "links": [
+        {
+          "label": "GitHub",
+          "href": "https://github.com/sagedeutschle/Bayzyl"
+        }
+      ],
+      "cover": "assets/live/bayzyl-1.webp",
+      "gallery": [
+        "assets/live/bayzyl-1.webp",
+        "assets/live/bayzyl-2.webp",
+        "fiverr/out/portfolio-bayzyl-help.png",
+        "fiverr/out/portfolio-bayzyl-commands.png"
+      ],
+      "fiverrGig": "mc-plugin",
+      "shotAlts": [
+        "A cherry-blossom village built on the Paper server this toolkit runs on, lit up at night.",
+        "Another build from the same server, seen from above the cloud layer.",
+        "Bayzyl help pages, rendered from the plugin’s help file",
+        "Bayzyl command registry"
+      ]
+    },
+    {
+      "slug": "the-long-now",
+      "beam": "worlds",
+      "stack": [
+        "Desktop"
+      ],
+      "links": [],
+      "cover": "assets/live/the-long-now-1.webp",
+      "gallery": [
+        "assets/live/the-long-now-1.webp",
+        "assets/live/the-long-now-2.webp",
+        "assets/live/the-long-now-3.webp"
+      ],
+      "shotAlts": [
+        "The medieval era of The Long Now: a pixel-art river crossing with tents, a campfire, and a stone keep in the trees.",
+        "The same world dressed for its industrial era.",
+        "The far-future Dyson era of the world's dressing pass."
+      ],
+      "fiverrGig": null
+    },
+    {
+      "slug": "prismcode",
+      "beam": "ai",
+      "stack": [
+        "Electron",
+        "React",
+        "TypeScript",
+        "Monaco",
+        "xterm.js",
+        "SQLite"
+      ],
+      "links": [],
+      "cover": "assets/live/prismcode-1.webp",
+      "gallery": [
+        "assets/live/prismcode-1.webp",
+        "assets/icons/prismcode.webp"
+      ],
+      "fiverrGig": "ai-agents",
+      "shotAlts": [
+        "PrismCode's Mission Control on a fresh launch, offering to add a DeepSeek, Claude, or Codex pane, with a file sidebar and a prompt bar across the bottom.",
+        "PrismCode app icon"
+      ]
+    },
+    {
+      "slug": "steam-rewind",
+      "beam": "web",
+      "stack": [
+        "Web",
+        "Mac",
+        "iPhone"
+      ],
+      "links": [
+        {
+          "label": "Open Steam Rewind",
+          "href": "/steam"
+        }
+      ],
+      "cover": "assets/live/steam-rewind-1.webp",
+      "gallery": [
+        "assets/live/steam-rewind-1.webp",
+        "assets/live/steam-rewind-2.webp"
+      ],
+      "shotAlts": [
+        "Steam Rewind's most-played lens over the demo fixture, listing games with hours played, price, and Deck time.",
+        "The same library re-sorted by the cost-per-hour lens."
+      ],
+      "fiverrGig": null
+    },
+    {
+      "slug": "debt-clock",
+      "beam": "web",
+      "stack": [
+        "Web",
+        "iPhone"
+      ],
+      "links": [
+        {
+          "label": "Open Accessible Debt Clock",
+          "href": "/debt"
+        }
+      ],
+      "cover": "assets/live/debt-clock-1.webp",
+      "gallery": [
+        "assets/live/debt-clock-1.webp"
+      ],
+      "shotAlts": [
+        "The debt clock showing the gross U.S. national debt in large green figures, with a spoken-value button, a pause-motion button, and per-citizen and per-taxpayer cards below."
+      ],
+      "fiverrGig": null
+    },
+    {
+      "slug": "cicero",
+      "beam": "ai",
+      "stack": [
+        "Desktop",
+        "iPhone"
+      ],
+      "links": [],
+      "cover": "assets/live/cicero-1.webp",
+      "gallery": [
+        "assets/live/cicero-1.webp"
+      ],
+      "shotAlts": [
+        "Cicero's council floor: a Legion panel, a running transcript of the Curia, an All-Hands fleet panel, and a long verdict under the heading Cicero Speaks."
+      ],
+      "fiverrGig": null
+    },
+    {
+      "slug": "hoi4-war-room",
+      "beam": "ai",
+      "stack": [
+        "Mac",
+        "LAN web"
+      ],
+      "links": [],
+      "cover": "assets/live/hoi4-war-room-1.webp",
+      "gallery": [
+        "assets/live/hoi4-war-room-1.webp",
+        "assets/live/hoi4-war-room-2.webp"
+      ],
+      "shotAlts": [
+        "The Hearts of Iron IV map the war room streams, showing central Europe in March 1936 with division counters and theatre panels.",
+        "The same game in 1940 with the observer console open in the corner, logging the AI agents' turns."
+      ],
+      "fiverrGig": null
+    },
+    {
+      "slug": "axiomextd",
+      "beam": "minecraft",
+      "stack": [
+        "Minecraft"
+      ],
+      "links": [],
+      "cover": "assets/live/axiomextd-1.webp",
+      "gallery": [
+        "assets/live/axiomextd-1.webp"
+      ],
+      "shotAlts": [
+        "A detailed Minecraft build on the server this extension targets: a dark spire above the clouds, ringed by towers and terraced ground."
+      ],
+      "fiverrGig": null
+    },
+    {
+      "slug": "minecraft-network",
+      "beam": "minecraft",
+      "stack": [
+        "Velocity",
+        "Paper",
+        "Docker",
+        "LibertyBans",
+        "Multiverse",
+        "Bash"
+      ],
+      "links": [],
+      "cover": "fiverr/out/portfolio-mc-network.png",
+      "gallery": [
+        "fiverr/out/portfolio-mc-network.png"
+      ],
+      "fiverrGig": "mc-server"
+    },
+    {
+      "slug": "usage-tracker",
+      "beam": "ai",
+      "stack": [
+        "Desktop"
+      ],
+      "links": [],
+      "cover": "assets/live/usage-tracker-1.webp",
+      "gallery": [
+        "assets/live/usage-tracker-1.webp"
+      ],
+      "shotAlts": [
+        "The usage dashboard: token totals per provider and account, a weekly limit meter, and a seven-day combined chart with estimated API-equivalent costs."
+      ],
+      "fiverrGig": null
+    },
+    {
+      "slug": "wizard-kings-decree",
+      "beam": "ai",
+      "stack": [
+        "Python",
+        "Claude",
+        "GPT",
+        "Gemini",
+        "SQLite"
+      ],
+      "links": [],
+      "cover": "assets/prismet/tiles/oracle.webp",
+      "gallery": [
+        "assets/prismet/tiles/oracle.webp"
+      ],
+      "fiverrGig": "ai-agents"
+    },
+    {
+      "slug": "agent-ops",
+      "beam": "ai",
+      "stack": [
+        "Claude Code",
+        "Codex",
+        "AGENTS.md",
+        "git worktrees"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "todo": "Pull specifics from CLAUDE-OPERATIONS-HANDOFF.md",
+      "fiverrGig": "ai-agents"
+    },
+    {
+      "slug": "qr-tools",
+      "beam": "web",
+      "stack": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "BarcodeDetector",
+        "MusicKit JS"
+      ],
+      "links": [
+        {
+          "label": "Live demo",
+          "href": "https://sagedeutschle.github.io/qr-scanner/"
+        },
+        {
+          "label": "GitHub",
+          "href": "https://github.com/sagedeutschle/qr-scanner"
+        }
+      ],
+      "cover": "assets/web/qr-homescreen-filled-desktop-mock.webp",
+      "gallery": [
+        "assets/web/qr-homescreen-filled-desktop-mock.webp",
+        "assets/web/qr-scanner-desktop.webp",
+        "assets/web/qr-organize-desktop.webp",
+        "assets/web/qr-playlist-desktop.webp"
+      ],
+      "fiverrGig": "web-tool"
+    },
+    {
+      "slug": "civ5-mod-profiles",
+      "beam": "worlds",
+      "stack": [
+        "Mac"
+      ],
+      "links": [],
+      "cover": "assets/live/civ5-mod-profiles-1.webp",
+      "gallery": [
+        "assets/live/civ5-mod-profiles-1.webp"
+      ],
+      "shotAlts": [
+        "The launcher's Choose Your Build window: a green Stable Build card and a red Risky Build card, each listing the mods in its stack."
+      ],
+      "fiverrGig": null
+    },
+    {
+      "slug": "wow-sidepanel",
+      "beam": "worlds",
+      "stack": [
+        "WoW Addon"
+      ],
+      "links": [],
+      "cover": "assets/live/wow-sidepanel-1.webp",
+      "gallery": [
+        "assets/live/wow-sidepanel-1.webp"
+      ],
+      "shotAlts": [
+        "World of Warcraft filling an ultrawide display, with the character roster held in the narrow right-hand strip the addon reserves."
+      ],
+      "fiverrGig": null
+    },
+    {
+      "slug": "yggdrasil",
+      "beam": "worlds",
+      "stack": [
+        "Games"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "fiverrGig": null
+    },
+    {
+      "slug": "westeros-uebs2",
+      "beam": "worlds",
+      "stack": [
+        "UEBS 2 map editor"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "todo": true,
+      "fiverrGig": null
+    },
+    {
+      "slug": "plexsquish",
+      "beam": "desktop",
+      "stack": [
+        "Mac",
+        "Windows"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "fiverrGig": null
+    },
+    {
+      "slug": "helix-research-desk",
+      "beam": "desktop",
+      "stack": [
+        "Desktop"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "fiverrGig": null
+    },
+    {
+      "slug": "escape-revert",
+      "beam": "desktop",
+      "stack": [
+        "Mac"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "fiverrGig": null
+    },
+    {
+      "slug": "screen-protection",
+      "beam": "desktop",
+      "stack": [
+        "Mac"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "fiverrGig": null
+    },
+    {
+      "slug": "quark",
+      "beam": "desktop",
+      "stack": [
+        "Electron",
+        "JavaScript",
+        "safeStorage"
+      ],
+      "links": [],
+      "cover": "assets/icons/quark.webp",
+      "gallery": [
+        "assets/icons/quark.webp"
+      ],
+      "fiverrGig": null
+    },
+    {
+      "slug": "airhorn",
+      "beam": "apps",
+      "stack": [
+        "Desktop"
+      ],
+      "links": [],
+      "cover": "assets/live/airhorn-1.webp",
+      "gallery": [
+        "assets/live/airhorn-1.webp"
+      ],
+      "shotAlts": [
+        "The whole app: the word AIRHORN over one big red button, and a line noting you can press Space instead."
+      ],
+      "fiverrGig": null
+    }
+  ]
+}
