@@ -209,7 +209,7 @@ public final class CommandAccessPolicy {
                 "clearclipboard", "clipboardinfo", "trailclear", "selcorners", "selswap",
                 "selsave", "selload", "selcenter", "pos1", "pos2", "bubu", "lol",
                 "select", "expand", "contract", "unstick", "thru", "tabmenu", "wand",
-                "nightvision", "particlevisualtoggle", "resume");
+                "nightvision", "particlevisualtoggle", "resume", "redstoneaudit");
         map(capabilities, CommandCapability.EDIT,
                 "set", "replace", "copy", "cut", "paste", "move", "stack", "rotate", "flip",
                 "sphere", "hsphere", "dome", "hdome", "bowl", "hbowl", "cyl", "hcyl",

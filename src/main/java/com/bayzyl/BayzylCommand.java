@@ -164,6 +164,7 @@ public final class BayzylCommand implements TabExecutor {
     private final MessageThemeService messageThemeService;
     private final CommandAuthorityService commandAuthorityService;
     private final CrashRecoveryService crashRecoveryService;
+    private com.bayzyl.redstone.RedstoneAuditCommand redstoneAuditCommand;
     private com.bayzyl.gen.GenBrushService genBrushService;
     private GlobalMaskService globalMaskService;
     private final Map<UUID, PendingKitUpdate> pendingKitUpdates = new HashMap<>();
@@ -571,6 +572,10 @@ DecoyTabListService decoyTabListService,
         if (sub.equals("test")) {
             ChatOutput.send(sender, ChatColor.LIGHT_PURPLE + "nya meow anins the best");
             return true;
+        }
+
+        if (sub.equals("audit")) {
+            return handleRedstoneAudit(sender, Arrays.copyOfRange(args, 1, args.length));
         }
 
         if (sub.equals("select")) {
@@ -982,9 +987,26 @@ DecoyTabListService decoyTabListService,
             return handleResume(sender);
         }
 
+        if (cmd.equals("redstoneaudit")) {
+            return handleRedstoneAudit(sender, args);
+        }
+
         ChatOutput.send(sender, ChatColor.YELLOW + "Bayzyl command stub: " + spec.get().name());
         ChatOutput.send(sender, ChatColor.WHITE + spec.get().usage());
         return true;
+    }
+
+    /** Connects the read-only redstone audit; until then the audit commands report that it is unavailable. */
+    public void setRedstoneAuditCommand(com.bayzyl.redstone.RedstoneAuditCommand redstoneAuditCommand) {
+        this.redstoneAuditCommand = redstoneAuditCommand;
+    }
+
+    private boolean handleRedstoneAudit(CommandSender sender, String[] args) {
+        if (redstoneAuditCommand == null) {
+            ChatOutput.send(sender, ChatColor.RED + "Redstone audit is not available.");
+            return true;
+        }
+        return redstoneAuditCommand.handle(sender, args);
     }
 
     private boolean handleResume(CommandSender sender) {
@@ -9415,6 +9437,9 @@ DecoyTabListService decoyTabListService,
         }
         if (sub.equals("selectionparticles")) {
             return suggestSelectionParticlesArgs(remapped);
+        }
+        if (sub.equals("audit")) {
+            return SuggestionUtil.redstoneAuditSuggestions(remapped);
         }
         if (sub.equals("tool")) {
             return suggestToolArgs(remapped);

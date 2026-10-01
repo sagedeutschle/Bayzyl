@@ -52,6 +52,19 @@ public final class ChatOutput {
         sender.sendMessage(railPrefixSupplier.get() + (line == null ? "" : line));
     }
 
+    /** One rail line that runs {@code command} when clicked and shows {@code hover} on mouse-over. */
+    public static void clickableRail(CommandSender sender, String line, String command, String hover) {
+        if (sender == null) {
+            return;
+        }
+        String text = railPrefixSupplier.get() + ChatColor.translateAlternateColorCodes('&', line == null ? "" : line);
+        sender.sendMessage(net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection()
+                .deserialize(text)
+                .clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand(command))
+                .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(
+                        net.kyori.adventure.text.Component.text(hover == null ? command : hover))));
+    }
+
     public static void railBlock(CommandSender sender, List<String> lines) {
         if (lines == null || lines.isEmpty()) {
             return;

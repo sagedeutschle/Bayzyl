@@ -41,9 +41,21 @@ public final class SuggestionUtil {
                 return filterPrefix(List.of("global"), args.length == 0 ? "" : args[args.length - 1]);
             case "clearclipboard":
                 return Collections.emptyList();
+            case "redstoneaudit":
+                return redstoneAuditSuggestions(args);
             default:
                 return Collections.emptyList();
         }
+    }
+
+    private static final List<String> REDSTONE_AUDIT_ACTIONS = List.of("clear", "page", "show");
+
+    /** Completions for {@code /redstoneaudit} and {@code /bzl audit} (arguments after the command or "audit"). */
+    public static List<String> redstoneAuditSuggestions(String[] args) {
+        if (args == null || args.length != 1) {
+            return Collections.emptyList();
+        }
+        return filterPrefix(REDSTONE_AUDIT_ACTIONS, args[0]);
     }
 
     public static List<String> blockSuggestions(String prefix) {

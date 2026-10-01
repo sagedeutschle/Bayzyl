@@ -198,6 +198,10 @@ public final class Bayzyl extends JavaPlugin {
                 crashRecoveryService
         );
         handler.setGenBrushService(genBrushService);
+        handler.setRedstoneAuditCommand(new com.bayzyl.redstone.RedstoneAuditCommand(
+                com.bayzyl.redstone.RedstoneAuditService.standard(),
+                new RedstoneAuditSelectionCapture(selectionManager),
+                com.bayzyl.redstone.RedstoneAuditCommand.MarkerSink.NONE));
         handler.setGlobalMaskService(globalMaskService);
         for (CommandSpec spec : CommandRegistry.getAllCommands()) {
             PluginCommand pluginCommand = CommandOverrideService.findPluginCommand(this, spec.name());

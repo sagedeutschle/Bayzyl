@@ -101,6 +101,7 @@ public final class CommandRegistry {
             new CommandSpec("cleanup", "Region cleanup utilities", "/cleanup <floatingcleanup|foliagecleanup|liquidcleanup|snowcleanup|lightcleanup|brush>"),
             new CommandSpec("detailbrush", "Preset detail brushes (flame, cloud, lightning, vine, bark)", "/detailbrush <tool|set|info|presets|save|load|code|getcode|variants|delete|mode|none> ..."),
             new CommandSpec("resume", "Resume interrupted command after server restart", "/resume"),
+            new CommandSpec("redstoneaudit", "Find the most likely static wiring faults in the selected redstone machine", "/redstoneaudit [clear|show <n>|page <n>]"),
             new CommandSpec("agitate", "Trigger physics on stuck fluid blocks in a selection", "/agitate"),
             new CommandSpec("accent", "Set, reset, or inspect the Bayzyl menu accent color", "/accent <color|reset|status|#RRGGBB>"),
             new CommandSpec("authority", "Bayzyl command authority controls — claim, give up, or inspect contested labels", "/authority <status|claim|giveup>"),
@@ -134,6 +135,7 @@ public final class CommandRegistry {
             new CommandSpec("naturalize", "Naturalize terrain", "/bzl naturalize [depth:<n>] [bedrock:on|off] [confirm:true]"),
             new CommandSpec("cleanup", "Region cleanup utilities", "/bzl cleanup <floatingcleanup|foliagecleanup|liquidcleanup|snowcleanup|lightcleanup|brush>"),
             new CommandSpec("unstick", "Movement unstuck controls", "/bzl unstick [auto <on|off|status>]"),
+            new CommandSpec("audit", "Redstone audit of the selected machine", "/bzl audit [clear|show <n>|page <n>]"),
             new CommandSpec("test", "Pipeline verification ping", "/bzl test")
     );
 

@@ -103,6 +103,12 @@ public record AuditCell(AuditKind kind, Side facing, boolean conductor, boolean 
         return new AuditCell(AuditKind.BLOCK, null, conductor, false, false, false, false, true, Map.of());
     }
 
+    /** A block with any combination of redstone roles (a hopper is both a receiver and readable, ...). */
+    public static AuditCell blockWith(boolean conductor, boolean source, boolean analogSource, boolean receiver,
+                                      boolean pistonLike, boolean readable) {
+        return new AuditCell(AuditKind.BLOCK, null, conductor, source, analogSource, receiver, pistonLike, readable, Map.of());
+    }
+
     public AuditCell asReadable() {
         return new AuditCell(kind, facing, conductor, source, analogSource, receiver, pistonLike, true, wire);
     }

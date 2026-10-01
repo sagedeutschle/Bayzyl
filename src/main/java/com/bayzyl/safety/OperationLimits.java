@@ -9,6 +9,8 @@ public final class OperationLimits {
     public static final int FOREST_RADIUS_HARD_MAX = 32;
     public static final int PUMPKIN_RADIUS_HARD_MAX = 64;
     public static final long GEN_BRUSH_HARD_MAX = 750_000L;
+    /** Selection volume the read-only redstone audit inspects (64 x 32 x 64). */
+    public static final long REDSTONE_AUDIT_HARD_MAX = 131_072L;
 
     private static final String WITHIN_LIMITS = "Operation is within the configured work limits.";
     private static final String OVERFLOW = "Operation estimate exceeds the supported numeric range.";
@@ -63,6 +65,10 @@ public final class OperationLimits {
 
     public static WorkEstimate checkPumpkinRadius(int radius) {
         return checkRadius(radius, PUMPKIN_RADIUS_HARD_MAX, "Pumpkin radius");
+    }
+
+    public static WorkEstimate checkRedstoneAudit(long blocks) {
+        return checkCap(blocks, REDSTONE_AUDIT_HARD_MAX, "Redstone audit selection");
     }
 
     public static WorkEstimate checkGenBrush(long workUnits) {

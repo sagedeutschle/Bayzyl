@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 final class CommandRegistrationParityTest {
     @Test
@@ -22,6 +23,22 @@ final class CommandRegistrationParityTest {
         }
 
         assertEquals(runtimeCommands, pluginCommands, "plugin.yml command keys must match CommandRegistry.getAllCommands()");
+    }
+
+    @Test
+    void redstoneAuditIsRegisteredAsARootAndUnderBzl() throws IOException {
+        CommandSpec root = CommandRegistry.getTopLevel().stream()
+                .filter(spec -> spec.name().equals("redstoneaudit")).findFirst().orElseThrow();
+        assertEquals("/redstoneaudit [clear|show <n>|page <n>]", root.usage());
+        CommandSpec bzl = CommandRegistry.getBzlSubcommands().stream()
+                .filter(spec -> spec.name().equals("audit")).findFirst().orElseThrow();
+        assertEquals("/bzl audit [clear|show <n>|page <n>]", bzl.usage());
+
+        List<String> descriptor = Files.readAllLines(Path.of("src", "main", "resources", "plugin.yml"), StandardCharsets.UTF_8);
+        int index = descriptor.indexOf("  redstoneaudit:");
+        assertTrue(index > 0, "plugin.yml must declare redstoneaudit");
+        assertTrue(descriptor.subList(index, Math.min(descriptor.size(), index + 4))
+                .contains("    usage: " + root.usage()), "plugin.yml usage must match the registry");
     }
 
     private static Set<String> readPluginCommands() throws IOException {

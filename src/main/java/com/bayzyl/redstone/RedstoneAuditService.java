@@ -18,6 +18,14 @@ public final class RedstoneAuditService {
         this.detectors = List.copyOf(detectors);
     }
 
+    /** The shipped detector catalogue. */
+    public static RedstoneAuditService standard() {
+        return new RedstoneAuditService(List.of(
+                new DustDeadEndDetector(),
+                new DustRangeDetector(),
+                new DirectionalComponentDetector()));
+    }
+
     public List<AuditFinding> audit(RedstoneAuditSnapshot snapshot) {
         List<AuditFinding> findings = new ArrayList<>();
         Set<String> seen = new HashSet<>();

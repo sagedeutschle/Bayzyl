@@ -29,7 +29,7 @@ final class CommandAccessPolicyTest {
         Set<String> registered = new LinkedHashSet<>();
         CommandRegistry.getAllCommands().forEach(spec -> registered.add(spec.name()));
 
-        assertEquals(109, registered.size(), "security review must cover the complete command surface");
+        assertEquals(110, registered.size(), "security review must cover the complete command surface");
         assertEquals(registered, policy.explicitRootCapabilities().keySet());
         registered.forEach(root -> assertNotNull(policy.requiredCapability(root, new String[0]), root));
     }
@@ -47,6 +47,17 @@ final class CommandAccessPolicyTest {
                 policy.requiredCapability("set", new String[0]),
                 policy.requiredCapability("bayzyl:set", new String[0])
         );
+    }
+
+    @Test
+    void redstoneAuditIsReadOnlyAndNeedsOnlyUse() {
+        for (String[] args : new String[][]{{}, {"clear"}, {"show", "1"}, {"page", "2"}}) {
+            assertEquals(CommandCapability.USE, policy.requiredCapability("redstoneaudit", args));
+            String[] bzlArgs = new String[args.length + 1];
+            bzlArgs[0] = "audit";
+            System.arraycopy(args, 0, bzlArgs, 1, args.length);
+            assertEquals(CommandCapability.USE, policy.requiredCapability("bzl", bzlArgs));
+        }
     }
 
     @Test

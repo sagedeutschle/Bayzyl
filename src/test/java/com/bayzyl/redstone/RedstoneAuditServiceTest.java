@@ -51,6 +51,20 @@ class RedstoneAuditServiceTest {
     }
 
     @Test
+    void standardServiceRunsTheShippedCatalogue() {
+        RedstoneAuditSnapshot snapshot = new Layout(10, 3, 3).floor(0, 1, 0, 5)
+                .put(0, 1, 1, AuditCell.sourceBlock())
+                .dustLine(1, 1, 1, 3)
+                .put(6, 1, 1, AuditCell.repeater(Side.WEST))
+                .put(7, 1, 1, AuditCell.receiverBlock(true))
+                .build();
+        List<String> detectors = RedstoneAuditService.standard().audit(snapshot).stream()
+                .map(AuditFinding::detector).toList();
+        assertTrue(detectors.contains(DustDeadEndDetector.ID), detectors.toString());
+        assertTrue(detectors.contains("repeater-input"), detectors.toString());
+    }
+
+    @Test
     void snapshotKnowsTheSelectionTheHaloAndNothingBeyond() {
         AuditPosition haloEdge = new AuditPosition(-2, 0, 0);
         AuditCell lever = AuditCell.sourceBlock();

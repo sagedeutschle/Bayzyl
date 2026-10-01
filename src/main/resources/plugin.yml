@@ -313,6 +313,9 @@ commands:
   resume:
     description: Resume interrupted command after server restart
     usage: /resume
+  redstoneaudit:
+    description: Find the most likely static wiring faults in the selected redstone machine
+    usage: /redstoneaudit [clear|show <n>|page <n>]
   agitate:
     description: Trigger physics on stuck fluid blocks in the current selection
     usage: /agitate
