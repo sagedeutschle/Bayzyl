@@ -165,19 +165,23 @@
           "href": "https://github.com/sagedeutschle/Bayzyl"
         }
       ],
-      "cover": "assets/live/bayzyl-1.webp",
+      "cover": "assets/minecraft/bayzyl-build-plaza-dome.webp",
       "gallery": [
-        "assets/live/bayzyl-1.webp",
-        "assets/live/bayzyl-2.webp",
-        "fiverr/out/portfolio-bayzyl-help.png",
-        "fiverr/out/portfolio-bayzyl-commands.png"
+        "assets/minecraft/bayzyl-build-plaza-dome.webp",
+        "assets/minecraft/bayzyl-build-overview.webp",
+        "assets/minecraft/bayzyl-build-formula-ring.webp",
+        "assets/minecraft/bayzyl-build-tower.webp",
+        "assets/minecraft/bayzyl-build-inside-dome.webp",
+        "assets/minecraft/bayzyl-tab-panel.webp"
       ],
       "fiverrGig": "mc-plugin",
       "shotAlts": [
-        "A cherry-blossom village built on the Paper server this toolkit runs on, lit up at night.",
-        "Another build from the same server, seen from above the cloud layer.",
-        "Bayzyl help pages, rendered from the plugin’s help file",
-        "Bayzyl command registry"
+        "A stone plaza with a glass dome and quartz pillars, a stone-brick tower and a copper ring behind it, built in Minecraft with /hsphere glass 9, /cyl quartz_pillar 1 9 and /walls 70%stone_bricks,30%mossy_stone_bricks.",
+        "The whole test scene seen from above on a clean Paper 1.21.4 server: the plaza and glass dome, the tower, the copper ring among oak trees, and a sand pyramid, all built with Bayzyl commands.",
+        "A copper-block ring generated from a math formula with /generate, surrounded by oak trees from /forestgen 16 oak 5.",
+        "A stone-brick tower with a dark oak pyramid roof, built with /hcyl 75%stone_bricks,25%cracked_stone_bricks 6 18 and /hpyramid dark_oak_planks 7.",
+        "The view from inside the glass dome looking out at the tower and the copper ring, with a floor laid in the weighted mix 60%polished_andesite,25%andesite,15%stone_bricks.",
+        "Bayzyl's tab panel in Minecraft, showing server memory use, a layer preview of a 6x3x5 clipboard, selection stats and recent command history."
       ]
     },
     {
@@ -337,9 +341,14 @@
       "links": [],
       "cover": "assets/prismet/tiles/oracle.webp",
       "gallery": [
+        "fiverr/out/portfolio-oracle.png",
         "assets/prismet/tiles/oracle.webp"
       ],
-      "fiverrGig": "ai-agents"
+      "fiverrGig": "ai-agents",
+      "shotAlts": [
+        "Diagram of the decree pipeline: a Harvester pulls news, the Council of Mages (Claude and GPT) deliberates, the Wizard King proclaims, the Court Historian (Gemini) grades, Scoring tallies hit rate, and the Chronicle publishes decrees.json.",
+        "The Oracle icon: a parchment scroll with a red wax seal."
+      ]
     },
     {
       "slug": "qr-tools",

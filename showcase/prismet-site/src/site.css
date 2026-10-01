@@ -15,6 +15,7 @@
   --ink-3: rgba(242, 244, 252, .50);
   --gold: #E2B65C;
   --gold-deep: #B88A33;
+  --on-gold: #17130A;
   --beam-core: #FFF8E6;
   /* the six-hue wheel, plus text-safe companions */
   --apps: #E68C33;      --apps-ink: #F2A55A;
@@ -41,8 +42,8 @@
     color-scheme: light;
     --ground: #F6F2E8; --ground-2: #EEE8DA; --panel: #FDFBF6; --panel-hi: #E6E0D1;
     --hair: rgba(28, 26, 18, .14); --outline: rgba(28, 26, 18, .28);
-    --ink: #1C1A12; --ink-2: rgba(28, 26, 18, .78); --ink-3: rgba(28, 26, 18, .58);
-    --gold: #8E6A22; --gold-deep: #8E6A22; --beam-core: #1C1A12;
+    --ink: #1C1A12; --ink-2: rgba(28, 26, 18, .78); --ink-3: rgba(28, 26, 18, .64);
+    --gold: #86631F; --gold-deep: #86631F; --beam-core: #1C1A12; --on-gold: #FDFBF6;
     --apps-ink: #A8571A; --minecraft-ink: #2F6B4C; --worlds-ink: #7E6510;
     --web-ink: #2B5C8A; --ai-ink: #5E4486; --desktop-ink: #B32D3D;
     --shadow: 0 18px 44px rgba(60, 45, 20, .18);
@@ -52,8 +53,8 @@
   color-scheme: light;
   --ground: #F6F2E8; --ground-2: #EEE8DA; --panel: #FDFBF6; --panel-hi: #E6E0D1;
   --hair: rgba(28, 26, 18, .14); --outline: rgba(28, 26, 18, .28);
-  --ink: #1C1A12; --ink-2: rgba(28, 26, 18, .78); --ink-3: rgba(28, 26, 18, .58);
-  --gold: #8E6A22; --gold-deep: #8E6A22; --beam-core: #1C1A12;
+  --ink: #1C1A12; --ink-2: rgba(28, 26, 18, .78); --ink-3: rgba(28, 26, 18, .64);
+  --gold: #86631F; --gold-deep: #86631F; --beam-core: #1C1A12; --on-gold: #FDFBF6;
   --apps-ink: #A8571A; --minecraft-ink: #2F6B4C; --worlds-ink: #7E6510;
   --web-ink: #2B5C8A; --ai-ink: #5E4486; --desktop-ink: #B32D3D;
   --shadow: 0 18px 44px rgba(60, 45, 20, .18);
@@ -100,7 +101,7 @@ p { margin: 0; text-wrap: pretty; }
   border: 1px solid var(--outline); background: var(--panel); color: var(--ink);
 }
 .btn:hover { background: var(--panel-hi); }
-.btn.primary { background: var(--gold-deep); border-color: transparent; color: #17130A; }
+.btn.primary { background: var(--gold-deep); border-color: transparent; color: var(--on-gold); }
 .btn.primary:hover { background: var(--gold); }
 .theme { width: 40px; height: 40px; padding: 0; justify-content: center; }
 @media (max-width: 760px) {
@@ -261,8 +262,8 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: 
 .p-body aside { display: grid; gap: 16px; align-content: start; }
 .stack { display: flex; flex-wrap: wrap; gap: 6px; }
 .stack span { font: 500 var(--t-xs)/1 var(--mono); padding: 7px 9px; border-radius: 8px; background: var(--panel); border: 1px solid var(--hair); color: var(--ink-2); }
-.gallery { display: flex; gap: 16px; overflow-x: auto; padding: 4px var(--gutter) 24px; scroll-snap-type: x mandatory; scrollbar-width: thin; }
-.gallery img { flex: none; height: clamp(240px, 40vw, 460px); width: auto; max-width: 88vw; object-fit: contain; scroll-snap-align: start; border-radius: 16px; border: 1px solid var(--hair); box-shadow: var(--shadow); background: var(--panel); }
+.gallery { display: flex; align-items: flex-start; gap: 16px; overflow-x: auto; padding: 4px var(--gutter) 24px; scroll-padding-inline: var(--gutter); scroll-snap-type: x mandatory; scrollbar-width: thin; }
+.gallery img { flex: none; height: auto; max-height: clamp(240px, 40vw, 460px); width: auto; max-width: 88vw; object-fit: contain; scroll-snap-align: start; border-radius: 16px; border: 1px solid var(--hair); box-shadow: var(--shadow); background: var(--panel); }
 .todo { border: 1px dashed var(--outline); border-radius: 14px; padding: 16px; color: var(--ink-2); font: 500 var(--t-sm)/1.5 var(--mono); }
 .next { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--hair); padding-block: 28px; }
 .next a { text-decoration: none; }

@@ -26,7 +26,7 @@ Selections, shapes, brushes, clipboards, persistent undo, shared kits, and build
 - Commands: 100+ registered
 - Brushes: 25+ types
 - Help: 16-page in-game guide
-- Version: 0.1.0-alpha
+- Version: 0.2.0-alpha.1
 
 ## highlights
 - Per-player undo history that survives restarts, plus /oops to undo and tell the team
