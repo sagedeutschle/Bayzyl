@@ -23,9 +23,9 @@ Author
 Selections, shapes, brushes, clipboards, persistent undo, shared kits, and builder profiles, in one consistent command set. Every option uses option:value syntax, tab-completion knows about masks and block distributions, and big edits ask for confirmation first. It runs alongside WorldEdit and FastAsyncWorldEdit, and falls back to its own implementations when neither is installed.
 
 ## facts
-- Commands: 99 top-level
+- Commands: 100+ registered
 - Brushes: 25+ types
-- Help: 15-page in-game guide
+- Help: 16-page in-game guide
 - Version: 0.1.0-alpha
 
 ## highlights
