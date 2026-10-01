@@ -23,7 +23,12 @@ public final class RedstoneAuditService {
         return new RedstoneAuditService(List.of(
                 new DustDeadEndDetector(),
                 new DustRangeDetector(),
-                new DirectionalComponentDetector()));
+                new DirectionalComponentDetector(),
+                new TorchFeedbackDetector(),
+                new SideInputWarningDetector(),
+                new RepeaterLockDetector(),
+                new WeakTransmissionDetector(),
+                new IndirectPowerDetector()));
     }
 
     public List<AuditFinding> audit(RedstoneAuditSnapshot snapshot) {

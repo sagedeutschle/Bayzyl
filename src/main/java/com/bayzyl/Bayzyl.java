@@ -66,6 +66,7 @@ public final class Bayzyl extends JavaPlugin {
     private com.bayzyl.detail.DetailBrushVariantService detailBrushVariantService;
     private com.bayzyl.gen.GenBrushService genBrushService;
     private CrashRecoveryService crashRecoveryService;
+    private com.bayzyl.redstone.RedstoneAuditMarkerService redstoneAuditMarkers;
     private GlobalMaskService globalMaskService;
 
     @Override
@@ -198,10 +199,16 @@ public final class Bayzyl extends JavaPlugin {
                 crashRecoveryService
         );
         handler.setGenBrushService(genBrushService);
-        handler.setRedstoneAuditCommand(new com.bayzyl.redstone.RedstoneAuditCommand(
+        redstoneAuditMarkers = new com.bayzyl.redstone.RedstoneAuditMarkerService((tick, period) -> {
+            org.bukkit.scheduler.BukkitTask task = Bukkit.getScheduler().runTaskTimer(this, tick, period, period);
+            return task::cancel;
+        }, com.bayzyl.redstone.RedstoneAuditMarkerService.dustParticles());
+        com.bayzyl.redstone.RedstoneAuditCommand redstoneAudit = new com.bayzyl.redstone.RedstoneAuditCommand(
                 com.bayzyl.redstone.RedstoneAuditService.standard(),
                 new RedstoneAuditSelectionCapture(selectionManager),
-                com.bayzyl.redstone.RedstoneAuditCommand.MarkerSink.NONE));
+                redstoneAuditMarkers);
+        handler.setRedstoneAuditCommand(redstoneAudit);
+        Bukkit.getPluginManager().registerEvents(new com.bayzyl.redstone.RedstoneAuditListener(redstoneAudit), this);
         handler.setGlobalMaskService(globalMaskService);
         for (CommandSpec spec : CommandRegistry.getAllCommands()) {
             PluginCommand pluginCommand = CommandOverrideService.findPluginCommand(this, spec.name());
@@ -265,6 +272,9 @@ public final class Bayzyl extends JavaPlugin {
         ramAlertService.shutdown();
         decoyTabListService.clearAll();
         tabInfoPanelService.stop();
+        if (redstoneAuditMarkers != null) {
+            redstoneAuditMarkers.clearAll();
+        }
         if (crashRecoveryService != null) {
             // CLEAN is written only when in-flight edits stopped cleanly and every recovery write succeeded.
             crashRecoveryService.disable(quiesced);
