@@ -6,7 +6,7 @@ qr-scanner, PrismCode, THE HELM, Quark). Nothing is a mockup pretending to be a 
 | Path | What it is |
 |---|---|
 | [`fiverr/FIVERR-KIT.md`](fiverr/FIVERR-KIT.md) | Profile copy, 6 gigs (titles, packages, descriptions, tags, FAQ), portfolio entries, upload order |
-| [`fiverr/out/`](fiverr/out/) | 6 gig covers, 9 portfolio boards, 1 LinkedIn banner (2560×1538 PNG) |
+| [`fiverr/out/`](fiverr/out/) | 6 gig covers, 10 portfolio boards, 1 LinkedIn banner (2560×1538 PNG) |
 | [`fiverr/gigs.json`](fiverr/gigs.json) | Source for the kit; `node showcase/fiverr/kit.mjs` validates it against Fiverr's limits |
 | [`fiverr/render.mjs`](fiverr/render.mjs) | Renders every image from HTML templates with Playwright |
 | [`prismet-site/REDESIGN-PLAN.md`](prismet-site/REDESIGN-PLAN.md) | The facelift plan: structure, design system, how to deploy on Fly safely |
