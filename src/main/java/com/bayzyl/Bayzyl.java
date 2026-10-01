@@ -10,6 +10,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public final class Bayzyl extends JavaPlugin {
     private SelectionManager selectionManager;
     private VisualizationManager visualizationManager;
@@ -111,7 +116,7 @@ public final class Bayzyl extends JavaPlugin {
         decoyTabListService = new DecoyTabListService(this, decoyPlayerCountService);
         tabInfoPanelService = new TabInfoPanelService(this, ramAlertService, tabMenuSettingsService, decoyPlayerCountService, clipboardManager, selectionManager, recentEditTrailService);
         // Crash recovery system (must be before services that depend on it)
-        crashRecoveryService = new CrashRecoveryService(this);
+        crashRecoveryService = openCrashRecovery(() -> new CrashRecoveryService(this), getLogger());
         builderProfileService = new BuilderProfileService(this, visualizationManager, nightVisionService, autoUnstickService, ghostHandService, stackLookDirectionService, nudgeSettingsService, tabMenuSettingsService, recentEditTrailService, tabInfoPanelService, messageThemeService, toolManager);
         builderKitService = new BuilderKitService(this);
         kitShortcutRegistry = new KitShortcutRegistry(this, builderKitService);
@@ -129,7 +134,9 @@ public final class Bayzyl extends JavaPlugin {
         editService.setCrashRecoveryService(crashRecoveryService);
         
         // Check for crash recovery
-        if (crashRecoveryService.wasCrashDetected()) {
+        if (crashRecoveryService != null && crashRecoveryService.migratedLegacyFile()) {
+            getLogger().info("Crash recovery data was migrated from the 0.1 format; interrupted sessions will be offered on player join.");
+        } else if (crashRecoveryService != null && crashRecoveryService.wasCrashDetected()) {
             getLogger().warning("Crash detected! Bayzyl will attempt to recover sessions on player join.");
         }
 
@@ -216,7 +223,9 @@ public final class Bayzyl extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(listener, this);
         
         // Add crash recovery listener
-        Bukkit.getPluginManager().registerEvents(new CrashRecoveryListener(crashRecoveryService), this);
+        if (crashRecoveryService != null) {
+            Bukkit.getPluginManager().registerEvents(new CrashRecoveryListener(crashRecoveryService), this);
+        }
 
         tabInfoPanelService.start();
 
@@ -241,12 +250,9 @@ public final class Bayzyl extends JavaPlugin {
     public void onDisable() {
         // Cancel any in-flight chunked paste/cut/copy tasks before saving anything else,
         // so they can't continue running against a half-disabled plugin.
-        if (editService != null) {
-            try { editService.cancelAllAsyncTasks(); } catch (Throwable ignored) {}
-        }
-        if (historyService != null) {
-            try { historyService.cancelAllAsyncTasks(); } catch (Throwable ignored) {}
-        }
+        boolean quiesced = quiesce(List.of(
+                () -> { if (editService != null) editService.cancelAllAsyncTasks(); },
+                () -> { if (historyService != null) historyService.cancelAllAsyncTasks(); }));
         runtimePreferencesService.saveGlobal(ramAlertService, messageThemeService, commandAuthorityService);
         for (var player : Bukkit.getOnlinePlayers()) {
             historyService.savePlayer(player.getUniqueId());
@@ -256,8 +262,35 @@ public final class Bayzyl extends JavaPlugin {
         decoyTabListService.clearAll();
         tabInfoPanelService.stop();
         if (crashRecoveryService != null) {
-            crashRecoveryService.disable();
+            // CLEAN is written only when in-flight edits stopped cleanly and every recovery write succeeded.
+            crashRecoveryService.disable(quiesced);
         }
         getLogger().info("Bayzyl disabled");
+    }
+
+    /** Runs every canceller; true only when none of them threw. */
+    static boolean quiesce(List<Runnable> cancellers) {
+        boolean clean = true;
+        for (Runnable canceller : cancellers) {
+            try {
+                canceller.run();
+            } catch (Throwable failure) {
+                clean = false;
+            }
+        }
+        return clean;
+    }
+
+    /**
+     * Opens crash recovery, or returns null with a SEVERE log when its persisted state is unreadable. The files are
+     * left untouched for inspection and the rest of Bayzyl keeps working without recovery.
+     */
+    static CrashRecoveryService openCrashRecovery(Supplier<CrashRecoveryService> factory, Logger logger) {
+        try {
+            return factory.get();
+        } catch (IllegalStateException failure) {
+            logger.log(Level.SEVERE, "Crash recovery is disabled for this run: " + failure.getMessage());
+            return null;
+        }
     }
 }

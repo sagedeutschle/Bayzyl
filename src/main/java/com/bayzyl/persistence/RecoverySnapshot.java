@@ -133,11 +133,14 @@ public record RecoverySnapshot(Lifecycle lifecycle,
     /**
      * Block data is palette-compressed: {@code blocks} is base64 of one unsigned LEB128 palette index per block, in
      * the clipboard's y-z-x order. Tile-entity states are not persisted; their count is kept so the loss is reported.
+     * The palette entry {@link #SKIP} marks a cell the clipboard leaves untouched on paste (it is not air).
      */
     public record ClipboardRecord(int sizeX, int sizeY, int sizeZ, DetachedLocation origin,
                                   int minOffsetX, int minOffsetY, int minOffsetZ,
                                   List<String> palette, String blocks, int omittedTileStates,
                                   List<EntityRecord> entities) {
+        public static final String SKIP = "bayzyl:skip";
+
         public ClipboardRecord {
             Objects.requireNonNull(origin, "origin");
             Objects.requireNonNull(blocks, "blocks");

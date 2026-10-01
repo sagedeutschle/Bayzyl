@@ -11,9 +11,11 @@ import java.util.Locale;
 
 public final class BlockMask {
     private final String raw;
-    private final List<Tag<Material>> tags;
-    private final List<Material> materials;
+    private volatile Resolved resolved;
     private final BlockMask andMask;
+
+    private record Resolved(List<Tag<Material>> tags, List<Material> materials) {
+    }
 
     public BlockMask(String raw, List<Tag<Material>> tags, List<Material> materials) {
         this(raw, tags, materials, null);
@@ -21,9 +23,31 @@ public final class BlockMask {
 
     private BlockMask(String raw, List<Tag<Material>> tags, List<Material> materials, BlockMask andMask) {
         this.raw = raw;
-        this.tags = tags;
-        this.materials = materials;
+        this.resolved = tags == null ? null : new Resolved(tags, materials);
         this.andMask = andMask;
+    }
+
+    /** A mask restored from its text whose tags and materials resolve on first use, not at restore time. */
+    static BlockMask deferred(String raw) {
+        return new BlockMask(raw == null ? "" : raw.trim(), null, null, null);
+    }
+
+    private Resolved resolved() {
+        Resolved current = resolved;
+        if (current == null) {
+            BlockMask parsed = parse(raw);
+            current = new Resolved(parsed.tags(), parsed.materials());
+            resolved = current;
+        }
+        return current;
+    }
+
+    private List<Tag<Material>> tags() {
+        return resolved().tags();
+    }
+
+    private List<Material> materials() {
+        return resolved().materials();
     }
 
     public boolean matches(Material material) {
@@ -33,23 +57,24 @@ public final class BlockMask {
         if (andMask != null && !andMask.matches(material)) {
             return false;
         }
-        for (Material value : materials) {
+        Resolved current = resolved();
+        for (Material value : current.materials()) {
             if (value == material) {
                 return true;
             }
         }
-        for (Tag<Material> tag : tags) {
+        for (Tag<Material> tag : current.tags()) {
             if (tag.isTagged(material)) {
                 return true;
             }
         }
-        return tags.isEmpty() && materials.isEmpty();
+        return current.tags().isEmpty() && current.materials().isEmpty();
     }
 
     public boolean isAny() {
         return (raw == null || raw.isBlank())
-                && tags.isEmpty()
-                && materials.isEmpty()
+                && tags().isEmpty()
+                && materials().isEmpty()
                 && andMask == null;
     }
 
@@ -63,14 +88,19 @@ public final class BlockMask {
         BlockMask nestedAnd = base.andMask == null ? additional : BlockMask.and(base.andMask, additional);
         return new BlockMask(
                 base.raw + " & " + additional.summary(),
-                base.tags,
-                base.materials,
+                base.tags(),
+                base.materials(),
                 nestedAnd
         );
     }
 
     public String getRaw() {
         return raw;
+    }
+
+    /** True for a mask built by {@link #and}, whose raw text no longer re-parses to the same mask. */
+    boolean isCombined() {
+        return andMask != null;
     }
 
     public String summary() {
