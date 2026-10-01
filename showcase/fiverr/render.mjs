@@ -183,20 +183,20 @@ const IMAGES = {
     ${gigLeft({ eyebrow: 'Minecraft · Paper plugins', title: 'Custom Minecraft <em>plugins</em>, built to last',
       lede: 'Commands, GUIs, events, and integrations for Paper and Spigot servers.',
       chips: ['Author of Bayzyl: 99 commands', 'Java 21 · Paper 1.21 · FAWE-aware', 'Clean, documented source code'] })}
-    <div class="right">
-      ${mcChat('1', 'position:absolute;left:24px;top:64px;width:640px;font-size:20px;transform:rotate(-1deg)', 8)}
-      <div class="term" style="position:absolute;left:60px;top:400px;width:600px;--hueTxt:${HUE_TXT.minecraft}">
-        <div class="bar"><i></i><i></i><i></i><span>TAB-COMPLETE · /sphere</span></div>
-        <pre><span class="p">/sphere</span> &lt;block&gt; &lt;radius&gt; [mask:&lt;blocks&gt;]
-        [at:&lt;player|target|selection-center&gt;]
-        [confirm:true]</pre>
-      </div>
+    <div class="right" style="left:560px">
+      <img src="${A('live/bayzyl-1.webp')}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;mask-image:linear-gradient(90deg,transparent 0,#000 22%);-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 22%)">
+      <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(16,17,26,.85) 0,rgba(16,17,26,0) 46%)"></div>
+      ${mcChat('1', 'position:absolute;left:118px;bottom:92px;width:590px;font-size:17px;line-height:1.32;background:rgba(0,0,0,.55)', 7)}
+      <div class="tag" style="right:28px;top:26px;color:rgba(255,255,255,.75)">real build · /bzlhelp in chat</div>
     </div>${foot('github.com/sagedeutschle/Bayzyl')}`, { hue: 'minecraft', title: 'Minecraft plugins' }),
 
   'gig-mc-server': () => page(`
     ${gigLeft({ eyebrow: 'Minecraft · Servers & networks', title: 'Your Minecraft <em>network</em>, set up right',
       lede: 'Proxies, backends, permissions, and backups, documented so you can run it.',
       chips: ['Velocity proxy + Paper backends', 'Docker, bans, whitelist, worlds', 'One admin command for all of it'] })}
+    <div class="right" style="left:560px">
+      <img src="${A('live/bayzyl-2.webp')}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.32;mask-image:linear-gradient(90deg,transparent 0,#000 30%);-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 30%)">
+    </div>
     <div class="right">
       ${networkDiagram(0, 56)}
       <div class="term" style="position:absolute;left:0;top:420px;width:650px">
@@ -330,6 +330,13 @@ const IMAGES = {
           <div style="font:400 13px/1.45 var(--code);color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(r.usage)}</div></div></div>`).join('')}
     </div>${foot('from CommandRegistry.java')}`, { hue: 'minecraft', title: 'Bayzyl commands' });
   },
+
+  'portfolio-mc-builds': () => page(`
+    <div style="position:absolute;left:64px;top:52px"><div class="eyebrow"><i></i>Minecraft · on the server</div><h1 style="font-size:40px;margin-top:14px">Builds on the Paper server Bayzyl runs on</h1></div>
+    <img class="shot" src="${A('live/bayzyl-1.webp')}" style="position:absolute;left:64px;top:180px;width:700px;height:470px;object-fit:cover;border-radius:16px">
+    <img class="shot" src="${A('live/bayzyl-2.webp')}" style="position:absolute;left:784px;top:180px;width:432px;height:225px;object-fit:cover;border-radius:16px">
+    <img class="shot" src="${A('live/axiomextd-1.webp')}" style="position:absolute;left:784px;top:425px;width:432px;height:225px;object-fit:cover;border-radius:16px">
+    ${foot('screenshots from the server')}`, { hue: 'minecraft', title: 'Minecraft builds' }),
 
   'portfolio-mc-network': () => page(`
     <div style="position:absolute;left:64px;top:56px"><div class="eyebrow"><i></i>Minecraft · network ops</div><h1 style="font-size:38px;margin-top:14px;max-width:560px">Every command lands on the right layer</h1></div>

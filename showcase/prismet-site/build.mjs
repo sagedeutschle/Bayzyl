@@ -160,13 +160,16 @@ function prism() {
 function media(p) {
   const g = (p.gallery || []).map(asset);
   if (p.slug === 'prismet-app') return `<div class="phones">${[g[2], g[0], g[1]].map((s) => `<img src="${s}" alt="" loading="lazy">`).join('')}</div>`;
-  if (p.slug === 'the-helm') return `<div class="collage">${[g[0], g[2], g[4], g[5]].map((s) => `<img src="${s}" alt="" loading="lazy">`).join('')}</div>`;
+  if (p.slug === 'the-helm') {
+    const phone = asset('assets/live/helm-1.webp'), faces = ['chronos', 'gpu'].map((n) => asset(`assets/helm/${n}.webp`));
+    return `<div class="helmmix"><img class="phone" src="${phone}" alt="" loading="lazy"><div>${faces.map((x) => `<img src="${x}" alt="" loading="lazy">`).join('')}</div></div>`;
+  }
   if ((p.cover || '').includes('/icons/')) return `<img class="icon" src="${asset(p.cover)}" alt="">`;
   return `<img class="cover" src="${asset(p.cover)}" alt="" loading="lazy">`;
 }
 const mediaAlt = (p) => ({
   'prismet-app': 'Prismet App Store screenshots: Sea Battle, the home screen, and Chess',
-  'the-helm': 'Four HELM widgets rendered from source: clock, GPU telemetry, fleet radar, and departures board',
+  'the-helm': 'Helm on iPhone next to three desktop widgets rendered from source: clock, GPU telemetry, and fleet radar',
 }[p.slug] || plain(work(p.slug, 'title')));
 
 const feature = (p) => {
@@ -185,12 +188,12 @@ const feature = (p) => {
 };
 
 const card = (p) => {
-  const cover = p.cover ? asset(p.cover) : null;
+  const cover = p.wideCover ? asset(p.wideCover) : p.cover ? asset(p.cover) : null;
   const contain = (cover && cover.includes('/icons/')) || (p.cover || '').includes('/tiles/');
   const title = P(p.slug, 'title'), sub = P(p.slug, 'subtitle'), st = status(p), ph = T('work.placeholder');
   const short = beamById[p.beam].short;
-  return `<a class="card" href="work/${p.slug}.html" data-beam="${p.beam}" style="${hueVars(p.beam)}">
-    <div class="thumb">${cover ? `<img class="${contain ? 'contain' : ''}" src="${cover}" alt="" loading="lazy">` : `<div class="placeholder"${ph.a}>${ph.h}</div>`}</div>
+  return `<a class="card${p.wideCover ? ' wide' : ''}" href="work/${p.slug}.html" data-beam="${p.beam}" style="${hueVars(p.beam)}">
+    <div class="thumb">${cover ? `<img class="${contain ? 'contain' : ''}" src="${cover}" alt="" loading="lazy">` : `<div class="placeholder"><strong aria-hidden="true">${inline(work(p.slug, 'title'))}</strong><span${ph.a}>${ph.h}</span></div>`}</div>
     <div class="body">
       <span class="beam-tag">${esc(short)}</span>
       <h3${title.a}>${title.h}</h3>
@@ -203,8 +206,7 @@ const card = (p) => {
 const GIGS = [['mc-plugin', 'minecraft'], ['mc-server', 'minecraft'], ['ios-app', 'apps'], ['web-tool', 'web'], ['ai-agents', 'ai'], ['linux-desktop', 'desktop']];
 
 // ── index ───────────────────────────────────────────────────────────────────────────────────
-const order = ['prismet-app', 'the-helm', 'bayzyl', 'prismcode'];
-const featured = order.map((s) => projects.find((p) => p.slug === s)).filter((p) => p && !isTodo(p));
+const featured = projects.filter((p) => p.featured && !isTodo(p));   // set "featured": true in projects.json
 const tileFor = { 'steam-rewind': 'steamrewind', 'debt-clock': 'debtclock', 'wordgame-api': 'wordle' };
 const k = (key) => T(key); // shorthand
 
@@ -272,7 +274,6 @@ projects.forEach((p, i) => {
   const b = beamLabel(p.beam), s = p.slug;
   const next = projects[(i + 1) % projects.length], prev = projects[(i - 1 + projects.length) % projects.length];
   const gal = (p.gallery || []).map(asset);
-  const wide = gal.some((x) => /boards|helm|web\//.test(x));
   const title = P(s, 'title'), sub = P(s, 'subtitle'), st = status(p), sum = P(s, 'summary');
   const hl = listItems(work(s, 'highlights')), hlT = T('project.highlights');
   const roleK = T('project.role_label'), yearK = T('project.year_label');
@@ -284,7 +285,7 @@ projects.forEach((p, i) => {
     <p class="sub"${sub.a}>${sub.h}</p>
     <div class="row"><span class="status"${st.a}>${st.h}</span>${(p.links || []).map((l) => `<a class="btn" href="${esc(l.href.startsWith('/') ? '..' + l.href : l.href)}">${esc(l.label)}${l.href.startsWith('http') ? ' ↗' : ''}</a>`).join('')}</div>
   </div>
-  ${gal.length ? `<div class="gallery${wide ? ' wide' : ''}" tabindex="0" aria-label="Gallery">${gal.map((x, n) => `<img src="../${x}" alt="${esc(plain(work(s, 'title')))} image ${n + 1}" loading="${n < 2 ? 'eager' : 'lazy'}">`).join('')}</div>` : ''}
+  ${gal.length ? `<div class="gallery" tabindex="0" aria-label="Screenshots">${gal.map((x, n) => `<img src="../${x}" alt="${esc((p.shotAlts && p.shotAlts[n]) || `${plain(work(s, 'title'))}, image ${n + 1}`)}" loading="${n < 2 ? 'eager' : 'lazy'}">`).join('')}</div>` : ''}
   <div class="wrap p-body">
     <div class="prose">
       <div class="summary${isTodo(p) ? ' todo' : ''}"${sum.a}>${sum.h.split(/\n\s*\n/).map((para) => `<p>${para}</p>`).join('')}</div>

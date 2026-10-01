@@ -52,7 +52,7 @@ show your face, use the Prismet app icon (`showcase/assets/icons/prismet-app.web
 
 - **Category:** Programming & Tech → Game Development (choose the Minecraft option if listed)
 - **Search tags:** `minecraft plugin` · `spigot plugin` · `paper plugin` · `minecraft java` · `minecraft server`
-- **Gallery images:** [`gig-mc-plugin.png`](out/gig-mc-plugin.png), [`portfolio-bayzyl-help.png`](out/portfolio-bayzyl-help.png), [`portfolio-bayzyl-commands.png`](out/portfolio-bayzyl-commands.png)
+- **Gallery images:** [`gig-mc-plugin.png`](out/gig-mc-plugin.png), [`portfolio-mc-builds.png`](out/portfolio-mc-builds.png), [`portfolio-bayzyl-help.png`](out/portfolio-bayzyl-help.png)
 
 | | **Small plugin** | **Feature plugin** | **Full system** |
 |---|---|---|---|
@@ -96,7 +96,7 @@ Message me before ordering with what the plugin should do. I'll confirm scope an
 
 - **Category:** Programming & Tech → Game Development (or the server setup option if listed)
 - **Search tags:** `minecraft server` · `velocity proxy` · `minecraft network` · `paper server` · `server setup`
-- **Gallery images:** [`gig-mc-server.png`](out/gig-mc-server.png), [`portfolio-mc-network.png`](out/portfolio-mc-network.png)
+- **Gallery images:** [`gig-mc-server.png`](out/gig-mc-server.png), [`portfolio-mc-network.png`](out/portfolio-mc-network.png), [`portfolio-mc-builds.png`](out/portfolio-mc-builds.png)
 
 | | **Single server** | **Proxy network** | **Run-it-yourself** |
 |---|---|---|---|
@@ -319,7 +319,7 @@ the description, and link the matching gig so buyers see proof on the gig page t
 
 ### Bayzyl: a 99-command Paper plugin
 
-- **Images:** [`portfolio-bayzyl-help.png`](out/portfolio-bayzyl-help.png), [`portfolio-bayzyl-commands.png`](out/portfolio-bayzyl-commands.png)
+- **Images:** [`portfolio-mc-builds.png`](out/portfolio-mc-builds.png), [`portfolio-bayzyl-help.png`](out/portfolio-bayzyl-help.png), [`portfolio-bayzyl-commands.png`](out/portfolio-bayzyl-commands.png)
 - **Linked gig:** I will develop a custom Minecraft plugin for your Paper or Spigot server
 
 > An open-source building toolkit for Paper servers: selections, shapes, 25+ brushes, persistent undo, shared kits, and a 15-page in-game guide.

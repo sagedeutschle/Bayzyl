@@ -21,12 +21,14 @@ Nineteen classic games and three live-data lenses in one app, each game with its
 
 ## facts
 - Games: 19 + 3 lenses
-- Platforms: iOS 17 · iPadOS · macOS
+- Platforms: iPhone · iPad · Mac · Watch
 - Codebase: ≈81k lines Swift + Python
 - Tests: ≈640 Swift · 237 Python
 
 ## highlights
 - Shipped v1.0 to the App Store; v1.1 rebrand submitted with saves and Game Center continuity preserved
+- A 3D Catan board, rendered in its meadow theme
 - Daily Wordgame fed by a self-hosted endpoint on prismet.xyz
 - Light, parchment, and dark reading themes; sound and haptics on every move
+- Began as Chess Hotswap, built to hot-swap between 2D and 3D chess
 - Built with a team of AI agents under a written coordination protocol (see Agent Ops)

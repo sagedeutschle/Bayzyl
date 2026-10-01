@@ -8,7 +8,7 @@ PrismCode
 Mission control for Claude Code, Codex, and DeepSeek
 
 ## status
-Private build
+Building
 
 ## year
 2026
@@ -21,8 +21,9 @@ A desktop IDE where three coding agents work side by side over one workspace, ea
 
 ## facts
 - Agents: Claude Code · Codex · DeepSeek
+- Platform: Mac
+- Version: 0.1.0
 - Tests: 51 passing (Vitest)
-- Ships as: signed macOS app
 
 ## highlights
 - One adapter per agent, one AgentEvent contract: adding an agent needed no UI work

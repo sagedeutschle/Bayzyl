@@ -8,7 +8,7 @@ Bayzyl
 An in-game building toolkit for Paper servers
 
 ## status
-v0.1 · open source (MIT)
+Alpha · open source (MIT)
 
 ## year
 2026
@@ -23,7 +23,7 @@ Selections, shapes, brushes, clipboards, persistent undo, shared kits, and build
 - Commands: 99 top-level
 - Brushes: 25+ types
 - Help: 15-page in-game guide
-- License: MIT
+- Version: 0.1.0-alpha
 
 ## highlights
 - Per-player undo history that survives restarts, plus /oops to undo and tell the team

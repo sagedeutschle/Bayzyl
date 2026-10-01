@@ -44,3 +44,8 @@ for n in chronos cpu gpu reactor fleet net transit diskmap diskpie worldclock or
   convert "$HELM_SHOTS/org.helm.$n.png" -quality 88 "$OUT/helm/$n.webp"
 done
 echo "assets -> $OUT"; du -sh "$OUT"
+
+# Screenshots already published on the live prismet.xyz (/shots/*-full.webp), resized for the redesign.
+# for n in $(curl -s https://prismet.xyz | grep -oE '/shots/[a-z0-9-]+-full\.webp' | sort -u); do
+#   curl -s "https://prismet.xyz$n" -o /tmp/s.webp && convert /tmp/s.webp -resize '1440x1440>' -quality 82 "$OUT/live/$(basename "$n" -full.webp).webp"
+# done

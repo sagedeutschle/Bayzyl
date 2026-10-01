@@ -47,13 +47,13 @@ See the work
 Hire me on Fiverr
 
 ## beam.desktop
-Desktop & Linux
+Desktop & Systems
 
 ## beam.apps
 Apps & Games
 
 ## beam.worlds
-Game Worlds
+Game Worlds & Mods
 
 ## beam.minecraft
 Minecraft
