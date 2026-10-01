@@ -83,20 +83,28 @@
           "href": "https://apps.apple.com/us/app/kaleidescope/id6785993194"
         }
       ],
-      "cover": "assets/prismet/store-01_home.webp",
+      "cover": "assets/live/prismet-5.webp",
       "gallery": [
-        "assets/prismet/store-01_home.webp",
-        "assets/prismet/store-03_chess.webp",
-        "assets/prismet/store-04_seabattle.webp",
-        "assets/prismet/store-02_wordgame.webp",
-        "assets/prismet/store-05_2048.webp",
-        "assets/prismet/store-06_solitaire.webp",
-        "assets/prismet/store-07_sudoku.webp",
-        "assets/live/prismet-5.webp"
+        "assets/prismet/raw-home.webp",
+        "assets/prismet/iphone-chess.webp",
+        "assets/prismet/iphone-seabattle.webp",
+        "assets/live/prismet-5.webp",
+        "assets/prismet/iphone-sudoku.webp",
+        "assets/prismet/raw-checkers.webp",
+        "assets/prismet/iphone-solitaire.webp"
       ],
       "fiverrGig": "ios-app",
       "wideCover": "assets/live/prismet-5.webp",
-      "wide": true
+      "wide": true,
+      "shotAlts": [
+        "The Prismet home screen on iPhone: a dark grid of game tiles with Wordgame under Daily, and 2048, Snake, Minesweeper and Sudoku under Puzzles.",
+        "Chess on iPhone against Stockfish at about 1,200 Elo, with the pieces in their starting position, four board colour swatches, a 2D and 3D switch and an opponent difficulty slider.",
+        "Sea Battle fleet placement on iPhone: an empty ten-by-ten grid with Horizontal and Vertical, Auto, Clear and Begin buttons and Easy, Normal and Hard difficulty.",
+        "A 3D Catan board in the meadow theme: hexagonal terrain tiles with numbered tokens, settlements, roads and the robber on an island surrounded by water.",
+        "Sudoku on iPhone: the Daily Grid, Easy edition, with 30 of 81 cells filled, a number pad, and New Edition and Clear Sheet buttons.",
+        "Checkers on iPhone at the start of a game: a red and black board with red and black pieces, vs AI and 2 Player options, and an opponent difficulty slider.",
+        "Solitaire on iPhone: a green table dealt with seven columns, the stock pile and four empty foundations, with Draw, Collect and New Game buttons."
+      ]
     },
     {
       "slug": "the-helm",
@@ -111,21 +119,36 @@
       "links": [],
       "cover": "assets/helm/chronos.webp",
       "gallery": [
-        "assets/live/helm-1.webp",
-        "assets/live/helm-2.webp",
-        "assets/live/helm-3.webp",
         "assets/helm/chronos.webp",
         "assets/helm/cpu.webp",
         "assets/helm/gpu.webp",
+        "assets/helm/net.webp",
+        "assets/helm/diskmap.webp",
         "assets/helm/reactor.webp",
-        "assets/helm/fleet.webp",
+        "assets/helm/qlora.webp",
         "assets/helm/transit.webp",
         "assets/helm/worldclock.webp",
-        "assets/helm/orbital.webp"
+        "assets/helm/theme.webp",
+        "assets/helm/bridge.webp",
+        "assets/helm/breakout.webp"
       ],
       "fiverrGig": "linux-desktop",
       "wideCover": "assets/helm/worldclock.webp",
-      "wide": true
+      "wide": true,
+      "shotAlts": [
+        "Helm's Chronos clock face: a large digital time readout with red seconds, a tick scale, the date, system uptime and kernel version.",
+        "Helm's Core Matrix face for a Ryzen 7900X, with 34 percent aggregate load, temperature, clock speed and a grid of 24 per-thread load tiles.",
+        "Helm's GPU Core face for an RTX 3080, with load, temperature and power readouts, a pixel-grid utilization history, and VRAM and disk usage bars.",
+        "Helm's Datalink face for the wlan2 interface, with downlink and uplink speeds, a two-minute throughput graph and session totals.",
+        "Helm's Volumes storage array face listing four mounts with usage bars, with the root volume flagged critical at 98 percent.",
+        "Helm's Reactor Core face: a red turbine dial with an output reading of 42 percent and a flux reading of 5362 rpm.",
+        "Helm's QLoRA Centrifuge face, a training monitor styled as a washing machine, with a porthole drum, idle cycle readouts and an empty loss graph.",
+        "Helm's Transit face listing scheduled jobs as departures, each with a last-run time and a countdown timer.",
+        "Helm's Meridian world clock face, with a timeline strip above a grid of 17 city clocks and their UTC offsets.",
+        "Helm's Chroma accent face with seven color swatches, from crimson to bone, that repaint every panel.",
+        "Helm's Bridge control face with buttons to move, place and snap widgets, six saved layouts, a city reseed, a palette switch and a region screenshot.",
+        "Helm's Hull Breach arcade face, a Breakout game with rows of red bricks, a blue paddle and a score and hull counter, waiting to start."
+      ]
     },
     {
       "slug": "bayzyl",
@@ -189,14 +212,20 @@
         "SQLite"
       ],
       "links": [],
-      "cover": "assets/live/prismcode-1.webp",
+      "cover": "assets/ai/prismcode-three-agents.webp",
       "gallery": [
-        "assets/live/prismcode-1.webp",
+        "assets/ai/prismcode-three-agents.webp",
+        "assets/ai/prismcode-prism-compare.webp",
+        "assets/ai/prismcode-sessions.webp",
+        "assets/ai/prismcode-usage.webp",
         "assets/icons/prismcode.webp"
       ],
       "fiverrGig": "ai-agents",
       "shotAlts": [
-        "PrismCode's Mission Control on a fresh launch, offering to add a DeepSeek, Claude, or Codex pane, with a file sidebar and a prompt bar across the bottom.",
+        "PrismCode's Mission Control running Claude, Codex and DeepSeek panes side by side on one task, with a file sidebar, a Codex pane waiting for approval, and a shared prompt bar.",
+        "The PRISM A/B compare view with Claude's and Codex's diffs for the same prompt shown side by side, plus Apply Claude, Apply Codex, Keep both and Discard buttons.",
+        "PrismCode's session history sidebar listing four finished sessions with cost and a Resume button, next to a git diff of index.html.",
+        "PrismCode's usage overview table with live cost, token counts, historical and total spend for six Claude, Codex and DeepSeek accounts.",
         "PrismCode app icon"
       ]
     },
@@ -217,11 +246,19 @@
       "cover": "assets/live/steam-rewind-1.webp",
       "gallery": [
         "assets/live/steam-rewind-1.webp",
-        "assets/live/steam-rewind-2.webp"
+        "assets/live/steam-rewind-2.webp",
+        "assets/web/steam-rewind-lens-metacritic.webp",
+        "assets/web/steam-rewind-lens-deck-time.webp",
+        "assets/web/steam-rewind-lens-genres.webp",
+        "assets/web/steam-rewind-phone-backlog.webp"
       ],
       "shotAlts": [
         "Steam Rewind's most-played lens over the demo fixture, listing games with hours played, price, and Deck time.",
-        "The same library re-sorted by the cost-per-hour lens."
+        "The same library re-sorted by the cost-per-hour lens.",
+        "The Highest Metacritic lens on the demo library, ranking games by score with Outer Wilds first at 92 percent.",
+        "The Longest Deck time lens on the demo library, ranking games by hours played on Steam Deck with Cult of the Lamb first at 12 hours.",
+        "The Genre bucket lens on the demo library, grouping games by genre with the Action titles Hades, Titanfall 2 and Hollow Moon listed first.",
+        "Steam Rewind on a phone showing the Backlog of shame lens, with the search form stacked above the first game card, Celeste, scored 79.17."
       ],
       "fiverrGig": null
     },
@@ -240,10 +277,14 @@
       ],
       "cover": "assets/live/debt-clock-1.webp",
       "gallery": [
-        "assets/live/debt-clock-1.webp"
+        "assets/live/debt-clock-1.webp",
+        "assets/web/debt-clock-light-desktop.webp",
+        "assets/web/debt-clock-dark-phone.webp"
       ],
       "shotAlts": [
-        "The debt clock showing the gross U.S. national debt in large green figures, with a spoken-value button, a pause-motion button, and per-citizen and per-taxpayer cards below."
+        "The debt clock showing the gross U.S. national debt in large green figures, with a spoken-value button, a pause-motion button, and per-citizen and per-taxpayer cards below.",
+        "The same page in the light theme, with dark green figures on white cards and the Read current values and Pause motion buttons above the gross debt figure.",
+        "The Debt Clock on a phone in the dark theme, with the two buttons stacked above the gross debt figure and the Debt per Citizen card."
       ],
       "fiverrGig": null
     },
@@ -322,12 +363,22 @@
       ],
       "cover": "assets/web/qr-homescreen-filled-desktop-mock.webp",
       "gallery": [
-        "assets/web/qr-homescreen-filled-desktop-mock.webp",
-        "assets/web/qr-scanner-desktop.webp",
+        "assets/web/qr-scanner-detected-desktop.webp",
+        "assets/web/qr-scanner-detected-phone.webp",
+        "assets/web/qr-homescreen-filled-desktop.webp",
+        "assets/web/qr-homescreen-filled-phone.webp",
         "assets/web/qr-organize-desktop.webp",
         "assets/web/qr-playlist-desktop.webp"
       ],
-      "fiverrGig": "web-tool"
+      "fiverrGig": "web-tool",
+      "shotAlts": [
+        "The QR Scanner on desktop after detecting a QR code from a test camera feed, with a green frame around the code and the status line reading QR code detected.",
+        "The QR Scanner on a phone after detecting a QR code, with the decoded text https://prismet.xyz in a field next to a Copy button.",
+        "The Home Screen Planner on desktop, with a list of apps tagged by folder and a live phone mockup showing them sorted into verb-named folders such as Watch, Listen and Pay.",
+        "The Home Screen Planner on a phone, showing the sorted home screen mockup with wallpaper choices and a widget-row checkbox below it.",
+        "The Phone Declutter checklist on desktop, showing 0 of 46 tasks done, All tips, iPhone and Android tabs, and the Quick wins and Home screen groups.",
+        "The Playlist Maker setup screen, with fields for an Apple Developer Team ID, Key ID and private key above a Save and continue button."
+      ]
     },
     {
       "slug": "civ5-mod-profiles",
@@ -410,7 +461,10 @@
       "gallery": [
         "assets/icons/quark.webp"
       ],
-      "fiverrGig": null
+      "fiverrGig": null,
+      "shotAlts": [
+        "Quark app icon: a glowing blue and purple atom with three orbiting nodes on a dark rounded square."
+      ]
     },
     {
       "slug": "airhorn",

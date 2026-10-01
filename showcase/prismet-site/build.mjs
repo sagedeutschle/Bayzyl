@@ -164,8 +164,9 @@ function media(p) {
   const g = (p.gallery || []).map(asset);
   if (p.slug === 'prismet-app') return `<div class="phones">${[g[2], g[0], g[1]].map((s) => `<img src="${s}" alt="" loading="lazy">`).join('')}</div>`;
   if (p.slug === 'the-helm') {
-    const phone = asset('assets/live/helm-1.webp'), faces = ['chronos', 'gpu'].map((n) => asset(`assets/helm/${n}.webp`));
-    return `<div class="helmmix"><img class="phone" src="${phone}" alt="" loading="lazy"><div>${faces.map((x) => `<img src="${x}" alt="" loading="lazy">`).join('')}</div></div>`;
+    // Widget faces only: the iPhone remote captures show host and server names.
+    const faces = ['chronos', 'gpu', 'cpu', 'net'].map((n) => asset(`assets/helm/${n}.webp`));
+    return `<div class="collage">${faces.map((x) => `<img src="${x}" alt="" loading="lazy">`).join('')}</div>`;
   }
   if (!p.cover) return `<div class="placeholder"><strong aria-hidden="true">${inline(work(p.slug, 'title'))}</strong></div>`;
   if (p.cover.includes('/icons/')) return `<img class="icon" src="${asset(p.cover)}" alt="">`;
@@ -173,7 +174,7 @@ function media(p) {
 }
 const mediaAlt = (p) => ({
   'prismet-app': 'Prismet App Store screenshots: Sea Battle, the home screen, and Chess',
-  'the-helm': 'Helm on iPhone next to three desktop widgets rendered from source: clock, GPU telemetry, and fleet radar',
+  'the-helm': 'Four Helm desktop widgets rendered from source: clock, GPU telemetry, CPU threads, and network throughput',
 }[p.slug] || plain(work(p.slug, 'title')));
 
 // ── layout (projects.json → layout, featuredOrder, per-project wide/hidden) ─────────────────
