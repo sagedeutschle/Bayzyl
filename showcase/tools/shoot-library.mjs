@@ -17,7 +17,7 @@ async function shot(url, name, { w = 1440, h = 900, dpr = 2, scheme = 'dark', fu
 }
 const demo = async (p) => { await p.click('#reset'); await p.waitForTimeout(800); };
 const lens = (v) => async (p) => { await demo(p); await p.selectOption('#lens', { index: v }); await p.waitForTimeout(600); };
-// live tools (same Fly app as prismet.xyz; the .fly.dev host avoids custom-domain proxy rules) (Steam Rewind uses its built-in demo fixture, no real account)
+// live tools (the Fly app behind prismet.xyz; Steam Rewind uses its built-in demo fixture, no real account)
 await shot('https://prismet-site-restless-horizon-217.fly.dev/steam', 'steam-rewind-desktop', { before: demo });
 await shot('https://prismet-site-restless-horizon-217.fly.dev/steam', 'steam-rewind-desktop-lens2', { before: lens(1) });
 await shot('https://prismet-site-restless-horizon-217.fly.dev/steam', 'steam-rewind-phone', { w: 390, h: 844, dpr: 3, before: demo });
