@@ -76,7 +76,7 @@ pages:
     - "&fDefaults to the direction you are facing."
     - "&6/clipboard info &f- Gives you the LxWxH and the location of the origin."
   8:
-    - "&a&lFlags &f& %aAnchors &6| Page 8/15"
+    - "&a&lFlags &f& &aAnchors &6| Page 8/15"
     - "&bFlags are short adjectives you can apply to commands to change how they behave."
     - "&bExample: &6/paste -a rotation:90"
     - "&fPaste while skipping air blocks and rotate 90 degrees."

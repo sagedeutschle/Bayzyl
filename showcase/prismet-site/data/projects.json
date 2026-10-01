@@ -1,0 +1,314 @@
+{
+  "_readme": "Single source of truth for prismet.xyz's work index AND the Fiverr portfolio. Add a project = add an object to `projects`. Image paths are relative to showcase/ (the build copies showcase/assets into the site). Fields marked TODO need Sage's input.",
+  "owner": {
+    "name": "Sage Deutschle",
+    "handle": "gtrktscrb",
+    "site": "https://prismet.xyz",
+    "github": "https://github.com/sagedeutschle",
+    "linkedin": "https://www.linkedin.com/in/sagedeutschle",
+    "fiverr": "https://www.fiverr.com/bayzyl"
+  },
+  "beams": [
+    { "id": "apps",      "label": "Apps & Games",       "short": "Apps",      "hue": "#E68C33", "blurb": "SwiftUI apps and games for iPhone, iPad, and Mac." },
+    { "id": "minecraft", "label": "Minecraft",          "short": "Minecraft", "hue": "#4D8C6B", "blurb": "Paper plugins and multi-server networks." },
+    { "id": "worlds",    "label": "Game Worlds",        "short": "Worlds",    "hue": "#CCA838", "blurb": "Maps, scenarios, and playable places." },
+    { "id": "web",       "label": "Web Tools & Data",   "short": "Web",       "hue": "#3D75A8", "blurb": "Small, private, fast tools and live-data pages." },
+    { "id": "ai",        "label": "AI & Agents",        "short": "AI",        "hue": "#75579E", "blurb": "Multi-agent coding systems and LLM experiments." },
+    { "id": "desktop",   "label": "Desktop & Linux",    "short": "Desktop",   "hue": "#DB4757", "blurb": "Custom desktops, widgets, and native-feeling apps." }
+  ],
+  "lenses": [
+    { "id": "steam-rewind", "label": "Steam Rewind", "href": "/steam-rewind", "blurb": "Explore a Steam library: playtime, eras, and the games you forgot you own.", "todo": "Confirm the live route on the Fly app" },
+    { "id": "debt-clock", "label": "Debt Clock", "href": "/debt-clock", "blurb": "The U.S. national debt from Treasury data, ticking live.", "todo": "Confirm the live route on the Fly app" },
+    { "id": "wordgame-api", "label": "Wordgame daily feed", "href": "/api/wordle", "blurb": "The JSON endpoint the Prismet apps read every morning.", "kind": "api" }
+  ],
+  "projects": [
+    {
+      "slug": "prismet-app",
+      "title": "Prismet",
+      "subtitle": "A calm home for classic games, on iPhone, iPad, and Mac",
+      "beam": "apps",
+      "featured": true,
+      "status": "Live on the App Store",
+      "year": "2026",
+      "role": "Product, design, iOS + macOS engineering, release",
+      "stack": ["SwiftUI", "SceneKit", "Game Center", "Supabase", "XcodeGen", "Python"],
+      "summary": "Nineteen classic games and three live-data lenses in one app, each game with its own hand-built look. Chess plays a tunable Stockfish engine in 2D or 3D, the Rubik's Cube is a real SceneKit cube, and friends can play Sea Battle, Checkers, Reversi, Connect Four, and Gomoku online. The Mac app ships at feature parity with iOS.",
+      "facts": [
+        ["Games", "19 + 3 lenses"],
+        ["Platforms", "iOS 17 · iPadOS · macOS"],
+        ["Codebase", "≈81k lines Swift + Python"],
+        ["Tests", "≈640 Swift · 237 Python"]
+      ],
+      "highlights": [
+        "Shipped v1.0 to the App Store; v1.1 rebrand submitted with saves and Game Center continuity preserved",
+        "Daily Wordgame fed by a self-hosted endpoint on prismet.xyz",
+        "Light, parchment, and dark reading themes; sound and haptics on every move",
+        "Built with a team of AI agents under a written coordination protocol (see Agent Ops)"
+      ],
+      "links": [
+        { "label": "App Store", "href": "https://apps.apple.com/us/app/kaleidescope/id6785993194" }
+      ],
+      "cover": "assets/prismet/store-01_home.webp",
+      "gallery": [
+        "assets/prismet/store-01_home.webp",
+        "assets/prismet/store-03_chess.webp",
+        "assets/prismet/store-04_seabattle.webp",
+        "assets/prismet/store-02_wordgame.webp",
+        "assets/prismet/store-05_2048.webp",
+        "assets/prismet/store-06_solitaire.webp",
+        "assets/prismet/store-07_sudoku.webp"
+      ],
+      "fiverrGig": "ios-app"
+    },
+    {
+      "slug": "wizard-kings-decree",
+      "title": "The Wizard King's Decree",
+      "subtitle": "Can chat models call the news before it happens?",
+      "beam": "ai",
+      "featured": false,
+      "status": "Running daily",
+      "year": "2026",
+      "role": "Design + engineering",
+      "stack": ["Python", "Claude", "GPT", "Gemini", "SQLite"],
+      "summary": "A council of two chat models must agree on a no-hedge prophecy about upcoming news. A separate, search-grounded Court Historian grades each decree against reality with at least two independent sources, and wrong calls trigger public corrections on an escalating ladder. Under the robes it is an auditable forecasting experiment with hit rates, bootstrap confidence intervals, and calibration.",
+      "facts": [
+        ["Models", "Claude + GPT council, Gemini judge"],
+        ["Tests", "237, fully offline"],
+        ["Output", "decrees.json → Prismet's Oracle lens"]
+      ],
+      "highlights": [
+        "Every SDK, clock, and network call sits behind an injectable seam, so the whole suite runs with no keys and no network",
+        "Append-only rulings and corrections in SQLite",
+        "Static-site chronicle generated with the standard library only"
+      ],
+      "links": [],
+      "cover": "assets/prismet/tiles/oracle.webp",
+      "gallery": ["assets/prismet/tiles/oracle.webp"],
+      "fiverrGig": "ai-agents"
+    },
+    {
+      "slug": "bayzyl",
+      "title": "Bayzyl",
+      "subtitle": "An in-game building toolkit for Paper servers",
+      "beam": "minecraft",
+      "featured": true,
+      "status": "v0.1 · open source (MIT)",
+      "year": "2026",
+      "role": "Author",
+      "stack": ["Java 21", "Paper 1.21", "Gradle", "FAWE-aware"],
+      "summary": "Selections, shapes, brushes, clipboards, persistent undo, shared kits, and builder profiles, in one consistent command set. Every option uses option:value syntax, tab-completion knows about masks and block distributions, and big edits ask for confirmation first. It runs alongside WorldEdit and FastAsyncWorldEdit, and falls back to its own implementations when neither is installed.",
+      "facts": [
+        ["Commands", "99 top-level"],
+        ["Brushes", "25+ types"],
+        ["Help", "15-page in-game guide"],
+        ["License", "MIT"]
+      ],
+      "highlights": [
+        "Per-player undo history that survives restarts, plus /oops to undo and tell the team",
+        "Shared builder kits with themes, icons, aliases, and notes",
+        "Formula-driven /generate and /generatebiome",
+        "Quality-of-life tools: ghost hand, auto-unstick, ruler, surface/ascend/descend"
+      ],
+      "links": [
+        { "label": "GitHub", "href": "https://github.com/sagedeutschle/Bayzyl" }
+      ],
+      "cover": "fiverr/out/portfolio-bayzyl-help.png",
+      "gallery": ["fiverr/out/portfolio-bayzyl-help.png", "fiverr/out/portfolio-bayzyl-commands.png"],
+      "fiverrGig": "mc-plugin"
+    },
+    {
+      "slug": "minecraft-network",
+      "title": "Minecraft server network",
+      "subtitle": "A Velocity proxy, Dockerized Paper backends, and one admin command",
+      "beam": "minecraft",
+      "featured": false,
+      "status": "In production",
+      "year": "2026",
+      "role": "Design, setup, operations",
+      "stack": ["Velocity", "Paper", "Docker", "LibertyBans", "Multiverse", "Bash"],
+      "summary": "A multi-server network: a Velocity proxy handles login, whitelisting, and network-wide bans, while containerized Paper backends run a multi-world survival server and a public hub. A single mc-admin command routes every task to the layer where it belongs, so an IP ban never lands on a backend and locks out the proxy.",
+      "facts": [
+        ["Proxy", "Velocity + LibertyBans + whitelist gate"],
+        ["Backends", "2 Paper servers in Docker"],
+        ["Ops", "one CLI for whitelist, bans, ops, gamerules, RCON"]
+      ],
+      "highlights": [
+        "Whitelist by Mojang UUID, resolved automatically from a player name",
+        "Per-world gamerules through Multiverse",
+        "Escape hatches straight to the proxy console or backend RCON"
+      ],
+      "links": [],
+      "cover": "fiverr/out/portfolio-mc-network.png",
+      "gallery": ["fiverr/out/portfolio-mc-network.png"],
+      "fiverrGig": "mc-server"
+    },
+    {
+      "slug": "westeros-uebs2",
+      "title": "Westeros for UEBS 2",
+      "subtitle": "A Westeros battle map for Ultimate Epic Battle Simulator 2",
+      "beam": "worlds",
+      "featured": true,
+      "status": "TODO: Workshop status",
+      "year": "TODO",
+      "role": "Map design",
+      "stack": ["UEBS 2 map editor"],
+      "summary": "TODO: two or three sentences from Sage on scale, landmarks, and how it plays. Add Workshop link and 3–6 screenshots to showcase/assets/worlds/.",
+      "facts": [["Game", "Ultimate Epic Battle Simulator 2"]],
+      "highlights": [],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "todo": true,
+      "fiverrGig": null
+    },
+    {
+      "slug": "qr-tools",
+      "title": "QR Scanner & pocket tools",
+      "subtitle": "One-file web tools that never phone home",
+      "beam": "web",
+      "featured": false,
+      "status": "Live on GitHub Pages",
+      "year": "2026",
+      "role": "Author",
+      "stack": ["HTML", "CSS", "JavaScript", "BarcodeDetector", "MusicKit JS"],
+      "summary": "A QR scanner that runs from a single HTML file with no backend and no build step, plus three siblings: a phone declutter checklist with 46 tasks across 11 zones, a home-screen planner that sorts 300+ apps into verb-named folders on a live phone mockup, and an Apple Music playlist maker built on your real listening history.",
+      "facts": [
+        ["Tools", "4, each one HTML file"],
+        ["Backend", "none, works offline"],
+        ["Apps catalog", "300+"]
+      ],
+      "highlights": [
+        "Native BarcodeDetector first, vendored jsQR fallback everywhere else",
+        "Progress and plans saved on-device only"
+      ],
+      "links": [
+        { "label": "Live demo", "href": "https://sagedeutschle.github.io/qr-scanner/" },
+        { "label": "GitHub", "href": "https://github.com/sagedeutschle/qr-scanner" }
+      ],
+      "cover": "assets/web/qr-homescreen-filled-desktop-mock.webp",
+      "gallery": [
+        "assets/web/qr-homescreen-filled-desktop-mock.webp",
+        "assets/web/qr-scanner-desktop.webp",
+        "assets/web/qr-organize-desktop.webp",
+        "assets/web/qr-playlist-desktop.webp"
+      ],
+      "fiverrGig": "web-tool"
+    },
+    {
+      "slug": "lenses",
+      "title": "Steam Rewind & Debt Clock",
+      "subtitle": "Live-data lenses on the web and in the app",
+      "beam": "web",
+      "featured": false,
+      "status": "Live on prismet.xyz",
+      "year": "2026",
+      "role": "Design + engineering",
+      "stack": ["Fly.io", "Treasury Fiscal Data API", "Steam Web API", "SwiftUI"],
+      "summary": "Two lenses that started in the Prismet app and now live on prismet.xyz. Steam Rewind reads a Steam library and turns playtime into a story. The Debt Clock ticks the U.S. national debt from Treasury data, with a smoothed growth rate and a live up/down banner.",
+      "facts": [["Hosting", "Fly.io"], ["Data", "Treasury + Steam Web API"]],
+      "highlights": ["Same engine on iOS, macOS, and the web"],
+      "links": [{ "label": "Open on prismet.xyz", "href": "/" }],
+      "cover": "assets/prismet/tiles/debtclock.webp",
+      "gallery": ["assets/prismet/tiles/steamrewind.webp", "assets/prismet/tiles/debtclock.webp"],
+      "fiverrGig": "web-tool"
+    },
+    {
+      "slug": "prismcode",
+      "title": "PrismCode",
+      "subtitle": "Mission control for Claude Code, Codex, and DeepSeek",
+      "beam": "ai",
+      "featured": true,
+      "status": "Private build",
+      "year": "2026",
+      "role": "Design + engineering",
+      "stack": ["Electron", "React", "TypeScript", "Monaco", "xterm.js", "SQLite"],
+      "summary": "A desktop IDE where three coding agents work side by side over one workspace, each normalized into a single event stream. PRISM A/B races Claude against Codex on the same prompt in separate git worktrees, then diffs the results so you keep the winner. Sessions resume, accounts hot-swap, and a usage tracker shows spend per account.",
+      "facts": [
+        ["Agents", "Claude Code · Codex · DeepSeek"],
+        ["Tests", "51 passing (Vitest)"],
+        ["Ships as", "signed macOS app"]
+      ],
+      "highlights": [
+        "One adapter per agent, one AgentEvent contract: adding an agent needed no UI work",
+        "Git worktree racing with compare, apply-winner, and keep-both",
+        "Zero-token dev loop with a mock agent"
+      ],
+      "links": [],
+      "cover": "assets/icons/prismcode.webp",
+      "gallery": ["assets/icons/prismcode.webp"],
+      "fiverrGig": "ai-agents"
+    },
+    {
+      "slug": "agent-ops",
+      "title": "Agent Ops",
+      "subtitle": "How a family ships software with a team of AI agents",
+      "beam": "ai",
+      "featured": false,
+      "status": "In daily use",
+      "year": "2026",
+      "role": "Process design",
+      "stack": ["Claude Code", "Codex", "AGENTS.md", "git worktrees"],
+      "summary": "A written contract every agent reads first: who owns which lane, how to claim files in a shared ledger, how to sync through git, and which build rules are non-negotiable. It let several Claude and Codex agents, run by two people, ship an App Store release without trampling each other's work.",
+      "facts": [["Agents", "Claude, Fable, Codex"], ["Humans", "2"]],
+      "highlights": ["Lane claims and releases logged in a coordination ledger", "Release gates tracked in one file"],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "todo": "Pull specifics from CLAUDE-OPERATIONS-HANDOFF.md",
+      "fiverrGig": "ai-agents"
+    },
+    {
+      "slug": "the-helm",
+      "title": "THE HELM",
+      "subtitle": "A red-on-black command bridge for a three-monitor Linux desktop",
+      "beam": "desktop",
+      "featured": true,
+      "status": "Daily driver",
+      "year": "2026",
+      "role": "Design + engineering",
+      "stack": ["KDE Plasma 6", "QML", "JavaScript", "Bash", "Arch Linux"],
+      "summary": "A full desktop system built on KDE Plasma 6: 28 native QML widgets for telemetry, network, storage, and arcade games, fullscreen app overlays, floating toys, a live packet scope, and a widget locker that docks and deploys faces on command. One helm command drives everything, and a written design-language spec keeps every face consistent.",
+      "facts": [
+        ["Widgets", "28 QML faces"],
+        ["Monitors", "3"],
+        ["Install", "one command"]
+      ],
+      "highlights": [
+        "Faces render standalone with sample data, so every widget can be previewed and screenshotted headless",
+        "Shared chrome and palette tokens synced into every widget",
+        "Arcade faces (Breakout, Minesweeper, Snake, Orbital Defense) next to CPU, GPU, and fleet telemetry"
+      ],
+      "links": [],
+      "cover": "assets/helm/chronos.webp",
+      "gallery": [
+        "assets/helm/chronos.webp",
+        "assets/helm/cpu.webp",
+        "assets/helm/gpu.webp",
+        "assets/helm/reactor.webp",
+        "assets/helm/fleet.webp",
+        "assets/helm/transit.webp",
+        "assets/helm/worldclock.webp",
+        "assets/helm/orbital.webp"
+      ],
+      "fiverrGig": "linux-desktop"
+    },
+    {
+      "slug": "quark",
+      "title": "Quark",
+      "subtitle": "A personal hub for mail, school, code, and files",
+      "beam": "desktop",
+      "featured": false,
+      "status": "Private build",
+      "year": "2026",
+      "role": "Design + engineering",
+      "stack": ["Electron", "JavaScript", "safeStorage"],
+      "summary": "One window with a tab strip for every service in a busy week, each tab in its own isolated session so sign-ins never collide. Sign-ins persist across restarts, saved credentials live in an OS-encrypted vault, and a built-in Files tab edits a shared local workspace.",
+      "facts": [["Tabs", "11 services"], ["Storage", "OS-encrypted vault"]],
+      "highlights": ["All views stay attached, so captchas and WebGL keep rendering when you switch tabs"],
+      "links": [],
+      "cover": "assets/icons/quark.webp",
+      "gallery": ["assets/icons/quark.webp"],
+      "fiverrGig": null
+    }
+  ]
+}

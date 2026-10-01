@@ -1,0 +1,111 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Prismet tiles</title><link rel="stylesheet" href="../../assets/fonts/fonts.css">
+<style>
+:root{
+  /* Prismet dark palette (from PrismetDesign.swift) + the six-hue wheel */
+  --ground:#10111A; --panel:#1B1D2A; --panelHi:#282B3C; --hair:rgba(255,255,255,.10); --outline:rgba(255,255,255,.18);
+  --ink:#F2F4FC; --ink2:rgba(242,244,252,.70); --ink3:rgba(242,244,252,.46);
+  --gold:#B88A33; --goldHi:#E2B65C;
+  --display:"Newsreader", "New York", Georgia, serif;
+  --body:"Hanken Grotesk", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1280px;height:769px;overflow:hidden;background:var(--ground);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+.frame{position:relative;width:1280px;height:769px;overflow:hidden;isolation:isolate}
+.frame::before{content:"";position:absolute;inset:0;z-index:-2;
+  background:radial-gradient(900px 620px at 0% 0%, color-mix(in srgb,var(--hue) 30%, transparent), transparent 70%),
+             radial-gradient(700px 520px at 100% 100%, color-mix(in srgb,var(--hue) 16%, transparent), transparent 70%)}
+.frame::after{content:"";position:absolute;inset:0;z-index:-1;opacity:.5;
+  background-image:radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);background-size:22px 22px;
+  mask-image:linear-gradient(90deg,#000 0,transparent 55%)}
+.left{position:absolute;left:64px;top:64px;bottom:104px;width:500px;display:flex;flex-direction:column;gap:22px}
+.eyebrow{font:600 15px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--goldHi);display:flex;align-items:center;gap:12px}
+.eyebrow i{display:inline-block;width:26px;height:3px;border-radius:2px;background:var(--hue)}
+h1{font:700 64px/1.02 var(--display);letter-spacing:-.015em;text-wrap:balance;font-variation-settings:"opsz" 72}
+h1 em{font-style:normal;color:var(--hueTxt)}
+.lede{font:500 21px/1.42 var(--body);color:var(--ink2);max-width:470px;text-wrap:pretty}
+.chips{display:flex;flex-direction:column;gap:10px;margin-top:auto}
+.chip{display:flex;align-items:center;gap:12px;font:600 19px/1.25 var(--body);color:var(--ink)}
+.chip b{flex:none;width:10px;height:10px;border-radius:50%;background:var(--hue);box-shadow:0 0 0 4px color-mix(in srgb,var(--hue) 25%, transparent)}
+.foot{position:absolute;left:64px;right:64px;bottom:26px;display:flex;align-items:center;justify-content:space-between;
+  font:500 14px/1 var(--mono);color:var(--ink3);letter-spacing:.04em}
+.foot .brand{display:flex;align-items:center;gap:10px;color:var(--ink2)}
+.foot .brand strong{font:700 17px/1 var(--display);letter-spacing:.01em;color:var(--ink)}
+.right{position:absolute;top:0;right:0;bottom:0;left:600px}
+.label{font:600 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+.card{background:var(--panel);border:1px solid var(--outline);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.45)}
+.shot{border-radius:22px;box-shadow:0 30px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.08)}
+/* Minecraft chat (Bayzyl) */
+.mc{font-family:"Pixelify Sans", var(--mono);font-size:21px;line-height:1.38;background:rgba(0,0,0,.62);padding:14px 18px;border-radius:4px;
+  text-shadow:2px 2px 0 rgba(0,0,0,.55);box-shadow:0 30px 70px rgba(0,0,0,.5)}
+.mc .l{white-space:pre-wrap}
+.mc .b{font-weight:600}
+/* terminal */
+.term{font:500 15px/1.6 var(--mono);color:#D7DBEA;background:#0B0C12;border:1px solid var(--outline);border-radius:14px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.55)}
+.term .bar{display:flex;gap:7px;align-items:center;padding:11px 14px;background:#151722;border-bottom:1px solid var(--hair)}
+.term .bar i{width:11px;height:11px;border-radius:50%;background:#3A3D4F}
+.term .bar span{margin-left:10px;font-size:12px;color:var(--ink3);letter-spacing:.06em}
+.term pre{padding:16px 18px;font:inherit;white-space:pre}
+.term .c{color:#6E748C} .term .p{color:var(--hueTxt)} .term .k{color:var(--goldHi)}
+/* diagram boxes */
+.node{position:absolute;padding:14px 16px;border-radius:14px;background:var(--panel);border:1px solid var(--outline);font:600 17px/1.25 var(--body)}
+.node small{display:block;margin-top:6px;font:500 13px/1.35 var(--mono);color:var(--ink3);letter-spacing:.02em}
+.node.hot{border-color:color-mix(in srgb,var(--hue) 70%, white 10%);box-shadow:0 0 0 4px color-mix(in srgb,var(--hue) 22%, transparent), 0 20px 50px rgba(0,0,0,.45)}
+svg.wires{position:absolute;inset:0;overflow:visible}
+.tag{position:absolute;font:600 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+</style></head><body><div class="frame" style="--hue:#E68C33;--hueTxt:#F2A55A">
+    <div style="position:absolute;left:64px;top:56px"><div class="eyebrow"><i></i>Prismet · game tiles</div><h1 style="font-size:52px;margin-top:14px">19 games, 3 live lenses</h1></div>
+    <p class="lede" style="position:absolute;left:64px;top:610px;max-width:900px">Every tile is drawn for the app, so each game gets its own look on the home screen.</p>
+    <div style="position:absolute;left:64px;right:64px;top:232px;display:grid;grid-template-columns:repeat(11,1fr);gap:40px 14px">
+      <figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/wordle.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Wordgame</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/2048.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">2048</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/snake.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Snake</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/minesweeper.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Minesweeper</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/sudoku.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Sudoku</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/rubiks.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Rubik's</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/lightsout.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Lights Out</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/sliding.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Sliding</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/nonogram.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Nonogram</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/chess.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Chess</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/reversi.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Reversi</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/checkers.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Checkers</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/connectfour.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Connect 4</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/gomoku.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Gomoku</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/seabattle.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Sea Battle</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/solitaire.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Solitaire</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/spider.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Spider</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/crazyeight.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Crazy 8</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/brickbench.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Brick Bench</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/oracle.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Oracle</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/debtclock.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Debt Clock</figcaption></figure><figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
+        <img src="../../assets/prismet/tiles/steamrewind.webp" style="width:98px;border-radius:22px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+        <figcaption style="font:600 14px/1.1 var(--body);color:var(--ink2);text-align:center">Steam Rewind</figcaption></figure>
+    </div><div class="foot"><div class="brand">
+<svg width="30" height="30" viewBox="0 0 64 64" aria-hidden="true">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4D77E"/><stop offset=".55" stop-color="#D8A53B"/><stop offset="1" stop-color="#9A6E22"/></linearGradient></defs>
+  <path d="M28.2 15.4 L32.0 3.0 L35.8 15.4Z" fill="#DB4757" opacity=".9"/><path d="M44.4 20.4 L57.1 17.5 L48.3 27.0Z" fill="#E68C33" opacity=".9"/><path d="M48.3 37.0 L57.1 46.5 L44.4 43.6Z" fill="#CCA838" opacity=".9"/><path d="M35.8 48.6 L32.0 61.0 L28.2 48.6Z" fill="#4D8C6B" opacity=".9"/><path d="M19.6 43.6 L6.9 46.5 L15.7 37.0Z" fill="#3D75A8" opacity=".9"/><path d="M15.7 27.0 L6.9 17.5 L19.6 20.4Z" fill="#75579E" opacity=".9"/>
+  <circle cx="32" cy="32" r="17" fill="#141331" stroke="url(#g)" stroke-width="3"/>
+  <path d="M32 22 L41 38 L23 38 Z" fill="none" stroke="url(#g)" stroke-width="2.4" stroke-linejoin="round"/>
+</svg><strong>Sage Deutschle</strong></div><div>icons drawn for the app</div></div></div></body></html>
