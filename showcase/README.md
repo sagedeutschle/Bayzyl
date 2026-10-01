@@ -9,6 +9,7 @@ qr-scanner, PrismCode, THE HELM, Quark). Nothing is a mockup pretending to be a 
 | [`fiverr/out/`](fiverr/out/) | 6 gig covers, 10 portfolio boards, 1 LinkedIn banner (2560×1538 PNG) |
 | [`fiverr/gigs.json`](fiverr/gigs.json) | Source for the kit; `node showcase/fiverr/kit.mjs` validates it against Fiverr's limits |
 | [`fiverr/render.mjs`](fiverr/render.mjs) | Renders every image from HTML templates with Playwright |
+| [`fiverr/screenshots/`](fiverr/screenshots/) | Real screenshots grouped by gig; `00-fiverr-ready/` is sized for upload |
 | [`prismet-site/REDESIGN-PLAN.md`](prismet-site/REDESIGN-PLAN.md) | The facelift plan: structure, design system, how to deploy on Fly safely |
 | [`prismet-site/data/projects.json`](prismet-site/data/projects.json) | One project catalog for the site and the Fiverr portfolio |
 | [`prismet-site/build.mjs`](prismet-site/build.mjs) | Builds the static site into `prismet-site/dist/` (`--preview` adds the Edit page mode) |
@@ -38,6 +39,8 @@ QML_IMPORT_PATH=showcase/tools/qmlstub python render-helm-faces.py <out-dir> ~/h
 ## Status (2026-10-01)
 
 **Done**
+- `fiverr/screenshots/`: 135 real screenshots grouped by gig, including 27 upload-ready 1280×769 versions
+  (`node showcase/fiverr/frame-screenshots.mjs`).
 - prismet.xyz redesign with all 20 live projects plus 5 new ones (25), real screenshots,
   Unbounded + Martian Mono type, light/dark, phone layout. Every word lives in `prismet-site/content/`.
 - Preview with **Edit page** mode (words + layout), saving to the preview's store:
@@ -49,11 +52,6 @@ QML_IMPORT_PATH=showcase/tools/qmlstub python render-helm-faces.py <out-dir> ~/h
 - Deploy to Fly (`prismet-site-restless-horizon-217`): needs `FLY_API_TOKEN` in the environment
   (new session). Inspect the running image first so `/steam`, `/debt`, `/api/wordle` keep working,
   and ask Sage before `fly deploy`. See `prismet-site/REDESIGN-PLAN.md`.
-- `fiverr/screenshots/`: a folder of real full-res screenshots grouped by gig, plus
-  1280×769 framed versions. Sources: live `/shots/*-full.webp` on prismet.xyz (parsed list in
-  `tools/live-prismet-projects.json`), App Store shots in the kaleidoscope repo, Helm widgets via
-  `tools/render-helm-faces.py` (`QT_SCALE_FACTOR=2` for 2×), live `/steam` (Load demo fixture)
-  and `/debt` pages, and the redesigned site itself.
 - Westeros for UEBS 2: needs screenshots + Workshop link (`prismet-site/content/work/westeros-uebs2.md`).
 - `sageskillz.md` / `CLAUDE-OPERATIONS-HANDOFF.md` never reached this session; reconcile
   `fiverr/gigs.json` against them when available.
