@@ -130,7 +130,8 @@ public final class NativeShapeAdapter implements ShapeAdapter {
         return changed;
     }
 
-    private List<int[]> generateSphereOffsets(int radiusX, int radiusY, int radiusZ, boolean hollow) {
+    // Package-private so tests can check the generated geometry without a live world.
+    List<int[]> generateSphereOffsets(int radiusX, int radiusY, int radiusZ, boolean hollow) {
         Set<Long> offsets = new LinkedHashSet<>();
         double rx = radiusX + 0.5;
         double ry = radiusY + 0.5;
@@ -182,7 +183,8 @@ public final class NativeShapeAdapter implements ShapeAdapter {
         return decodeOffsets(offsets);
     }
 
-    private List<int[]> generateCylinderOffsets(int radiusX, int radiusZ, int height, boolean hollow) {
+    // Package-private so tests can check the generated geometry without a live world.
+    List<int[]> generateCylinderOffsets(int radiusX, int radiusZ, int height, boolean hollow) {
         Set<Long> offsets = new LinkedHashSet<>();
         double rx = radiusX + 0.5;
         double rz = radiusZ + 0.5;
@@ -223,7 +225,8 @@ public final class NativeShapeAdapter implements ShapeAdapter {
         return decodeOffsets(offsets);
     }
 
-    private List<int[]> generatePyramidOffsets(int size, boolean hollow) {
+    // Package-private so tests can check the generated geometry without a live world.
+    List<int[]> generatePyramidOffsets(int size, boolean hollow) {
         Set<Long> offsets = new LinkedHashSet<>();
         int originalSize = size;
         for (int y = 0; y <= originalSize; y++) {
@@ -263,8 +266,8 @@ public final class NativeShapeAdapter implements ShapeAdapter {
         for (long value : encoded) {
             offsets.add(new int[]{
                     (int) ((value >> 42) - 1_048_576L),
-                    (int) (((value >> 21) & 0x1F_FFFL) - 1_048_576L),
-                    (int) ((value & 0x1F_FFFL) - 1_048_576L)
+                    (int) (((value >> 21) & 0x1F_FFFFL) - 1_048_576L),
+                    (int) ((value & 0x1F_FFFFL) - 1_048_576L)
             });
         }
         return offsets;
