@@ -5,7 +5,7 @@
 Bayzyl
 
 ## subtitle
-WorldEdit is the foundation. Various tweaks to make it easier for beginners to learn, and for masters to create at their highest capacity
+WorldEdit is the foundation. Various tweaks to make it easier for beginners to learn, and for masters to create at their highest capacity. That is the core thesis behind all design decisions.
 
 ## tag
 Paper Minecraft plugin

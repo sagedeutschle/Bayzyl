@@ -86,10 +86,10 @@ Debt Clock
 The U.S. national debt from Treasury data, ticking live. Yikes...
 
 ## selected.eyebrow
-Selected work
+WORLDEDIT AS THE FOUNDATION
 
 ## selected.title
-Four builds, four beams
+Simultaneously easy for beginners to learn, while also being designed for experts to do their best work.
 
 ## selected.read_more
 Read the case study

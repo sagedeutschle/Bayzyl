@@ -10,8 +10,8 @@
   },
   "layout": {
     "sections": [
-      "lenses",
       "selected",
+      "lenses",
       "work",
       "about"
     ],

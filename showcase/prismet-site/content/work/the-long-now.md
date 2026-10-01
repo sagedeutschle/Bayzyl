@@ -5,7 +5,7 @@
 The Long Now
 
 ## subtitle
-One game world, from a medieval river crossing to the Dyson era
+A mix of colony sim style storytelling, civilization technological progression.
 
 ## status
 Building
