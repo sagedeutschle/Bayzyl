@@ -213,6 +213,19 @@ class HighConfidenceDetectorTest {
     }
 
     @Test
+    void unpoweredRepeaterFeedingDustIsNotCalledBackwards() {
+        RedstoneAuditSnapshot snapshot = new Layout(10, 3, 3).floor(0, Z, 0, 6)
+                .put(2, Y, Z, AuditCell.repeater(Side.WEST))
+                .dustLine(Y, Z, 3, 4)
+                .put(5, Y, Z, AuditCell.receiverBlock(true))
+                .build();
+
+        AuditFinding finding = single(new DirectionalComponentDetector(), snapshot);
+        assertEquals(at(2, Y, Z), finding.position());
+        assertTrue(!finding.pattern().contains("backwards"), finding.pattern());
+    }
+
+    @Test
     void repeaterOutputIntoAirDrivesNothing() {
         RedstoneAuditSnapshot snapshot = new Layout(10, 3, 3).floor(0, Z, 0, 5)
                 .put(0, Y, Z, AuditCell.sourceBlock())

@@ -14,6 +14,7 @@ import java.util.Map;
 public final class DirectionalComponentDetector implements RedstoneAuditDetector {
     @Override
     public List<AuditFinding> detect(RedstoneAuditSnapshot snapshot) {
+        Context context = new Context(snapshot);
         List<AuditFinding> findings = new ArrayList<>();
         for (Map.Entry<AuditPosition, AuditCell> entry : snapshot.cells().entrySet()) {
             AuditPosition position = entry.getKey();
@@ -24,7 +25,7 @@ public final class DirectionalComponentDetector implements RedstoneAuditDetector
             if (cell.isDiode()) {
                 Boolean input = inputOk(snapshot, position, cell);
                 if (Boolean.FALSE.equals(input)) {
-                    findings.add(missingInput(snapshot, position, cell));
+                    findings.add(missingInput(context, position, cell));
                 }
             }
             if (cell.isDiode() || cell.kind() == AuditKind.OBSERVER) {
@@ -86,7 +87,8 @@ public final class DirectionalComponentDetector implements RedstoneAuditDetector
         return false;
     }
 
-    private static AuditFinding missingInput(RedstoneAuditSnapshot snapshot, AuditPosition position, AuditCell diode) {
+    private static AuditFinding missingInput(Context context, AuditPosition position, AuditCell diode) {
+        RedstoneAuditSnapshot snapshot = context.snapshot;
         boolean comparator = diode.kind() == AuditKind.COMPARATOR;
         AuditPosition input = position.relative(diode.inputSide());
         StringBuilder pattern = new StringBuilder("Nothing behind it at ").append(input).append(" (")
@@ -94,7 +96,7 @@ public final class DirectionalComponentDetector implements RedstoneAuditDetector
                 .append(comparator ? "power it or be measured by it." : "power it.");
         AuditPosition output = position.relative(diode.outputSide());
         AuditCell front = snapshot.at(output);
-        if (front != null && arrivesFromFront(snapshot, output, front, position)) {
+        if (front != null && arrivesFromFront(context, output, front, position)) {
             pattern.append(" The signal seems to arrive from its output side, so it may be placed backwards.");
         }
         String name = comparator ? "Comparator" : "Repeater";
@@ -103,11 +105,11 @@ public final class DirectionalComponentDetector implements RedstoneAuditDetector
                 "Feed it from behind, or rotate it so its arrow points away from the incoming signal.");
     }
 
-    private static boolean arrivesFromFront(RedstoneAuditSnapshot snapshot, AuditPosition output, AuditCell front,
+    /** Is a signal arriving at this component's output side from something other than the component itself? */
+    private static boolean arrivesFromFront(Context context, AuditPosition output, AuditCell front,
                                             AuditPosition component) {
         if (front.isDust()) {
-            Topology.Feed feed = Topology.dustFeed(snapshot, output);
-            return feed != null && feed != Topology.Feed.NONE || feedsAlongDust(snapshot, output, component);
+            return context.fedOtherThan(output, component);
         }
         if (front.source() || front.analogSource() || front.isTorch()) {
             return true;
@@ -116,18 +118,36 @@ public final class DirectionalComponentDetector implements RedstoneAuditDetector
                 && output.relative(front.outputSide()).equals(component);
     }
 
-    private static boolean feedsAlongDust(RedstoneAuditSnapshot snapshot, AuditPosition dust, AuditPosition component) {
-        for (Topology.Network network : Topology.networks(snapshot)) {
-            if (network.dust().contains(dust)) {
-                for (AuditPosition piece : network.dust()) {
-                    Topology.Feed feed = Topology.dustFeed(snapshot, piece);
-                    if (feed != null && feed != Topology.Feed.NONE) {
-                        return true;
+    /** Per-audit memo: dust networks are built once, not once per finding. */
+    private static final class Context {
+        private final RedstoneAuditSnapshot snapshot;
+        private Map<AuditPosition, Topology.Network> networkOf;
+
+        Context(RedstoneAuditSnapshot snapshot) {
+            this.snapshot = snapshot;
+        }
+
+        boolean fedOtherThan(AuditPosition dust, AuditPosition component) {
+            if (networkOf == null) {
+                networkOf = new java.util.HashMap<>();
+                for (Topology.Network network : Topology.networks(snapshot)) {
+                    for (AuditPosition piece : network.dust()) {
+                        networkOf.put(piece, network);
                     }
                 }
             }
+            Topology.Network network = networkOf.get(dust);
+            if (network == null) {
+                return false;
+            }
+            for (AuditPosition piece : network.dust()) {
+                Topology.Feed feed = Topology.dustFeed(snapshot, piece, component);
+                if (feed != null && feed != Topology.Feed.NONE) {
+                    return true;
+                }
+            }
+            return false;
         }
-        return false;
     }
 
     private static AuditFinding deadOutput(RedstoneAuditSnapshot snapshot, AuditPosition position, AuditCell component) {

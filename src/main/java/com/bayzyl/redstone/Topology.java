@@ -119,10 +119,18 @@ final class Topology {
 
     /** The strongest feed reaching the dust at {@code pos} from non-dust neighbours; null if unknown and unfed. */
     static Feed dustFeed(RedstoneAuditSnapshot snapshot, AuditPosition pos) {
+        return dustFeed(snapshot, pos, null);
+    }
+
+    /** As {@link #dustFeed(RedstoneAuditSnapshot, AuditPosition)}, ignoring the neighbour at {@code ignore}. */
+    static Feed dustFeed(RedstoneAuditSnapshot snapshot, AuditPosition pos, AuditPosition ignore) {
         Feed best = Feed.NONE;
         boolean unknown = false;
         for (Side side : Side.values()) {
             AuditPosition neighbour = pos.relative(side);
+            if (neighbour.equals(ignore)) {
+                continue;
+            }
             AuditCell cell = snapshot.at(neighbour);
             if (cell == null) {
                 unknown = true;
