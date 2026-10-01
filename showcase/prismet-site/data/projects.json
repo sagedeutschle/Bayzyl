@@ -284,56 +284,6 @@
       "fiverrGig": null
     },
     {
-      "slug": "axiomextd",
-      "beam": "minecraft",
-      "stack": [
-        "Minecraft"
-      ],
-      "links": [],
-      "cover": "assets/live/axiomextd-1.webp",
-      "gallery": [
-        "assets/live/axiomextd-1.webp"
-      ],
-      "shotAlts": [
-        "A detailed Minecraft build on the server this extension targets: a dark spire above the clouds, ringed by towers and terraced ground."
-      ],
-      "fiverrGig": null
-    },
-    {
-      "slug": "minecraft-network",
-      "beam": "minecraft",
-      "stack": [
-        "Velocity",
-        "Paper",
-        "Docker",
-        "LibertyBans",
-        "Multiverse",
-        "Bash"
-      ],
-      "links": [],
-      "cover": "fiverr/out/portfolio-mc-network.png",
-      "gallery": [
-        "fiverr/out/portfolio-mc-network.png"
-      ],
-      "fiverrGig": "mc-server"
-    },
-    {
-      "slug": "usage-tracker",
-      "beam": "ai",
-      "stack": [
-        "Desktop"
-      ],
-      "links": [],
-      "cover": "assets/live/usage-tracker-1.webp",
-      "gallery": [
-        "assets/live/usage-tracker-1.webp"
-      ],
-      "shotAlts": [
-        "The usage dashboard: token totals per provider and account, a weekly limit meter, and a seven-day combined chart with estimated API-equivalent costs."
-      ],
-      "fiverrGig": null
-    },
-    {
       "slug": "wizard-kings-decree",
       "beam": "ai",
       "stack": [
@@ -348,21 +298,6 @@
       "gallery": [
         "assets/prismet/tiles/oracle.webp"
       ],
-      "fiverrGig": "ai-agents"
-    },
-    {
-      "slug": "agent-ops",
-      "beam": "ai",
-      "stack": [
-        "Claude Code",
-        "Codex",
-        "AGENTS.md",
-        "git worktrees"
-      ],
-      "links": [],
-      "cover": null,
-      "gallery": [],
-      "todo": "Pull specifics from CLAUDE-OPERATIONS-HANDOFF.md",
       "fiverrGig": "ai-agents"
     },
     {
@@ -451,47 +386,10 @@
       "fiverrGig": null
     },
     {
-      "slug": "plexsquish",
-      "beam": "desktop",
-      "stack": [
-        "Mac",
-        "Windows"
-      ],
-      "links": [],
-      "cover": null,
-      "gallery": [],
-      "shotAlts": [],
-      "fiverrGig": null
-    },
-    {
       "slug": "helix-research-desk",
       "beam": "desktop",
       "stack": [
         "Desktop"
-      ],
-      "links": [],
-      "cover": null,
-      "gallery": [],
-      "shotAlts": [],
-      "fiverrGig": null
-    },
-    {
-      "slug": "escape-revert",
-      "beam": "desktop",
-      "stack": [
-        "Mac"
-      ],
-      "links": [],
-      "cover": null,
-      "gallery": [],
-      "shotAlts": [],
-      "fiverrGig": null
-    },
-    {
-      "slug": "screen-protection",
-      "beam": "desktop",
-      "stack": [
-        "Mac"
       ],
       "links": [],
       "cover": null,
