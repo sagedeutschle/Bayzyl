@@ -8,6 +8,7 @@ import com.bayzyl.persistence.RecoverySnapshot.Lifecycle;
 import com.bayzyl.persistence.RecoverySnapshot.NudgeRecord;
 import com.bayzyl.persistence.RecoverySnapshot.SessionRecord;
 import com.bayzyl.persistence.RecoverySnapshot.SessionValue;
+import com.bayzyl.safety.OperationLimits;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -320,9 +321,14 @@ public final class CrashRecoveryService {
     // Clipboards and nudge state
     // ---------------------------------------------------------------------------------------------------------
 
-    /** Save (or with {@code null}, clear) the player's clipboard. Call on the thread that owns the clipboard. */
+    /**
+     * Save (or with {@code null}, clear) the player's clipboard. Call on the thread that owns the clipboard. A
+     * clipboard above {@link OperationLimits#RECOVERY_CLIPBOARD_HARD_MAX} is not persisted; the previous one is
+     * dropped too, so a restart never restores a superseded clipboard.
+     */
     public void saveClipboard(UUID playerId, Clipboard clipboard) {
-        ClipboardRecord record = clipboard == null ? null : CrashRecoveryBridge.detachClipboard(clipboard);
+        ClipboardRecord record = withinRecoveryCap(playerId, clipboard)
+                ? CrashRecoveryBridge.detachClipboard(clipboard) : null;
         synchronized (this) {
             if (record == null) {
                 clipboards.remove(playerId);
@@ -355,7 +361,8 @@ public final class CrashRecoveryService {
 
     /** Save (or with {@code null}, clear) the player's nudge state. */
     public void saveNudgeSession(UUID playerId, EditService.NudgeSession nudgeSession) {
-        NudgeRecord record = nudgeSession == null ? null : CrashRecoveryBridge.detachNudge(nudgeSession);
+        NudgeRecord record = nudgeSession != null && withinRecoveryCap(playerId, nudgeSession.clipboard())
+                ? CrashRecoveryBridge.detachNudge(nudgeSession) : null;
         synchronized (this) {
             if (record == null) {
                 nudges.remove(playerId);
@@ -382,6 +389,29 @@ public final class CrashRecoveryService {
             return null;
         }
         return restored.value();
+    }
+
+    private boolean withinRecoveryCap(UUID playerId, Clipboard clipboard) {
+        if (clipboard == null) {
+            return false;
+        }
+        long volume = (long) clipboard.getSizeX() * clipboard.getSizeY() * clipboard.getSizeZ();
+        if (!OperationLimits.checkRecoveryClipboard(volume).hardRejected()) {
+            return true;
+        }
+        notifyPlayer(playerId, "§6[Bayzyl] §7This clipboard (§f" + volume + "§7 blocks) is larger than crash recovery keeps (§f"
+                + OperationLimits.RECOVERY_CLIPBOARD_HARD_MAX + "§7); it will not survive a restart.");
+        return false;
+    }
+
+    private static void notifyPlayer(UUID playerId, String message) {
+        if (Bukkit.getServer() == null) {
+            return;
+        }
+        Player player = Bukkit.getPlayer(playerId);
+        if (player != null) {
+            player.sendMessage(message);
+        }
     }
 
     private void handleUnrestorable(UUID playerId, String what, CrashRecoveryBridge.Materialized<?> restored,
@@ -416,10 +446,7 @@ public final class CrashRecoveryService {
         if (rejectedEntities > 0) {
             message.append(" §f").append(rejectedEntities).append("§7 entit(ies) could not be restored.");
         }
-        Player player = Bukkit.getPlayer(playerId);
-        if (player != null) {
-            player.sendMessage(message.toString());
-        }
+        notifyPlayer(playerId, message.toString());
     }
 
     // ---------------------------------------------------------------------------------------------------------

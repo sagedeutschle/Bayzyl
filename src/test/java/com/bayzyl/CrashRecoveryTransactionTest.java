@@ -74,6 +74,26 @@ class CrashRecoveryTransactionTest {
     }
 
     @Test
+    void clipboardAboveTheRecoveryCapIsNotPersistedAndDoesNotLeaveAStaleOne() throws Exception {
+        Path target = temporaryDirectory.resolve("cap").resolve("crash-recovery.yml");
+        CrashRecoveryService service = direct(target);
+        service.saveClipboard(PLAYER, clipboard(blockData("minecraft:stone"), null));
+        assertTrue(service.flushRecovery());
+        assertTrue(Files.readString(target).contains("minecraft:stone"));
+
+        int volume = 250_001;
+        BlockData dirt = blockData("minecraft:dirt");
+        BlockData[] data = new BlockData[volume];
+        java.util.Arrays.fill(data, dirt);
+        Clipboard huge = new Clipboard(volume, 1, 1, data, new BlockState[volume], List.of(), location(0, 0, 0), 0, 0, 0);
+        service.saveClipboard(PLAYER, huge);
+        assertTrue(service.flushRecovery());
+        String saved = Files.readString(target);
+        assertFalse(saved.contains("minecraft:dirt"), "an over-cap clipboard must not be persisted");
+        assertFalse(saved.contains("minecraft:stone"), "the superseded clipboard must not survive either");
+    }
+
+    @Test
     void maskedCellsArePersistedAsSkipAndNeverAsAir() throws Exception {
         Path target = temporaryDirectory.resolve("skip").resolve("crash-recovery.yml");
         CrashRecoveryService service = direct(target);
