@@ -23,7 +23,7 @@ public final class CrashRecoveryListener implements Listener {
         if (crashRecoveryService.hasInterruptedSession(event.getPlayer().getUniqueId())) {
             // Offer to resume the session
             event.getPlayer().sendMessage("§6[Bayzyl] §7You have an interrupted command from server restart.");
-            event.getPlayer().sendMessage("§7Type §f/bayzyl resume §7to resume where you left off.");
+            event.getPlayer().sendMessage("§7Type §f/resume §7to resume where you left off.");
         }
         
         // Restore clipboard automatically (in memory)
@@ -32,7 +32,7 @@ public final class CrashRecoveryListener implements Listener {
     
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        // Clean up completed sessions when player leaves
-        crashRecoveryService.completeSession(event.getPlayer().getUniqueId());
+        // Sessions outlive a quit: an interrupted command stays resumable until it completes, is resumed,
+        // or ages out after 24 hours. Commands complete their own sessions.
     }
 }

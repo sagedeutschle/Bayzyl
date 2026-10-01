@@ -263,6 +263,9 @@ DecoyTabListService decoyTabListService,
         this.messageThemeService = messageThemeService;
         this.commandAuthorityService = commandAuthorityService;
         this.crashRecoveryService = crashRecoveryService;
+        if (crashRecoveryService != null) {
+            crashRecoveryService.registerResumeHandler("copy", new CopyResumeHandler(this::runCopy));
+        }
     }
 
     /**
@@ -2086,7 +2089,13 @@ DecoyTabListService decoyTabListService,
         OptionState options = parseOptions(args, 0);
         BlockMask mask = BlockMask.parse(options.mask);
         Selection selection = selectionManager.get(player.getUniqueId());
-        
+        runCopy(player, selection, mask);
+        return true;
+    }
+
+    /** Copies {@code selection} for {@code player}; also the resume path for a copy a restart interrupted. */
+    private void runCopy(org.bukkit.entity.Player player, Selection selection, BlockMask mask) {
+        CommandSender sender = player;
         // Track copy session for crash recovery
         if (crashRecoveryService != null) {
             Map<String, Object> sessionData = new HashMap<>();
@@ -2094,10 +2103,9 @@ DecoyTabListService decoyTabListService,
             sessionData.put("mask", mask);
             crashRecoveryService.startSession(player.getUniqueId(), "copy", "starting", sessionData, 
                 session -> {
-                    // This would be called if session is resumed after crash
-                    // For copy, we'd restart the copy operation
+                    // Resumed within the same run (the callback does not survive a restart; see CopyResumeHandler)
                     player.sendMessage("§6[Bayzyl] §7Resuming copy operation...");
-                    handleCopy(sender, args);
+                    runCopy(player, selection, mask);
                 });
         }
         
@@ -2110,11 +2118,11 @@ DecoyTabListService decoyTabListService,
                     crashRecoveryService.completeSession(player.getUniqueId());
                 }
             });
-            return true;
+            return;
         }
         if (editService.hasCopyTask(player.getUniqueId())) {
             ChatOutput.send(sender, ChatColor.RED + "A copy is already running. Wait for it to finish before starting another.");
-            return true;
+            return;
         }
         Clipboard clipboard = editService.copySelection(player, selection, mask);
         if (clipboard != null) {
@@ -2125,7 +2133,6 @@ DecoyTabListService decoyTabListService,
                 crashRecoveryService.completeSession(player.getUniqueId());
             }
         }
-        return true;
     }
 
     private boolean handleCut(CommandSender sender, String[] args) {
