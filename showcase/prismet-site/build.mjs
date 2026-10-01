@@ -27,6 +27,8 @@ const W = Object.fromEntries(projects.map((p) => [p.slug, loadWork(p.slug)]));
 const VARS = { count: projects.length };
 const missing = new Set();
 const site = (key) => { if (!(key in S)) { missing.add(`content/site.md → ## ${key}`); return key; } return S[key]; };
+// About paragraphs: every "## about.p<N>" in site.md, in number order, so adding one adds a paragraph.
+const ABOUT_PARAS = Object.keys(S).filter((key) => /^about\.p\d+$/.test(key)).sort((a, b) => a.slice(7) - b.slice(7));
 const work = (slug, f) => { const v = W[slug][f]; if (v === undefined) { missing.add(`content/work/${slug}.md → ## ${f}`); return ''; } return v; };
 // In --preview every piece of wording carries its key, so the page editor can save edits back.
 const ed = (key, raw) => (PREVIEW ? ` data-edit="${esc(key)}" data-src="${esc(raw)}"` : '');
@@ -253,8 +255,7 @@ const SECTIONS = {
   <div>
     <p class="eyebrow"${k('about.eyebrow').a}>${k('about.eyebrow').h}</p><h2 id="about-title" class="about-title"${k('about.title').a}>${k('about.title').h}</h2>
     <div class="prose">
-      <p${k('about.p1').a}>${k('about.p1').h}</p>
-      <p${k('about.p2').a}>${k('about.p2').h}</p>
+      ${ABOUT_PARAS.map((key) => `<p${k(key).a}>${k(key).h}</p>`).join('\n      ')}
     </div>
   </div>
   <div class="hire" id="hire">
