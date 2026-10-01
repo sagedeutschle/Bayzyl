@@ -186,7 +186,8 @@ const shownProjects = projects.filter((p) => !p.hidden);
 const off = (isOff) => (isOff ? ' is-off' : '');
 
 const feature = (p, i, isOff = false) => {
-  const title = P(p.slug, 'title'), sub = P(p.slug, 'subtitle'), b = beamLabel(p.beam), more = T('selected.read_more');
+  const title = P(p.slug, 'title'), sub = P(p.slug, 'subtitle'), more = T('selected.read_more');
+  const b = W[p.slug].tag ? P(p.slug, 'tag') : beamLabel(p.beam); // optional "## tag" overrides the beam name on this row
   const facts = factPairs(work(p.slug, 'facts')).slice(0, 4);
   return `<article class="feature${i % 2 ? ' flip' : ''}${off(isOff)}" data-slug="${p.slug}" style="${hueVars(p.beam)}">
   <a class="media" href="work/${p.slug}.html" aria-label="${esc(mediaAlt(p))}">${media(p)}</a>
@@ -221,7 +222,7 @@ const card = (p) => {
 const GIGS = [['mc-plugin', 'minecraft'], ['mc-server', 'minecraft'], ['ios-app', 'apps'], ['web-tool', 'web'], ['ai-agents', 'ai'], ['linux-desktop', 'desktop']];
 
 // ── index ───────────────────────────────────────────────────────────────────────────────────
-const tileFor = { 'steam-rewind': 'steamrewind', 'debt-clock': 'debtclock', 'wordgame-api': 'wordle' };
+const tileFor = { 'steam-rewind': 'steamrewind', 'debt-clock': 'debtclock' };
 const k = (key) => T(key); // shorthand
 const sec = (id, attrs, inner) => (hiddenSections.has(id) && !PREVIEW ? '' :
   `<section id="${id}" data-section="${id}" class="${off(hiddenSections.has(id)).trim()}" ${attrs}>${inner}</section>`);

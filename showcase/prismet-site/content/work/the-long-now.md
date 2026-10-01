@@ -17,7 +17,7 @@ Building
 Design + engineering
 
 ## summary
-An evolving desktop game world where courts, campaigns, and small human decisions accumulate over time.
+I am attempting to combine Rimworld mechanics with Civilization style tech progression, with a huge 'mini-game' floating wizard castle belonging to a deity-ish guy called The Wizard. His castle is in the sky overseeing the mortals below and you can jump between both creating a somewhat unique gameplay flow. Inside the castle there are lots of mini games and secret things to click on.
 
 ## facts
 - Platforms: Desktop

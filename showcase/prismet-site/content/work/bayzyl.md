@@ -5,7 +5,10 @@
 Bayzyl
 
 ## subtitle
-An in-game building toolkit for Paper servers
+WorldEdit is the foundation. Various tweaks to make it easier for beginners to learn, and for masters to create at their highest capacity
+
+## tag
+Paper Minecraft plugin
 
 ## status
 Alpha · open source (MIT)

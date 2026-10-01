@@ -83,13 +83,7 @@ Explore a Steam library: playtime, eras, and the games you forgot you own.
 Debt Clock
 
 ## lens.debt-clock.blurb
-The U.S. national debt from Treasury data, ticking live.
-
-## lens.wordgame-api.title
-Wordgame daily feed
-
-## lens.wordgame-api.blurb
-The JSON endpoint the Prismet apps read every morning.
+The U.S. national debt from Treasury data, ticking live. Yikes...
 
 ## selected.eyebrow
 Selected work

@@ -36,7 +36,8 @@ blocked by its network policy), so this comes from the Prismet repo's coordinati
   Game Worlds (ochre), Minecraft (green), Web Tools & Data (blue), AI & Agents (violet).
   Every card, tag, and page header carries its beam's color, so the category reads at a glance.
 - **Lenses stay front and center**, right under the hero, because they're the live part of
-  the site and the reason the app links here.
+  the site and the reason the app links here. Two cards: Steam Rewind and the Debt Clock.
+  `/api/wordle` keeps working for the apps but has no card.
 - **Selected work** gives the four strongest projects big editorial rows with real visuals and
   a fact strip (numbers like "99 commands", "19 + 3 lenses", "28 QML faces").
 - **All work** lists every project with a status pill (Live on the App Store, Private build,
@@ -81,6 +82,8 @@ in a format `apply-edits.mjs` also accepts. The production build never includes 
 
 You can also edit by hand: words in `content/site.md` and `content/work/<slug>.md`, layout in
 `data/projects.json` (`layout`, `featuredOrder`, and per-project `wide` / `hidden`).
+An optional `## tag` in a project's `.md` replaces its category name on its Selected work row
+(Bayzyl uses it for "Paper Minecraft plugin").
 
 ## Adding a project
 

@@ -18,9 +18,9 @@
     "hiddenSections": []
   },
   "featuredOrder": [
+    "bayzyl",
     "prismet-app",
     "the-helm",
-    "bayzyl",
     "the-long-now"
   ],
   "beams": [
@@ -63,11 +63,6 @@
     {
       "id": "debt-clock",
       "href": "/debt"
-    },
-    {
-      "id": "wordgame-api",
-      "href": "/api/wordle",
-      "kind": "api"
     }
   ],
   "projects": [

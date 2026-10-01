@@ -5,7 +5,7 @@
 Helm
 
 ## subtitle
-A command bridge for the home fleet: a three-monitor desktop and an iPhone remote
+A command bridge for the home fleet.
 
 ## status
 Daily driver
