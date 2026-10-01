@@ -10,7 +10,7 @@ Selections, brushes, shapes, shared kits, and builder profiles — with a comman
 
 Bayzyl is a full editing workflow for Paper servers — selections, shapes, brushes, clipboards, history, shared kits, and builder profiles — packaged as a consistent, builder-friendly command set.
 
-Bayzyl is designed to play nicely with [WorldEdit](https://enginehub.org/worldedit/) and [FastAsyncWorldEdit](https://www.spigotmc.org/resources/fastasyncworldedit.13932/) — both are great tools and Bayzyl is happy sitting alongside them. It softdepends on FAWE so large-region operations get FAWE's speed when it's installed. If your server doesn't run either, Bayzyl falls back to its own implementations for every core editing, selection, shape, brush, and clipboard feature.
+Bayzyl is designed to play nicely with [WorldEdit](https://enginehub.org/worldedit/) and [FastAsyncWorldEdit](https://www.spigotmc.org/resources/fastasyncworldedit.13932/) — both are great tools and Bayzyl is happy sitting alongside them. Bayzyl auto-detects WorldEdit-compatible plugins for supported shape operations while keeping its native edit, history, selection, brush, and clipboard behavior available without external dependencies.
 
 **What Bayzyl focuses on**
 
@@ -35,6 +35,9 @@ Bayzyl is designed to play nicely with [WorldEdit](https://enginehub.org/worlded
 ### Brushes
 Bind reusable brushes to any held item with `/brush sphere|hsphere|cyl|hcyl|pyramid|hpyramid|clipboard|paint|naturalize|smooth|raise|lower|flatten|erase|surface|noise|spatter|blend|vegetation|decay` and more. Live-tweak them with `/mask` `/material` `/size` `/density` without rebinding.
 
+### Detail brushes
+Preset paint brushes for fire, clouds, lightning, vines, roots, and bark — each with its own purpose-built parameters (heat, flicker, height, branches, etc.) and a curated palette. `/detailbrush tool flame` to bind, `/detailbrush set heat 0.9` to tweak, `/detailbrush save mybrush` to persist a variant. Quick-load with overrides: `/db thunderbolt red`, `/db jungle-vine jungle`. See [`docs/DETAIL_BRUSHES.md`](docs/DETAIL_BRUSHES.md) for the system design.
+
 ### Generation
 `/forestgen` `/pumpkins` `/generatebiome` `/biomeinfo`
 
@@ -47,9 +50,6 @@ Save a complete loadout (toolbar, runtime toggles, preferences) as a profile. Sh
 ### Server-side QoL
 RAM alerts with configurable thresholds, a tab info panel, decoy player count for events, runtime admin/builder toggles.
 
-### BayzylBridge (optional companion)
-A separate plugin that pipes in-game chat to an LLM so builders can ask questions about a build, get suggestions, or run vision queries — with per-player persistent memory.
-
 ---
 
 ## Install
@@ -57,7 +57,7 @@ A separate plugin that pipes in-game chat to an LLM so builders can ask question
 1. Download the latest `bayzyl.jar` from the [Releases page](https://github.com/sagedeutschle/Bayzyl/releases).
 2. Drop it into your server's `plugins/` folder.
 3. Restart the server.
-4. *(Optional)* Install [FastAsyncWorldEdit](https://www.spigotmc.org/resources/fastasyncworldedit.13932/) for accelerated large-region operations. Bayzyl auto-detects it.
+4. *(Optional)* Install [WorldEdit](https://enginehub.org/worldedit/) or [FastAsyncWorldEdit](https://www.spigotmc.org/resources/fastasyncworldedit.13932/) if you want Bayzyl to use its WorldEdit-compatible shape adapter when available.
 
 **Requirements**
 
@@ -93,27 +93,19 @@ Block distributions work everywhere a block is accepted:
 
 ```bash
 git clone https://github.com/sagedeutschle/Bayzyl.git
-cd Bayzyl/paperdevelopment
+cd Bayzyl
 ./gradlew build
 ```
 
-The compiled jar lands in `paperdevelopment/build/libs/`.
+The compiled jar lands in `build/libs/`. Requires Java 21+.
 
----
-
-## Repository layout
-
-- `paperdevelopment/` — active Bayzyl Paper plugin source
-- `personalbridge/` — BayzylBridge companion plugin (separate)
-- `releases/` — public release artifacts
-- `versionports/` — work-in-progress ports to other server platforms
-- `MISC/` — design docs and unrelated material (including `bzlV2.md`)
+Design notes for individual systems live in [`docs/`](docs/): [detail brushes](docs/DETAIL_BRUSHES.md), [parametric noise brushes](docs/PARAMETRIC_NOISE_BRUSHES.md), and [WorldEdit parity](docs/TOOL_WORLDEDIT_PARITY.md). A Python [terrain schematic generator](terrain_schematic_generator/) is included as an experimental tool.
 
 ---
 
 ## Roadmap
 
-Active design work for v2 lives in [`MISC/bzlV2.md`](MISC/bzlV2.md). Highlights:
+Planned v2 work, highlights:
 
 - **BzlBlender** — optional Fabric companion mod for client-side ghost rendering and floating GUI panels
 - **Redstone Audit** — static analysis of redstone circuits with fault localization

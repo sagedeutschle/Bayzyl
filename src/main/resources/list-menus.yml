@@ -1,0 +1,229 @@
+menus:
+  # ============================================================
+  # Chat list: /kit list and /kitlist
+  # ============================================================
+  kit-list:
+    default-theme: 'Custom Kits'
+    page-size: 12
+    theme-order:
+      - 'Masonry & Castle'
+      - 'Dark & Fantasy'
+      - 'Organic & Landscaping'
+      - 'Trees & Timber'
+      - 'Interiors & Workspaces'
+      - 'Towns & Streets'
+      - 'Specialty Palettes'
+      - 'Custom Kits'
+    title-single: '{theme}'
+    title-split: '{theme} {theme_page}'
+    messages:
+      empty: '&fNo shared Bayzyl kits saved yet.'
+      usage: '&cUsage: {usage} [page]'
+      page-range: '&cKit list page must be 1-{page_count}.'
+      header:
+        - '&a&lBZL'
+        - '&aKits &8| &6Page {page}/{page_count} &8| &f{title}'
+      tip: '&bTip: /kit inspect <name> previews a kit. /kit restoredefaults resets Bayzyl defaults.'
+      row: '&6{name} &8| &f{scope}&8 | &f{item_count} items&8 | &f{kind}&8 | &f{theme} &8| &b{shortcut}'
+      next: '&bNext &8| &f{usage} {next_page}'
+      last: '&bYou are on the last kit page.'
+
+  # ============================================================
+  # GUI list: /kit menu
+  # ============================================================
+  kit-menu:
+    default-theme: 'Custom Kits'
+    page-size: 45
+    inventory-title: '&2BZL Kits {page}/{page_count}'
+    theme-order:
+      - 'Masonry & Castle'
+      - 'Dark & Fantasy'
+      - 'Organic & Landscaping'
+      - 'Trees & Timber'
+      - 'Interiors & Workspaces'
+      - 'Towns & Streets'
+      - 'Specialty Palettes'
+      - 'Custom Kits'
+    title-single: '{theme}'
+    title-split: '{theme} {theme_page}'
+    empty-message: '&fNo shared Bayzyl kits saved yet.'
+    kit-item:
+      name: '&6{name}'
+      note-fallback: 'Shared builder kit'
+      aliases-line: '&fAliases: &f{aliases}'
+      lore:
+        - '&f{note}'
+        - '&fTheme: &b{theme}'
+        - '&fScope: &f{scope}'
+        - '&fType: &f{kind}'
+        - '&fStored: &f{item_count} items'
+        - '{aliases_line}'
+        - '&9Left-click to load'
+        - '&9Right-click to inspect'
+    page-buttons:
+      previous:
+        material: 'ARROW'
+        name: '&6Previous Page'
+        lore:
+          - '&9Open page {target_page}'
+      next:
+        material: 'ARROW'
+        name: '&6Next Page'
+        lore:
+          - '&9Open page {target_page}'
+    info-item:
+      material: 'BOOK'
+      name: '&aKit Browser'
+      lore:
+        - '&f{title}'
+        - '&fPage: &6{page}/{page_count}'
+        - '&fKits: &f{kit_count}'
+        - '&9Use /kit list for the chat view'
+
+  # ============================================================
+  # Chat list: /selload with no selection name
+  # ============================================================
+  selection-bookmarks:
+    separator: '&8, &f'
+    header:
+      - '&a&lBZL'
+      - '&aSelection Bookmarks'
+    messages:
+      empty: '&fNo saved selections yet.'
+      line: '&fSaved selections &8| &f{names}'
+
+  # ============================================================
+  # Chat list: /profile list
+  # ============================================================
+  profile-list:
+    empty: '&fNo Bayzyl profiles saved yet.'
+    header:
+      - '&a&lBZL'
+      - '&aProfiles &8| &6{count}'
+    row: '&6{name} &8| &b{type} &8| &f{contents} &8| &fupdated {updated}'
+
+  # ============================================================
+  # Chat details: /profile inspect <name>
+  # ============================================================
+  profile-inspect:
+    header:
+      - '&a&lBZL'
+      - '&a{name} &8| &b{type}'
+    updated: '&fUpdated &8| &b{updated}'
+    features-title: '&bFeatures'
+    features-primary: '&f  Viz &8| &6{viz}&8 | &fNightvision &8| &6{nightvision}&8 | &fAdmin &8| &6{admin}'
+    features-secondary: '&f  Unstick &8| &6{unstick}&8 | &fGhosthand &8| &6{ghosthand}'
+    nudge-title: '&bNudge Settings'
+    nudge-line: '&f  Step &8| &6{step}&8 | &fInvert &8| &6{invert}&8 | &fVertical &8| &6{vertical}'
+    tabmenu-title: '&bTab Menu & Trail'
+    tabmenu-line: '&f  {tabmenu}&8 | &fTrail limit &8| &6{trail_limit}'
+    toolbar-title: '&bToolbar'
+    toolbar-empty: '&f  (empty)'
+    toolbar-line: '&f  {toolbar}'
+
+  # ============================================================
+  # Chat details: /kit inspect <name>
+  # ============================================================
+  kit-inspect:
+    header:
+      - '&a&lBZL'
+      - '&a{name} &8| &b{scope}'
+    summary: '&fType &8| &b{kind}&8 | &fStored &8| &6{item_count} items'
+    updated: '&fUpdated &8| &b{updated}'
+    theme-author: '&fTheme &8| &6{theme}&8 | &fAuthor &8| &6{author}'
+    note: '&bNote &8| &f{note}'
+    load-targets-title: '&bLoad Targets'
+    load-targets-line: '&f  {load_targets}'
+    aliases-title: '&bAliases &8| &6{aliases}'
+    aliases-loads-line: '&f  Loads &8| &f{alias_loads}'
+    contents-title: '&bContents'
+    contents-empty: '&f  &8empty'
+    contents-row: '&f  {items}'
+    built-in-footer: '&8This default kit can be customized, deleted, or restored with /kit restoredefaults.'
+
+  # ============================================================
+  # Chat list: /kit alias list <name>
+  # ============================================================
+  kit-alias-list:
+    header:
+      - '&a&lBZL'
+      - '&aKit Aliases &8| &f{name}'
+    none-label: 'none'
+    separator: ', '
+    line: '&fAliases &8| &f{aliases}'
+
+  # ============================================================
+  # Chat list: /bzl palette analyze
+  # ============================================================
+  palette-analysis:
+    header:
+      - '&a&lBZL'
+      - '&aPalette Analysis &8| &f{size}'
+    summary: '&fFilled &8| &6{filled}&8 | &fAir &8| &6{air}&8 | &fUnique &8| &6{unique}'
+    top-blocks:
+      limit: 8
+      item: '&6{material}&8 | &f{count}&8 | &f{percent}'
+      separator: '&8 | '
+      line: '&fTop blocks &8| {items}'
+      empty: '&fTop blocks &8| &8selection is all air'
+    families:
+      limit: 5
+      item: '&b{family}&8 | &f{count}&8 | &f{percent}'
+      separator: '&8 | '
+      line: '&fFamilies &8| {items}'
+    tip: '&bUse /bzl palette swap <from> <to> to push the selection toward a cleaner target palette.'
+
+  # ============================================================
+  # Chat list: /biomeinfo
+  # ============================================================
+  biome-info:
+    empty: '&cNo biome data found for that selection.'
+    header:
+      - '&a&lBZL'
+      - '&aBiome Info &8| &f{min} &8-> &f{max}'
+    summary: '&fUnique biomes &8| &6{unique}&8 | &fTotal blocks &8| &6{total}'
+    center: '&fCenter &8| &b{center}'
+    column-center: '&fColumn center &8| &b{column_center}'
+    divider: '&8--------------'
+    row: '{color}{biome} &8| &6{count}&8 | &f{percent}'
+
+  # ============================================================
+  # Chat list: /tabmenu status
+  # ============================================================
+  tabmenu-status:
+    header:
+      - '&a&lBZL'
+      - '&aTab Menu &8| &fStatus'
+    states:
+      on: '&aon'
+      off: '&coff'
+    trail-extra: '&8| &fcount &6{count}'
+    row: '&f{module} &8| &f{state}{extra}'
+
+  # ============================================================
+  # Chat list: /ramalert status
+  # ============================================================
+  ramalert-status:
+    state:
+      on: '&6on'
+      off: '&6off'
+    lines:
+      - '&a&lBZL'
+      - '&aRAM Alert &8| &f{state}&8 | &fthreshold &6{threshold}%&8 | &finterval &6{interval}s&8 | &fcooldown &6{cooldown}s'
+      - '&aCurrent JVM use &8| &6{used_percent}%&8 | &6{used_mb}MB&8 / &6{max_mb}MB'
+    consumer:
+      limit: 5
+      row: '&8- &6{name}&8 | &6{used_mb}MB&8 | &6{percent_of_max}% &fof max&8 | &6{percent_of_used}% &fof current load'
+
+  # ============================================================
+  # Chat list: /ramalert help
+  # ============================================================
+  ramalert-help:
+    lines:
+      - '&a&lBZL'
+      - '&aRAM Alert &8| &fHelp'
+      - '&aBayzyl RAM alert watches JVM memory pressure, not TPS or CPU.'
+      - '&6It tracks total used JVM memory against the max JVM allocation and shows the largest memory pools.'
+      - '&aHigh values mean the server has less headroom before garbage collection pressure increases.'
+      - '&6Frequent alerts usually mean heavy edits, too many loaded systems, or an undersized JVM allocation.'
+    syntax: '&aSyntax: &6{usage} <on|off|status|help> [threshold:<percent>] [interval:<seconds>] [cooldown:<seconds>]'

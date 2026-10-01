@@ -1,0 +1,388 @@
+name: Bayzyl
+version: 0.1.0-SNAPSHOT
+main: com.bayzyl.Bayzyl
+api-version: 1.21
+softdepend: [WorldEdit, FastAsyncWorldEdit]
+commands:
+  bzl:
+    description: Bayzyl command root
+    usage: /bzl
+    aliases: [bayzyl]
+  bzlhelp:
+    description: Bayzyl help shortcut
+    usage: /bzlhelp [topic]
+    aliases: [bayzylhelp, bzyzylhelp]
+  kithelp:
+    description: Bayzyl kit help shortcut
+    usage: /kithelp [topic]
+  kitlist:
+    description: Paginated shared Bayzyl kit browser
+    usage: /kitlist [page]
+  kitupdate:
+    description: Update a shared Bayzyl builder kit from your current loadout
+    usage: /kitupdate <name>
+  kitconfirm:
+    description: Confirm a pending shared Bayzyl kit update
+    usage: /kitconfirm
+  bzltoggle:
+    description: Bayzyl runtime toggles
+    usage: /bzltoggle <admin|ramalert|authority>
+  ramalert:
+    description: Bayzyl RAM alert controls
+    usage: /ramalert <on|off|status|help> [threshold:<percent>] [interval:<seconds>] [cooldown:<seconds>]
+  memreset:
+    description: Clear clipboard/history/trail state and reclaim Bayzyl edit memory
+    usage: /memreset [global]
+  clearclipboard:
+    description: Clear your current Bayzyl clipboard only
+    usage: /clearclipboard
+  step:
+    description: Move the player forward immediately
+    usage: /step [blocks]
+  nudge:
+    description: Bayzyl nudge settings
+    usage: /nudge <status|invert|step|vertical|reset>
+  tabmenu:
+    description: Bayzyl tab menu controls
+    usage: /tabmenu <all|module|status> [on|off|status]
+  profile:
+    description: Bayzyl profile and preset controls
+    usage: /profile <save|update|load|inspect|list|delete|rename|duplicate>
+  kit:
+    description: Shared Bayzyl builder kits
+    usage: /kit <name|list|menu|load|inspect|delete|rename|duplicate|update|restoredefaults|confirm|note|theme|icon|alias>
+  kitmake:
+    description: Capture a shared Bayzyl builder kit
+    usage: /kitmake <hotbar|inventory> <name> [overwrite:true]
+  brushmenu:
+    description: Open the in-game brush menu
+    usage: /brushmenu
+    aliases: [bm]
+  set:
+    description: Set blocks in a selection
+    usage: /set <block|distribution> [options]
+  replace:
+    description: Replace blocks in a selection
+    usage: /replace <from...> <block|distribution> [options]
+  copy:
+    description: Copy a selection
+    usage: /copy [options]
+  cut:
+    description: Cut a selection
+    usage: /cut [options]
+  paste:
+    description: Paste a clipboard
+    usage: /paste [-aons] [rotation:<0|90|180|270>] [confirm:true]
+  undo:
+    description: Undo the last action
+    usage: /undo [steps:<n>]
+  redo:
+    description: Redo the last action
+    usage: /redo [steps:<n>]
+  clearhistory:
+    description: Clear your own Bayzyl undo/redo history
+    usage: /clearhistory
+    aliases: [historyclear]
+  move:
+    description: Move a selection
+    usage: /move <distance> [direction] [-a] [confirm:true]
+  stack:
+    description: Stack a selection
+    usage: /stack <count> [direction] [-a] [confirm:true]
+  rotate:
+    description: Rotate a clipboard
+    usage: /rotate <0|90|180|270|left|right|back>
+  flip:
+    description: Flip a clipboard
+    usage: /flip <x|y|z|left-right|front-back|up-down|left|right|forward|back>
+  sphere:
+    description: Create a sphere
+    usage: /sphere <block|distribution> <radius> [mask:<blocks>] [at:<player|target|selection-center>] [confirm:true]
+  hsphere:
+    description: Create a hollow sphere
+    usage: /hsphere <block|distribution> <radius> [mask:<blocks>] [at:<player|target|selection-center>] [confirm:true]
+  dome:
+    description: Create a dome
+    usage: /dome <block|distribution> <radius> [mask:<blocks>] [at:<player|target|selection-center>] [confirm:true]
+  hdome:
+    description: Create a hollow dome
+    usage: /hdome <block|distribution> <radius> [mask:<blocks>] [at:<player|target|selection-center>] [confirm:true]
+  bowl:
+    description: Create a bowl
+    usage: /bowl <block|distribution> <radius> [mask:<blocks>] [at:<player|target|selection-center>] [confirm:true]
+  hbowl:
+    description: Create a hollow bowl
+    usage: /hbowl <block|distribution> <radius> [mask:<blocks>] [at:<player|target|selection-center>] [confirm:true]
+  cyl:
+    description: Create a cylinder
+    usage: /cyl <block|distribution> <radius> [height] [mask:<blocks>] [at:<player|target|selection-center>] [confirm:true]
+  hcyl:
+    description: Create a hollow cylinder
+    usage: /hcyl <block|distribution> <radius> [height] [mask:<blocks>] [at:<player|target|selection-center>] [confirm:true]
+  pyramid:
+    description: Create a pyramid
+    usage: /pyramid <block|distribution> <size> [mask:<blocks>] [at:<player|target|selection-center>] [confirm:true]
+  hpyramid:
+    description: Create a hollow pyramid
+    usage: /hpyramid <block|distribution> <size> [mask:<blocks>] [at:<player|target|selection-center>] [confirm:true]
+  brush:
+    description: Bind, save, and load reusable brushes
+    usage: /brush <save|load|list|delete|sphere|hsphere|cyl|hcyl|pyramid|hpyramid|structure|naturalize|clipboard|paint|spatter|replace|blend|surface|noise|restore|vegetation|decay|gen|erase|smooth|raise|lower|flatten|floatingcleanup|foliagecleanup|liquidcleanup|snowcleanup|lightcleanup|none|info> ...
+  brushgen:
+    description: Bind a parametric vanilla-style generation brush
+    usage: /brushgen <ridge|plateau|valley|basin|erode|ravine|cave|dunes|mesa|peak|cliff|boulder|scree> [subtype] [options]
+    aliases: [genbrush]
+  mask:
+    description: Set or clear the mask of the brush bound to your held item
+    usage: /mask <blocks|none>
+  gmask:
+    description: Set, toggle, or clear a global mask that filters every edit you perform
+    usage: /gmask [blocks|none|status]
+  material:
+    description: Change the material of the brush bound to your held item
+    usage: /material <block|distribution>
+    aliases: [mat]
+  size:
+    description: Change the size (and optionally height) of the brush bound to your held item
+    usage: /size <radius> [height]
+  density:
+    description: Change the scatter density of the paint or pattern brush bound to your held item
+    usage: /density <0.0-1.0>
+  none:
+    description: Unbind the brush from your held item (alias for /brush none)
+    usage: /none
+  generate:
+    description: Generate an arbitrary formula-driven shape in a selection
+    usage: /generate <block> <expression> [mode:normalized|raw|center|origin] [hollow:true] [confirm:true]
+    aliases: [g, gen]
+  generatebiome:
+    description: Generate a biome fill, primitive shape, or formula-driven biome edit in a selection
+    usage: /generatebiome <biome> [sphere|cyl|pyramid|dome|bowl|expr <expression>] [mode:normalized|raw|center|origin] [hollow:true] [preview:true] [confirm:true]
+    aliases: [genbiome, gbiome]
+  forestgen:
+    description: Generate a forest around a placement anchor
+    usage: /forestgen [size] [type] [density] [options]
+  genfeature:
+    description: Place a vanilla configured feature at an anchor
+    usage: /genfeature <feature_id> [at:<player|target|center|selection-center>] [confirm:true]
+  genstructure:
+    description: Place a vanilla structure at an anchor
+    usage: /genstructure <structure_id> [at:<player|target|center|selection-center>] [confirm:true]
+  regen:
+    description: Reroll the last generated structure in the exact same place
+    usage: /regen
+  pumpkins:
+    description: Generate pumpkin patches around a placement anchor
+    usage: /pumpkins [size] [options]
+  biomeinfo:
+    description: Show biome composition for the current selection
+    usage: /biomeinfo
+  measure:
+    description: Show dimensions and totals for the current selection
+    usage: /measure
+  ruler:
+    description: Measure distance to the block you are looking at
+    usage: /ruler
+  whereami:
+    description: Show your exact position and context
+    usage: /whereami
+  surface:
+    description: Teleport to the nearest safe surface above
+    usage: /surface
+  naturalize:
+    description: Naturalize a selection
+    usage: /naturalize [depth:<n>] [bedrock:on|off] [confirm:true]
+  schematic:
+    description: Save the current selection as a schematic file
+    usage: /schematic <save|load|orient|list> ...
+    aliases: [schem]
+  ascend:
+    description: Teleport to the next safe floor above
+    usage: /ascend
+  descend:
+    description: Teleport to the nearest safe floor below
+    usage: /descend
+  align:
+    description: Snap your facing to a cardinal direction
+    usage: /align [north|south|east|west]
+  ceil:
+    description: Report the clearance to the ceiling above you
+    usage: /ceil
+  centerme:
+    description: Center yourself on the current block
+    usage: /centerme
+  ghosthand:
+    description: Toggle interact-through mode for containers and buttons
+    usage: /ghosthand
+    aliases: [gh]
+  clipboardinfo:
+    description: Show clipboard dimensions and origin
+    usage: /clipboardinfo
+  trailclear:
+    description: Clear your recent edit trail
+    usage: /trailclear
+  selcorners:
+    description: Show the current selection corners
+    usage: /selcorners
+  selswap:
+    description: Swap pos1 and pos2 for the current selection
+    usage: /selswap
+  selsave:
+    description: Save the current selection server-side
+    usage: /selsave <name>
+  selload:
+    description: Load a saved selection
+    usage: /selload <name>
+  selcenter:
+    description: Highlight the center of the current selection
+    usage: /selcenter
+  pos1:
+    description: Set selection pos1 with an anchor option
+    usage: /pos1 [at:player|at:target|at:selection-center]
+  pos2:
+    description: Set selection pos2 with an anchor option
+    usage: /pos2 [at:player|at:target|at:selection-center]
+  jail:
+    description: Jailed admin-mode prank command
+    usage: /jail <player>
+  liberate:
+    description: Release a jailed player
+    usage: /liberate <player>
+  bubu:
+    description: Cute pink chat phrase command
+    usage: /bubu
+  lol:
+    description: Broadcasts "haha" — deploy smoke test
+    usage: /lol
+  susu:
+    description: Spawn a calico cat named Susu
+    usage: /susu
+  artie:
+    description: Spawn a tuxedo cat named Artie
+    usage: /artie
+  walls:
+    description: Create walls around a selection
+    usage: /walls <block|distribution> [options]
+  overlay:
+    description: Overlay blocks on top of a selection
+    usage: /overlay <block> [options]
+  smooth:
+    description: Smooth a terrain selection
+    usage: /smooth [options]
+  palette:
+    description: Palette utilities
+    usage: /palette <analyze|swap>
+  select:
+    description: Selection utilities
+    usage: /select <subcommand>
+  expand:
+    description: Expand a selection
+    usage: /expand <amount|all amount> [direction|dir:<direction>]
+  contract:
+    description: Contract a selection
+    usage: /contract <amount|all amount> [direction|dir:<direction>]
+  unstick:
+    description: Move yourself to the nearest safe open space
+    usage: /unstick [auto <on|off|status>]
+  thru:
+    description: Teleport through the wall you are looking at
+    usage: /thru
+  wand:
+    description: Get the selection wand
+    usage: /wand
+  eraser:
+    description: Get the eraser tool
+    usage: /eraser
+  nightvision:
+    description: Toggle night vision
+    usage: /nightvision [on|off|toggle]
+  particlevisualtoggle:
+    description: Toggle selection particle visualization
+    usage: /particlevisualtoggle
+    aliases: [pvt]
+  oops:
+    description: Undo your latest Bayzyl action with a broadcast
+    usage: /oops [steps:<n>]
+  cleanup:
+    description: Cleanup floating blocks or other debris
+    usage: /cleanup <floatingcleanup|foliagecleanup|liquidcleanup|snowcleanup|lightcleanup|brush>
+  detailbrush:
+    description: Preset detail brushes (flame, cloud, lightning, vine, bark)
+    usage: /detailbrush <tool|set|info|presets|save|load|code|getcode|variants|delete|mode|none> ...
+    aliases: [db]
+  resume:
+    description: Resume interrupted command after server restart
+    usage: /resume
+  agitate:
+    description: Trigger physics on stuck fluid blocks in the current selection
+    usage: /agitate
+  accent:
+    description: Set, reset, or inspect the Bayzyl menu accent color
+    usage: /accent <color|reset|status|#RRGGBB>
+    aliases: [bzlaccent]
+  authority:
+    description: Bayzyl command authority controls — claim, give up, or inspect contested labels
+    usage: /authority <status|claim|giveup>
+    aliases: [bzlauthority, commandauthority]
+  tool:
+    description: Bind a Bayzyl terrain tool (smooth, raise, lower, flatten) to your held slot
+    usage: /tool <smooth|raise|lower|flatten> <radius> [power] [bedrock:on|off]
+    aliases: [bzltool]
+  floatingcleanup:
+    description: Remove orphan floating blocks in the current selection
+    usage: /floatingcleanup [confirm:true]
+  foliagecleanup:
+    description: Remove leaves and grass in the current selection
+    usage: /foliagecleanup [confirm:true]
+  liquidcleanup:
+    description: Remove water and lava in the current selection
+    usage: /liquidcleanup [confirm:true]
+  snowcleanup:
+    description: Remove snow layers in the current selection
+    usage: /snowcleanup [confirm:true]
+  lightcleanup:
+    description: Remove redundant light-source blocks in the current selection
+    usage: /lightcleanup [confirm:true]
+  wetoggle:
+    description: Enable or disable the WorldEdit plugin at runtime (testing aid)
+    usage: /wetoggle [on|off|toggle|status]
+permissions:
+  bayzyl.admin:
+    description: Full access to Bayzyl
+    default: op
+  bayzyl.use:
+    description: Use non-mutating Bayzyl commands and tools
+    default: true
+  bayzyl.edit:
+    description: Perform Bayzyl world edits and use editing tools
+    default: op
+  bayzyl.generate:
+    description: Run Bayzyl procedural generation commands and brushes
+    default: op
+  bayzyl.genstructure:
+    description: Place and reroll vanilla structures directly or with brushes
+    default: op
+  bayzyl.adminmode:
+    description: Enable and use Bayzyl admin mode
+    default: op
+  bayzyl.jail:
+    description: Jail or liberate players while authorized for admin mode
+    default: op
+  bayzyl.wetoggle:
+    description: Toggle the WorldEdit integration at runtime
+    default: op
+  bayzyl.runtime:
+    description: Change Bayzyl runtime and command-authority settings
+    default: op
+  bayzyl.toggle:
+    description: Access Bayzyl runtime toggles
+    default: op
+  bayzyl.eraser.unlimited:
+    description: Remove eraser radius limits
+    default: op
+  bayzyl.kit.create:
+    description: Create, overwrite, rename, duplicate, and update shared Bayzyl kits
+    default: op
+  bayzyl.kit.delete:
+    description: Delete shared Bayzyl kits
+    default: op
