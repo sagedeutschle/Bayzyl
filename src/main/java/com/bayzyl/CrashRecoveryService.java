@@ -493,10 +493,13 @@ public final class CrashRecoveryService {
 
     private void runMaintenance() {
         cleanupOldSessions();
-        synchronized (this) {
-            if (store.state() == AtomicYamlStore.State.RETRYABLE && lastDocument != null) {
-                store.submit(revision, lastDocument);
-            }
+        retryFailedWrites();
+    }
+
+    /** Re-schedule the newest retained revision after a failed write; a no-op when nothing failed. */
+    public synchronized void retryFailedWrites() {
+        if (store.state() == AtomicYamlStore.State.RETRYABLE && lastDocument != null) {
+            store.submit(revision, lastDocument);
         }
     }
 
