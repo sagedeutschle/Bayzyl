@@ -116,10 +116,16 @@ About
 Hi, I'm Sage.
 
 ## about.p1
-Prismet started as a games app I build with family and a crew of AI agents, and it became the name for everything I make. The app is on the App Store, the lenses run on this site, and the rest of the work lives on GitHub.
+I've been building, breaking, repairing, and experimenting with computers for as long as I can remember. Prismet started as the name of one of my projects and eventually became the name I use for everything I build.
 
 ## about.p2
-I like tools that **respect the person using them**: fast to load, honest about what they do, and private by default. That goes for a Minecraft plugin with confirmations on big edits, a web tool with no backend, and a desktop where every widget earns its pixels.
+My work ranges from apps and web tools to Minecraft infrastructure, Linux customization, and developer tooling. Some projects ship to the App Store, some live on this site, and the rest live on GitHub.
+
+## about.p3
+**I like building tools that respect the person using them.** They should be fast, understandable, private when possible, and designed around the actual problem instead of unnecessary complexity.
+
+## about.p4
+That philosophy applies whether I'm building a Minecraft plugin with safeguards for destructive edits, a lightweight web tool with no backend, or a Linux desktop where every widget earns its space.
 
 ## hire.eyebrow
 Work with me
@@ -131,37 +137,37 @@ What I can build for you
 Minecraft plugins
 
 ## hire.mc-plugin.sub
-Paper and Spigot, from one command to a full toolkit
+Paper & Spigot plugins, from one command to complete custom toolkits.
 
 ## hire.mc-server.title
 Minecraft servers & networks
 
 ## hire.mc-server.sub
-Velocity, Docker, permissions, backups
+Velocity, Docker, permissions, backups, deployment, and server infrastructure.
 
 ## hire.ios-app.title
 iPhone, iPad & Mac apps
 
 ## hire.ios-app.sub
-SwiftUI, from first screen to App Store review
+SwiftUI apps built from the first screen through App Store submission.
 
 ## hire.web-tool.title
 Web tools & landing pages
 
 ## hire.web-tool.sub
-Fast, private, no bloat
+Fast, focused websites and utilities without unnecessary complexity.
 
 ## hire.ai-agents.title
 AI coding-agent setup
 
 ## hire.ai-agents.sub
-Claude Code and Codex working as a team
+Claude Code, Codex, and developer tooling configured to work together.
 
 ## hire.linux-desktop.title
 Linux desktop customization
 
 ## hire.linux-desktop.sub
-KDE Plasma widgets, themes, scripts
+KDE Plasma widgets, themes, scripts, workflows, and desktop automation.
 
 ## hire.cta
 Hire me on Fiverr
