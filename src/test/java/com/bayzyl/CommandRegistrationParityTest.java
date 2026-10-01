@@ -26,6 +26,37 @@ final class CommandRegistrationParityTest {
     }
 
     @Test
+    void descriptorUsageAndAliasesMatchTheRegistryAndAccessPolicy() throws IOException {
+        List<String> descriptor = Files.readAllLines(Path.of("src", "main", "resources", "plugin.yml"), StandardCharsets.UTF_8);
+        assertEquals(List.of(), DescriptorParity.problems(descriptor, CommandRegistry.getAllCommands(),
+                new com.bayzyl.security.CommandAccessPolicy().aliases()));
+    }
+
+    @Test
+    void parityCatchesAMissingRootAMismatchedUsageAndAnUndeclaredAlias() {
+        List<String> descriptor = List.of(
+                "name: Bayzyl",
+                "commands:",
+                "  copy:",
+                "    description: Copy",
+                "    usage: /copy [mask]",
+                "  db:",
+                "    usage: /db",
+                "    aliases: [dbx]",
+                "permissions:");
+        List<CommandSpec> registry = List.of(
+                new CommandSpec("copy", "Copy", "/copy [options]"),
+                new CommandSpec("paste", "Paste", "/paste"));
+        List<String> problems = DescriptorParity.problems(descriptor, registry, java.util.Map.of("pst", "paste"));
+
+        assertTrue(problems.contains("missing root: paste"), problems.toString());
+        assertTrue(problems.stream().anyMatch(problem -> problem.startsWith("usage differs for copy")), problems.toString());
+        assertTrue(problems.contains("undeclared in registry: db"), problems.toString());
+        assertTrue(problems.stream().anyMatch(problem -> problem.startsWith("alias dbx is declared for db")), problems.toString());
+        assertTrue(problems.contains("alias pst -> paste is not declared in plugin.yml"), problems.toString());
+    }
+
+    @Test
     void redstoneAuditIsRegisteredAsARootAndUnderBzl() throws IOException {
         CommandSpec root = CommandRegistry.getTopLevel().stream()
                 .filter(spec -> spec.name().equals("redstoneaudit")).findFirst().orElseThrow();

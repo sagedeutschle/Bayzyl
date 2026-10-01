@@ -63,6 +63,11 @@ public final class CommandAccessPolicy {
         return ROOT_CAPABILITIES;
     }
 
+    /** Every command alias and the root it resolves to (mirrors plugin.yml). */
+    public Map<String, String> aliases() {
+        return ALIASES;
+    }
+
     public CommandCapability requiredToolCapability(ToolType toolType) {
         if (toolType == null) {
             return CommandCapability.USE;

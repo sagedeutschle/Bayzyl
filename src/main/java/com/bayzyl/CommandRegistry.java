@@ -154,7 +154,7 @@ public final class CommandRegistry {
                 new CommandSpec("kitupdate", "Update a shared builder kit", "/kitupdate <name>"),
                 new CommandSpec("kitconfirm", "Confirm a pending shared builder kit update", "/kitconfirm"),
                 new CommandSpec("bzltoggle", "Bayzyl runtime toggles", "/bzltoggle <admin|ramalert|authority>"),
-                new CommandSpec("ramalert", "Bayzyl RAM alert controls", "/ramalert <on|off|status|help> [options]"),
+                new CommandSpec("ramalert", "Bayzyl RAM alert controls", "/ramalert <on|off|status|help> [threshold:<percent>] [interval:<seconds>] [cooldown:<seconds>]"),
                 new CommandSpec("step", "Move the player forward immediately", "/step [blocks]"),
                 new CommandSpec("nudge", "Bayzyl nudge settings", "/nudge <status|invert|step|vertical|reset>"))) {
             byName.put(spec.name(), spec);

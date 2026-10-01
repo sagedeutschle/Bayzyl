@@ -130,7 +130,7 @@ commands:
     usage: /brush <save|load|list|delete|sphere|hsphere|cyl|hcyl|pyramid|hpyramid|structure|naturalize|clipboard|paint|spatter|replace|blend|surface|noise|restore|vegetation|decay|gen|erase|smooth|raise|lower|flatten|floatingcleanup|foliagecleanup|liquidcleanup|snowcleanup|lightcleanup|none|info> ...
   brushgen:
     description: Bind a parametric vanilla-style generation brush
-    usage: /brushgen <ridge|plateau|valley|basin|erode|ravine|cave|dunes|mesa|peak|cliff|boulder|scree> [subtype] [options]
+    usage: /brushgen <type> [subtype] [size:<n>] [intensity:<0..1>] [height:<n>] [mask:<blocks>] [adapt:on|off] [seed:<n>]
     aliases: [genbrush]
   mask:
     description: Set or clear the mask of the brush bound to your held item
@@ -161,7 +161,7 @@ commands:
     aliases: [genbiome, gbiome]
   forestgen:
     description: Generate a forest around a placement anchor
-    usage: /forestgen [size] [type] [density] [options]
+    usage: /forestgen [size] [type] [density] [at:<player|target|selection-center>] [confirm:true]
   genfeature:
     description: Place a vanilla configured feature at an anchor
     usage: /genfeature <feature_id> [at:<player|target|center|selection-center>] [confirm:true]
@@ -173,7 +173,7 @@ commands:
     usage: /regen
   pumpkins:
     description: Generate pumpkin patches around a placement anchor
-    usage: /pumpkins [size] [options]
+    usage: /pumpkins [size] [at:<player|target|selection-center>] [confirm:true]
   biomeinfo:
     description: Show biome composition for the current selection
     usage: /biomeinfo
@@ -194,7 +194,7 @@ commands:
     usage: /naturalize [depth:<n>] [bedrock:on|off] [confirm:true]
   schematic:
     description: Save the current selection as a schematic file
-    usage: /schematic <save|load|orient|list> ...
+    usage: /schematic <save|load|orient|list> [args]
     aliases: [schem]
   ascend:
     description: Teleport to the next safe floor above

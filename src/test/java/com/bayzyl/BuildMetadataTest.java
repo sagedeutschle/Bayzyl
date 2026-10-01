@@ -43,6 +43,21 @@ class BuildMetadataTest {
     }
 
     @Test
+    void builtDescriptorParsesTheWayPaperReadsIt() throws IOException {
+        try (JarFile jar = builtJar(); InputStream in = jar.getInputStream(jar.getEntry("plugin.yml"))) {
+            org.bukkit.configuration.file.YamlConfiguration descriptor = new org.bukkit.configuration.file.YamlConfiguration();
+            try {
+                descriptor.loadFromString(new String(in.readAllBytes(), StandardCharsets.UTF_8));
+            } catch (org.bukkit.configuration.InvalidConfigurationException invalid) {
+                throw new AssertionError("plugin.yml in the jar is not valid YAML", invalid);
+            }
+            assertEquals(jar.getManifest().getMainAttributes().getValue("Implementation-Version"), descriptor.getString("version"));
+            assertEquals(CommandRegistry.getAllCommands().size(), descriptor.getConfigurationSection("commands").getKeys(false).size());
+            assertEquals("/redstoneaudit [clear|show <n>|page <n>]", descriptor.getString("commands.redstoneaudit.usage"));
+        }
+    }
+
+    @Test
     void buildInfoFallsBackToUnknownWithoutMetadata() {
         assertEquals(new BuildInfo("unknown", "unknown"), BuildInfo.from(new Manifest()));
         assertEquals(new BuildInfo("unknown", "unknown"), BuildInfo.from(null));
