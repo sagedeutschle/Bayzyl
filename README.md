@@ -4,6 +4,10 @@
 
 Selections, brushes, shapes, shared kits, and builder profiles — with a command surface that aims to be approachable for newer builders while staying useful for those already comfortable in WorldEdit or FAWE.
 
+![Bayzyl building a plaza, dome, pyramid, tower, formula ring, and forest one command at a time](docs/images/bayzyl-timelapse.gif)
+
+*Every frame above is one real Bayzyl command on a clean Paper 1.21.4 server with no WorldEdit installed. Renders use vanilla textures.*
+
 ---
 
 ## Overview
@@ -50,6 +54,21 @@ Save a complete loadout (toolbar, runtime toggles, preferences) as a profile. Sh
 ### Server-side QoL
 RAM alerts with configurable thresholds, a tab info panel, decoy player count for events, runtime admin/builder toggles.
 
+## Screenshots
+
+| | |
+|---|---|
+| ![Glass dome and quartz pillars on a stone plaza](docs/images/showcase-plaza-dome.webp) | ![Copper torus generated from a formula, surrounded by a generated forest](docs/images/showcase-formula-ring.webp) |
+| `/hsphere glass 9`, `/cyl quartz_pillar 1 9`, `/walls 70%stone_bricks,30%mossy_stone_bricks` | `/generate copper_block (sqrt(x*x+y*y)-0.62)*(sqrt(x*x+y*y)-0.62)+z*z<0.05`, `/forestgen 16 oak 5` |
+| ![Stone brick tower with a dark oak roof](docs/images/showcase-tower.webp) | ![Inside the glass dome looking out](docs/images/showcase-inside-dome.webp) |
+| `/hcyl 75%stone_bricks,25%cracked_stone_bricks 6 18`, `/hpyramid dark_oak_planks 7` | Weighted block mixes (`60%polished_andesite,25%andesite,15%stone_bricks`) on the floor |
+
+In game, `/bzlhelp` pages every command, and the tab panel shows live server memory, a clipboard preview, selection stats, and recent commands:
+
+| | |
+|---|---|
+| ![Bayzyl help page 1 in Minecraft chat](docs/images/ingame-help-page-01.webp) | ![Bayzyl tab panel with RAM usage, clipboard preview, selection, and command history](docs/images/ingame-tab-panel.webp) |
+
 ---
 
 ## Install
@@ -57,11 +76,11 @@ RAM alerts with configurable thresholds, a tab info panel, decoy player count fo
 1. Download the latest `bayzyl.jar` from the [Releases page](https://github.com/sagedeutschle/Bayzyl/releases).
 2. Drop it into your server's `plugins/` folder.
 3. Restart the server.
-4. *(Optional)* Install [WorldEdit](https://enginehub.org/worldedit/) or [FastAsyncWorldEdit](https://www.spigotmc.org/resources/fastasyncworldedit.13932/) if you want Bayzyl to use its WorldEdit-compatible shape adapter when available.
+4. *(Optional)* Install [WorldEdit](https://enginehub.org/worldedit/) or [FastAsyncWorldEdit](https://www.spigotmc.org/resources/fastasyncworldedit.13932/). Bayzyl runs without either: shapes, edits, clipboard, history, and brushes use Bayzyl's native adapters. Saving and loading schematic **files** needs WorldEdit or FAWE.
 
 **Requirements**
 
-- Paper 1.21 or newer
+- Paper 1.21 or newer (0.2.0-alpha.1 was tested on Paper 1.21.4)
 - Java 21+
 
 Spigot, Folia, Forge, and Fabric ports are on the v2 roadmap.
