@@ -181,7 +181,7 @@ const IMAGES = {
   'gig-mc-plugin': () => page(`
     ${gigLeft({ eyebrow: 'Minecraft · Paper plugins', title: 'Custom Minecraft <em>plugins</em>, built to last',
       lede: 'Commands, GUIs, events, and integrations for Paper and Spigot servers.',
-      chips: ['Author of Bayzyl: 99 commands', 'Java 21 · Paper 1.21 · FAWE-aware', 'Clean code, docs, and tests'] })}
+      chips: ['Author of Bayzyl: 99 commands', 'Java 21 · Paper 1.21 · FAWE-aware', 'Clean, documented source code'] })}
     <div class="right">
       ${mcChat('1', 'position:absolute;left:24px;top:64px;width:640px;font-size:20px;transform:rotate(-1deg)', 8)}
       <div class="term" style="position:absolute;left:60px;top:400px;width:600px;--hueTxt:${HUE_TXT.minecraft}">

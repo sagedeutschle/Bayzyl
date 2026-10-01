@@ -295,7 +295,7 @@
     {
       "slug": "quark",
       "title": "Quark",
-      "subtitle": "A personal hub for mail, school, code, and files",
+      "subtitle": "A personal hub for mail, calendars, code, and files",
       "beam": "desktop",
       "featured": false,
       "status": "Private build",
