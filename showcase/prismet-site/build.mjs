@@ -63,7 +63,8 @@ copyFileSync(join(HERE, 'src/site.css'), join(DIST, 'site.css'));
 copyFileSync(join(HERE, 'src/site.js'), join(DIST, 'site.js'));
 if (PREVIEW) for (const f of ['editor.js', 'editor.css']) if (existsSync(join(HERE, 'src', f))) copyFileSync(join(HERE, 'src', f), join(DIST, f));
 asset('assets/icons/prismet-app.webp');            // favicon
-asset('fiverr/out/portfolio-prismet-spread.png');   // og:image
+// og:image as JPEG: some link unfurlers still skip WebP
+execFileSync('convert', [join(SHOWCASE, 'fiverr/out/portfolio-prismet-spread.png'), '-resize', '1200x', '-quality', '82', join(DIST, 'assets/og.jpg')]);
 
 // ── shared pieces ───────────────────────────────────────────────────────────────────────────
 const hueVars = (id) => `--h:var(--${id});--hi:var(--${id}-ink)`;
@@ -84,7 +85,7 @@ const head = ({ title, desc, root = '' }) => `<meta charset="utf-8">
 <meta name="description" content="${esc(desc)}">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
-<meta property="og:image" content="https://prismet.xyz/assets/boards/portfolio-prismet-spread.webp">
+<meta property="og:image" content="https://prismet.xyz/assets/og.jpg">
 <meta name="theme-color" content="#10111A">
 <link rel="icon" href="${root}assets/icons/prismet-app.webp">
 <link rel="stylesheet" href="${root}assets/fonts/fonts.css">${PREVIEW ? GOOGLE_FONTS + `<link rel="stylesheet" href="${root}editor.css">` : ''}
