@@ -24,8 +24,8 @@ In your pocket it is a native iPhone master remote for home services, lifecycle 
 ## facts
 - Widgets: 28 QML faces
 - Remote: native iPhone app
-- Monitors: 3
-- Install: one command
+- VSCODIUM: Custom built IDE
+- Install: Best on Mac or Linux
 
 ## highlights
 - The iPhone Mesh tab lists hosts and Minecraft servers with live status dots, resource use, and tap-to-wake

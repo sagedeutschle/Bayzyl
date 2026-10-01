@@ -20,7 +20,7 @@ Product, design, iOS + macOS engineering, release
 Nineteen classic games and three live-data lenses in one app, each game with its own hand-built look. Chess plays a tunable Stockfish engine in 2D or 3D, the Rubik's Cube is a real SceneKit cube, and friends can play Sea Battle, Checkers, Reversi, Connect Four, and Gomoku online. The Mac app ships at feature parity with iOS.
 
 ## facts
-- Games: 19 + 3 lenses
+- Games: 19
 - Platforms: iPhone · iPad · Mac · Watch
 - Codebase: ≈81k lines Swift + Python
 - Tests: ≈640 Swift · 237 Python

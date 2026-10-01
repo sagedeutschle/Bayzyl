@@ -35,10 +35,10 @@ Hire me
 Prismet · the workshop of Sage Deutschle
 
 ## hero.title
-One workshop, *split six ways*.
+Hello!
 
 ## hero.lede
-I ship iPhone and Mac games, Minecraft plugins and servers, custom Linux desktops, AI agent systems, and small web tools that keep your data on your device.
+I have shipped iPhone and Mac games. Coded Minecraft plugins and ran Minecraft servers. I also like to make custom Linux desktops, AI agent systems, and small web tools that keep your data on your device and in your control.
 
 ## hero.cta_primary
 See the work
@@ -68,7 +68,7 @@ AI & Agents
 Live on prismet.xyz
 
 ## lenses.title
-Lenses
+Fun Analytic Tools
 
 ## lenses.intro
 Live-data tools that started inside the Prismet app. They run here too.
