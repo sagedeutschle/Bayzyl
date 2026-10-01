@@ -164,7 +164,8 @@ function media(p) {
     const phone = asset('assets/live/helm-1.webp'), faces = ['chronos', 'gpu'].map((n) => asset(`assets/helm/${n}.webp`));
     return `<div class="helmmix"><img class="phone" src="${phone}" alt="" loading="lazy"><div>${faces.map((x) => `<img src="${x}" alt="" loading="lazy">`).join('')}</div></div>`;
   }
-  if ((p.cover || '').includes('/icons/')) return `<img class="icon" src="${asset(p.cover)}" alt="">`;
+  if (!p.cover) return `<div class="placeholder"><strong aria-hidden="true">${inline(work(p.slug, 'title'))}</strong></div>`;
+  if (p.cover.includes('/icons/')) return `<img class="icon" src="${asset(p.cover)}" alt="">`;
   return `<img class="cover" src="${asset(p.cover)}" alt="" loading="lazy">`;
 }
 const mediaAlt = (p) => ({
