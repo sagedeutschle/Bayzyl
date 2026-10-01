@@ -48,9 +48,10 @@ const CSS = `
   --ground:#10111A; --panel:#1B1D2A; --panelHi:#282B3C; --hair:rgba(255,255,255,.10); --outline:rgba(255,255,255,.18);
   --ink:#F2F4FC; --ink2:rgba(242,244,252,.70); --ink3:rgba(242,244,252,.46);
   --gold:#B88A33; --goldHi:#E2B65C;
-  --display:"Newsreader", "New York", Georgia, serif;
+  --display:"Unbounded", "Arial Black", sans-serif;
   --body:"Hanken Grotesk", system-ui, sans-serif;
-  --mono:"JetBrains Mono", ui-monospace, monospace;
+  --mono:"Martian Mono", ui-monospace, monospace;
+  --code:"JetBrains Mono", ui-monospace, monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:${W}px;height:${H}px;overflow:hidden;background:var(--ground);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
@@ -62,18 +63,18 @@ html,body{width:${W}px;height:${H}px;overflow:hidden;background:var(--ground);co
   background-image:radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);background-size:22px 22px;
   mask-image:linear-gradient(90deg,#000 0,transparent 55%)}
 .left{position:absolute;left:64px;top:64px;bottom:104px;width:500px;display:flex;flex-direction:column;gap:22px}
-.eyebrow{font:600 15px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--goldHi);display:flex;align-items:center;gap:12px}
+.eyebrow{font:600 13px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--goldHi);display:flex;align-items:center;gap:12px}
 .eyebrow i{display:inline-block;width:26px;height:3px;border-radius:2px;background:var(--hue)}
-h1{font:700 64px/1.02 var(--display);letter-spacing:-.015em;text-wrap:balance;font-variation-settings:"opsz" 72}
+h1{font:700 50px/1.1 var(--display);letter-spacing:-.025em;text-wrap:balance}
 h1 em{font-style:normal;color:var(--hueTxt)}
 .lede{font:500 21px/1.42 var(--body);color:var(--ink2);max-width:470px;text-wrap:pretty}
 .chips{display:flex;flex-direction:column;gap:10px;margin-top:auto}
 .chip{display:flex;align-items:center;gap:12px;font:600 19px/1.25 var(--body);color:var(--ink)}
 .chip b{flex:none;width:10px;height:10px;border-radius:50%;background:var(--hue);box-shadow:0 0 0 4px color-mix(in srgb,var(--hue) 25%, transparent)}
 .foot{position:absolute;left:64px;right:64px;bottom:26px;display:flex;align-items:center;justify-content:space-between;
-  font:500 14px/1 var(--mono);color:var(--ink3);letter-spacing:.04em}
+  font:500 12.5px/1 var(--mono);color:var(--ink3);letter-spacing:.04em}
 .foot .brand{display:flex;align-items:center;gap:10px;color:var(--ink2)}
-.foot .brand strong{font:700 17px/1 var(--display);letter-spacing:.01em;color:var(--ink)}
+.foot .brand strong{font:700 15px/1 var(--display);letter-spacing:-.01em;color:var(--ink)}
 .right{position:absolute;top:0;right:0;bottom:0;left:600px}
 .label{font:600 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
 .card{background:var(--panel);border:1px solid var(--outline);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.45)}
@@ -84,7 +85,7 @@ h1 em{font-style:normal;color:var(--hueTxt)}
 .mc .l{white-space:pre-wrap}
 .mc .b{font-weight:600}
 /* terminal */
-.term{font:500 15px/1.6 var(--mono);color:#D7DBEA;background:#0B0C12;border:1px solid var(--outline);border-radius:14px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.55)}
+.term{font:500 15px/1.6 var(--code);color:#D7DBEA;background:#0B0C12;border:1px solid var(--outline);border-radius:14px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.55)}
 .term .bar{display:flex;gap:7px;align-items:center;padding:11px 14px;background:#151722;border-bottom:1px solid var(--hair)}
 .term .bar i{width:11px;height:11px;border-radius:50%;background:#3A3D4F}
 .term .bar span{margin-left:10px;font-size:12px;color:var(--ink3);letter-spacing:.06em}
@@ -92,10 +93,10 @@ h1 em{font-style:normal;color:var(--hueTxt)}
 .term .c{color:#6E748C} .term .p{color:var(--hueTxt)} .term .k{color:var(--goldHi)}
 /* diagram boxes */
 .node{position:absolute;padding:14px 16px;border-radius:14px;background:var(--panel);border:1px solid var(--outline);font:600 17px/1.25 var(--body)}
-.node small{display:block;margin-top:6px;font:500 13px/1.35 var(--mono);color:var(--ink3);letter-spacing:.02em}
+.node small{display:block;margin-top:6px;font:500 13px/1.35 var(--code);color:var(--ink3);letter-spacing:.02em}
 .node.hot{border-color:color-mix(in srgb,var(--hue) 70%, white 10%);box-shadow:0 0 0 4px color-mix(in srgb,var(--hue) 22%, transparent), 0 20px 50px rgba(0,0,0,.45)}
 svg.wires{position:absolute;inset:0;overflow:visible}
-.tag{position:absolute;font:600 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+.tag{position:absolute;font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
 `;
 
 const page = (body, { hue = 'apps', title = 'image' } = {}) => `<!doctype html><html><head><meta charset="utf-8"><title>${esc(title)}</title>${FONTS}
@@ -266,7 +267,7 @@ const IMAGES = {
   // ══════════════════════════════════════════════════════════════════════════════════════
   'portfolio-prismet-spread': () => page(`
     <div style="position:absolute;left:64px;top:56px;right:64px;display:flex;justify-content:space-between;align-items:flex-end">
-      <div><div class="eyebrow"><i></i>Prismet · App Store</div><h1 style="font-size:52px;margin-top:14px">Twenty classics, one lens</h1></div>
+      <div><div class="eyebrow"><i></i>Prismet · App Store</div><h1 style="font-size:42px;margin-top:14px">Twenty classics, one lens</h1></div>
       <img src="${A('icons/prismet-app.webp')}" style="width:96px;border-radius:22px;box-shadow:0 14px 34px rgba(0,0,0,.5)">
     </div>
     ${['store-01_home', 'store-03_chess', 'store-04_seabattle', 'store-02_wordgame', 'store-05_2048'].map((s, i) =>
@@ -277,7 +278,7 @@ const IMAGES = {
     const tiles = ['wordle', '2048', 'snake', 'minesweeper', 'sudoku', 'rubiks', 'lightsout', 'sliding', 'nonogram', 'chess', 'reversi', 'checkers', 'connectfour', 'gomoku', 'seabattle', 'solitaire', 'spider', 'crazyeight', 'brickbench', 'oracle', 'debtclock', 'steamrewind'];
     const names = { wordle: 'Wordgame', '2048': '2048', snake: 'Snake', minesweeper: 'Minesweeper', sudoku: 'Sudoku', rubiks: "Rubik's", lightsout: 'Lights Out', sliding: 'Sliding', nonogram: 'Nonogram', chess: 'Chess', reversi: 'Reversi', checkers: 'Checkers', connectfour: 'Connect 4', gomoku: 'Gomoku', seabattle: 'Sea Battle', solitaire: 'Solitaire', spider: 'Spider', crazyeight: 'Crazy 8', brickbench: 'Brick Bench', oracle: 'Oracle', debtclock: 'Debt Clock', steamrewind: 'Steam Rewind' };
     return page(`
-    <div style="position:absolute;left:64px;top:56px"><div class="eyebrow"><i></i>Prismet · game tiles</div><h1 style="font-size:52px;margin-top:14px">19 games, 3 live lenses</h1></div>
+    <div style="position:absolute;left:64px;top:56px"><div class="eyebrow"><i></i>Prismet · game tiles</div><h1 style="font-size:42px;margin-top:14px">19 games, 3 live lenses</h1></div>
     <p class="lede" style="position:absolute;left:64px;top:610px;max-width:900px">Every tile is drawn for the app, so each game gets its own look on the home screen.</p>
     <div style="position:absolute;left:64px;right:64px;top:232px;display:grid;grid-template-columns:repeat(11,1fr);gap:40px 14px">
       ${tiles.map((t) => `<figure style="display:flex;flex-direction:column;align-items:center;gap:9px">
@@ -296,7 +297,7 @@ const IMAGES = {
     ${foot('28 QML widgets · rendered from source')}`, { hue: 'desktop', title: 'Helm wall' }),
 
   'portfolio-helm-arcade': () => page(`
-    <div style="position:absolute;left:64px;top:56px"><div class="eyebrow"><i></i>THE HELM · arcade faces</div><h1 style="font-size:46px;margin-top:14px;max-width:330px">Games that live on the desktop</h1></div>
+    <div style="position:absolute;left:64px;top:56px"><div class="eyebrow"><i></i>THE HELM · arcade faces</div><h1 style="font-size:37px;margin-top:14px;max-width:330px">Games that live on the desktop</h1></div>
     ${helmFace('breakout', 64, 330, 280)}
     ${helmFace('minesweeper', 400, 70, 270)}
     ${helmFace('orbital', 690, 90, 262)}
@@ -304,14 +305,14 @@ const IMAGES = {
     ${foot('rendered from source')}`, { hue: 'desktop', title: 'Helm arcade' }),
 
   'portfolio-qr-suite': () => page(`
-    <div style="position:absolute;left:64px;top:56px"><div class="eyebrow"><i></i>Web tools · no backend</div><h1 style="font-size:50px;margin-top:14px;max-width:560px">Four tools, one HTML file each</h1></div>
+    <div style="position:absolute;left:64px;top:56px"><div class="eyebrow"><i></i>Web tools · no backend</div><h1 style="font-size:40px;margin-top:14px;max-width:560px">Four tools, one HTML file each</h1></div>
     <img class="shot" src="${A('web/qr-scanner-desktop.webp')}" style="position:absolute;left:64px;top:262px;width:560px;border-radius:12px">
     <img src="${A('web/qr-homescreen-filled-desktop-mock.webp')}" style="position:absolute;left:672px;top:70px;width:268px;filter:drop-shadow(0 30px 50px rgba(0,0,0,.6))">
     <img class="shot" src="${A('web/qr-organize-phone.webp')}" style="position:absolute;left:972px;top:150px;width:244px;height:500px;object-fit:cover;object-position:top;border-radius:26px">
     ${foot('sagedeutschle.github.io/qr-scanner')}`, { hue: 'web', title: 'QR suite' }),
 
   'portfolio-bayzyl-help': () => page(`
-    <div style="position:absolute;left:64px;top:56px"><div class="eyebrow"><i></i>Bayzyl · /bzlhelp</div><h1 style="font-size:48px;margin-top:14px;max-width:520px">A 15-page guide, inside the game</h1>
+    <div style="position:absolute;left:64px;top:56px"><div class="eyebrow"><i></i>Bayzyl · /bzlhelp</div><h1 style="font-size:38px;margin-top:14px;max-width:520px">A 15-page guide, inside the game</h1>
       <p class="lede" style="margin-top:16px;max-width:470px">Rendered from the plugin's own help-pages.yml, color codes and all.</p></div>
     ${mcChat('6', 'position:absolute;left:640px;top:56px;width:580px;font-size:17px')}
     ${mcChat('8', 'position:absolute;left:64px;top:372px;width:600px;font-size:17px', 9)}
@@ -321,17 +322,17 @@ const IMAGES = {
     const pick = ['sphere', 'cyl', 'pyramid', 'brush', 'mask', 'generate', 'generatebiome', 'forestgen'];
     const rows = pick.map((n) => commandSpecs.find((c) => c.name === n)).filter(Boolean);
     return page(`
-    <div style="position:absolute;left:64px;top:56px"><div class="eyebrow"><i></i>Bayzyl · command registry</div><h1 style="font-size:48px;margin-top:14px">99 commands, one syntax</h1></div>
+    <div style="position:absolute;left:64px;top:56px"><div class="eyebrow"><i></i>Bayzyl · command registry</div><h1 style="font-size:38px;margin-top:14px">99 commands, one syntax</h1></div>
     <div class="card" style="position:absolute;left:64px;right:64px;top:196px;padding:8px 0;overflow:hidden">
       ${rows.map((r) => `<div style="display:grid;grid-template-columns:150px 1fr;gap:20px;padding:10px 24px;border-bottom:1px solid var(--hair)">
-        <div style="font:700 17px/1.4 var(--mono);color:${HUE_TXT.minecraft}">/${esc(r.name)}</div>
+        <div style="font:700 17px/1.4 var(--code);color:${HUE_TXT.minecraft}">/${esc(r.name)}</div>
         <div style="min-width:0"><div style="font:600 16px/1.35 var(--body)">${esc(r.desc)}</div>
-          <div style="font:400 13px/1.45 var(--mono);color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(r.usage)}</div></div></div>`).join('')}
+          <div style="font:400 13px/1.45 var(--code);color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(r.usage)}</div></div></div>`).join('')}
     </div>${foot('from CommandRegistry.java')}`, { hue: 'minecraft', title: 'Bayzyl commands' });
   },
 
   'portfolio-mc-network': () => page(`
-    <div style="position:absolute;left:64px;top:56px"><div class="eyebrow"><i></i>Minecraft · network ops</div><h1 style="font-size:48px;margin-top:14px;max-width:560px">Every command lands on the right layer</h1></div>
+    <div style="position:absolute;left:64px;top:56px"><div class="eyebrow"><i></i>Minecraft · network ops</div><h1 style="font-size:38px;margin-top:14px;max-width:560px">Every command lands on the right layer</h1></div>
     ${networkDiagram(64, 250)}
     <div class="term" style="position:absolute;left:720px;top:210px;width:500px">
       <div class="bar"><i></i><i></i><i></i><span>mc-admin · usage</span></div>
@@ -342,7 +343,7 @@ const IMAGES = {
   'portfolio-oracle': () => page(`
     <div style="position:absolute;left:64px;top:56px;display:flex;gap:24px;align-items:center">
       <img src="${A('prismet/tiles/oracle.webp')}" style="width:92px;border-radius:22px;box-shadow:0 14px 30px rgba(0,0,0,.5)">
-      <div><div class="eyebrow"><i></i>The Wizard King's Decree</div><h1 style="font-size:46px;margin-top:12px">Can chat models call the news?</h1></div>
+      <div><div class="eyebrow"><i></i>The Wizard King's Decree</div><h1 style="font-size:37px;margin-top:12px">Can chat models call the news?</h1></div>
     </div>
     <div style="position:absolute;left:64px;right:64px;top:240px;height:380px">
       <svg class="wires" width="1152" height="380" viewBox="0 0 1152 380" fill="none">
@@ -362,7 +363,7 @@ const IMAGES = {
   'linkedin-banner': () => `<!doctype html><html><head><meta charset="utf-8">${FONTS}<style>${CSS}
     html,body,.frame{width:1584px;height:396px}</style></head><body><div class="frame" style="--hue:#B88A33;--hueTxt:#E2B65C">
     <div style="position:absolute;left:560px;top:78px;right:80px">
-      <div style="font:700 60px/1 var(--display);letter-spacing:-.01em">Sage Deutschle<span style="color:var(--goldHi)">.</span></div>
+      <div style="font:700 50px/1 var(--display);letter-spacing:-.025em">Sage Deutschle<span style="color:var(--goldHi)">.</span></div>
       <div style="font:500 22px/1.4 var(--body);color:var(--ink2);margin-top:16px;max-width:820px">Apps on the App Store, Minecraft plugins and servers, custom Linux desktops, AI agent systems, and small web tools.</div>
       <div style="display:flex;gap:10px;margin-top:22px">${Object.entries({ apps: 'Swift · SwiftUI', minecraft: 'Java · Paper', desktop: 'QML · KDE', ai: 'Claude Code · Codex', web: 'JavaScript' }).map(([k, v]) =>
         `<span style="font:600 15px/1 var(--body);padding:9px 13px;border-radius:999px;border:1px solid ${HUE[k]};color:${HUE_TXT[k]};background:color-mix(in srgb, ${HUE[k]} 14%, transparent)">${v}</span>`).join('')}</div>

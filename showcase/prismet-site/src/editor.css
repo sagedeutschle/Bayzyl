@@ -1,0 +1,40 @@
+/* editor.css — preview-only "Edit words" mode. Uses the site's tokens from site.css. */
+.bz-dock {
+  position: fixed; z-index: 50; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px;
+  max-width: min(560px, calc(100vw - 32px));
+  padding: 10px; border-radius: 16px;
+  background: color-mix(in srgb, var(--panel, #1B1D2A) 92%, transparent);
+  border: 1px solid var(--outline, rgba(255,255,255,.18));
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .45);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  font-family: var(--body, system-ui, sans-serif);
+}
+.bz-btn {
+  font: 700 .86rem/1 var(--body, system-ui, sans-serif); cursor: pointer;
+  padding: 11px 14px; border-radius: 11px; color: var(--ink, #F2F4FC);
+  background: var(--panel-hi, #282B3C); border: 1px solid var(--outline, rgba(255,255,255,.18));
+}
+.bz-btn:hover { border-color: var(--gold, #E2B65C); }
+.bz-main { background: var(--gold-deep, #B88A33); color: #17130A; border-color: transparent; }
+.bz-main[aria-pressed="true"] { background: var(--gold, #E2B65C); }
+.bz-quiet { background: transparent; color: var(--ink-2, rgba(242,244,252,.7)); }
+.bz-btn span { display: inline-block; min-width: 1.4em; margin-left: 4px; padding: 2px 6px; border-radius: 999px; background: var(--ground, #10111A); font-variant-numeric: tabular-nums; }
+.bz-msg { flex-basis: 100%; margin: 0; min-height: 0; font: 500 .8rem/1.4 var(--mono, ui-monospace, monospace); color: var(--ink-2, rgba(242,244,252,.7)); text-align: right; }
+.bz-msg:empty { display: none; }
+.bz-copybox { flex-basis: 100%; height: 140px; font: 400 .8rem/1.5 var(--mono, ui-monospace, monospace); background: var(--ground, #10111A); color: var(--ink, #F2F4FC); border: 1px solid var(--outline); border-radius: 10px; padding: 10px; }
+
+.bz-editing [data-edit]:not(text) {
+  outline: 1.5px dashed color-mix(in srgb, var(--gold, #E2B65C) 55%, transparent);
+  outline-offset: 3px; border-radius: 4px; cursor: text;
+}
+.bz-editing [data-edit]:not(text):hover { outline-color: var(--gold, #E2B65C); }
+.bz-editing [data-edit][contenteditable]:focus {
+  outline: 2px solid var(--gold, #E2B65C); outline-offset: 3px;
+  background: color-mix(in srgb, var(--gold, #E2B65C) 10%, transparent);
+  white-space: pre-wrap;
+}
+.bz-editing .card:hover { transform: none; }
+.bz-changed { text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--gold, #E2B65C) 60%, transparent); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.bz-editing .bz-changed { text-decoration: none; }
+@media (max-width: 520px) { .bz-dock { left: 16px; right: 16px; max-width: none; } }

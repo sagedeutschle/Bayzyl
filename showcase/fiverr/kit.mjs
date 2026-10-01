@@ -218,7 +218,7 @@ document.addEventListener('click', async (e) => {
 </script>`;
 const css = `<style>
 :root{color-scheme:dark;--bg:#10111A;--bg2:#0B0C13;--panel:#1B1D2A;--hi:#282B3C;--hair:rgba(255,255,255,.10);--line:rgba(255,255,255,.18);--ink:#F2F4FC;--ink2:rgba(242,244,252,.70);--ink3:rgba(242,244,252,.50);--gold:#E2B65C;--goldd:#B88A33;
---display:"Newsreader","New York",Georgia,serif;--body:"Hanken Grotesk",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace}
+--display:"Unbounded","Arial Black",sans-serif;--body:"Hanken Grotesk",system-ui,sans-serif;--mono:"Martian Mono",ui-monospace,monospace}
 @media (prefers-color-scheme: light){:root:not([data-theme="dark"]){color-scheme:light;--bg:#F6F2E8;--bg2:#EEE8DA;--panel:#FDFBF6;--hi:#E6E0D1;--hair:rgba(28,26,18,.14);--line:rgba(28,26,18,.28);--ink:#1C1A12;--ink2:rgba(28,26,18,.78);--ink3:rgba(28,26,18,.58);--gold:#8E6A22;--goldd:#8E6A22}}
 :root[data-theme="light"]{color-scheme:light;--bg:#F6F2E8;--bg2:#EEE8DA;--panel:#FDFBF6;--hi:#E6E0D1;--hair:rgba(28,26,18,.14);--line:rgba(28,26,18,.28);--ink:#1C1A12;--ink2:rgba(28,26,18,.78);--ink3:rgba(28,26,18,.58);--gold:#8E6A22;--goldd:#8E6A22}
 :root[data-theme="dark"]{color-scheme:dark;--bg:#10111A;--bg2:#0B0C13;--panel:#1B1D2A;--hi:#282B3C;--hair:rgba(255,255,255,.10);--line:rgba(255,255,255,.18);--ink:#F2F4FC;--ink2:rgba(242,244,252,.70);--ink3:rgba(242,244,252,.50);--gold:#E2B65C;--goldd:#B88A33}
@@ -226,9 +226,9 @@ const css = `<style>
 .wrap{max-width:1080px;margin-inline:auto;padding-inline:clamp(16px,4vw,40px)}
 .top{border-bottom:1px solid var(--hair);background:radial-gradient(70% 120% at 0% 0%,color-mix(in srgb,var(--goldd) 18%,transparent),transparent 70%)}
 .top .wrap{padding-block:40px 28px}
-h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.1;letter-spacing:-.01em;text-wrap:balance;margin:0}
-h1{font-size:clamp(2.2rem,5vw,3.4rem);margin-top:10px}h2{font-size:1.6rem}h3{font-size:1.15rem;margin:12px 0 4px}
-.eyebrow{margin:0;font:600 .76rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.15;letter-spacing:-.02em;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.8rem,4.4vw,2.7rem);font-weight:700;margin-top:12px}h2{font-size:1.25rem}h3{font-size:1rem;margin:12px 0 4px}
+.eyebrow{margin:0;font:600 .72rem/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
 .lede{color:var(--ink2);max-width:42rem;margin:14px 0 0;font-size:1.08rem}
 .toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
 .toc a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font:600 .86rem/1 var(--body);padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel)}
@@ -248,7 +248,7 @@ main{padding-block:28px 64px;display:grid;gap:22px}
 .copy:hover{border-color:var(--gold)}.copy:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 textarea{width:100%;resize:vertical;background:var(--bg2);color:var(--ink);border:1px solid var(--hair);border-radius:10px;padding:10px 12px;font:400 .95rem/1.55 var(--body)}
 .tablewrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:520px;font-size:.92rem}
-th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--hair);vertical-align:top}thead th{font-family:var(--display);font-size:1rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--hair);vertical-align:top}thead th{font-family:var(--display);font-size:.82rem;font-weight:600}
 tbody th{font:600 .74rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
 .num{font-variant-numeric:tabular-nums;font-weight:600}
 details{border-top:1px solid var(--hair);padding-top:12px}details>.field{margin-top:12px}
@@ -257,7 +257,7 @@ summary{cursor:pointer;font-weight:600;color:var(--ink2)}
 .pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px}
 .pf{min-width:0;display:grid;gap:8px;align-content:start}.pf img{width:100%;border-radius:10px;border:1px solid var(--hair)}
 </style>`;
-const fonts = `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600..800&family=Hanken+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400..700&display=swap">`;
+const fonts = `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400..800&family=Hanken+Grotesk:wght@400..700&family=Martian+Mono:wdth,wght@75..112.5,400..700&display=swap">`;
 writeFileSync(join(KIT, 'index.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fiverr Gig Kit</title><link rel="stylesheet" href="../../assets/fonts/fonts.css">${css}</head><body>${body}</body></html>`);
 if (PREVIEW) writeFileSync(join(KIT, '_preview.html'), `<title>Fiverr Gig Kit</title>${fonts}${css}${body}`);
 console.log(`ok: ${gigs.length} gigs, ${portfolio.length} portfolio projects, all fields within Fiverr limits`);
