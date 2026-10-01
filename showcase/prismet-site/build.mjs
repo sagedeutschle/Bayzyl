@@ -172,28 +172,42 @@ const mediaAlt = (p) => ({
   'the-helm': 'Helm on iPhone next to three desktop widgets rendered from source: clock, GPU telemetry, and fleet radar',
 }[p.slug] || plain(work(p.slug, 'title')));
 
-const feature = (p) => {
+// ── layout (projects.json → layout, featuredOrder, per-project wide/hidden) ─────────────────
+// Production leaves hidden things out. The preview renders everything, marked .is-off, so the
+// editor can bring it back without a rebuild.
+const bySlug = Object.fromEntries(projects.map((p) => [p.slug, p]));
+const SECTION_IDS = ['lenses', 'selected', 'work', 'about'];
+const L = data.layout || {};
+const sectionOrder = [...(L.sections || []).filter((id) => SECTION_IDS.includes(id)), ...SECTION_IDS.filter((id) => !(L.sections || []).includes(id))];
+const hiddenSections = new Set(L.hiddenSections || []);
+const featuredSlugs = (data.featuredOrder || []).filter((s) => bySlug[s] && !isTodo(bySlug[s]) && !bySlug[s].hidden);
+const shownProjects = projects.filter((p) => !p.hidden);
+const off = (isOff) => (isOff ? ' is-off' : '');
+
+const feature = (p, i, isOff = false) => {
   const title = P(p.slug, 'title'), sub = P(p.slug, 'subtitle'), b = beamLabel(p.beam), more = T('selected.read_more');
   const facts = factPairs(work(p.slug, 'facts')).slice(0, 4);
-  return `<article class="feature" style="${hueVars(p.beam)}">
+  return `<article class="feature${i % 2 ? ' flip' : ''}${off(isOff)}" data-slug="${p.slug}" style="${hueVars(p.beam)}">
   <a class="media" href="work/${p.slug}.html" aria-label="${esc(mediaAlt(p))}">${media(p)}</a>
   <div class="text">
     <span class="beam-tag"${b.a}>${b.h}</span>
     <h3${title.a}>${title.h}</h3>
     <p class="sub"${sub.a}>${sub.h}</p>
-    <dl class="facts">${facts.map(([k, v], i) => `<div><dt${ed(`work.${p.slug}.facts.${i}.label`, k)}>${inline(k)}</dt><dd${ed(`work.${p.slug}.facts.${i}.value`, v)}>${inline(v)}</dd></div>`).join('')}</dl>
+    <dl class="facts">${facts.map(([k, v], n) => `<div><dt${ed(`work.${p.slug}.facts.${n}.label`, k)}>${inline(k)}</dt><dd${ed(`work.${p.slug}.facts.${n}.value`, v)}>${inline(v)}</dd></div>`).join('')}</dl>
     <div class="more"><a class="btn" href="work/${p.slug}.html"${more.a}>${more.h}</a>${(p.links || []).filter((l) => l.href.startsWith('http')).slice(0, 1).map((l) => `<a class="btn" href="${esc(l.href)}">${esc(l.label)} ↗</a>`).join('')}</div>
   </div>
 </article>`;
 };
 
 const card = (p) => {
-  const cover = p.wideCover ? asset(p.wideCover) : p.cover ? asset(p.cover) : null;
+  const normal = p.cover ? asset(p.cover) : null, wideSrc = p.wideCover ? asset(p.wideCover) : null;
+  const cover = p.wide && wideSrc ? wideSrc : normal || wideSrc;
   const contain = (cover && cover.includes('/icons/')) || (p.cover || '').includes('/tiles/');
   const title = P(p.slug, 'title'), sub = P(p.slug, 'subtitle'), st = status(p), ph = T('work.placeholder');
   const short = beamById[p.beam].short;
-  return `<a class="card${p.wideCover ? ' wide' : ''}" href="work/${p.slug}.html" data-beam="${p.beam}" style="${hueVars(p.beam)}">
-    <div class="thumb">${cover ? `<img class="${contain ? 'contain' : ''}" src="${cover}" alt="" loading="lazy">` : `<div class="placeholder"><strong aria-hidden="true">${inline(work(p.slug, 'title'))}</strong><span${ph.a}>${ph.h}</span></div>`}</div>
+  const swap = PREVIEW && normal && wideSrc ? ` data-src-normal="${normal}" data-src-wide="${wideSrc}"` : '';
+  return `<a class="card${p.wide ? ' wide' : ''}${off(p.hidden)}" href="work/${p.slug}.html" data-beam="${p.beam}" data-slug="${p.slug}" style="${hueVars(p.beam)}">
+    <div class="thumb">${cover ? `<img class="${contain ? 'contain' : ''}" src="${cover}"${swap} alt="" loading="lazy">` : `<div class="placeholder"><strong aria-hidden="true">${inline(work(p.slug, 'title'))}</strong><span${ph.a}>${ph.h}</span></div>`}</div>
     <div class="body">
       <span class="beam-tag">${esc(short)}</span>
       <h3${title.a}>${title.h}</h3>
@@ -206,9 +220,57 @@ const card = (p) => {
 const GIGS = [['mc-plugin', 'minecraft'], ['mc-server', 'minecraft'], ['ios-app', 'apps'], ['web-tool', 'web'], ['ai-agents', 'ai'], ['linux-desktop', 'desktop']];
 
 // ── index ───────────────────────────────────────────────────────────────────────────────────
-const featured = projects.filter((p) => p.featured && !isTodo(p));   // set "featured": true in projects.json
 const tileFor = { 'steam-rewind': 'steamrewind', 'debt-clock': 'debtclock', 'wordgame-api': 'wordle' };
 const k = (key) => T(key); // shorthand
+const sec = (id, attrs, inner) => (hiddenSections.has(id) && !PREVIEW ? '' :
+  `<section id="${id}" data-section="${id}" class="${off(hiddenSections.has(id)).trim()}" ${attrs}>${inner}</section>`);
+
+const SECTIONS = {
+  lenses: () => sec('lenses', 'aria-labelledby="lenses-title"', `<div class="wrap">
+  <div class="sec-head"><div><p class="eyebrow"${k('lenses.eyebrow').a}>${k('lenses.eyebrow').h}</p><h2 id="lenses-title"${k('lenses.title').a}>${k('lenses.title').h}</h2></div>
+    <p${k('lenses.intro').a}>${k('lenses.intro').h}</p></div>
+  <div class="lenses">${lenses.map((l) => { const t = k(`lens.${l.id}.title`), d = k(`lens.${l.id}.blurb`); return `<a class="lens" href="${esc(l.href)}">
+    <img src="${asset('assets/prismet/tiles/' + tileFor[l.id] + '.webp')}" alt="">
+    <div><h3${t.a}>${t.h}</h3><p${d.a}>${d.h}</p>${l.kind === 'api' ? `<code>GET ${esc(l.href)}</code>` : ''}</div></a>`; }).join('')}</div>
+</div>`),
+  selected: () => sec('selected', 'aria-labelledby="selected-title"', `<div class="wrap">
+  <div class="sec-head"><div><p class="eyebrow"${k('selected.eyebrow').a}>${k('selected.eyebrow').h}</p><h2 id="selected-title"${k('selected.title').a}>${k('selected.title').h}</h2></div></div>
+  ${featuredSlugs.map((s, i) => feature(bySlug[s], i)).join('\n')}
+  ${PREVIEW ? projects.filter((p) => !featuredSlugs.includes(p.slug) && !isTodo(p)).map((p, i) => feature(p, i, true)).join('\n') : ''}
+</div>`),
+  work: () => sec('work', 'aria-labelledby="work-title"', `<div class="wrap">
+  <div class="sec-head"><div><p class="eyebrow"${k('work.eyebrow').a}>${k('work.eyebrow').h}</p><h2 id="work-title"${k('work.title').a}>${k('work.title').h}</h2></div>
+    <p${k('work.intro').a} data-count="${shownProjects.length}">${inline(site('work.intro'), { count: shownProjects.length })}</p></div>
+  <div class="filters" role="group" aria-label="Filter by category">
+    <button class="chip" type="button" data-filter="all" aria-pressed="true" style="--h:var(--gold)"><i></i><span${k('work.filter_all').a}>${k('work.filter_all').h}</span></button>
+    ${SPECTRUM.map((id) => { const b = beamLabel(id); return `<button class="chip" type="button" data-filter="${id}" aria-pressed="false" style="--h:var(--${id})"><i></i><span${b.a}>${b.h}</span></button>`; }).join('')}
+  </div>
+  <div class="grid" id="grid">${(PREVIEW ? projects : shownProjects).map(card).join('')}</div>
+</div>`),
+  about: () => sec('about', 'aria-labelledby="about-title"', `<div class="wrap about">
+  <div>
+    <p class="eyebrow"${k('about.eyebrow').a}>${k('about.eyebrow').h}</p><h2 id="about-title" class="about-title"${k('about.title').a}>${k('about.title').h}</h2>
+    <div class="prose">
+      <p${k('about.p1').a}>${k('about.p1').h}</p>
+      <p${k('about.p2').a}>${k('about.p2').h}</p>
+    </div>
+  </div>
+  <div class="hire" id="hire">
+    <p class="eyebrow"${k('hire.eyebrow').a}>${k('hire.eyebrow').h}</p>
+    <h3${k('hire.title').a}>${k('hire.title').h}</h3>
+    <ul>${GIGS.map(([id, h]) => { const t = k(`hire.${id}.title`), s = k(`hire.${id}.sub`); return `<li style="--h:var(--${h})"><i></i><span><span${t.a}>${t.h}</span><small${s.a}>${s.h}</small></span></li>`; }).join('')}</ul>
+    <div class="links"><a class="btn primary" href="${esc(owner.fiverr)}"${k('hire.cta').a}>${k('hire.cta').h}</a><a class="btn" href="${esc(owner.github)}">GitHub</a><a class="btn" href="${esc(owner.linkedin)}">LinkedIn</a></div>
+  </div>
+</div>`),
+};
+
+// The editor starts from this; "apply my edits" writes its changes back into projects.json.
+const layoutState = {
+  sections: sectionOrder, hiddenSections: [...hiddenSections],
+  order: projects.map((p) => p.slug), featured: featuredSlugs,
+  wide: projects.filter((p) => p.wide).map((p) => p.slug), hidden: projects.filter((p) => p.hidden).map((p) => p.slug),
+  names: Object.fromEntries(projects.map((p) => [p.slug, plain(work(p.slug, 'title'))])),
+};
 
 const indexBody = `${bar()}
 <main id="main">
@@ -224,47 +286,10 @@ const indexBody = `${bar()}
     <div class="beam-chips" aria-label="Categories">${SPECTRUM.map((id) => { const b = beamLabel(id); return `<a class="chip" href="#work" data-beam="${id}" style="--h:var(--${id})"><i></i><span${b.a}>${b.h}</span></a>`; }).join('')}</div>
   </div>
 </div></section>
-
-<section id="lenses" aria-labelledby="lenses-title"><div class="wrap">
-  <div class="sec-head"><div><p class="eyebrow"${k('lenses.eyebrow').a}>${k('lenses.eyebrow').h}</p><h2 id="lenses-title"${k('lenses.title').a}>${k('lenses.title').h}</h2></div>
-    <p${k('lenses.intro').a}>${k('lenses.intro').h}</p></div>
-  <div class="lenses">${lenses.map((l) => { const t = k(`lens.${l.id}.title`), d = k(`lens.${l.id}.blurb`); return `<a class="lens" href="${esc(l.href)}">
-    <img src="${asset('assets/prismet/tiles/' + tileFor[l.id] + '.webp')}" alt="">
-    <div><h3${t.a}>${t.h}</h3><p${d.a}>${d.h}</p>${l.kind === 'api' ? `<code>GET ${esc(l.href)}</code>` : ''}</div></a>`; }).join('')}</div>
-</div></section>
-
-<section id="selected" aria-labelledby="selected-title" style="padding-top:0"><div class="wrap">
-  <div class="sec-head"><div><p class="eyebrow"${k('selected.eyebrow').a}>${k('selected.eyebrow').h}</p><h2 id="selected-title"${k('selected.title').a}>${k('selected.title').h}</h2></div></div>
-  ${featured.map(feature).join('\n')}
-</div></section>
-
-<section id="work" aria-labelledby="work-title" style="background:var(--ground-2);border-block:1px solid var(--hair)"><div class="wrap">
-  <div class="sec-head"><div><p class="eyebrow"${k('work.eyebrow').a}>${k('work.eyebrow').h}</p><h2 id="work-title"${k('work.title').a}>${k('work.title').h}</h2></div>
-    <p${k('work.intro').a} data-count="${projects.length}">${k('work.intro').h}</p></div>
-  <div class="filters" role="group" aria-label="Filter by category">
-    <button class="chip" type="button" data-filter="all" aria-pressed="true" style="--h:var(--gold)"><i></i><span${k('work.filter_all').a}>${k('work.filter_all').h}</span></button>
-    ${SPECTRUM.map((id) => { const b = beamLabel(id); return `<button class="chip" type="button" data-filter="${id}" aria-pressed="false" style="--h:var(--${id})"><i></i><span${b.a}>${b.h}</span></button>`; }).join('')}
-  </div>
-  <div class="grid" id="grid">${projects.map(card).join('')}</div>
-</div></section>
-
-<section id="about" aria-labelledby="about-title"><div class="wrap about">
-  <div>
-    <p class="eyebrow"${k('about.eyebrow').a}>${k('about.eyebrow').h}</p><h2 id="about-title" class="about-title"${k('about.title').a}>${k('about.title').h}</h2>
-    <div class="prose">
-      <p${k('about.p1').a}>${k('about.p1').h}</p>
-      <p${k('about.p2').a}>${k('about.p2').h}</p>
-    </div>
-  </div>
-  <div class="hire" id="hire">
-    <p class="eyebrow"${k('hire.eyebrow').a}>${k('hire.eyebrow').h}</p>
-    <h3${k('hire.title').a}>${k('hire.title').h}</h3>
-    <ul>${GIGS.map(([id, h]) => { const t = k(`hire.${id}.title`), s = k(`hire.${id}.sub`); return `<li style="--h:var(--${h})"><i></i><span><span${t.a}>${t.h}</span><small${s.a}>${s.h}</small></span></li>`; }).join('')}</ul>
-    <div class="links"><a class="btn primary" href="${esc(owner.fiverr)}"${k('hire.cta').a}>${k('hire.cta').h}</a><a class="btn" href="${esc(owner.github)}">GitHub</a><a class="btn" href="${esc(owner.linkedin)}">LinkedIn</a></div>
-  </div>
-</div></section>
+${sectionOrder.map((id) => SECTIONS[id]()).join('\n')}
 </main>
 ${footer()}
+${PREVIEW ? `<script type="application/json" id="bz-layout">${JSON.stringify(layoutState).replace(/</g, '\\u003c')}</script>` : ''}
 ${scripts()}`;
 
 writeFileSync(join(DIST, 'index.html'), `<!doctype html><html lang="en"><head>${head({ title: plain(site('page.title')), desc: plain(site('page.description')) })}</head><body>${indexBody}</body></html>`);

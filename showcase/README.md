@@ -11,7 +11,9 @@ qr-scanner, PrismCode, THE HELM, Quark). Nothing is a mockup pretending to be a 
 | [`fiverr/render.mjs`](fiverr/render.mjs) | Renders every image from HTML templates with Playwright |
 | [`prismet-site/REDESIGN-PLAN.md`](prismet-site/REDESIGN-PLAN.md) | The facelift plan: structure, design system, how to deploy on Fly safely |
 | [`prismet-site/data/projects.json`](prismet-site/data/projects.json) | One project catalog for the site and the Fiverr portfolio |
-| [`prismet-site/build.mjs`](prismet-site/build.mjs) | Builds the static site into `prismet-site/dist/` |
+| [`prismet-site/build.mjs`](prismet-site/build.mjs) | Builds the static site into `prismet-site/dist/` (`--preview` adds the Edit page mode) |
+| [`prismet-site/content/`](prismet-site/content/) | Every word on the site, as plain text |
+| [`prismet-site/apply-edits.mjs`](prismet-site/apply-edits.mjs) | Writes Edit-mode changes (words + layout) back into `content/` and `data/projects.json` |
 | [`assets/`](assets/) | Compressed real visuals + self-hosted fonts (SIL OFL) |
 | [`tools/`](tools/) | Asset collection, offscreen QML widget renderer, web capture scripts |
 

@@ -1,5 +1,5 @@
 {
-  "_readme": "Project DATA (images, links, stack, category). All WORDING lives in content/site.md and content/work/<slug>.md. Add a project = add an object here + a content/work/<slug>.md file.",
+  "_readme": "Project DATA (images, links, categories) and page LAYOUT. All WORDING lives in content/site.md and content/work/<slug>.md. Grid order = order of `projects`. `featuredOrder` = the Selected work rows. Per project: \"wide\": true (double-width card), \"hidden\": true (left off the site). `layout.sections` orders the home page sections; `layout.hiddenSections` hides them. The preview's Edit mode changes all of these; apply-edits.mjs writes them back here.",
   "owner": {
     "name": "Sage Deutschle",
     "handle": "gtrktscrb",
@@ -8,6 +8,21 @@
     "linkedin": "https://www.linkedin.com/in/sagedeutschle",
     "fiverr": "https://www.fiverr.com/bayzyl"
   },
+  "layout": {
+    "sections": [
+      "lenses",
+      "selected",
+      "work",
+      "about"
+    ],
+    "hiddenSections": []
+  },
+  "featuredOrder": [
+    "prismet-app",
+    "the-helm",
+    "bayzyl",
+    "the-long-now"
+  ],
   "beams": [
     {
       "id": "apps",
@@ -59,7 +74,6 @@
     {
       "slug": "prismet-app",
       "beam": "apps",
-      "featured": true,
       "stack": [
         "SwiftUI",
         "SceneKit",
@@ -86,12 +100,12 @@
         "assets/live/prismet-5.webp"
       ],
       "fiverrGig": "ios-app",
-      "wideCover": "assets/live/prismet-5.webp"
+      "wideCover": "assets/live/prismet-5.webp",
+      "wide": true
     },
     {
       "slug": "the-helm",
       "beam": "desktop",
-      "featured": true,
       "stack": [
         "KDE Plasma 6",
         "QML",
@@ -115,12 +129,12 @@
         "assets/helm/orbital.webp"
       ],
       "fiverrGig": "linux-desktop",
-      "wideCover": "assets/helm/worldclock.webp"
+      "wideCover": "assets/helm/worldclock.webp",
+      "wide": true
     },
     {
       "slug": "bayzyl",
       "beam": "minecraft",
-      "featured": true,
       "stack": [
         "Java 21",
         "Paper 1.21",
@@ -144,14 +158,13 @@
       "shotAlts": [
         "A cherry-blossom village built on the Paper server this toolkit runs on, lit up at night.",
         "Another build from the same server, seen from above the cloud layer.",
-        "Bayzyl help pages, rendered from the plugin\u2019s help file",
+        "Bayzyl help pages, rendered from the plugin’s help file",
         "Bayzyl command registry"
       ]
     },
     {
       "slug": "the-long-now",
       "beam": "worlds",
-      "featured": true,
       "stack": [
         "Desktop"
       ],
@@ -172,7 +185,6 @@
     {
       "slug": "prismcode",
       "beam": "ai",
-      "featured": false,
       "stack": [
         "Electron",
         "React",
@@ -196,7 +208,6 @@
     {
       "slug": "steam-rewind",
       "beam": "web",
-      "featured": false,
       "stack": [
         "Web",
         "Mac",
@@ -222,7 +233,6 @@
     {
       "slug": "debt-clock",
       "beam": "web",
-      "featured": false,
       "stack": [
         "Web",
         "iPhone"
@@ -245,7 +255,6 @@
     {
       "slug": "cicero",
       "beam": "ai",
-      "featured": false,
       "stack": [
         "Desktop",
         "iPhone"
@@ -263,7 +272,6 @@
     {
       "slug": "hoi4-war-room",
       "beam": "ai",
-      "featured": false,
       "stack": [
         "Mac",
         "LAN web"
@@ -283,7 +291,6 @@
     {
       "slug": "axiomextd",
       "beam": "minecraft",
-      "featured": false,
       "stack": [
         "Minecraft"
       ],
@@ -300,7 +307,6 @@
     {
       "slug": "minecraft-network",
       "beam": "minecraft",
-      "featured": false,
       "stack": [
         "Velocity",
         "Paper",
@@ -319,7 +325,6 @@
     {
       "slug": "usage-tracker",
       "beam": "ai",
-      "featured": false,
       "stack": [
         "Desktop"
       ],
@@ -336,7 +341,6 @@
     {
       "slug": "wizard-kings-decree",
       "beam": "ai",
-      "featured": false,
       "stack": [
         "Python",
         "Claude",
@@ -354,7 +358,6 @@
     {
       "slug": "agent-ops",
       "beam": "ai",
-      "featured": false,
       "stack": [
         "Claude Code",
         "Codex",
@@ -370,7 +373,6 @@
     {
       "slug": "qr-tools",
       "beam": "web",
-      "featured": false,
       "stack": [
         "HTML",
         "CSS",
@@ -400,7 +402,6 @@
     {
       "slug": "civ5-mod-profiles",
       "beam": "worlds",
-      "featured": false,
       "stack": [
         "Mac"
       ],
@@ -417,7 +418,6 @@
     {
       "slug": "wow-sidepanel",
       "beam": "worlds",
-      "featured": false,
       "stack": [
         "WoW Addon"
       ],
@@ -434,7 +434,6 @@
     {
       "slug": "yggdrasil",
       "beam": "worlds",
-      "featured": false,
       "stack": [
         "Games"
       ],
@@ -447,7 +446,6 @@
     {
       "slug": "westeros-uebs2",
       "beam": "worlds",
-      "featured": false,
       "stack": [
         "UEBS 2 map editor"
       ],
@@ -460,7 +458,6 @@
     {
       "slug": "plexsquish",
       "beam": "desktop",
-      "featured": false,
       "stack": [
         "Mac",
         "Windows"
@@ -474,7 +471,6 @@
     {
       "slug": "helix-research-desk",
       "beam": "desktop",
-      "featured": false,
       "stack": [
         "Desktop"
       ],
@@ -487,7 +483,6 @@
     {
       "slug": "escape-revert",
       "beam": "desktop",
-      "featured": false,
       "stack": [
         "Mac"
       ],
@@ -500,7 +495,6 @@
     {
       "slug": "screen-protection",
       "beam": "desktop",
-      "featured": false,
       "stack": [
         "Mac"
       ],
@@ -513,7 +507,6 @@
     {
       "slug": "quark",
       "beam": "desktop",
-      "featured": false,
       "stack": [
         "Electron",
         "JavaScript",
@@ -529,7 +522,6 @@
     {
       "slug": "airhorn",
       "beam": "apps",
-      "featured": false,
       "stack": [
         "Desktop"
       ],

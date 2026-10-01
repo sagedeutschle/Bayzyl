@@ -23,8 +23,8 @@ blocked by its network policy), so this comes from the Prismet repo's coordinati
 ```
 /                      Home: prism hero → Lenses → Selected work → All work → About + Hire
 /work/<slug>.html      One case-study page per project (generated)
-/steam-rewind          existing tool, unchanged   ← confirm real path
-/debt-clock            existing tool, unchanged   ← confirm real path
+/steam                 existing Steam Rewind tool, unchanged
+/debt                  existing Accessible Debt Clock, unchanged
 /api/wordle            existing route, untouched
 ```
 
@@ -63,12 +63,31 @@ Taken from the Prismet app so the site, the app, and the Fiverr images look like
 - Respects reduced motion (the beams stop flowing), keyboard focus is always visible, and the
   layout holds from 390px phones to wide desktops with no sideways scroll.
 
+## Editing the site (words and layout)
+
+Open the preview and tap **✎ Edit page**:
+
+- **Words:** click any text and type. It saves when you click away. `*word*` makes it gold,
+  `**word**` bold. Esc cancels.
+- **Sections:** the bar on each section moves it up or down, or hides it.
+- **Project cards:** drag **⠿** (or use ◀ ▶) to reorder, **Wide** for a double-width card,
+  **★** to put it in Selected work, **Hide** to leave it off the site.
+- **Selected work:** ▲ ▼ to reorder, **Remove** to take it out.
+
+Edits save to the preview page, so Claude can read them back. Say "apply my edits" and Claude
+runs `apply-edits.mjs`, which writes wording into `content/` and layout into
+`data/projects.json`, then rebuilds. **Copy my changes** puts the same edits on your clipboard,
+in a format `apply-edits.mjs` also accepts. The production build never includes the editor.
+
+You can also edit by hand: words in `content/site.md` and `content/work/<slug>.md`, layout in
+`data/projects.json` (`layout`, `featuredOrder`, and per-project `wide` / `hidden`).
+
 ## Adding a project
 
-Everything comes from **`data/projects.json`**, the same file the Fiverr kit reads:
+Images, links, and categories live in **`data/projects.json`**; wording lives in `content/work/<slug>.md`:
 
-1. Add an object to `projects` (copy an existing one): `slug`, `title`, `subtitle`, `beam`,
-   `status`, `facts`, `summary`, `highlights`, `stack`, `links`, `cover`, `gallery`.
+1. Add an object to `projects` (copy an existing one): `slug`, `beam`, `stack`, `links`,
+   `cover`, `gallery`. Copy any `content/work/*.md` to `content/work/<slug>.md` and rewrite it.
 2. Put images in `showcase/assets/<area>/` (WebP, ~720–1440px wide).
 3. `node showcase/prismet-site/build.mjs` and deploy `dist/`.
 
@@ -87,8 +106,6 @@ matches the current Fly app before deploying:
    handler.
 3. **If it's a static server (nginx/Caddy) with a proxy rule for `/api/wordle`:** replace the
    web root with `dist/` and leave the proxy rule alone.
-4. Update the `lenses[].href` values in `projects.json` to the real Steam Rewind and Debt Clock
-   paths, then rebuild.
 5. **Before switching DNS or deploying to the live app:**
    - `curl -sS https://<staging>/api/wordle` returns today's payload.
    - Open Steam Rewind and the Debt Clock from the new homepage.
@@ -97,7 +114,8 @@ matches the current Fly app before deploying:
 
 ## Launch checklist
 
-- [ ] Real routes for Steam Rewind and Debt Clock set in `projects.json`
+- [x] Real routes for Steam Rewind and Debt Clock (`/steam`, `/debt`)
+- [x] All 20 live projects carried over, plus 5 new ones
 - [ ] Westeros screenshots + description added (or entry hidden)
 - [ ] Agent Ops details filled in from `CLAUDE-OPERATIONS-HANDOFF.md`
 - [ ] Fiverr profile URL confirmed (`owner.fiverr` in `projects.json`)
