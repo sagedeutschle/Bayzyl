@@ -1,14 +1,17 @@
-// build.mjs — generates the static prismet.xyz site from data/projects.json.
+// build.mjs — generates the static prismet.xyz site.
 //
 //   node showcase/prismet-site/build.mjs            # → showcase/prismet-site/dist/
-//   node showcase/prismet-site/build.mjs --preview  # also writes dist/_preview.html (artifact-safe fragment)
+//   node showcase/prismet-site/build.mjs --preview  # adds the "Edit words" editor + dist/_preview.html
 //
+// WORDS live in content/site.md and content/work/<slug>.md (plain text, edit freely).
+// DATA (images, links, categories) lives in data/projects.json.
 // No dependencies. Output is plain HTML/CSS/JS + images, so it drops into the existing Fly app
 // as static files next to the /api/wordle route (see REDESIGN-PLAN.md).
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, rmSync, cpSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync, cpSync, existsSync } from 'node:fs';
 import { dirname, join, basename, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
+import { loadSite, loadWork, inline, plain, listItems, factPairs } from './content.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SHOWCASE = join(HERE, '..');
@@ -17,6 +20,19 @@ const PREVIEW = process.argv.includes('--preview');
 const data = JSON.parse(readFileSync(join(HERE, 'data/projects.json'), 'utf8'));
 const { owner, beams, lenses, projects } = data;
 const beamById = Object.fromEntries(beams.map((b) => [b.id, b]));
+
+// ── words ───────────────────────────────────────────────────────────────────────────────────
+const S = loadSite();
+const W = Object.fromEntries(projects.map((p) => [p.slug, loadWork(p.slug)]));
+const VARS = { count: projects.length };
+const missing = new Set();
+const site = (key) => { if (!(key in S)) { missing.add(`content/site.md → ## ${key}`); return key; } return S[key]; };
+const work = (slug, f) => { const v = W[slug][f]; if (v === undefined) { missing.add(`content/work/${slug}.md → ## ${f}`); return ''; } return v; };
+// In --preview every piece of wording carries its key, so the page editor can save edits back.
+const ed = (key, raw) => (PREVIEW ? ` data-edit="${esc(key)}" data-src="${esc(raw)}"` : '');
+const T = (key) => ({ a: ed(key, site(key)), h: inline(site(key), VARS) });               // site text
+const P = (slug, f) => ({ a: ed(`work.${slug}.${f}`, work(slug, f)), h: inline(work(slug, f)) }); // project text
+const isTodo = (p) => p.todo === true;
 
 rmSync(DIST, { recursive: true, force: true });
 mkdirSync(join(DIST, 'work'), { recursive: true });
@@ -45,6 +61,7 @@ function asset(p) {
 cpSync(join(SHOWCASE, 'assets/fonts'), join(DIST, 'assets/fonts'), { recursive: true });
 copyFileSync(join(HERE, 'src/site.css'), join(DIST, 'site.css'));
 copyFileSync(join(HERE, 'src/site.js'), join(DIST, 'site.js'));
+if (PREVIEW) for (const f of ['editor.js', 'editor.css']) if (existsSync(join(HERE, 'src', f))) copyFileSync(join(HERE, 'src', f), join(DIST, f));
 asset('assets/icons/prismet-app.webp');            // favicon
 asset('fiverr/out/portfolio-prismet-spread.png');   // og:image
 
@@ -53,15 +70,14 @@ const hueVars = (id) => `--h:var(--${id});--hi:var(--${id}-ink)`;
 const mark = (size = 30) => `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true">
   <defs><linearGradient id="mk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4D77E"/><stop offset=".55" stop-color="#D8A53B"/><stop offset="1" stop-color="#9A6E22"/></linearGradient></defs>
   ${['desktop', 'apps', 'worlds', 'minecraft', 'web', 'ai'].map((c, i) => {
-    const a = (i * 60 - 90) * Math.PI / 180, l = a - 0.23, r = a + 0.23, P = (ang, rad) => `${(32 + Math.cos(ang) * rad).toFixed(1)} ${(32 + Math.sin(ang) * rad).toFixed(1)}`;
-    return `<path d="M${P(l, 17)} L${P(a, 30)} L${P(r, 17)}Z" fill="var(--${c})"/>`;
+    const a = (i * 60 - 90) * Math.PI / 180, l = a - 0.23, r = a + 0.23, Pt = (ang, rad) => `${(32 + Math.cos(ang) * rad).toFixed(1)} ${(32 + Math.sin(ang) * rad).toFixed(1)}`;
+    return `<path d="M${Pt(l, 17)} L${Pt(a, 30)} L${Pt(r, 17)}Z" fill="var(--${c})"/>`;
   }).join('')}
   <circle cx="32" cy="32" r="17" fill="#141331" stroke="url(#mk)" stroke-width="3"/>
   <path d="M32 22 L41 38 L23 38 Z" fill="none" stroke="url(#mk)" stroke-width="2.4" stroke-linejoin="round"/></svg>`;
 
-const FONT_LINK = PREVIEW
-  ? '' // preview uses Google Fonts (artifact CSP); production self-hosts
-  : '';
+// The artifact preview can't load fonts from its own files, so it uses Google Fonts; production self-hosts.
+const GOOGLE_FONTS = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300..900&family=Martian+Mono:wdth,wght@75..112.5,300..700&family=Hanken+Grotesk:wght@400..700&display=swap">';
 const head = ({ title, desc, root = '' }) => `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(title)}</title>
@@ -71,28 +87,39 @@ const head = ({ title, desc, root = '' }) => `<meta charset="utf-8">
 <meta property="og:image" content="https://prismet.xyz/assets/boards/portfolio-prismet-spread.webp">
 <meta name="theme-color" content="#10111A">
 <link rel="icon" href="${root}assets/icons/prismet-app.webp">
-<link rel="stylesheet" href="${root}assets/fonts/fonts.css">
-<link rel="stylesheet" href="${root}site.css">${FONT_LINK}`;
+<link rel="stylesheet" href="${root}assets/fonts/fonts.css">${PREVIEW ? GOOGLE_FONTS + `<link rel="stylesheet" href="${root}editor.css">` : ''}
+<link rel="stylesheet" href="${root}site.css">`;
+const scripts = (root = '') => `<script src="${root}site.js"></script>${PREVIEW ? `<script src="${root}editor.js"></script>` : ''}`;
 
-const bar = (root = '') => `<a class="skip" href="#main">Skip to content</a>
+const bar = (root = '') => {
+  const [w, l, a, h] = ['nav.work', 'nav.lenses', 'nav.about', 'nav.hire'].map(T);
+  return `<a class="skip" href="#main">Skip to content</a>
 <header class="bar"><div class="wrap">
-  <a class="brand" href="${root}index.html">${mark(30)}<strong>Prismet</strong><span>by Sage Deutschle</span></a>
+  <a class="brand" href="${root}index.html">${mark(30)}<strong>Prismet</strong><span${T('brand.tagline').a}>${T('brand.tagline').h}</span></a>
   <nav class="nav" aria-label="Main">
-    <a href="${root}index.html#work">Work</a>
-    <a href="${root}index.html#lenses">Lenses</a>
-    <a href="${root}index.html#about">About</a>
-    <a class="btn primary keep" href="${esc(owner.fiverr)}">Hire me</a>
+    <a href="${root}index.html#work"${w.a}>${w.h}</a>
+    <a href="${root}index.html#lenses"${l.a}>${l.h}</a>
+    <a href="${root}index.html#about"${a.a}>${a.h}</a>
+    <a class="btn primary keep" href="${esc(owner.fiverr)}"${h.a}>${h.h}</a>
     <button class="btn theme" type="button" id="theme-toggle" aria-label="Switch light or dark theme">◐</button>
   </nav>
 </div></header>`;
+};
 
 const footer = () => `<footer><div class="wrap">
-  <span>© 2026 Sage Deutschle · prismet.xyz</span>
+  <span${T('footer.copyright').a}>${T('footer.copyright').h}</span>
   <span><a href="${esc(owner.github)}">GitHub</a> · <a href="${esc(owner.linkedin)}">LinkedIn</a> · <a href="${esc(owner.fiverr)}">Fiverr</a></span>
 </div></footer>`;
 
-const facts = (rows) => `<dl class="facts">${rows.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`;
-const isTodo = (p) => p.todo === true;
+const factList = (slug, extra = []) => {
+  const rows = [...extra, ...factPairs(work(slug, 'facts')).map(([k, v], i) => ({
+    k: { a: ed(`work.${slug}.facts.${i}.label`, k), h: inline(k) },
+    v: { a: ed(`work.${slug}.facts.${i}.value`, v), h: inline(v) },
+  }))];
+  return `<dl class="facts">${rows.map(({ k, v }) => `<div><dt${k.a}>${k.h}</dt><dd${v.a}>${v.h}</dd></div>`).join('')}</dl>`;
+};
+const beamLabel = (id) => T(`beam.${id}`);
+const status = (p) => (isTodo(p) ? T('project.in_progress') : P(p.slug, 'status'));
 
 // ── the prism (hero + navigation) ───────────────────────────────────────────────────────────
 // Spectrum order, red deviates least: desktop, apps, worlds, minecraft, web, ai.
@@ -102,13 +129,12 @@ function prism() {
   const ys = [64, 132, 200, 268, 336, 404];
   const count = (id) => projects.filter((p) => p.beam === id).length;
   const beamsSvg = SPECTRUM.map((id, i) => {
-    const b = beamById[id], y = ys[i], d = `M${ex} ${ey} L${lx - 12} ${y}`;
-    const n = count(id);
-    return `<a class="beam" href="#work" data-beam="${id}" aria-label="${esc(b.label)}: ${n} project${n === 1 ? '' : 's'}">
+    const y = ys[i], d = `M${ex} ${ey} L${lx - 12} ${y}`, n = count(id), label = plain(site(`beam.${id}`));
+    return `<a class="beam" href="#work" data-beam="${id}" aria-label="${esc(label)}: ${n} project${n === 1 ? '' : 's'}">
       <path class="ray" d="${d}" stroke="var(--${id})" stroke-width="5" stroke-linecap="round"/>
       <path class="flow" d="${d}" stroke="#fff" stroke-opacity=".55" stroke-width="2" stroke-linecap="round"/>
       <circle cx="${lx - 12}" cy="${y}" r="5" fill="var(--${id})"/>
-      <text x="${lx + 4}" y="${y + 1}">${esc(b.label)}</text>
+      <text x="${lx + 4}" y="${y + 1}"${ed(`beam.${id}`, site(`beam.${id}`))}>${esc(label)}</text>
       <text class="count" x="${lx + 4}" y="${y + 19}">${n} PROJECT${n === 1 ? '' : 'S'}</text>
     </a>`;
   }).join('');
@@ -141,152 +167,152 @@ function media(p) {
 const mediaAlt = (p) => ({
   'prismet-app': 'Prismet App Store screenshots: Sea Battle, the home screen, and Chess',
   'the-helm': 'Four HELM widgets rendered from source: clock, GPU telemetry, fleet radar, and departures board',
-}[p.slug] || `${p.title}`);
+}[p.slug] || plain(work(p.slug, 'title')));
 
 const feature = (p) => {
-  const b = beamById[p.beam];
+  const title = P(p.slug, 'title'), sub = P(p.slug, 'subtitle'), b = beamLabel(p.beam), more = T('selected.read_more');
+  const facts = factPairs(work(p.slug, 'facts')).slice(0, 4);
   return `<article class="feature" style="${hueVars(p.beam)}">
   <a class="media" href="work/${p.slug}.html" aria-label="${esc(mediaAlt(p))}">${media(p)}</a>
   <div class="text">
-    <span class="beam-tag">${esc(b.label)}</span>
-    <h3>${esc(p.title)}</h3>
-    <p class="sub">${esc(p.subtitle)}</p>
-    ${facts(p.facts.slice(0, 4))}
-    <div class="more"><a class="btn" href="work/${p.slug}.html">Read the case study</a>${(p.links || []).filter((l) => l.href.startsWith('http')).slice(0, 1).map((l) => `<a class="btn" href="${esc(l.href)}">${esc(l.label)} ↗</a>`).join('')}</div>
+    <span class="beam-tag"${b.a}>${b.h}</span>
+    <h3${title.a}>${title.h}</h3>
+    <p class="sub"${sub.a}>${sub.h}</p>
+    <dl class="facts">${facts.map(([k, v], i) => `<div><dt${ed(`work.${p.slug}.facts.${i}.label`, k)}>${inline(k)}</dt><dd${ed(`work.${p.slug}.facts.${i}.value`, v)}>${inline(v)}</dd></div>`).join('')}</dl>
+    <div class="more"><a class="btn" href="work/${p.slug}.html"${more.a}>${more.h}</a>${(p.links || []).filter((l) => l.href.startsWith('http')).slice(0, 1).map((l) => `<a class="btn" href="${esc(l.href)}">${esc(l.label)} ↗</a>`).join('')}</div>
   </div>
 </article>`;
 };
 
-const card = (p, root = '') => {
-  const b = beamById[p.beam];
+const card = (p) => {
   const cover = p.cover ? asset(p.cover) : null;
-  const contain = cover && cover.includes('/icons/') || (p.cover || '').includes('/tiles/');
-  return `<a class="card" href="${root}work/${p.slug}.html" data-beam="${p.beam}" style="${hueVars(p.beam)}">
-    <div class="thumb">${cover ? `<img class="${contain ? 'contain' : ''}" src="${root}${cover}" alt="" loading="lazy">` : `<div class="placeholder">Screenshots coming soon</div>`}</div>
+  const contain = (cover && cover.includes('/icons/')) || (p.cover || '').includes('/tiles/');
+  const title = P(p.slug, 'title'), sub = P(p.slug, 'subtitle'), st = status(p), ph = T('work.placeholder');
+  const short = beamById[p.beam].short;
+  return `<a class="card" href="work/${p.slug}.html" data-beam="${p.beam}" style="${hueVars(p.beam)}">
+    <div class="thumb">${cover ? `<img class="${contain ? 'contain' : ''}" src="${cover}" alt="" loading="lazy">` : `<div class="placeholder"${ph.a}>${ph.h}</div>`}</div>
     <div class="body">
-      <span class="beam-tag">${esc(b.short)}</span>
-      <h3>${esc(p.title)}</h3>
-      <p>${esc(p.subtitle)}</p>
-      <div class="meta"><span class="status">${esc(isTodo(p) ? 'In progress' : p.status)}</span></div>
+      <span class="beam-tag">${esc(short)}</span>
+      <h3${title.a}>${title.h}</h3>
+      <p${sub.a}>${sub.h}</p>
+      <div class="meta"><span class="status"${st.a}>${st.h}</span></div>
     </div>
   </a>`;
 };
 
-const GIGS = [
-  ['minecraft', 'Minecraft plugins', 'Paper and Spigot, from one command to a full toolkit'],
-  ['minecraft', 'Minecraft servers & networks', 'Velocity, Docker, permissions, backups'],
-  ['apps', 'iPhone, iPad & Mac apps', 'SwiftUI, from first screen to App Store review'],
-  ['web', 'Web tools & landing pages', 'Fast, private, no bloat'],
-  ['ai', 'AI coding-agent setup', 'Claude Code and Codex working as a team'],
-  ['desktop', 'Linux desktop customization', 'KDE Plasma widgets, themes, scripts'],
-];
+const GIGS = [['mc-plugin', 'minecraft'], ['mc-server', 'minecraft'], ['ios-app', 'apps'], ['web-tool', 'web'], ['ai-agents', 'ai'], ['linux-desktop', 'desktop']];
 
 // ── index ───────────────────────────────────────────────────────────────────────────────────
 const order = ['prismet-app', 'the-helm', 'bayzyl', 'prismcode'];
 const featured = order.map((s) => projects.find((p) => p.slug === s)).filter((p) => p && !isTodo(p));
 const tileFor = { 'steam-rewind': 'steamrewind', 'debt-clock': 'debtclock', 'wordgame-api': 'wordle' };
+const k = (key) => T(key); // shorthand
 
 const indexBody = `${bar()}
 <main id="main">
 <section class="hero" aria-labelledby="hero-title" style="padding:0"><div class="wrap">
   <div>
-    <p class="eyebrow">Prismet · the workshop of Sage Deutschle</p>
-    <h1 id="hero-title">One workshop, <em>split six ways</em>.</h1>
-    <p class="lede">I ship iPhone and Mac games, Minecraft plugins and servers, custom Linux desktops, AI agent systems, and small web tools that keep your data on your device.</p>
-    <div class="ctas"><a class="btn primary" href="#work">See the work</a><a class="btn" href="${esc(owner.fiverr)}">Hire me on Fiverr</a></div>
+    <p class="eyebrow"${k('hero.eyebrow').a}>${k('hero.eyebrow').h}</p>
+    <h1 id="hero-title"${k('hero.title').a}>${k('hero.title').h}</h1>
+    <p class="lede"${k('hero.lede').a}>${k('hero.lede').h}</p>
+    <div class="ctas"><a class="btn primary" href="#work"${k('hero.cta_primary').a}>${k('hero.cta_primary').h}</a><a class="btn" href="${esc(owner.fiverr)}"${k('hero.cta_secondary').a}>${k('hero.cta_secondary').h}</a></div>
   </div>
   <div>
     ${prism()}
-    <div class="beam-chips" aria-label="Categories">${SPECTRUM.map((id) => `<a class="chip" href="#work" data-beam="${id}" style="--h:var(--${id})"><i></i>${esc(beamById[id].label)}</a>`).join('')}</div>
+    <div class="beam-chips" aria-label="Categories">${SPECTRUM.map((id) => { const b = beamLabel(id); return `<a class="chip" href="#work" data-beam="${id}" style="--h:var(--${id})"><i></i><span${b.a}>${b.h}</span></a>`; }).join('')}</div>
   </div>
 </div></section>
 
 <section id="lenses" aria-labelledby="lenses-title"><div class="wrap">
-  <div class="sec-head"><div><p class="eyebrow">Live on prismet.xyz</p><h2 id="lenses-title">Lenses</h2></div>
-    <p>Live-data tools that started inside the Prismet app. They run here too.</p></div>
-  <div class="lenses">${lenses.map((l) => `<a class="lens" href="${esc(l.href)}">
+  <div class="sec-head"><div><p class="eyebrow"${k('lenses.eyebrow').a}>${k('lenses.eyebrow').h}</p><h2 id="lenses-title"${k('lenses.title').a}>${k('lenses.title').h}</h2></div>
+    <p${k('lenses.intro').a}>${k('lenses.intro').h}</p></div>
+  <div class="lenses">${lenses.map((l) => { const t = k(`lens.${l.id}.title`), d = k(`lens.${l.id}.blurb`); return `<a class="lens" href="${esc(l.href)}">
     <img src="${asset('assets/prismet/tiles/' + tileFor[l.id] + '.webp')}" alt="">
-    <div><h3>${esc(l.label)}</h3><p>${esc(l.blurb)}</p>${l.kind === 'api' ? `<code>GET ${esc(l.href)}</code>` : ''}</div></a>`).join('')}</div>
+    <div><h3${t.a}>${t.h}</h3><p${d.a}>${d.h}</p>${l.kind === 'api' ? `<code>GET ${esc(l.href)}</code>` : ''}</div></a>`; }).join('')}</div>
 </div></section>
 
 <section id="selected" aria-labelledby="selected-title" style="padding-top:0"><div class="wrap">
-  <div class="sec-head"><div><p class="eyebrow">Selected work</p><h2 id="selected-title">Four builds, four beams</h2></div></div>
+  <div class="sec-head"><div><p class="eyebrow"${k('selected.eyebrow').a}>${k('selected.eyebrow').h}</p><h2 id="selected-title"${k('selected.title').a}>${k('selected.title').h}</h2></div></div>
   ${featured.map(feature).join('\n')}
 </div></section>
 
 <section id="work" aria-labelledby="work-title" style="background:var(--ground-2);border-block:1px solid var(--hair)"><div class="wrap">
-  <div class="sec-head"><div><p class="eyebrow">Everything</p><h2 id="work-title">All work</h2></div>
-    <p>${projects.length} projects across six beams. Pick a color to filter.</p></div>
+  <div class="sec-head"><div><p class="eyebrow"${k('work.eyebrow').a}>${k('work.eyebrow').h}</p><h2 id="work-title"${k('work.title').a}>${k('work.title').h}</h2></div>
+    <p${k('work.intro').a} data-count="${projects.length}">${k('work.intro').h}</p></div>
   <div class="filters" role="group" aria-label="Filter by category">
-    <button class="chip" type="button" data-filter="all" aria-pressed="true" style="--h:var(--gold)"><i></i>All</button>
-    ${SPECTRUM.map((id) => `<button class="chip" type="button" data-filter="${id}" aria-pressed="false" style="--h:var(--${id})"><i></i>${esc(beamById[id].label)}</button>`).join('')}
+    <button class="chip" type="button" data-filter="all" aria-pressed="true" style="--h:var(--gold)"><i></i><span${k('work.filter_all').a}>${k('work.filter_all').h}</span></button>
+    ${SPECTRUM.map((id) => { const b = beamLabel(id); return `<button class="chip" type="button" data-filter="${id}" aria-pressed="false" style="--h:var(--${id})"><i></i><span${b.a}>${b.h}</span></button>`; }).join('')}
   </div>
-  <div class="grid" id="grid">${projects.map((p) => card(p)).join('')}</div>
+  <div class="grid" id="grid">${projects.map(card).join('')}</div>
 </div></section>
 
 <section id="about" aria-labelledby="about-title"><div class="wrap about">
   <div>
-    <p class="eyebrow">About</p><h2 id="about-title" style="font-size:var(--t-xl);margin:12px 0 22px">Hi, I'm Sage.</h2>
+    <p class="eyebrow"${k('about.eyebrow').a}>${k('about.eyebrow').h}</p><h2 id="about-title" class="about-title"${k('about.title').a}>${k('about.title').h}</h2>
     <div class="prose">
-      <p>Prismet started as a games app I build with family and a crew of AI agents, and it became the name for everything I make. The app is on the App Store, the lenses run on this site, and the rest of the work lives on GitHub.</p>
-      <p>I like tools that <strong>respect the person using them</strong>: fast to load, honest about what they do, and private by default. That goes for a Minecraft plugin with confirmations on big edits, a web tool with no backend, and a desktop where every widget earns its pixels.</p>
+      <p${k('about.p1').a}>${k('about.p1').h}</p>
+      <p${k('about.p2').a}>${k('about.p2').h}</p>
     </div>
   </div>
   <div class="hire" id="hire">
-    <p class="eyebrow">Work with me</p>
-    <h3 style="margin-top:10px">What I can build for you</h3>
-    <ul>${GIGS.map(([h, t, s]) => `<li style="--h:var(--${h})"><i></i><span>${esc(t)}<small>${esc(s)}</small></span></li>`).join('')}</ul>
-    <div class="links"><a class="btn primary" href="${esc(owner.fiverr)}">Hire me on Fiverr</a><a class="btn" href="${esc(owner.github)}">GitHub</a><a class="btn" href="${esc(owner.linkedin)}">LinkedIn</a></div>
+    <p class="eyebrow"${k('hire.eyebrow').a}>${k('hire.eyebrow').h}</p>
+    <h3${k('hire.title').a}>${k('hire.title').h}</h3>
+    <ul>${GIGS.map(([id, h]) => { const t = k(`hire.${id}.title`), s = k(`hire.${id}.sub`); return `<li style="--h:var(--${h})"><i></i><span><span${t.a}>${t.h}</span><small${s.a}>${s.h}</small></span></li>`; }).join('')}</ul>
+    <div class="links"><a class="btn primary" href="${esc(owner.fiverr)}"${k('hire.cta').a}>${k('hire.cta').h}</a><a class="btn" href="${esc(owner.github)}">GitHub</a><a class="btn" href="${esc(owner.linkedin)}">LinkedIn</a></div>
   </div>
 </div></section>
 </main>
 ${footer()}
-<script src="site.js"></script>`;
+${scripts()}`;
 
-const DESC = 'Sage Deutschle builds iPhone and Mac games, Minecraft plugins and servers, custom Linux desktops, AI agent systems, and private web tools.';
-writeFileSync(join(DIST, 'index.html'), `<!doctype html><html lang="en"><head>${head({ title: 'Prismet · Sage Deutschle', desc: DESC })}</head><body>${indexBody}</body></html>`);
+writeFileSync(join(DIST, 'index.html'), `<!doctype html><html lang="en"><head>${head({ title: plain(site('page.title')), desc: plain(site('page.description')) })}</head><body>${indexBody}</body></html>`);
 
 // ── project pages ───────────────────────────────────────────────────────────────────────────
 projects.forEach((p, i) => {
-  const b = beamById[p.beam];
+  const b = beamLabel(p.beam), s = p.slug;
   const next = projects[(i + 1) % projects.length], prev = projects[(i - 1 + projects.length) % projects.length];
   const gal = (p.gallery || []).map(asset);
-  const wide = gal.some((s) => /boards|helm|web\//.test(s));
+  const wide = gal.some((x) => /boards|helm|web\//.test(x));
+  const title = P(s, 'title'), sub = P(s, 'subtitle'), st = status(p), sum = P(s, 'summary');
+  const hl = listItems(work(s, 'highlights')), hlT = T('project.highlights');
+  const roleK = T('project.role_label'), yearK = T('project.year_label');
   const body = `${bar('../')}
 <main id="main" style="${hueVars(p.beam)}">
   <div class="wrap p-hero">
-    <p class="crumbs"><a href="../index.html#work">Work</a> / <a href="../index.html#work" data-beam="${p.beam}">${esc(b.label)}</a></p>
-    <h1>${esc(p.title)}</h1>
-    <p class="sub">${esc(p.subtitle)}</p>
-    <div class="row"><span class="status">${esc(isTodo(p) ? 'In progress' : p.status)}</span>${(p.links || []).map((l) => `<a class="btn" href="${esc(l.href.startsWith('/') ? '..' + l.href : l.href)}">${esc(l.label)}${l.href.startsWith('http') ? ' ↗' : ''}</a>`).join('')}</div>
+    <p class="crumbs"><a href="../index.html#work">${T('nav.work').h}</a> / <a href="../index.html#work">${b.h}</a></p>
+    <h1${title.a}>${title.h}</h1>
+    <p class="sub"${sub.a}>${sub.h}</p>
+    <div class="row"><span class="status"${st.a}>${st.h}</span>${(p.links || []).map((l) => `<a class="btn" href="${esc(l.href.startsWith('/') ? '..' + l.href : l.href)}">${esc(l.label)}${l.href.startsWith('http') ? ' ↗' : ''}</a>`).join('')}</div>
   </div>
-  ${gal.length ? `<div class="gallery${wide ? ' wide' : ''}" tabindex="0" aria-label="Gallery">${gal.map((s, k) => `<img src="../${s}" alt="${esc(p.title)} image ${k + 1}" loading="${k < 2 ? 'eager' : 'lazy'}">`).join('')}</div>` : ''}
+  ${gal.length ? `<div class="gallery${wide ? ' wide' : ''}" tabindex="0" aria-label="Gallery">${gal.map((x, n) => `<img src="../${x}" alt="${esc(plain(work(s, 'title')))} image ${n + 1}" loading="${n < 2 ? 'eager' : 'lazy'}">`).join('')}</div>` : ''}
   <div class="wrap p-body">
     <div class="prose">
-      ${isTodo(p) ? `<p class="todo">${esc(p.summary)}</p>` : `<p>${esc(p.summary)}</p>`}
-      ${p.highlights?.length ? `<h2>Highlights</h2><ul class="hl">${p.highlights.map((h) => `<li>${esc(h)}</li>`).join('')}</ul>` : ''}
+      <div class="summary${isTodo(p) ? ' todo' : ''}"${sum.a}>${sum.h.split(/\n\s*\n/).map((para) => `<p>${para}</p>`).join('')}</div>
+      ${hl.length ? `<h2${hlT.a}>${hlT.h}</h2><ul class="hl">${hl.map((h, n) => `<li${ed(`work.${s}.highlights.${n}`, h)}>${inline(h)}</li>`).join('')}</ul>` : ''}
     </div>
     <aside>
-      ${facts([['Role', p.role], ['Year', p.year], ...p.facts])}
-      <div class="stack" aria-label="Stack">${p.stack.map((s) => `<span>${esc(s)}</span>`).join('')}</div>
+      ${factList(s, [
+        { k: roleK, v: { a: ed(`work.${s}.role`, work(s, 'role')), h: inline(work(s, 'role')) } },
+        { k: yearK, v: { a: ed(`work.${s}.year`, work(s, 'year')), h: inline(work(s, 'year')) } },
+      ])}
+      <div class="stack" aria-label="Stack">${p.stack.map((x) => `<span>${esc(x)}</span>`).join('')}</div>
     </aside>
   </div>
   <div class="wrap next">
-    <a href="${prev.slug}.html"><small>← Previous</small><strong>${esc(prev.title)}</strong></a>
-    <a href="${next.slug}.html" style="text-align:right"><small>Next →</small><strong>${esc(next.title)}</strong></a>
+    <a href="${prev.slug}.html"><small>← ${T('project.previous').h}</small><strong>${inline(work(prev.slug, 'title'))}</strong></a>
+    <a href="${next.slug}.html" style="text-align:right"><small>${T('project.next').h} →</small><strong>${inline(work(next.slug, 'title'))}</strong></a>
   </div>
 </main>
 ${footer()}
-<script src="../site.js"></script>`;
-  writeFileSync(join(DIST, 'work', p.slug + '.html'), `<!doctype html><html lang="en"><head>${head({ title: `${p.title} · Prismet`, desc: p.subtitle, root: '../' })}</head><body>${body}</body></html>`);
+${scripts('../')}`;
+  writeFileSync(join(DIST, 'work', s + '.html'), `<!doctype html><html lang="en"><head>${head({ title: `${plain(work(s, 'title'))} · Prismet`, desc: plain(work(s, 'subtitle')), root: '../' })}</head><body>${body}</body></html>`);
 });
 
-// ── artifact preview: same page as a fragment (the artifact host supplies <head>/<body>) ────
+// ── artifact preview: the same page as a fragment (the artifact host supplies <head>/<body>) ─
 if (PREVIEW) {
-  const frag = `<title>Prismet Redesign</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..800;1,6..72,400..600&family=Hanken+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400..700&display=swap">
-<link rel="stylesheet" href="site.css">
-${indexBody}`;
-  writeFileSync(join(DIST, '_preview.html'), frag);
+  writeFileSync(join(DIST, '_preview.html'), `<title>Prismet Redesign</title>
+${GOOGLE_FONTS}<link rel="stylesheet" href="editor.css"><link rel="stylesheet" href="site.css">
+${indexBody}`);
 }
-console.log(`built ${projects.length} project pages + index → ${DIST}`);
+if (missing.size) console.warn('⚠ missing wording (shown as the key on the page):\n  ' + [...missing].join('\n  '));
+console.log(`built ${projects.length} project pages + index → ${DIST}${PREVIEW ? ' (with editor)' : ''}`);
