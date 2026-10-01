@@ -5,6 +5,48 @@ plugins {
 group = 'com.bayzyl'
 version = '0.2.0-alpha.1'
 
+/**
+ * Short commit of HEAD, with "-dirty" when this project directory has uncommitted changes, or "unknown" without
+ * git. A ValueSource so the configuration cache re-checks it on every build.
+ */
+abstract class GitRevision implements ValueSource<String, GitRevision.Params> {
+    interface Params extends ValueSourceParameters {
+        DirectoryProperty getProjectDir()
+    }
+
+    @javax.inject.Inject
+    abstract ExecOperations getExecOperations()
+
+    @Override
+    String obtain() {
+        File dir = parameters.projectDir.get().asFile
+        String head = run(dir, 'git', 'rev-parse', '--short=12', 'HEAD')
+        if (!head) {
+            return 'unknown'
+        }
+        return run(dir, 'git', 'status', '--porcelain', '--', '.') ? head + '-dirty' : head
+    }
+
+    private String run(File dir, String... command) {
+        try {
+            def out = new ByteArrayOutputStream()
+            def result = execOperations.exec { spec ->
+                spec.workingDir = dir
+                spec.commandLine(command)
+                spec.standardOutput = out
+                spec.errorOutput = new ByteArrayOutputStream()
+                spec.ignoreExitValue = true
+            }
+            return result.exitValue == 0 ? out.toString().trim() : ''
+        } catch (Exception ignored) {
+            return ''
+        }
+    }
+}
+
+def bayzylRevision = providers.gradleProperty('bayzyl.revision')
+        .orElse(providers.of(GitRevision) { parameters.projectDir.set(layout.projectDirectory) })
+
 def targetJavaVersion = 21
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
@@ -32,10 +74,30 @@ tasks.withType(JavaCompile).configureEach {
     options.release.set(targetJavaVersion)
 }
 
+processResources {
+    def pluginVersion = project.version.toString()
+    inputs.property('version', pluginVersion)
+    filesMatching('plugin.yml') {
+        expand(version: pluginVersion)
+    }
+}
+
 tasks.jar {
     archiveBaseName = 'bayzyl'
+    // Reproducible: no file timestamps, stable entry order, and no wall-clock time in the manifest.
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+    manifest {
+        attributes(
+                'Implementation-Title': 'Bayzyl',
+                'Implementation-Version': project.version.toString(),
+                'Bayzyl-Revision': bayzylRevision.get())
+    }
 }
 
 tasks.test {
     useJUnitPlatform()
+    // Metadata and reproducibility tests inspect the real jar, never a stale one.
+    dependsOn tasks.jar
+    systemProperty 'bayzyl.jar', tasks.jar.archiveFile.get().asFile.absolutePath
 }

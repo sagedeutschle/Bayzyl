@@ -1,5 +1,5 @@
 name: Bayzyl
-version: 0.2.0-alpha.1
+version: ${version}
 main: com.bayzyl.Bayzyl
 api-version: 1.21
 softdepend: [WorldEdit, FastAsyncWorldEdit]

@@ -71,7 +71,7 @@ public final class Bayzyl extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("Bayzyl enabled — local test target verified at 2026-05-12");
+        getLogger().info("Bayzyl enabled — " + BuildInfo.of(getFile()).describe());
 
         selectionManager = new SelectionManager();
         visualizationManager = new VisualizationManager(selectionManager);
