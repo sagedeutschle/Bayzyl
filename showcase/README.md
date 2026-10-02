@@ -15,7 +15,7 @@ qr-scanner, PrismCode, THE HELM, Quark). Nothing is a mockup pretending to be a 
 | [`prismet-site/build.mjs`](prismet-site/build.mjs) | Builds the static site into `prismet-site/dist/` (`--preview` adds the Edit page mode) |
 | [`prismet-site/content/`](prismet-site/content/) | Every word on the site, as plain text |
 | [`prismet-site/apply-edits.mjs`](prismet-site/apply-edits.mjs) | Writes Edit-mode changes (words + layout) back into `content/` and `data/projects.json` |
-| [`assets/`](assets/) | Compressed real visuals + self-hosted fonts (SIL OFL) |
+| [`assets/`](assets/) | Compressed real visuals + self-hosted fonts (SIL OFL). `helm2/` holds the widget faces at 2×, `bench/` the nine timelapse steps, `worlds/` the Long Now eras |
 | [`tools/`](tools/) | Asset collection, offscreen QML widget renderer, web capture scripts |
 
 ## Rebuild everything
@@ -26,7 +26,22 @@ node showcase/fiverr/kit.mjs           # validate + regenerate FIVERR-KIT.md and
 node showcase/prismet-site/build.mjs   # site → prismet-site/dist/
 ```
 
-Needs Node 20+, Playwright with Chromium, and ImageMagick (`convert`) for WebP output.
+Needs Node 20+, Playwright with Chromium, and ImageMagick (`convert`) for WebP output. Note that ImageMagick 6
+ignores `-quality` for WebP; use `-define webp:method=6` (and `webp:target-size=N` to cap a file).
+
+### Fonts
+
+`assets/fonts/` holds Newsreader (roman and italic, weight 200–800, optical size 6–72) and Martian Mono (weight
+100–800, width 75–112.5), subset to Latin plus arrows and math symbols. To regenerate from the variable TTFs in
+[google/fonts](https://github.com/google/fonts) (`ofl/newsreader`, `ofl/martianmono`):
+
+```bash
+pip install fonttools brotli
+U='U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2190-2199,U+2212,U+2215,U+2248,U+2260,U+2264,U+2265,U+FEFF,U+FFFD'
+pyftsubset 'Newsreader[opsz,wght].ttf' --unicodes="$U" --layout-features='kern,liga,tnum,calt' --flavor=woff2 --output-file=Newsreader.woff2
+pyftsubset 'Newsreader-Italic[opsz,wght].ttf' --unicodes="$U" --layout-features='kern,liga,tnum,calt' --flavor=woff2 --output-file=Newsreader-Italic.woff2
+pyftsubset 'MartianMono[wdth,wght].ttf' --unicodes="$U" --layout-features='kern,tnum,calt' --flavor=woff2 --output-file=MartianMono.woff2
+```
 
 THE HELM screenshots come from `tools/render-helm-faces.py`, which renders each widget's
 `Face.qml` offscreen with PySide6 using the widget's own sample data
@@ -35,6 +50,12 @@ THE HELM screenshots come from `tools/render-helm-faces.py`, which renders each 
 ```bash
 QML_IMPORT_PATH=showcase/tools/qmlstub python render-helm-faces.py <out-dir> ~/helm-dotfiles/helm/plasmoids/*/contents/ui/Face.qml
 ```
+
+## Status (2026-10-02)
+
+**The workshop redesign** (branch `claude/funny-wozniak-4j636o`): the site is now a workshop with a hall plan for
+navigation, a ledger register, and one signature module per flagship. See `showcase/HANDOFF.md` for the current
+state, and `prismet-site/build.mjs` for how pages are made. `node build.mjs --preview` writes to `dist-preview/`.
 
 ## Status (2026-10-01)
 
