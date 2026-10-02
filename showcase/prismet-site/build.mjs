@@ -247,7 +247,7 @@ function signature(p, root = '../') {
     <div class="stepper" data-stepper>
       <ol class="steps">${p.steps.map((st, i) => `<li class="step"${i === 0 ? ' aria-current="step"' : ''} data-step="${i}">
         ${img(`assets/bench/step-${i}.webp`, { root, alt: st.command ? `${st.title}: the test plaza after ${st.command}` : st.title, lazy: i !== 0 })}
-        <p class="step-cmd">${st.command ? `<code>${esc(st.command)}</code>` : `<span class="muted">—</span>`}</p>
+        ${st.command ? `<p class="step-cmd"><code>${esc(st.command)}</code></p>` : ''}
         <p class="step-title"><span class="step-n">${i}/${p.steps.length - 1}</span> ${esc(st.title)}</p>
       </li>`).join('')}</ol>
       <div class="step-nav"><button type="button" class="btn" data-prev aria-label="${esc(T('bench.previous').p)}"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M8 1.5 3.5 6 8 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><output aria-live="polite">${esc(T('bench.step').p)} 0 / ${p.steps.length - 1}</output><button type="button" class="btn" data-next aria-label="${esc(T('bench.next').p)}"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4 1.5 8.5 6 4 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>

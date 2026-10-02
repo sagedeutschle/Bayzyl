@@ -179,6 +179,12 @@ fly deploy --image registry.fly.io/prismet-site-restless-horizon-217:redesign-YY
 
 ## Known issues and backlog
 
+- **Budgets (QA, 2026-10-02):** home first view 22 requests / 646 KB at 1440 (the four door modules make 13
+  of them); full scroll 38 requests / 0.8 MB; Bayzyl page 14 requests / 1.0 MB; CLS under 0.001; axe 0
+  violations on every page in both modes. Fonts are 214 KB (Newsreader roman 125, italic 54, Martian Mono 35).
+  Project-page plates have no `srcset` yet (`img()` in build.mjs accepts one); pre-composing the door
+  modules into single images would bring the first view under 20 requests.
+
 - **The Long Now** is a featured room with three 1280×720 captures. The Mac holds more.
 - **Steam Rewind and Debt Clock** plates are crops of demo data; the Debt Clock captures show the
   labelled Treasury fallback.
