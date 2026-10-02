@@ -12,7 +12,7 @@ Nothing here is wired into the site yet. Pick the best ones, then point `cover` 
 | Project | New shots | Source |
 |---|---|---|
 | PrismCode | 7 screens at 3200×2000: three agents on one task, a Codex approval, the git panel, a diff, session history, the usage table, PRISM A/B compare | The real app interface, built from the prismcode repo and run in a browser with demo data (`tools/prismcode-shots/`). The demo project is the public qr-scanner repo. |
-| Steam Rewind | All 13 lenses, the full page, 2 phone views | Live tool, built-in demo library |
+| Steam Rewind | (removed: every capture showed a Steam ID in the search field; the site uses crops of the list only) | Live tool, built-in demo library |
 | Debt Clock | Desktop dark and light, full page, phone, phone full page | Live tool |
 | QR tools | Scanner, Home Screen Planner, Phone Declutter, Playlist Maker on desktop and phone, plus the scanner decoding a real QR code from a fake camera | qr-scanner repo |
 | Prismet app | The 7-screen App Store pack (1320×2868) and 7 raw iPhone captures | kaleidoscope repo, `ios/docs/appstore-screenshots-v14` |

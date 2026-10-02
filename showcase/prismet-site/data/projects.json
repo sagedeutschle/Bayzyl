@@ -1,5 +1,5 @@
 {
-  "_readme": "Project DATA (images, links, categories) and page LAYOUT. All WORDING lives in content/site.md and content/work/<slug>.md. Grid order = order of `projects`. `featuredOrder` = the Selected work rows. Per project: \"wide\": true (double-width card), \"hidden\": true (left off the site). `layout.sections` orders the home page sections; `layout.hiddenSections` hides them. The preview's Edit mode changes all of these; apply-edits.mjs writes them back here.",
+  "_readme": "Project DATA (images, links, categories, rooms) and page LAYOUT. All WORDING lives in content/site.md and content/work/<slug>.md. Ledger order = order of `projects`. `featuredOrder` = the Principal works. Per project: \"room\" picks the page's material (bench, arcade, bridge, notebook, museum, observatory, council, cabinet), \"tier\" its weight (flagship, featured, record, cabinet), \"hidden\": true leaves it off the site (its old URL gets a one-line stub), \"related\" lists slugs shown as Threads. `layout.sections` orders the home page sections; `layout.hiddenSections` hides them. The preview's Edit mode changes wording and layout; apply-edits.mjs writes them back here.",
   "owner": {
     "name": "Sage Deutschle",
     "handle": "gtrktscrb",
@@ -11,8 +11,9 @@
   "layout": {
     "sections": [
       "selected",
-      "lenses",
       "work",
+      "plate",
+      "lenses",
       "about"
     ],
     "hiddenSections": []
@@ -21,7 +22,7 @@
     "bayzyl",
     "prismet-app",
     "the-helm",
-    "the-long-now"
+    "prismcode"
   ],
   "beams": [
     {
@@ -67,6 +68,83 @@
   ],
   "projects": [
     {
+      "slug": "bayzyl",
+      "beam": "minecraft",
+      "stack": [
+        "Java 21",
+        "Paper 1.21",
+        "Gradle",
+        "FAWE-aware"
+      ],
+      "links": [
+        {
+          "label": "GitHub",
+          "href": "https://github.com/sagedeutschle/Bayzyl"
+        }
+      ],
+      "cover": "assets/minecraft/bayzyl-scene-overview.webp",
+      "gallery": [
+        "assets/minecraft/bayzyl-scene-plaza-dome.webp",
+        "assets/minecraft/bayzyl-scene-tower.webp",
+        "assets/minecraft/bayzyl-scene-formula-ring.webp",
+        "assets/minecraft/bayzyl-scene-inside-dome.webp",
+        "assets/minecraft/bayzyl-scene-overview.webp",
+        "assets/minecraft/bayzyl-tab-panel-1400.webp",
+        "assets/minecraft/bayzyl-help-page-01.webp"
+      ],
+      "fiverrGig": "mc-plugin",
+      "shotAlts": [
+        "A stone plaza with a glass dome and quartz pillars, a stone-brick tower and a copper ring behind it, built in Minecraft with /hsphere glass 9, /cyl quartz_pillar 1 9 and /walls 70%stone_bricks,30%mossy_stone_bricks.",
+        "A stone-brick tower with a dark oak pyramid roof, built with /hcyl 75%stone_bricks,25%cracked_stone_bricks 6 18 and /hpyramid dark_oak_planks 7.",
+        "A copper-block ring generated from a math formula with /generate, surrounded by oak trees from /forestgen 16 oak 5.",
+        "The view from inside the glass dome looking out at the tower and the copper ring, with a floor laid in the weighted mix 60%polished_andesite,25%andesite,15%stone_bricks.",
+        "The whole test scene seen from above on a clean Paper 1.21.4 server: the plaza and glass dome, the tower, the copper ring among oak trees, and a sandstone step pyramid, all built with Bayzyl commands.",
+        "Bayzyl's tab panel in Minecraft, showing server memory use, a layer preview of a 6x3x5 clipboard, selection stats and recent command history.",
+        "Page one of Bayzyl's in-game help, in Minecraft chat: the /bzl namespace, /bzl help, /select and /profile, and what target and selection mean."
+      ],
+      "room": "bench",
+      "tier": "flagship",
+      "related": [],
+      "steps": [
+        {
+          "title": "Empty superflat test world",
+          "command": ""
+        },
+        {
+          "title": "Floor from a weighted block mix",
+          "command": "/set 60%polished_andesite,25%andesite,15%stone_bricks"
+        },
+        {
+          "title": "Walls around the selection",
+          "command": "/walls 70%stone_bricks,30%mossy_stone_bricks"
+        },
+        {
+          "title": "Hollow glass dome",
+          "command": "/hsphere glass 9"
+        },
+        {
+          "title": "Quartz pillars",
+          "command": "/cyl quartz_pillar 1 9"
+        },
+        {
+          "title": "Stepped pyramid from a two-block mix",
+          "command": "/pyramid 70%sandstone,30%smooth_sandstone 11"
+        },
+        {
+          "title": "Tower and roof",
+          "command": "/hcyl 75%stone_bricks,25%cracked_stone_bricks 6 18  +  /hpyramid dark_oak_planks 7"
+        },
+        {
+          "title": "Torus generated from a math formula",
+          "command": "/generate copper_block (sqrt(x*x+y*y)-0.62)*(sqrt(x*x+y*y)-0.62)+z*z<0.05"
+        },
+        {
+          "title": "Procedural forest",
+          "command": "/forestgen 16 oak 5 at:player"
+        }
+      ]
+    },
+    {
       "slug": "prismet-app",
       "beam": "apps",
       "stack": [
@@ -83,28 +161,84 @@
           "href": "https://apps.apple.com/us/app/kaleidescope/id6785993194"
         }
       ],
-      "cover": "assets/live/prismet-5.webp",
+      "cover": "assets/prismet/iphone-home.webp",
       "gallery": [
-        "assets/prismet/raw-home.webp",
-        "assets/prismet/iphone-chess.webp",
+        "assets/prismet/iphone-home.webp",
+        "assets/prismet/iphone-chess2d.webp",
         "assets/prismet/iphone-seabattle.webp",
+        "assets/prismet/iphone-wordle.webp",
         "assets/live/prismet-5.webp",
         "assets/prismet/iphone-sudoku.webp",
         "assets/prismet/raw-checkers.webp",
-        "assets/prismet/iphone-solitaire.webp"
+        "assets/prismet/iphone-solitaire.webp",
+        "assets/prismet/iphone-2048.webp",
+        "assets/prismet/raw-snake.webp"
       ],
       "fiverrGig": "ios-app",
-      "wideCover": "assets/live/prismet-5.webp",
-      "wide": true,
       "shotAlts": [
         "The Prismet home screen on iPhone: a dark grid of game tiles with Wordgame under Daily, and 2048, Snake, Minesweeper and Sudoku under Puzzles.",
         "Chess on iPhone against Stockfish at about 1,200 Elo, with the pieces in their starting position, four board colour swatches, a 2D and 3D switch and an opponent difficulty slider.",
         "Sea Battle fleet placement on iPhone: an empty ten-by-ten grid with Horizontal and Vertical, Auto, Clear and Begin buttons and Easy, Normal and Hard difficulty.",
+        "The daily Wordgame on iPhone: a six-row letter grid with the first guesses coloured green, yellow and grey above an on-screen keyboard.",
         "A 3D Catan board in the meadow theme: hexagonal terrain tiles with numbered tokens, settlements, roads and the robber on an island surrounded by water.",
         "Sudoku on iPhone: the Daily Grid, Easy edition, with 30 of 81 cells filled, a number pad, and New Edition and Clear Sheet buttons.",
         "Checkers on iPhone at the start of a game: a red and black board with red and black pieces, vs AI and 2 Player options, and an opponent difficulty slider.",
-        "Solitaire on iPhone: a green table dealt with seven columns, the stock pile and four empty foundations, with Draw, Collect and New Game buttons."
-      ]
+        "Solitaire on iPhone: a green table dealt with seven columns, the stock pile and four empty foundations, with Draw, Collect and New Game buttons.",
+        "2048 on iPhone: a four-by-four grid of numbered tiles with the score above it.",
+        "Snake on iPhone: a green playfield with the snake and an apple, the score above and directional controls below."
+      ],
+      "room": "arcade",
+      "tier": "flagship",
+      "related": [
+        "steam-rewind",
+        "debt-clock"
+      ],
+      "tiles": [
+        "wordle",
+        "chess",
+        "seabattle",
+        "2048",
+        "sudoku",
+        "minesweeper",
+        "snake",
+        "solitaire",
+        "checkers",
+        "reversi",
+        "connectfour",
+        "gomoku",
+        "rubiks",
+        "lightsout",
+        "sliding",
+        "nonogram",
+        "spider",
+        "crazyeight",
+        "brickbench",
+        "steamrewind",
+        "debtclock"
+      ],
+      "tileNames": {
+        "2048": "2048",
+        "wordle": "Wordgame",
+        "chess": "Chess",
+        "seabattle": "Sea Battle",
+        "sudoku": "Sudoku",
+        "minesweeper": "Minesweeper",
+        "snake": "Snake",
+        "solitaire": "Solitaire",
+        "checkers": "Checkers",
+        "reversi": "Reversi",
+        "connectfour": "Connect Four",
+        "gomoku": "Gomoku",
+        "rubiks": "Rubik's Cube",
+        "lightsout": "Lights Out",
+        "sliding": "Sliding Puzzle",
+        "nonogram": "Nonogram",
+        "spider": "Spider",
+        "crazyeight": "Crazy Eights",
+        "brickbench": "Brick Bench",
+        "steamrewind": "Steam Rewind",
+        "debtclock": "Debt Clock"
+      }
     },
     {
       "slug": "the-helm",
@@ -117,25 +251,27 @@
         "Arch Linux"
       ],
       "links": [],
-      "cover": "assets/helm/chronos.webp",
+      "cover": "assets/helm2/reactor.webp",
       "gallery": [
-        "assets/helm/chronos.webp",
-        "assets/helm/cpu.webp",
-        "assets/helm/gpu.webp",
-        "assets/helm/net.webp",
-        "assets/helm/diskmap.webp",
-        "assets/helm/reactor.webp",
-        "assets/helm/qlora.webp",
-        "assets/helm/transit.webp",
-        "assets/helm/worldclock.webp",
-        "assets/helm/theme.webp",
-        "assets/helm/bridge.webp",
-        "assets/helm/breakout.webp"
+        "assets/helm2/worldclock.webp",
+        "assets/helm2/chronos.webp",
+        "assets/helm2/cpu.webp",
+        "assets/helm2/gpu.webp",
+        "assets/helm2/net.webp",
+        "assets/helm2/diskmap.webp",
+        "assets/helm2/reactor.webp",
+        "assets/helm2/qlora.webp",
+        "assets/helm2/transit.webp",
+        "assets/helm2/theme.webp",
+        "assets/helm2/bridge.webp",
+        "assets/helm2/breakout.webp",
+        "assets/helm2/orbital.webp",
+        "assets/helm2/minesweeper.webp",
+        "assets/helm2/snake.webp"
       ],
       "fiverrGig": "linux-desktop",
-      "wideCover": "assets/helm/worldclock.webp",
-      "wide": true,
       "shotAlts": [
+        "Helm's Meridian world clock face, with a timeline strip above a grid of 16 city clocks and the local HELM clock, each with its UTC offset.",
         "Helm's Chronos clock face: a large digital time readout with red seconds, a tick scale, the date, system uptime and kernel version.",
         "Helm's Core Matrix face for a Ryzen 7900X, with 34 percent aggregate load, temperature, clock speed and a grid of 24 per-thread load tiles.",
         "Helm's GPU Core face for an RTX 3080, with load, temperature and power readouts, a pixel-grid utilization history, and VRAM and disk usage bars.",
@@ -144,65 +280,43 @@
         "Helm's Reactor Core face: a red turbine dial with an output reading of 42 percent and a flux reading of 5362 rpm.",
         "Helm's QLoRA Centrifuge face, a training monitor styled as a washing machine, with a porthole drum, idle cycle readouts and an empty loss graph.",
         "Helm's Transit face listing scheduled jobs as departures, each with a last-run time and a countdown timer.",
-        "Helm's Meridian world clock face, with a timeline strip above a grid of 17 city clocks and their UTC offsets.",
         "Helm's Chroma accent face with seven color swatches, from crimson to bone, that repaint every panel.",
         "Helm's Bridge control face with buttons to move, place and snap widgets, six saved layouts, a city reseed, a palette switch and a region screenshot.",
-        "Helm's Hull Breach arcade face, a Breakout game with rows of red bricks, a blue paddle and a score and hull counter, waiting to start."
+        "Helm's Hull Breach arcade face, a Breakout game with rows of red bricks, a blue paddle and a score and hull counter, waiting to start.",
+        "Helm's Orbital Defense arcade face: a radar-style playfield with a planet at the centre and incoming targets.",
+        "Helm's Minesweeper face: a grid of unopened tiles with a mine counter and timer in the header.",
+        "Helm's Snake face: a dark playfield with the snake, its food and the score in the header."
+      ],
+      "room": "bridge",
+      "tier": "flagship",
+      "related": [],
+      "rack": [
+        [
+          "worldclock",
+          "chronos"
+        ],
+        [
+          "cpu",
+          "gpu",
+          "net",
+          "diskmap"
+        ],
+        [
+          "reactor",
+          "qlora",
+          "transit"
+        ],
+        [
+          "theme",
+          "bridge"
+        ],
+        [
+          "breakout",
+          "orbital",
+          "minesweeper",
+          "snake"
+        ]
       ]
-    },
-    {
-      "slug": "bayzyl",
-      "beam": "minecraft",
-      "stack": [
-        "Java 21",
-        "Paper 1.21",
-        "Gradle",
-        "FAWE-aware"
-      ],
-      "links": [
-        {
-          "label": "GitHub",
-          "href": "https://github.com/sagedeutschle/Bayzyl"
-        }
-      ],
-      "cover": "assets/minecraft/bayzyl-build-plaza-dome.webp",
-      "gallery": [
-        "assets/minecraft/bayzyl-build-plaza-dome.webp",
-        "assets/minecraft/bayzyl-build-overview.webp",
-        "assets/minecraft/bayzyl-build-formula-ring.webp",
-        "assets/minecraft/bayzyl-build-tower.webp",
-        "assets/minecraft/bayzyl-build-inside-dome.webp",
-        "assets/minecraft/bayzyl-tab-panel.webp"
-      ],
-      "fiverrGig": "mc-plugin",
-      "shotAlts": [
-        "A stone plaza with a glass dome and quartz pillars, a stone-brick tower and a copper ring behind it, built in Minecraft with /hsphere glass 9, /cyl quartz_pillar 1 9 and /walls 70%stone_bricks,30%mossy_stone_bricks.",
-        "The whole test scene seen from above on a clean Paper 1.21.4 server: the plaza and glass dome, the tower, the copper ring among oak trees, and a sand pyramid, all built with Bayzyl commands.",
-        "A copper-block ring generated from a math formula with /generate, surrounded by oak trees from /forestgen 16 oak 5.",
-        "A stone-brick tower with a dark oak pyramid roof, built with /hcyl 75%stone_bricks,25%cracked_stone_bricks 6 18 and /hpyramid dark_oak_planks 7.",
-        "The view from inside the glass dome looking out at the tower and the copper ring, with a floor laid in the weighted mix 60%polished_andesite,25%andesite,15%stone_bricks.",
-        "Bayzyl's tab panel in Minecraft, showing server memory use, a layer preview of a 6x3x5 clipboard, selection stats and recent command history."
-      ]
-    },
-    {
-      "slug": "the-long-now",
-      "beam": "worlds",
-      "stack": [
-        "Desktop"
-      ],
-      "links": [],
-      "cover": "assets/live/the-long-now-1.webp",
-      "gallery": [
-        "assets/live/the-long-now-1.webp",
-        "assets/live/the-long-now-2.webp",
-        "assets/live/the-long-now-3.webp"
-      ],
-      "shotAlts": [
-        "The medieval era of The Long Now: a pixel-art river crossing with tents, a campfire, and a stone keep in the trees.",
-        "The same world dressed for its industrial era.",
-        "The far-future Dyson era of the world's dressing pass."
-      ],
-      "fiverrGig": null
     },
     {
       "slug": "prismcode",
@@ -216,21 +330,68 @@
         "SQLite"
       ],
       "links": [],
-      "cover": "assets/ai/prismcode-three-agents.webp",
+      "cover": "assets/ai/prismcode-three-agents-working.webp",
       "gallery": [
-        "assets/ai/prismcode-three-agents.webp",
+        "assets/ai/prismcode-three-agents-working.webp",
+        "assets/ai/prismcode-codex-asks-approval.webp",
         "assets/ai/prismcode-prism-compare.webp",
+        "assets/ai/prismcode-diff.webp",
+        "assets/ai/prismcode-git-panel.webp",
         "assets/ai/prismcode-sessions.webp",
-        "assets/ai/prismcode-usage.webp",
-        "assets/icons/prismcode.webp"
+        "assets/ai/prismcode-usage.webp"
       ],
       "fiverrGig": "ai-agents",
       "shotAlts": [
         "PrismCode's Mission Control running Claude, Codex and DeepSeek panes side by side on one task, with a file sidebar, a Codex pane waiting for approval, and a shared prompt bar.",
+        "A Codex pane paused on a permission request to run a shell command, with Approve and Deny buttons, while the other agents keep working.",
         "The PRISM A/B compare view with Claude's and Codex's diffs for the same prompt shown side by side, plus Apply Claude, Apply Codex, Keep both and Discard buttons.",
+        "A unified diff of index.html in the editor pane, with added lines highlighted in green.",
+        "PrismCode's git panel listing the worktrees and changed files for the current task.",
         "PrismCode's session history sidebar listing four finished sessions with cost and a Resume button, next to a git diff of index.html.",
-        "PrismCode's usage overview table with live cost, token counts, historical and total spend for six Claude, Codex and DeepSeek accounts.",
-        "PrismCode app icon"
+        "PrismCode's usage overview table with live cost, token counts, historical and total spend for six Claude, Codex and DeepSeek accounts."
+      ],
+      "room": "notebook",
+      "tier": "flagship",
+      "related": [
+        "qr-tools",
+        "cicero"
+      ]
+    },
+    {
+      "slug": "the-long-now",
+      "beam": "worlds",
+      "stack": [
+        "Desktop"
+      ],
+      "links": [],
+      "cover": "assets/worlds/long-now-medieval.webp",
+      "gallery": [
+        "assets/worlds/long-now-medieval.webp",
+        "assets/worlds/long-now-industrial.webp",
+        "assets/worlds/long-now-dyson.webp"
+      ],
+      "shotAlts": [
+        "The medieval era of The Long Now: a pixel-art river crossing with tents, a campfire, a wooden bridge and a stone keep on the riverbank.",
+        "The same scene dressed for its industrial era: three brick factories with smokestacks and an iron railing along the river.",
+        "The same scene in the far-future Dyson era: golden orbital rings and radiating constructs above the river."
+      ],
+      "fiverrGig": null,
+      "room": "museum",
+      "tier": "featured",
+      "related": [],
+      "eras": [
+        [
+          "medieval",
+          "Medieval"
+        ],
+        [
+          "industrial",
+          "Industrial"
+        ],
+        [
+          "dyson",
+          "Dyson"
+        ]
       ]
     },
     {
@@ -247,24 +408,22 @@
           "href": "/steam"
         }
       ],
-      "cover": "assets/live/steam-rewind-1.webp",
+      "cover": "assets/web/steam-rewind-most-played.webp",
       "gallery": [
-        "assets/live/steam-rewind-1.webp",
-        "assets/live/steam-rewind-2.webp",
-        "assets/web/steam-rewind-lens-metacritic.webp",
-        "assets/web/steam-rewind-lens-deck-time.webp",
-        "assets/web/steam-rewind-lens-genres.webp",
-        "assets/web/steam-rewind-phone-backlog.webp"
+        "assets/web/steam-rewind-most-played.webp",
+        "assets/web/steam-rewind-backlog.webp"
       ],
       "shotAlts": [
-        "Steam Rewind's most-played lens over the demo fixture, listing games with hours played, price, and Deck time.",
-        "The same library re-sorted by the cost-per-hour lens.",
-        "The Highest Metacritic lens on the demo library, ranking games by score with Outer Wilds first at 92 percent.",
-        "The Longest Deck time lens on the demo library, ranking games by hours played on Steam Deck with Cult of the Lamb first at 12 hours.",
-        "The Genre bucket lens on the demo library, grouping games by genre with the Action titles Hades, Titanfall 2 and Hollow Moon listed first.",
-        "Steam Rewind on a phone showing the Backlog of shame lens, with the search form stacked above the first game card, Celeste, scored 79.17."
+        "Steam Rewind's most-played lens over the demo library, listing Axiom Verge 2, Hades and Factorio with hours played, price and Deck time.",
+        "The Backlog of shame lens over the demo library, ranking games by the hours they have waited unplayed."
       ],
-      "fiverrGig": null
+      "fiverrGig": null,
+      "room": "observatory",
+      "tier": "record",
+      "related": [
+        "prismet-app",
+        "debt-clock"
+      ]
     },
     {
       "slug": "debt-clock",
@@ -279,75 +438,23 @@
           "href": "/debt"
         }
       ],
-      "cover": "assets/live/debt-clock-1.webp",
+      "cover": "assets/web/debt-clock-desktop-dark.webp",
       "gallery": [
-        "assets/live/debt-clock-1.webp",
-        "assets/web/debt-clock-light-desktop.webp",
-        "assets/web/debt-clock-dark-phone.webp"
+        "assets/web/debt-clock-desktop-dark.webp",
+        "assets/web/debt-clock-desktop-light.webp",
+        "assets/web/debt-clock-phone.webp"
       ],
       "shotAlts": [
-        "The debt clock showing the gross U.S. national debt in large green figures, with a spoken-value button, a pause-motion button, and per-citizen and per-taxpayer cards below.",
-        "The same page in the light theme, with dark green figures on white cards and the Read current values and Pause motion buttons above the gross debt figure.",
-        "The Debt Clock on a phone in the dark theme, with the two buttons stacked above the gross debt figure and the Debt per Citizen card."
+        "The debt clock in its dark theme showing the gross U.S. national debt in large green figures, with Read current values and Pause motion buttons, and per-citizen and per-taxpayer cards below.",
+        "The same page in the light theme, with dark green figures on white cards.",
+        "The Debt Clock on a phone in the dark theme, with the two buttons stacked above the gross debt figure."
       ],
-      "fiverrGig": null
-    },
-    {
-      "slug": "cicero",
-      "beam": "ai",
-      "stack": [
-        "Desktop",
-        "iPhone"
-      ],
-      "links": [],
-      "cover": "assets/live/cicero-1.webp",
-      "gallery": [
-        "assets/live/cicero-1.webp"
-      ],
-      "shotAlts": [
-        "Cicero's council floor: a Legion panel, a running transcript of the Curia, an All-Hands fleet panel, and a long verdict under the heading Cicero Speaks."
-      ],
-      "fiverrGig": null
-    },
-    {
-      "slug": "hoi4-war-room",
-      "beam": "ai",
-      "stack": [
-        "Mac",
-        "LAN web"
-      ],
-      "links": [],
-      "cover": "assets/live/hoi4-war-room-1.webp",
-      "gallery": [
-        "assets/live/hoi4-war-room-1.webp",
-        "assets/live/hoi4-war-room-2.webp"
-      ],
-      "shotAlts": [
-        "The Hearts of Iron IV map the war room streams, showing central Europe in March 1936 with division counters and theatre panels.",
-        "The same game in 1940 with the observer console open in the corner, logging the AI agents' turns."
-      ],
-      "fiverrGig": null
-    },
-    {
-      "slug": "wizard-kings-decree",
-      "beam": "ai",
-      "stack": [
-        "Python",
-        "Claude",
-        "GPT",
-        "Gemini",
-        "SQLite"
-      ],
-      "links": [],
-      "cover": "assets/prismet/tiles/oracle.webp",
-      "gallery": [
-        "fiverr/out/portfolio-oracle.png",
-        "assets/prismet/tiles/oracle.webp"
-      ],
-      "fiverrGig": "ai-agents",
-      "shotAlts": [
-        "Diagram of the decree pipeline: a Harvester pulls news, the Council of Mages (Claude and GPT) deliberates, the Wizard King proclaims, the Court Historian (Gemini) grades, Scoring tallies hit rate, and the Chronicle publishes decrees.json.",
-        "The Oracle icon: a parchment scroll with a red wax seal."
+      "fiverrGig": null,
+      "room": "observatory",
+      "tier": "record",
+      "related": [
+        "prismet-app",
+        "steam-rewind"
       ]
     },
     {
@@ -370,9 +477,9 @@
           "href": "https://github.com/sagedeutschle/qr-scanner"
         }
       ],
-      "cover": "assets/web/qr-homescreen-filled-desktop-mock.webp",
+      "cover": "assets/web/qr-scanner-decoding-desktop.webp",
       "gallery": [
-        "assets/web/qr-scanner-detected-desktop.webp",
+        "assets/web/qr-scanner-decoding-desktop.webp",
         "assets/web/qr-scanner-detected-phone.webp",
         "assets/web/qr-homescreen-filled-desktop.webp",
         "assets/web/qr-homescreen-filled-phone.webp",
@@ -381,13 +488,62 @@
       ],
       "fiverrGig": "web-tool",
       "shotAlts": [
-        "The QR Scanner on desktop after detecting a QR code from a test camera feed, with a green frame around the code and the status line reading QR code detected.",
+        "The QR Scanner on desktop decoding a QR code from a test camera feed, with a green frame around the code and the decoded text in a field below.",
         "The QR Scanner on a phone after detecting a QR code, with the decoded text https://prismet.xyz in a field next to a Copy button.",
         "The Home Screen Planner on desktop, with a list of apps tagged by folder and a live phone mockup showing them sorted into verb-named folders such as Watch, Listen and Pay.",
         "The Home Screen Planner on a phone, showing the sorted home screen mockup with wallpaper choices and a widget-row checkbox below it.",
         "The Phone Declutter checklist on desktop, showing 0 of 46 tasks done, All tips, iPhone and Android tabs, and the Quick wins and Home screen groups.",
         "The Playlist Maker setup screen, with fields for an Apple Developer Team ID, Key ID and private key above a Save and continue button."
+      ],
+      "room": "observatory",
+      "tier": "record",
+      "related": [
+        "prismcode"
       ]
+    },
+    {
+      "slug": "cicero",
+      "beam": "ai",
+      "stack": [
+        "Desktop",
+        "iPhone"
+      ],
+      "links": [],
+      "cover": "assets/live/cicero-1.webp",
+      "gallery": [
+        "assets/live/cicero-1.webp"
+      ],
+      "shotAlts": [
+        "Cicero's council floor: a Legion panel, a running transcript of the Curia, an All-Hands fleet panel, and a long verdict under the heading Cicero Speaks."
+      ],
+      "fiverrGig": null,
+      "room": "council",
+      "tier": "record",
+      "related": [
+        "prismcode"
+      ]
+    },
+    {
+      "slug": "hoi4-war-room",
+      "beam": "ai",
+      "stack": [
+        "Mac",
+        "LAN web"
+      ],
+      "links": [],
+      "cover": "assets/live/hoi4-war-room-1.webp",
+      "gallery": [
+        "assets/live/hoi4-war-room-1.webp",
+        "assets/live/hoi4-war-room-2.webp"
+      ],
+      "shotAlts": [
+        "The Hearts of Iron IV map the war room streams, showing central Europe in March 1936 with division counters and theatre panels.",
+        "The same game in April 1940 with the game's own console open in observe mode in the corner."
+      ],
+      "fiverrGig": null,
+      "room": "council",
+      "tier": "record",
+      "related": []
     },
     {
       "slug": "civ5-mod-profiles",
@@ -403,59 +559,10 @@
       "shotAlts": [
         "The launcher's Choose Your Build window: a green Stable Build card and a red Risky Build card, each listing the mods in its stack."
       ],
-      "fiverrGig": null
-    },
-    {
-      "slug": "wow-sidepanel",
-      "beam": "worlds",
-      "stack": [
-        "WoW Addon"
-      ],
-      "links": [],
-      "cover": "assets/live/wow-sidepanel-1.webp",
-      "gallery": [
-        "assets/live/wow-sidepanel-1.webp"
-      ],
-      "shotAlts": [
-        "World of Warcraft filling an ultrawide display, with the character roster held in the narrow right-hand strip the addon reserves."
-      ],
-      "fiverrGig": null
-    },
-    {
-      "slug": "yggdrasil",
-      "beam": "worlds",
-      "stack": [
-        "Games"
-      ],
-      "links": [],
-      "cover": null,
-      "gallery": [],
-      "shotAlts": [],
-      "fiverrGig": null
-    },
-    {
-      "slug": "westeros-uebs2",
-      "beam": "worlds",
-      "stack": [
-        "UEBS 2 map editor"
-      ],
-      "links": [],
-      "cover": null,
-      "gallery": [],
-      "todo": true,
-      "fiverrGig": null
-    },
-    {
-      "slug": "helix-research-desk",
-      "beam": "desktop",
-      "stack": [
-        "Desktop"
-      ],
-      "links": [],
-      "cover": null,
-      "gallery": [],
-      "shotAlts": [],
-      "fiverrGig": null
+      "fiverrGig": null,
+      "room": "cabinet",
+      "tier": "cabinet",
+      "related": []
     },
     {
       "slug": "quark",
@@ -473,7 +580,10 @@
       "fiverrGig": null,
       "shotAlts": [
         "Quark app icon: a glowing blue and purple atom with three orbiting nodes on a dark rounded square."
-      ]
+      ],
+      "room": "cabinet",
+      "tier": "cabinet",
+      "related": []
     },
     {
       "slug": "airhorn",
@@ -489,7 +599,101 @@
       "shotAlts": [
         "The whole app: the word AIRHORN over one big red button, and a line noting you can press Space instead."
       ],
-      "fiverrGig": null
+      "fiverrGig": null,
+      "room": "cabinet",
+      "tier": "cabinet",
+      "related": []
+    },
+    {
+      "slug": "wizard-kings-decree",
+      "beam": "ai",
+      "stack": [
+        "Python",
+        "Claude",
+        "GPT",
+        "Gemini",
+        "SQLite"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "fiverrGig": "ai-agents",
+      "shotAlts": [
+        "Diagram of the decree pipeline: a Harvester pulls news, the Council of Mages (Claude and GPT) deliberates, the Wizard King proclaims, the Court Historian (Gemini) grades, Scoring tallies hit rate, and the Chronicle publishes decrees.json.",
+        "The Oracle icon: a parchment scroll with a red wax seal."
+      ],
+      "hidden": true,
+      "room": "cabinet",
+      "tier": "cabinet",
+      "related": []
+    },
+    {
+      "slug": "wow-sidepanel",
+      "beam": "worlds",
+      "stack": [
+        "WoW Addon"
+      ],
+      "links": [],
+      "cover": "assets/live/wow-sidepanel-1.webp",
+      "gallery": [
+        "assets/live/wow-sidepanel-1.webp"
+      ],
+      "shotAlts": [
+        "World of Warcraft filling an ultrawide display, with the character roster held in the narrow right-hand strip the addon reserves."
+      ],
+      "fiverrGig": null,
+      "hidden": true,
+      "room": "cabinet",
+      "tier": "cabinet",
+      "related": []
+    },
+    {
+      "slug": "yggdrasil",
+      "beam": "worlds",
+      "stack": [
+        "Games"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "fiverrGig": null,
+      "hidden": true,
+      "room": "cabinet",
+      "tier": "cabinet",
+      "related": []
+    },
+    {
+      "slug": "westeros-uebs2",
+      "beam": "worlds",
+      "stack": [
+        "UEBS 2 map editor"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "todo": true,
+      "fiverrGig": null,
+      "hidden": true,
+      "room": "cabinet",
+      "tier": "cabinet",
+      "related": []
+    },
+    {
+      "slug": "helix-research-desk",
+      "beam": "desktop",
+      "stack": [
+        "Desktop"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "fiverrGig": null,
+      "hidden": true,
+      "room": "cabinet",
+      "tier": "cabinet",
+      "related": []
     }
   ]
 }
