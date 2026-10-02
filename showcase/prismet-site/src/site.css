@@ -170,7 +170,7 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 .plan .beacon { stroke: var(--lantern); stroke-width: 1; opacity: .5; }
 .plan .inlay { stroke-width: 3; stroke-linecap: round; }
 .plan .room-fill { fill: var(--surface); opacity: 0; transition: opacity .25s; }
-.plan .room-name { font-size: 21px; fill: var(--ink); font-weight: 500; }
+.plan .room-name { font-size: 20px; fill: var(--ink); font-weight: 500; }
 .plan .room-lead { font-size: 16px; fill: var(--ink-2); font-style: italic; }
 .plan .wing { cursor: pointer; outline: none; }
 .plan .wing:hover .room-fill, .plan .wing:focus-visible .room-fill { opacity: 1; }
