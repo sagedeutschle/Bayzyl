@@ -117,16 +117,18 @@ const head = ({ title, desc, root = '', noindex = false, url = '' }) => `<meta c
 ${PREVIEW ? GOOGLE_FONTS + '\n' : ''}<link rel="stylesheet" href="${root}site.css">${PREVIEW ? `\n<link rel="stylesheet" href="${root}editor.css">` : ''}
 <script src="${root}site.js"></script>`;
 const scripts = (root = '') => (PREVIEW ? `<script src="${root}editor.js"></script>` : '');
+// In the artifact preview the home page is the artifact itself, so links to it point at the folder, not index.html.
+const HOME = (root = '') => (PREVIEW ? (root || './') : `${root}index.html`);
 
 const bar = (root = '') => {
   const [w, l, a, h] = ['nav.work', 'nav.lenses', 'nav.about', 'nav.hire'].map((k) => T(k));
   return `<a class="skip" href="#main">Skip to content</a>
 <header class="bar"><div class="wrap">
-  <a class="brand" href="${root}index.html">${mark(28)}<strong>Prismet</strong><span>${esc(owner.name)}</span></a>
+  <a class="brand" href="${HOME(root)}">${mark(28)}<strong>Prismet</strong><span>${esc(owner.name)}</span></a>
   <nav class="nav" aria-label="Main">
-    <a class="keep" href="${root}index.html#work"${w.a}>${w.h}</a>
-    <a href="${root}index.html#lenses"${l.a}>${l.h}</a>
-    <a href="${root}index.html#about"${a.a}>${a.h}</a>
+    <a class="keep" href="${HOME(root)}#work"${w.a}>${w.h}</a>
+    <a href="${HOME(root)}#lenses"${l.a}>${l.h}</a>
+    <a href="${HOME(root)}#about"${a.a}>${a.h}</a>
     <a class="btn primary keep" href="${esc(owner.fiverr)}"${h.a}>${h.h}</a>
     <button class="btn theme keep" type="button" id="theme-toggle" aria-label="${esc(T('footer.day_night').p)}" data-to-day="${esc(T('theme.to_day').p)}" data-to-night="${esc(T('theme.to_night').p)}"><span class="sun" aria-hidden="true"></span></button>
   </nav>
@@ -135,7 +137,7 @@ const bar = (root = '') => {
 
 const footer = (root = '') => `<footer><div class="wrap">
   <span${T('footer.copyright').a}>${T('footer.copyright').h}</span>
-  <nav aria-label="Footer"><a href="${root}index.html#work">${T('nav.work').h}</a><a href="${root}index.html#lenses">${T('nav.lenses').h}</a><a href="${root}index.html#about">${T('nav.about').h}</a><a href="${root}colophon.html"${T('footer.colophon').a}>${T('footer.colophon').h}</a><a href="${esc(owner.github)}">GitHub</a><a href="${esc(owner.linkedin)}">LinkedIn</a><a href="${esc(owner.fiverr)}">Fiverr</a></nav>
+  <nav aria-label="Footer"><a href="${HOME(root)}#work">${T('nav.work').h}</a><a href="${HOME(root)}#lenses">${T('nav.lenses').h}</a><a href="${HOME(root)}#about">${T('nav.about').h}</a><a href="${root}colophon.html"${T('footer.colophon').a}>${T('footer.colophon').h}</a><a href="${esc(owner.github)}">GitHub</a><a href="${esc(owner.linkedin)}">LinkedIn</a><a href="${esc(owner.fiverr)}">Fiverr</a></nav>
 </div></footer>`;
 
 const factRows = (slug, extra = [], limit = Infinity) => [...extra, ...factPairs(work(slug, 'facts')).map(([k, v], i) => ({
