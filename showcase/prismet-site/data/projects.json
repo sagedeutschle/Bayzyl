@@ -89,8 +89,7 @@
         "assets/minecraft/bayzyl-scene-formula-ring.webp",
         "assets/minecraft/bayzyl-scene-inside-dome.webp",
         "assets/minecraft/bayzyl-scene-overview.webp",
-        "assets/minecraft/bayzyl-tab-panel-1400.webp",
-        "assets/minecraft/bayzyl-help-page-01.webp"
+        "assets/minecraft/bayzyl-tab-panel-1400.webp"
       ],
       "fiverrGig": "mc-plugin",
       "shotAlts": [
@@ -99,8 +98,7 @@
         "A copper-block ring generated from a math formula with /generate, surrounded by oak trees from /forestgen 16 oak 5.",
         "The view from inside the glass dome looking out at the tower and the copper ring, with a floor laid in the weighted mix 60%polished_andesite,25%andesite,15%stone_bricks.",
         "The whole test scene seen from above on a clean Paper 1.21.4 server: the plaza and glass dome, the tower, the copper ring among oak trees, and a sandstone step pyramid, all built with Bayzyl commands.",
-        "Bayzyl's tab panel in Minecraft, showing server memory use, a layer preview of a 6x3x5 clipboard, selection stats and recent command history.",
-        "Page one of Bayzyl's in-game help, in Minecraft chat: the /bzl namespace, /bzl help, /select and /profile, and what target and selection mean."
+        "Bayzyl's tab panel in Minecraft, showing server memory use, a layer preview of a 6x3x5 clipboard, selection stats and recent command history."
       ],
       "room": "bench",
       "tier": "flagship",
@@ -142,6 +140,10 @@
           "title": "Procedural forest",
           "command": "/forestgen 16 oak 5 at:player"
         }
+      ],
+      "doorFacts": [
+        0,
+        1
       ]
     },
     {
@@ -238,7 +240,11 @@
         "brickbench": "Brick Bench",
         "steamrewind": "Steam Rewind",
         "debtclock": "Debt Clock"
-      }
+      },
+      "doorFacts": [
+        2
+      ],
+      "doorCover": "assets/prismet/iphone-home.webp"
     },
     {
       "slug": "the-helm",
@@ -316,6 +322,9 @@
           "minesweeper",
           "snake"
         ]
+      ],
+      "doorFacts": [
+        1
       ]
     },
     {
@@ -355,7 +364,12 @@
       "related": [
         "qr-tools",
         "cicero"
-      ]
+      ],
+      "doorFacts": [
+        0,
+        3
+      ],
+      "doorCover": "assets/ai/prismcode-compare-door.webp"
     },
     {
       "slug": "the-long-now",
@@ -695,5 +709,95 @@
       "tier": "cabinet",
       "related": []
     }
+  ],
+  "skills": [
+    [
+      "Swift",
+      "prismet-app"
+    ],
+    [
+      "Java",
+      "bayzyl"
+    ],
+    [
+      "TypeScript",
+      "prismcode"
+    ],
+    [
+      "JavaScript",
+      "qr-tools"
+    ],
+    [
+      "Python",
+      "prismet-app"
+    ],
+    [
+      "QML",
+      "the-helm"
+    ],
+    [
+      "Bash",
+      "the-helm"
+    ],
+    [
+      "SwiftUI",
+      "prismet-app"
+    ],
+    [
+      "SceneKit",
+      "prismet-app"
+    ],
+    [
+      "Game Center",
+      "prismet-app"
+    ],
+    [
+      "Supabase",
+      "prismet-app"
+    ],
+    [
+      "Paper 1.21",
+      "bayzyl"
+    ],
+    [
+      "WorldEdit / FAWE",
+      "bayzyl"
+    ],
+    [
+      "Gradle",
+      "bayzyl"
+    ],
+    [
+      "KDE Plasma 6",
+      "the-helm"
+    ],
+    [
+      "Arch Linux",
+      "the-helm"
+    ],
+    [
+      "Electron",
+      "prismcode"
+    ],
+    [
+      "React",
+      "prismcode"
+    ],
+    [
+      "SQLite",
+      "prismcode"
+    ],
+    [
+      "HTML & CSS",
+      "qr-tools"
+    ],
+    [
+      "BarcodeDetector",
+      "qr-tools"
+    ],
+    [
+      "MusicKit JS",
+      "qr-tools"
+    ]
   ]
 }

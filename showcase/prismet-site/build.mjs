@@ -87,9 +87,8 @@ copyFileSync(join(HERE, 'src/site.css'), join(DIST, 'site.css'));
 copyFileSync(join(HERE, 'src/site.js'), join(DIST, 'site.js'));
 if (PREVIEW) for (const f of ['editor.js', 'editor.css']) if (existsSync(join(HERE, 'src', f))) copyFileSync(join(HERE, 'src', f), join(DIST, f));
 asset('assets/icons/prismet-app.webp');            // favicon
-// og:image as JPEG (some link unfurlers skip WebP): the dark spire plate. Needs ImageMagick; the old file is kept if it fails.
-try { execFileSync('convert', [join(SHOWCASE, 'assets/minecraft/server-dark-spire-1655.webp'), '-resize', '1200x', '-quality', '82', join(DIST, 'assets/og.jpg')]); }
-catch { console.warn('⚠ ImageMagick not found: assets/og.jpg was not generated'); }
+// og:image: a capture of the entrance (showcase/tools/shoot-og.mjs writes assets/og/entrance.jpg).
+copyFileSync(join(SHOWCASE, 'assets/og/entrance.jpg'), join(DIST, 'assets/og.jpg'));
 
 // ── shared pieces ───────────────────────────────────────────────────────────────────────────
 const hue = (id) => `--h:var(--${id});--hi:var(--${id}-ink)`;
@@ -125,7 +124,7 @@ const bar = (root = '') => {
 <header class="bar"><div class="wrap">
   <a class="brand" href="${root}index.html">${mark(28)}<strong>Prismet</strong><span>${esc(owner.name)}</span></a>
   <nav class="nav" aria-label="Main">
-    <a href="${root}index.html#work"${w.a}>${w.h}</a>
+    <a class="keep" href="${root}index.html#work"${w.a}>${w.h}</a>
     <a href="${root}index.html#lenses"${l.a}>${l.h}</a>
     <a href="${root}index.html#about"${a.a}>${a.h}</a>
     <a class="btn primary keep" href="${esc(owner.fiverr)}"${h.a}>${h.h}</a>
@@ -176,15 +175,15 @@ const href = (p, root = '') => `${root}work/${p.slug}.html`;
 function plan() {
   const W_ = 720, H_ = 540, cx = 360, cy = 270, R = 78;
   const count = (id) => shown.filter((p) => p.beam === id).length;
-  const rooms = { desktop: [56, 60], apps: [56, 216], worlds: [56, 372], minecraft: [484, 60], web: [484, 216], ai: [484, 372] };
-  const rw = 180, rh = 108;
+  const rooms = { desktop: [48, 60], apps: [48, 216], worlds: [48, 372], minecraft: [472, 60], web: [472, 216], ai: [472, 372] };
+  const rw = 200, rh = 108;
   const wings = SPECTRUM.map((id, i) => {
     const [rx, ry] = rooms[id], left = rx < cx;
     const ex = left ? rx + rw : rx, ey = ry + rh / 2;          // the room's inner door
     const dx = ex - cx, dy = ey - cy, len = Math.hypot(dx, dy), ux = dx / len, uy = dy / len;
     const sx = cx + ux * R, sy = cy + uy * R;                   // leave the rotunda
     const px = -uy * 7, py = ux * 7;                            // corridor walls, 7px either side
-    const n = count(id), label = beamLabel(id);
+    const n = count(id), label = beamLabel(id), lead = shown.find((p) => p.beam === id);
     const f = (v) => v.toFixed(1);
     return `<a class="wing" href="#work" data-beam="${id}" style="--i:${i}" aria-label="${esc(label.p)}: ${n} record${n === 1 ? '' : 's'}">
       <path class="wall" d="M${f(sx + px)} ${f(sy + py)} L${f(ex + px)} ${f(ey + py)}" pathLength="1"/>
@@ -192,8 +191,8 @@ function plan() {
       <path class="inlay" d="M${f(sx)} ${f(sy)} L${f(ex)} ${f(ey)}" stroke="var(--${id})" pathLength="1"/>
       <rect class="room" x="${rx}" y="${ry}" width="${rw}" height="${rh}" pathLength="1"/>
       <rect class="room-fill" x="${rx}" y="${ry}" width="${rw}" height="${rh}"/>
-      <text class="room-name" x="${rx + rw / 2}" y="${ry + 50}" text-anchor="middle"${ed(`beam.${id}`, site(`beam.${id}`))}>${esc(label.p)}</text>
-      <text class="room-count" x="${rx + rw / 2}" y="${ry + 76}" text-anchor="middle">${n} RECORD${n === 1 ? '' : 'S'}</text>
+      <text class="room-name" x="${rx + rw / 2}" y="${ry + 48}" text-anchor="middle"${ed(`beam.${id}`, site(`beam.${id}`))}>${esc(label.p)}</text>
+      <text class="room-lead" x="${rx + rw / 2}" y="${ry + 76}" text-anchor="middle">${lead ? esc(plain(work(lead.slug, 'title'))) + (n > 1 ? ` + ${n - 1}` : '') : ''}</text>
     </a>`;
   }).join('');
   const piers = [[300, 210], [420, 210], [300, 330], [420, 330]].map(([x, y]) => `<rect class="pier" x="${x - 6}" y="${y - 6}" width="12" height="12" pathLength="1"/>`).join('');
@@ -225,14 +224,14 @@ function doorModule(p, root = '') {
   switch (p.room) {
     case 'bench': {
       const step = p.steps[3];
-      return `<figure class="mod bench-door">${img('assets/bench/step-3.webp', { root, alt: `${step.title}: the result of ${step.command} on the test plaza` })}<figcaption><code>${esc(step.command)}</code><span>${esc(step.title)}</span></figcaption></figure>`;
+      return `<figure class="mod bench-door">${img('assets/minecraft/bayzyl-scene-plaza-dome.webp', { root, alt: (p.shotAlts || [])[0] || '' })}<figcaption><code>${esc(step.command)}</code><span>${esc(step.title)}</span></figcaption></figure>`;
     }
     case 'arcade':
       return `<div class="mod tile-mosaic" aria-hidden="true">${(p.tiles || []).slice(0, 9).map((t) => img(tileSrc(t), { root, alt: '' })).join('')}</div>`;
     case 'bridge':
       return `<div class="mod face-quad" aria-hidden="true">${['chronos', 'gpu', 'cpu', 'net'].map((n) => img(`assets/helm2/${n}.webp`, { root, alt: '' })).join('')}</div>`;
     case 'notebook':
-      return `<figure class="mod plate-door">${img(g[2] || p.cover, { root, alt: (p.shotAlts || [])[2] || '' })}</figure>`;
+      return `<figure class="mod plate-door">${img(p.doorCover || g[2] || p.cover, { root, alt: (p.shotAlts || [])[2] || '' })}</figure>`;
     default:
       return p.cover ? `<figure class="mod plate-door">${img(p.cover, { root, alt: '' })}</figure>` : '';
   }
@@ -246,12 +245,12 @@ function signature(p, root = '../') {
   <div class="wrap">
     <div class="sig-head"><h2 id="bench-title"${t.a}>${t.h}</h2><p${c.a}>${c.h}</p></div>
     <div class="stepper" data-stepper>
-      <ol class="steps">${p.steps.map((st, i) => `<li class="step"${i === 3 ? ' aria-current="step"' : ''} data-step="${i}">
-        ${img(`assets/bench/step-${i}.webp`, { root, alt: st.command ? `${st.title}: the test plaza after ${st.command}` : st.title, lazy: i !== 3 })}
+      <ol class="steps">${p.steps.map((st, i) => `<li class="step"${i === 0 ? ' aria-current="step"' : ''} data-step="${i}">
+        ${img(`assets/bench/step-${i}.webp`, { root, alt: st.command ? `${st.title}: the test plaza after ${st.command}` : st.title, lazy: i !== 0 })}
         <p class="step-cmd">${st.command ? `<code>${esc(st.command)}</code>` : `<span class="muted">—</span>`}</p>
         <p class="step-title"><span class="step-n">${i}/${p.steps.length - 1}</span> ${esc(st.title)}</p>
       </li>`).join('')}</ol>
-      <div class="step-nav"><button type="button" class="btn" data-prev aria-label="${esc(T('bench.previous').p)}"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M8 1.5 3.5 6 8 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><output aria-live="polite">${esc(T('bench.step').p)} 3 / ${p.steps.length - 1}</output><button type="button" class="btn" data-next aria-label="${esc(T('bench.next').p)}"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4 1.5 8.5 6 4 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+      <div class="step-nav"><button type="button" class="btn" data-prev aria-label="${esc(T('bench.previous').p)}"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M8 1.5 3.5 6 8 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><output aria-live="polite">${esc(T('bench.step').p)} 0 / ${p.steps.length - 1}</output><button type="button" class="btn" data-next aria-label="${esc(T('bench.next').p)}"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4 1.5 8.5 6 4 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
     </div>
   </div>
 </section>`;
@@ -288,6 +287,7 @@ function signature(p, root = '../') {
     const n = (k) => T(`notebook.node_${k}`);
     return `<section class="sig notebook" aria-labelledby="notebook-title"><div class="wrap">
   <div class="sig-head"><h2 id="notebook-title"${t.a}>${t.h}</h2></div>
+  <div class="notebook-grid">
   <div class="schematic">
     <svg viewBox="0 0 720 300" role="img" aria-label="${esc(t.p)}">
       <path class="wire" d="M170 60 C 230 60, 230 150, 290 150" pathLength="1"/><path class="wire" d="M170 150 L290 150" pathLength="1"/><path class="wire" d="M170 240 C 230 240, 230 150, 290 150" pathLength="1"/>
@@ -304,6 +304,8 @@ function signature(p, root = '../') {
     </svg>
     <p class="schematic-note"><span${n('race').a}>${n('race').h}</span> <em${n('compare').a}>${n('compare').h}</em></p>
   </div>
+  <figure class="notebook-plate">${img(p.gallery[2], { root, alt: (p.shotAlts || [])[2] || '' })}<figcaption>${esc((p.shotAlts || [])[2] || '')}</figcaption></figure>
+  </div>
 </div></section>`;
   }
   return '';
@@ -318,7 +320,7 @@ const door = (p, isOff = false) => {
     <p class="typeline"><i></i><span${tl.a}>${tl.h}</span></p>
     <h3><a href="${href(p)}"${title.a}>${title.h}</a></h3>
     <p class="sub"${sub.a}>${sub.h}</p>
-    ${factList(factRows(p.slug, [], 2), 'small')}
+    ${factList(p.doorFacts ? factRows(p.slug).filter((_, i) => p.doorFacts.includes(i)) : factRows(p.slug, [], 2), 'small')}
     <p class="access"><span class="plaque status"${st.a}>${st.h}</span>${accessLinks(p)}</p>
   </div>
 </article>`;
@@ -333,7 +335,8 @@ const row = (p) => {
     <span class="row-tick" aria-hidden="true"></span>
     ${thumb}
     <span class="row-record"><a class="row-link" href="${href(p)}"${title.a}>${title.h}</a><em${sub.a}>${sub.h}</em></span>
-    <span class="row-wing"><span${tl.a}>${tl.h}</span></span>
+    <span class="row-wing"><span${beamLabel(p.beam).a}>${beamLabel(p.beam).h}</span></span>
+    <span class="row-stack">${(p.stack || []).slice(0, 3).map(esc).join(' · ')}</span>
     <span class="row-status"><span${st.a}>${st.h}</span></span>
     <span class="row-access">${links.length ? links.map((l) => `<a href="${esc(l.href)}">${T(accessLabel[l.kind]).h}${l.external ? arrow : ''}</a>`).join('') : `<span class="muted"${T('access.private').a}>${T('access.private').h}</span>`}</span>
   </div>`;
@@ -343,7 +346,7 @@ function ledger() {
   const groups = [['principal', 'work.group_principal'], ['records', 'work.group_records'], ['cabinet', 'work.group_cabinet']];
   const list = PREVIEW ? projects.filter((p) => !isTodo(p)) : shown;
   const drafting = projects.filter((p) => p.hidden && (isTodo(p) || !p.cover)).filter((p) => !/decree|sidepanel/.test(p.slug));
-  const cols = ['work.col_record', 'work.col_wing', 'work.col_status', 'work.col_access'].map((k) => T(k));
+  const cols = ['work.col_record', 'work.col_wing', 'work.col_stack', 'work.col_status', 'work.col_access'].map((k) => T(k));
   return `<div class="ledger" id="grid" data-ledger>
   <div class="ledger-head" aria-hidden="true"><span></span><span></span>${cols.map((c) => `<span${c.a}>${c.h}</span>`).join('')}</div>
   ${groups.map(([g, key]) => { const rows = list.filter((p) => tierOf(p) === g); if (!rows.length) return ''; const gt = T(key); return `<div class="ledger-group" data-group="${g}"><h3${gt.a}>${gt.h}</h3>${rows.map(row).join('')}</div>`; }).join('\n')}
@@ -353,10 +356,8 @@ function ledger() {
 
 // ── home: skills from the stacks of the shown projects, each linked to its evidence ─────────
 function skills() {
-  const generic = new Set(['Desktop', 'Mac', 'iPhone', 'Web', 'Games', 'LAN web', 'Watch', 'WoW Addon', 'UEBS 2 map editor', 'Python']);
-  const seen = new Map();
-  for (const p of shown) for (const s of p.stack || []) if (!generic.has(s) && !seen.has(s)) seen.set(s, p);
-  return `<ul class="skills">${[...seen].map(([s, p]) => `<li><a href="${href(p)}">${esc(s)}</a><small>${inline(work(p.slug, 'title'))}</small></li>`).join('')}</ul>`;
+  const list = (data.skills || []).map(([s, slug]) => [s, bySlug[slug]]).filter(([, p]) => p && shown.includes(p));
+  return `<ul class="skills">${list.map(([s, p]) => `<li><a href="${href(p)}">${esc(s)}</a><small>${inline(work(p.slug, 'title'))}</small></li>`).join('')}</ul>`;
 }
 
 const GIGS = [['mc-plugin', 'minecraft'], ['mc-server', 'minecraft'], ['ios-app', 'apps'], ['web-tool', 'web'], ['ai-agents', 'ai'], ['linux-desktop', 'desktop']];
@@ -383,9 +384,9 @@ const SECTIONS = {
   ${ledger()}
 </div>`),
   plate: () => sec('plate', 'aria-label="Plate"', `<div class="wrap">
-  <figure class="plate">
+  <figure class="plate" style="${hue('minecraft')}">
     ${img('assets/minecraft/server-dark-spire-1655.webp', { alt: 'A night view of a Minecraft server build: a giant hollow tree with lit windows on a stone plinth, a walled farm village, a cherry pagoda, a lit castle, a dark spire with beacon beams and a snowy ridge under a starry sky.', srcset: `${asset('assets/minecraft/server-dark-spire-860.webp')} 860w, ${asset('assets/minecraft/server-dark-spire-1655.webp')} 1655w`, sizesAttr: '(max-width: 900px) 100vw, 860px' })}
-    <figcaption${k('plate.caption').a}>${k('plate.caption').h}</figcaption>
+    <figcaption><i></i><span${k('plate.caption').a}>${k('plate.caption').h}</span> <a href="#minecraft" data-beam="minecraft">${beamLabel('minecraft').h}</a></figcaption>
   </figure>
 </div>`),
   lenses: () => sec('lenses', 'aria-labelledby="lenses-title"', `<div class="wrap">
@@ -513,7 +514,7 @@ ${scripts('../')}`;
 
 // Hidden records keep a one-line stub at their old URL, so links from elsewhere don't 404.
 projects.filter((p) => !shown.includes(p)).forEach((p) => {
-  const s = p.slug, w = T('project.withdrawn');
+  const s = p.slug, w = (isTodo(p) || !p.cover) && !/decree|sidepanel/.test(s) ? T('project.drafting_stub') : T('project.withdrawn');
   const body = `${bar('../')}
 <main id="main" class="withdrawn"><div class="wrap">
   <h1>${inline(work(s, 'title'))}</h1>

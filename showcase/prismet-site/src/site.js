@@ -57,6 +57,7 @@
         let n = 0;
         rows.forEach((r) => { const show = id === 'all' || r.dataset.beam === id; r.hidden = !show; if (show && !r.classList.contains('is-off')) n++; });
         groups.forEach((g) => { g.hidden = ![...g.querySelectorAll('.row')].some((r) => !r.hidden); });
+        const drafting = ledger.querySelector('.drafting'); if (drafting) drafting.hidden = id !== 'all';
         buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === id)));
         if (count) count.textContent = count.dataset.countTemplate.replace('{shown}', n).replace('{total}', count.dataset.total);
         if (push) history.replaceState(null, '', id === 'all' ? location.pathname : `#${id}`);
