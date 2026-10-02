@@ -5,6 +5,8 @@ qr-scanner, PrismCode, THE HELM, Quark). Nothing is a mockup pretending to be a 
 
 | Path | What it is |
 |---|---|
+| [`fiverr/HANDOFF-2026-10-02.md`](fiverr/HANDOFF-2026-10-02.md) | **Start here.** Live Fiverr status, decisions, open questions, and the next steps for whoever picks this up |
+| [`fiverr/paste-kit/`](fiverr/paste-kit/) | The "Fiverr Gig Kit" page (status checklist + copy buttons), built from `gigs.json` by `python3 showcase/fiverr/paste-kit/build.py` |
 | [`fiverr/FIVERR-KIT.md`](fiverr/FIVERR-KIT.md) | Profile copy, 6 gigs (titles, packages, descriptions, tags, FAQ), portfolio entries, upload order |
 | [`fiverr/out/`](fiverr/out/) | 6 gig covers, 10 portfolio boards, 1 LinkedIn banner (2560×1538 PNG) |
 | [`fiverr/gigs.json`](fiverr/gigs.json) | Source for the kit; `node showcase/fiverr/kit.mjs` validates it against Fiverr's limits |

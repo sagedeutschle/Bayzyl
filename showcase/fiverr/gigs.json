@@ -1,27 +1,25 @@
 {
   "_readme": "Source of truth for the Fiverr kit. `node showcase/fiverr/kit.mjs` validates every field against Fiverr's limits and regenerates FIVERR-KIT.md + kit.html. Prices are starting points: adjust before publishing.",
+  "_launch": "Fiverr allows 4 gigs for new sellers (drafts count). Sage chose (2026-10-01): mc-plugin, mc-server, ios-app, ai-agents. web-tool and linux-desktop wait for Level 1 (10 gigs).",
+  "_updated": "2026-10-02 cloud session: co-developed credit for Prismet Arcade (matches Sage's resume), Wizard King's Decree removed (scrapped 10-01), face-free options, education, skill levels, work entry, video scripts. See HANDOFF-2026-10-02.md.",
   "profile": {
-    "displayName": "Sage",
-    "oneLiner": "I build iOS apps, Minecraft plugins & AI agent setups",
-    "about": "I'm Sage, a developer who ships. My game app Prismet is live on the App Store with 19 games on iPhone, iPad, and Mac. I wrote Bayzyl, a 99-command building toolkit for Minecraft Paper servers, and I run my own Velocity server network. I also build custom KDE Plasma desktops with hand-made widgets, set up Claude Code and Codex to work as a team, and make small web tools that never phone home. I scope honestly, talk before big orders, and hand over full source. See it all at prismet.xyz.",
+    "displayName": "Sage Deutschle",
+    "oneLiner": "I build iOS apps, Minecraft plugins, and AI agent setups",
+    "about": "I'm Sage, a Computer Science & Engineering student at Ohio State who ships real software. I co-developed Prismet Arcade, which is live on the App Store with 19 classic games for iPhone, iPad, and Mac and passed App Store review on its first submission. I wrote Bayzyl, an open-source building toolkit for Minecraft Paper servers with 100+ commands, and I run my own Velocity network. I also set up Claude Code and Codex to work as a team, build custom KDE desktops, and make small web tools. I scope honestly and hand over full source.",
     "skills": [
-      "Swift",
       "SwiftUI",
+      "Swift",
       "iOS Development",
-      "macOS Development",
       "Java",
       "Minecraft Plugin Development",
+      "AI Agents",
+      "Claude Code",
+      "macOS Development",
       "Minecraft Server Setup",
       "Docker",
-      "JavaScript",
-      "HTML & CSS",
-      "TypeScript",
-      "Electron",
-      "QML",
       "Linux",
       "Python",
-      "AI Agents",
-      "Prompt Engineering"
+      "JavaScript"
     ],
     "languages": [
       "English (Native/Bilingual)"
@@ -30,7 +28,116 @@
       "prismet.xyz",
       "github.com/sagedeutschle",
       "linkedin.com/in/sagedeutschle"
-    ]
+    ],
+    "skillLevels": {
+      "SwiftUI": "Expert",
+      "Swift": "Expert",
+      "iOS Development": "Expert",
+      "Java": "Expert",
+      "Minecraft Plugin Development": "Expert",
+      "AI Agents": "Expert",
+      "Claude Code": "Expert",
+      "macOS Development": "Intermediate",
+      "Minecraft Server Setup": "Intermediate",
+      "Docker": "Intermediate",
+      "Linux": "Intermediate",
+      "Python": "Intermediate",
+      "JavaScript": "Intermediate"
+    },
+    "removeSkills": [
+      "Windows installation",
+      "PostgreSQL",
+      "Bash scripting",
+      "System administration",
+      "Debugging",
+      "API integration",
+      "Node.js",
+      "Python automation"
+    ],
+    "education": {
+      "Country": "United States",
+      "College / university": "The Ohio State University",
+      "Title": "B.Sc.",
+      "Major": "Computer Science & Engineering",
+      "Year": "2027"
+    },
+    "work": {
+      "Title": "Independent software developer",
+      "Company": "Self-employed",
+      "Dates": "Your start month and year, through Present",
+      "Description": "I build and ship my own software. Prismet Arcade, a SwiftUI games app I co-developed, is live on the App Store for iPhone, iPad, and Mac. Bayzyl, my open-source building plugin for Paper servers, has 109 commands and a 16-page in-game guide. I also run a Minecraft network of Dockerized Paper servers behind a Velocity proxy, and I build tooling that lets Claude Code and Codex agents work on one repo together."
+    },
+    "photo": "Optional headshot. Sage may keep the \"B\" logo: Fiverr allows your own logo, and Sage asked whether a face is needed (it is not).",
+    "introVideo": {
+      "_note": "Optional. Fiverr requires Sage on camera and speaking. Skip unless Sage chooses to appear.",
+      "beats": [
+        [
+          "Open, on camera",
+          "Hi, I'm Sage. I study Computer Science and Engineering at Ohio State, and I build software that ships."
+        ],
+        [
+          "Your app",
+          "I co-developed Prismet Arcade, a games app that's live on the App Store for iPhone, iPad, and Mac."
+        ],
+        [
+          "Minecraft",
+          "I also wrote Bayzyl, an open-source building plugin for Minecraft Paper servers with over a hundred commands, and I run my own Minecraft network in Docker."
+        ],
+        [
+          "AI agents",
+          "And I set up AI coding agents like Claude Code and Codex so they help a project instead of making a mess."
+        ],
+        [
+          "What you sell",
+          "Here on Fiverr I take on Minecraft plugins and servers, SwiftUI apps, and AI agent setups. Every order comes with the full source code and a plain-English handover."
+        ],
+        [
+          "Close",
+          "Send me a message with what you're building, and I'll tell you honestly what it takes."
+        ]
+      ]
+    },
+    "gigVideo": {
+      "_note": "mc-plugin gig video, no face. Bayzyl timelapse (docs/images/bayzyl-timelapse.gif, 17.6 s, 960x572) centered on a dark 1280x720 frame, ~35 s, MP4.",
+      "gig": "mc-plugin",
+      "beats": [
+        [
+          "0:00",
+          "Title card",
+          "Custom Minecraft plugins for Paper servers"
+        ],
+        [
+          "0:04",
+          "Timelapse starts",
+          "This is Bayzyl, my open-source building plugin"
+        ],
+        [
+          "0:09",
+          "Plaza and dome",
+          "Every frame is one real command"
+        ],
+        [
+          "0:15",
+          "Pyramid and tower",
+          "100+ commands, 25+ brushes, undo that survives restarts"
+        ],
+        [
+          "0:21",
+          "Formula ring and forest",
+          "A 16-page guide built into the game"
+        ],
+        [
+          "0:27",
+          "End card",
+          "Your plugin gets the same care. Full source included."
+        ],
+        [
+          "0:32",
+          "End card",
+          "Message me with your idea"
+        ]
+      ]
+    }
   },
   "gigs": [
     {
@@ -73,11 +180,11 @@
           "revisions": 3
         }
       ],
-      "description": "Need a feature no existing plugin gets quite right? I build custom plugins for Paper and Spigot (Java 21, Minecraft 1.21+).\n\nI'm the author of Bayzyl, an open-source building toolkit for Paper with 99 commands, 25+ brush types, per-player undo that survives restarts, and a 15-page in-game help guide. Your plugin gets the same care:\n• Consistent commands with permissions and tab-completion\n• A config file you can actually read\n• Confirmations before anything destructive\n• Built to sit alongside WorldEdit and FastAsyncWorldEdit\n\nWhat you get:\n• A compiled .jar, ready to drop in\n• Full source code, yours to keep\n• A short setup guide\n\nMessage me before ordering with what the plugin should do. I'll confirm scope and timeline up front.",
+      "description": "Need a feature no existing plugin gets quite right? I build custom plugins for Paper and Spigot (Java 21, Minecraft 1.21+).\n\nI'm the author of Bayzyl, an open-source building toolkit for Paper with 100+ commands, 25+ brush types, per-player undo that survives restarts, and a 16-page in-game help guide. Your plugin gets the same care:\n• Consistent commands with permissions and tab-completion\n• A config file you can actually read\n• Confirmations before anything destructive\n• Built to sit alongside WorldEdit and FastAsyncWorldEdit\n\nWhat you get:\n• A compiled .jar, ready to drop in\n• Full source code, yours to keep\n• A short setup guide\n\nMessage me before ordering with what the plugin should do. I'll confirm scope and timeline up front.",
       "faq": [
         [
           "Which versions do you support?",
-          "Paper and Spigot on Minecraft 1.21+ with Java 21 by default. Older versions are possible, so ask first."
+          "Paper and Spigot on Minecraft 1.21+ with Java 21. Bayzyl itself is Paper-only, so tell me if your server runs Spigot and I'll stick to the Spigot API. Older versions are possible, so ask first."
         ],
         [
           "Do I get the source code?",
@@ -128,13 +235,13 @@
         },
         {
           "name": "Run-it-yourself",
-          "desc": "Full network in Docker, an admin command for daily tasks, and a runbook.",
+          "desc": "Full network in Docker, scripts for daily admin tasks, and a runbook.",
           "price": 260,
           "days": 10,
           "revisions": 3
         }
       ],
-      "description": "I run my own Minecraft network: a Velocity proxy in front of Paper backends in Docker (a multi-world survival server and a public hub), with network-wide bans, a whitelist gate, and Multiverse worlds. One admin command sends every task to the layer where it belongs, so an IP ban never locks out the whole proxy.\n\nI'll set up yours the same way:\n• Paper server tuned for your player count\n• Velocity proxy with secure player forwarding\n• Whitelist, bans, and permissions at the right layer\n• Multiverse worlds and per-world gamerules\n• Docker containers, so restarts and moves are painless\n• Automatic backups\n• A plain-English runbook so you can run it without me\n\nYou provide the machine: a VPS, a home server, or a panel host. I do the setup and walk you through it.",
+      "description": "I run my own Minecraft network: a Velocity proxy in front of Paper backends in Docker (a multi-world survival server and a public hub), with network-wide bans, a whitelist gate, and Multiverse worlds. Each admin task is handled at the layer where it belongs, so an IP ban never locks out the whole proxy.\n\nI'll set up yours the same way:\n• Paper server tuned for your player count\n• Velocity proxy with secure player forwarding\n• Whitelist, bans, and permissions at the right layer\n• Multiverse worlds and per-world gamerules\n• Docker containers, so restarts and moves are painless\n• Automatic backups\n• A plain-English runbook so you can run it without me\n\nYou provide the machine: a VPS, a home server, or a panel host. I do the setup and walk you through it.",
       "faq": [
         [
           "Do you provide hosting?",
@@ -189,13 +296,13 @@
         },
         {
           "name": "Ship it",
-          "desc": "Full app with sync or accounts, plus App Store listing and submission.",
-          "price": 1500,
-          "days": 45,
+          "desc": "An app with up to 8 screens and local data, plus App Store listing and submission.",
+          "price": 700,
+          "days": 30,
           "revisions": 3
         }
       ],
-      "description": "I build native apps in SwiftUI and ship them. My app Prismet is live on the App Store: 19 classic games and 3 live-data lenses on iPhone, iPad, and Mac. It has a tunable Stockfish chess engine in 2D and 3D, a real SceneKit Rubik's Cube, online friend games, Game Center, and light, parchment, and dark themes, backed by hundreds of tests.\n\nWhat I can do for you:\n• New apps, from idea to App Store review\n• Features and fixes in an existing SwiftUI codebase\n• iPhone-to-Mac ports with real feature parity\n• Polish passes: animation, haptics, sound, and accessibility\n• App Store listing: screenshots, keywords, and submission\n\nYou get the full Xcode project and source. Message me first with your idea so I can quote scope and timeline honestly.",
+      "description": "I build native apps in SwiftUI and ship them. I co-developed Prismet Arcade, which is live on the App Store with 19 classic games on iPhone, iPad, and Mac and passed App Store review on its first submission. It has a tunable Stockfish chess engine in 2D and 3D, a real SceneKit Rubik's Cube, online friend games, Game Center, and light, parchment, and dark themes, backed by hundreds of tests.\n\nWhat I can do for you:\n• New apps, from idea to App Store review\n• Features and fixes in an existing SwiftUI codebase\n• iPhone-to-Mac ports with real feature parity\n• Polish passes: animation, haptics, sound, and accessibility\n• App Store listing: screenshots, keywords, and submission\n\nYou get the full Xcode project and source. Message me first with your idea so I can quote scope and timeline honestly.",
       "faq": [
         [
           "Do I need a Mac or a developer account?",
@@ -208,12 +315,75 @@
         [
           "Do you do Android too?",
           "No. I focus on Apple platforms so the result feels native."
+        ],
+        [
+          "Can you build a bigger app with accounts or cloud sync?",
+          "Yes, as a custom offer. Message me first so we can scope it together and agree on milestones."
         ]
       ],
       "requirements": [
         "What does the app do, and who is it for?",
         "Screens or sketches you already have, even rough ones.",
         "Existing repo link, if any."
+      ]
+    },
+    {
+      "id": "ai-agents",
+      "beam": "ai",
+      "title": "set up Claude Code and Codex agents to build your project as a team",
+      "category": "Programming & Tech → AI Development (or AI Agents)",
+      "tags": [
+        "claude code",
+        "ai agents",
+        "ai automation",
+        "codex",
+        "ai coding"
+      ],
+      "images": [
+        "gig-ai-agents.png"
+      ],
+      "packages": [
+        {
+          "name": "Agent setup",
+          "desc": "CLAUDE.md, AGENTS.md, and permission rules tuned for one repo.",
+          "price": 60,
+          "days": 2,
+          "revisions": 1
+        },
+        {
+          "name": "Team workflow",
+          "desc": "Multi-agent lanes, a coordination ledger, hooks, and a recorded walkthrough.",
+          "price": 180,
+          "days": 5,
+          "revisions": 2
+        },
+        {
+          "name": "Custom tooling",
+          "desc": "Custom agent tooling: scripts, an MCP server, or an LLM pipeline with tests.",
+          "price": 480,
+          "days": 10,
+          "revisions": 3
+        }
+      ],
+      "description": "I use AI coding agents every day, and I've built the tooling to run them well.\n\n• PrismCode: a desktop IDE that runs Claude Code, Codex, and DeepSeek side by side and races two agents on the same prompt in separate git worktrees, so you keep the better result.\n• Agent Ops: a written protocol that let several Claude and Codex agents, run by two people, ship an App Store release without stepping on each other's work.\n\nI'll set up your repo so agents help instead of making a mess:\n• CLAUDE.md and AGENTS.md written for your codebase\n• Permission rules, hooks, and safe defaults\n• Lanes and hand-off rules for multiple agents\n• Custom scripts or MCP servers where they pay off\n\nI explain every choice so your team can maintain it.",
+      "faq": [
+        [
+          "Which tools do you support?",
+          "Claude Code and OpenAI Codex first. I can wire in local models through Ollama too."
+        ],
+        [
+          "Do you need access to my code?",
+          "Read access to the repo is enough for the setup packages. Nothing is shared outside the order."
+        ],
+        [
+          "Will this work for a solo developer?",
+          "Yes. The Agent setup package is built for one person and one repo."
+        ]
+      ],
+      "requirements": [
+        "Repo link or a description of the codebase and stack.",
+        "Which agents and plans you use today.",
+        "What goes wrong now when you use them."
       ]
     },
     {
@@ -274,66 +444,6 @@
         "What should the page or tool do?",
         "Text, logo, and images you want used.",
         "Any site you like the feel of."
-      ]
-    },
-    {
-      "id": "ai-agents",
-      "beam": "ai",
-      "title": "set up Claude Code and Codex agents to build your project as a team",
-      "category": "Programming & Tech → AI Development (or AI Agents)",
-      "tags": [
-        "claude code",
-        "ai agents",
-        "ai automation",
-        "codex",
-        "ai coding"
-      ],
-      "images": [
-        "gig-ai-agents.png",
-        "portfolio-oracle.png"
-      ],
-      "packages": [
-        {
-          "name": "Agent setup",
-          "desc": "CLAUDE.md, AGENTS.md, and permission rules tuned for one repo.",
-          "price": 60,
-          "days": 2,
-          "revisions": 1
-        },
-        {
-          "name": "Team workflow",
-          "desc": "Multi-agent lanes, a coordination ledger, hooks, and a recorded walkthrough.",
-          "price": 180,
-          "days": 5,
-          "revisions": 2
-        },
-        {
-          "name": "Custom tooling",
-          "desc": "Custom agent tooling: scripts, an MCP server, or an LLM pipeline with tests.",
-          "price": 480,
-          "days": 10,
-          "revisions": 3
-        }
-      ],
-      "description": "I use AI coding agents every day, and I've built the tooling to run them well.\n\n• PrismCode: a desktop IDE that runs Claude Code, Codex, and DeepSeek side by side and races two agents on the same prompt in separate git worktrees, so you keep the better result.\n• Agent Ops: a written protocol that let several Claude and Codex agents, run by two people, ship an App Store release without stepping on each other's work.\n• The Wizard King's Decree: an LLM council that forecasts the news, graded by a separate search-grounded model, with 237 offline tests.\n\nI'll set up your repo so agents help instead of making a mess:\n• CLAUDE.md and AGENTS.md written for your codebase\n• Permission rules, hooks, and safe defaults\n• Lanes and hand-off rules for multiple agents\n• Custom scripts or MCP servers where they pay off\n\nI explain every choice so your team can maintain it.",
-      "faq": [
-        [
-          "Which tools do you support?",
-          "Claude Code and OpenAI Codex first. I can wire in local models through Ollama too."
-        ],
-        [
-          "Do you need access to my code?",
-          "Read access to the repo is enough for the setup packages. Nothing is shared outside the order."
-        ],
-        [
-          "Will this work for a solo developer?",
-          "Yes. The Agent setup package is built for one person and one repo."
-        ]
-      ],
-      "requirements": [
-        "Repo link or a description of the codebase and stack.",
-        "Which agents and plans you use today.",
-        "What goes wrong now when you use them."
       ]
     },
     {
@@ -400,13 +510,31 @@
   ],
   "portfolio": [
     {
-      "title": "Prismet: 19 games on the App Store",
+      "title": "Prismet Arcade: 19 games on the App Store",
       "gig": "ios-app",
       "images": [
         "portfolio-prismet-spread.png",
         "portfolio-prismet-tiles.png"
       ],
-      "desc": "A SwiftUI games app live on the App Store for iPhone, iPad, and Mac: chess with a tunable engine in 2D and 3D, a SceneKit Rubik's Cube, online friend games, Game Center, and three live-data lenses."
+      "desc": "A SwiftUI games app I co-developed, live on the App Store for iPhone, iPad, and Mac. It has 19 classic games, including chess with a tunable engine in 2D and 3D, a SceneKit Rubik's Cube, online friend games, and Game Center."
+    },
+    {
+      "title": "Bayzyl: a 100+ command Paper plugin",
+      "gig": "mc-plugin",
+      "images": [
+        "portfolio-mc-builds.png",
+        "portfolio-bayzyl-help.png",
+        "portfolio-bayzyl-commands.png"
+      ],
+      "desc": "An open-source building toolkit for Paper servers: selections, shapes, 25+ brushes, persistent undo, shared kits, and a 16-page in-game guide. Open source under MIT."
+    },
+    {
+      "title": "A Velocity network in Docker",
+      "gig": "mc-server",
+      "images": [
+        "portfolio-mc-network.png"
+      ],
+      "desc": "A Velocity proxy with network-wide bans and a whitelist gate in front of Dockerized Paper backends, with each admin task handled at the layer where it belongs."
     },
     {
       "title": "THE HELM: a custom KDE Plasma desktop",
@@ -418,38 +546,12 @@
       "desc": "A three-monitor command-bridge desktop with 28 hand-built QML widgets, overlays, floating toys, and a one-command installer. Every widget shown here was rendered from its source."
     },
     {
-      "title": "Bayzyl: a 99-command Paper plugin",
-      "gig": "mc-plugin",
-      "images": [
-        "portfolio-mc-builds.png",
-        "portfolio-bayzyl-help.png",
-        "portfolio-bayzyl-commands.png"
-      ],
-      "desc": "An open-source building toolkit for Paper servers: selections, shapes, 25+ brushes, persistent undo, shared kits, and a 15-page in-game guide."
-    },
-    {
-      "title": "A Velocity network in Docker",
-      "gig": "mc-server",
-      "images": [
-        "portfolio-mc-network.png"
-      ],
-      "desc": "A Velocity proxy with network-wide bans and a whitelist gate in front of Dockerized Paper backends, run day to day with a single admin command."
-    },
-    {
       "title": "Four one-file web tools",
       "gig": "web-tool",
       "images": [
         "portfolio-qr-suite.png"
       ],
       "desc": "A QR scanner, phone declutter checklist, home-screen planner, and Apple Music playlist maker. Each is one HTML file with no backend that keeps data on the device."
-    },
-    {
-      "title": "The Wizard King's Decree",
-      "gig": "ai-agents",
-      "images": [
-        "portfolio-oracle.png"
-      ],
-      "desc": "An LLM forecasting experiment: a Claude + GPT council commits to news predictions, a search-grounded Gemini judge grades them with sources, and 237 offline tests keep it honest."
     }
   ]
 }

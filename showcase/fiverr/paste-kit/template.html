@@ -1,0 +1,285 @@
+<title>Fiverr Gig Kit</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400..800&family=Hanken+Grotesk:wght@400..700&family=Martian+Mono:wdth,wght@75..112.5,400..700&display=swap">
+<style>
+/* Layout: one 1080px column; a status board first, then copy blocks in the order you'll paste them on Fiverr. */
+:root{color-scheme:dark;
+  --bg:#10111A;--bg2:#0B0C13;--panel:#1B1D2A;--hi:#282B3C;--hair:rgba(255,255,255,.10);--line:rgba(255,255,255,.18);
+  --ink:#F2F4FC;--ink2:rgba(242,244,252,.72);--ink3:rgba(242,244,252,.52);--gold:#E2B65C;--goldd:#B88A33;
+  --live:#5FB98A;--livebg:rgba(95,185,138,.14);--todo:#E2B65C;--todobg:rgba(226,182,92,.14);--opt:#9AA3C7;--optbg:rgba(154,163,199,.14);
+  --display:"Unbounded","Arial Black",sans-serif;--body:"Hanken Grotesk",system-ui,sans-serif;--mono:"Martian Mono",ui-monospace,monospace}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){color-scheme:light;--bg:#F6F2E8;--bg2:#EEE8DA;--panel:#FDFBF6;--hi:#E6E0D1;--hair:rgba(28,26,18,.14);--line:rgba(28,26,18,.28);--ink:#1C1A12;--ink2:rgba(28,26,18,.78);--ink3:rgba(28,26,18,.60);--gold:#8E6A22;--goldd:#8E6A22;--live:#2E7A52;--livebg:rgba(46,122,82,.12);--todo:#8E6A22;--todobg:rgba(142,106,34,.12);--opt:#55608A;--optbg:rgba(85,96,138,.12)}}
+:root[data-theme="light"]{color-scheme:light;--bg:#F6F2E8;--bg2:#EEE8DA;--panel:#FDFBF6;--hi:#E6E0D1;--hair:rgba(28,26,18,.14);--line:rgba(28,26,18,.28);--ink:#1C1A12;--ink2:rgba(28,26,18,.78);--ink3:rgba(28,26,18,.60);--gold:#8E6A22;--goldd:#8E6A22;--live:#2E7A52;--livebg:rgba(46,122,82,.12);--todo:#8E6A22;--todobg:rgba(142,106,34,.12);--opt:#55608A;--optbg:rgba(85,96,138,.12)}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#10111A;--bg2:#0B0C13;--panel:#1B1D2A;--hi:#282B3C;--hair:rgba(255,255,255,.10);--line:rgba(255,255,255,.18);--ink:#F2F4FC;--ink2:rgba(242,244,252,.72);--ink3:rgba(242,244,252,.52);--gold:#E2B65C;--goldd:#B88A33;--live:#5FB98A;--livebg:rgba(95,185,138,.14);--todo:#E2B65C;--todobg:rgba(226,182,92,.14);--opt:#9AA3C7;--optbg:rgba(154,163,199,.14)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--body)}
+.wrap{max-width:1080px;margin-inline:auto;padding-inline:clamp(16px,4vw,40px)}
+.top{border-bottom:1px solid var(--hair);background:radial-gradient(70% 120% at 0% 0%,color-mix(in srgb,var(--goldd) 18%,transparent),transparent 70%)}
+.top .wrap{padding-block:40px 28px}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.15;letter-spacing:-.02em;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.8rem,4.4vw,2.7rem);font-weight:700;margin-top:12px}
+h2{font-size:1.3rem}h3{font-size:1rem}
+.eyebrow,.label{margin:0;font:600 .72rem/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.label{color:var(--ink3);margin-bottom:6px}
+.lede{color:var(--ink2);max-width:44rem;margin:14px 0 0;font-size:1.08rem}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.toc a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font:600 .86rem/1 var(--body);padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel)}
+.toc a:hover{border-color:var(--gold)}
+.toc i{width:9px;height:9px;border-radius:50%;background:var(--h,var(--gold))}
+main{padding-block:28px 64px;display:grid;gap:22px}
+.card{background:var(--panel);border:1px solid var(--hair);border-radius:18px;padding:clamp(16px,3vw,28px);display:grid;gap:18px;min-width:0}
+.sechead{display:grid;gap:6px}
+.sechead p{margin:0;color:var(--ink2);max-width:46rem}
+.band{display:grid;gap:6px;padding-top:10px}
+.band h2{font-size:1.5rem}
+.band p{margin:0;color:var(--ink2);max-width:46rem}
+
+/* status board */
+.board{display:grid;grid-template-columns:minmax(0,1fr);gap:0;margin:0;padding:0;list-style:none;border-top:1px solid var(--hair)}
+.board li{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--hair)}
+.board input{margin:4px 0 0;width:18px;height:18px;accent-color:var(--live);flex:none}
+.board label{display:grid;grid-template-columns:84px minmax(0,11rem) minmax(0,1fr);gap:4px 14px;align-items:baseline;flex:1;min-width:0;cursor:pointer}
+.board .st-live label{cursor:default}
+.pill{justify-self:start;font:600 .66rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:5px 8px;border-radius:999px}
+.st-live .pill{color:var(--live);background:var(--livebg)}
+.st-todo .pill{color:var(--todo);background:var(--todobg)}
+.st-optional .pill{color:var(--opt);background:var(--optbg)}
+.ck-name{font-weight:700}.ck-name a{color:inherit;text-decoration-color:var(--line);text-underline-offset:3px}
+.ck-note{color:var(--ink2);font-size:.94rem}
+.board input:checked:not(:disabled)+label .ck-name,.board input:checked:not(:disabled)+label .ck-note{text-decoration:line-through;text-decoration-color:var(--ink3);color:var(--ink3)}
+.progress{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font:500 .8rem/1.3 var(--mono);color:var(--ink3)}
+.progress b{color:var(--ink);font-variant-numeric:tabular-nums}
+.reset{font:600 .78rem/1 var(--body);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink2);cursor:pointer}
+
+/* fields */
+.field{display:grid;gap:6px;min-width:0}
+.fh{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fh label{font:600 .78rem/1.3 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--ink2);margin-right:auto;min-width:0}
+.n{font:500 .74rem/1 var(--mono);color:var(--ink3);font-variant-numeric:tabular-nums}
+.copy{font:700 .8rem/1 var(--body);padding:8px 12px;border-radius:9px;border:1px solid var(--line);background:var(--hi);color:var(--ink);cursor:pointer;min-width:64px}
+.copy.sm{padding:5px 9px;min-width:0;font-size:.74rem}
+.copy:hover,.reset:hover{border-color:var(--gold)}
+.copy:focus-visible,.reset:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible,.board input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+textarea{width:100%;resize:vertical;background:var(--bg2);color:var(--ink);border:1px solid var(--hair);border-radius:10px;padding:10px 12px;font:400 .95rem/1.55 var(--body)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+.pk{min-width:520px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--hair);vertical-align:top}
+thead th{font-family:var(--display);font-size:.82rem;font-weight:600}
+tbody th{font:600 .72rem/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);white-space:nowrap}
+.num{font-variant-numeric:tabular-nums;font-weight:600}
+.kv td{width:100%}
+.facet{min-width:560px}.facet td:first-child{font-weight:700;white-space:nowrap}
+.vid{min-width:0}.vid td:first-child{white-space:nowrap;color:var(--ink3)}
+.yn{font:600 .66rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:5px 8px;border-radius:999px;white-space:nowrap}
+.yn.no{color:var(--live);background:var(--livebg)}.yn.yes{color:var(--todo);background:var(--todobg)}.yn.priv{color:var(--opt);background:var(--optbg)}
+@media (max-width:640px){.kv tbody th{white-space:normal;width:7.5rem}}
+.val{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
+details{border-top:1px solid var(--hair);padding-top:12px}
+details>.field{margin-top:12px}
+summary{cursor:pointer;font-weight:600;color:var(--ink2)}
+
+/* profile grid */
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:22px}
+.sub{display:grid;gap:12px;align-content:start;min-width:0}
+.note{margin:0;color:var(--ink3);font-size:.9rem}
+.note b{color:var(--ink2)}
+.skills{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.skills li{display:inline-flex;align-items:center;gap:8px;padding:6px 6px 6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg2)}
+.sk{font-weight:600;font-size:.92rem}
+.lv{font:600 .64rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 7px;border-radius:999px}
+.lv-expert .lv{color:var(--live);background:var(--livebg)}
+.lv-intermediate .lv{color:var(--opt);background:var(--optbg)}
+.script{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:beat}
+.script li{display:grid;grid-template-columns:8.5rem minmax(0,1fr);gap:12px;align-items:baseline}
+.beat{font:600 .7rem/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
+.script p{margin:0}
+
+/* gigs */
+.gig{border-top:4px solid var(--h)}
+.gighead{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;justify-content:space-between}
+.changed{margin:0;font-size:.86rem;color:var(--ink2);max-width:40rem}
+.changed b{color:var(--gold);font-weight:700}
+.gigtitle{font-size:1.18rem}
+.iwill{color:var(--ink3);font-weight:600}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}
+.files{margin:0;padding-left:1.4em;display:grid;gap:4px}
+.files code{font:500 .8rem/1.4 var(--mono);overflow-wrap:anywhere}
+.tag{margin-left:8px;font:600 .62rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);padding:3px 6px;border-radius:999px}
+.cat{margin:0;color:var(--ink2);font-size:.92rem}
+
+/* portfolio */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px}
+.pf{min-width:0;display:grid;gap:10px;align-content:start;padding:16px;border:1px solid var(--hair);border-radius:14px;background:var(--bg2)}
+.pf textarea{background:var(--panel)}
+
+/* held */
+.held{border:1px solid var(--hair);border-radius:14px;padding:14px 16px;background:var(--panel)}
+.held>summary{display:flex;align-items:center;gap:10px;color:var(--ink);list-style-position:outside}
+.held .dot{width:9px;height:9px;border-radius:50%;background:var(--h);flex:none}
+.heldbody{display:grid;gap:14px;margin-top:14px}
+.rules{margin:0;padding-left:1.2em;display:grid;gap:6px;color:var(--ink2)}
+.rules a,.foot a{color:var(--ink)}
+.foot{color:var(--ink3);font-size:.88rem;display:grid;gap:6px}
+.foot p{margin:0}
+
+@media (max-width:640px){
+  .board label{grid-template-columns:auto minmax(0,1fr)}
+  .ck-note{grid-column:1 / -1}
+  .script li{grid-template-columns:minmax(0,1fr);gap:2px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+
+<header class="top"><div class="wrap">
+  <p class="eyebrow">fiverr.com/bayzyl · paste kit · updated Oct 2</p>
+  <h1>Fiverr Gig Kit</h1>
+  <p class="lede">Your profile status, then every field in the order you'll paste it. It includes yesterday's fixes and fits Fiverr's length limits. Tick items off as you go. The ticks stay saved in this browser.</p>
+  <nav class="toc" aria-label="Sections"><a href="#status">Status</a><a href="#profile">Profile</a><a href="#face">Face or no face</a><a href="#portfolio">Portfolio</a>{{TOC}}<a href="#held">On hold</a></nav>
+</div></header>
+
+<main class="wrap">
+
+<section id="status" class="card">
+  <div class="sechead"><h2>Where your profile stands</h2>
+  <p>Two fields are live from Oct 1. Nothing else was saved. Nothing on this list needs your face.</p></div>
+  <ul class="board">{{CHECKLIST}}</ul>
+  <div class="progress"><span><b id="done">0</b> of <b>{{TODO_COUNT}}</b> to-dos ticked</span><button type="button" class="reset" id="reset">Clear ticks</button></div>
+</section>
+
+<div class="band" id="profile"><p class="eyebrow">Profile</p><h2>Profile copy</h2>
+<p>Edit it from Dashboard → View profile in Selling mode, and click the pencil beside each field.</p></div>
+
+<section class="card" id="about">
+  <div class="sechead"><h3>About</h3>
+  <p>No links, company names, or contact details. "More at prismet.xyz" came out for that reason. Yesterday the About card had no pencil. Fiverr says to finish any open onboarding tasks on your dashboard first, which may be why.</p></div>
+  {{ABOUT}}
+</section>
+
+<div class="two">
+  <section class="card" id="education">
+    <div class="sechead"><h3>Education</h3><p>Fiverr asks for a graduation year, so this uses 2027.</p></div>
+    <div class="tablewrap"><table class="kv"><tbody>{{EDU_ROWS}}</tbody></table></div>
+  </section>
+  <section class="card" id="work">
+    <div class="sechead"><h3>Work experience <span class="iwill">(optional)</span></h3><p>One entry that points at what you've shipped.</p></div>
+    <div class="tablewrap"><table class="kv"><tbody>{{WORK_ROWS}}</tbody></table></div>
+    {{WORK_DESC}}
+  </section>
+</div>
+
+<section class="card" id="skills">
+  <div class="sechead"><h3>Skills</h3>
+  <p>Your current 13 skills are all set to Intermediate, including the ones you have shipped work in. These 13 follow your four launch gigs. Expert goes on the skills with public proof. Change any level you wouldn't defend on a buyer call.</p></div>
+  <ul class="skills">{{SKILLS}}</ul>
+  {{SKILL_COPY}}
+  <p class="note"><b>Remove:</b> {{OLD_SKILLS}}. Fiverr only offers skills from its own list, so pick the closest name when one isn't there.</p>
+</section>
+
+<section class="card" id="face">
+  <div class="sechead"><h3>Do buyers need to see your face?</h3>
+  <p>No. Only one optional item needs it.</p></div>
+  <div class="tablewrap"><table class="pk facet"><thead><tr><th>Item</th><th>Face needed?</th><th>What Fiverr says</th></tr></thead><tbody>
+    <tr><td>Profile photo</td><td><span class="yn no">No</span></td><td>A clear photo of you, or your own logo. No one else's logo, no celebrities, no GIFs.</td></tr>
+    <tr><td>Intro video</td><td><span class="yn yes">Yes</span></td><td>Optional. If you add one, you must appear and speak, with nobody else in it.</td></tr>
+    <tr><td>Gig video</td><td><span class="yn no">No</span></td><td>Optional. Screen recordings and captions are fine. Up to 75 seconds, 1280×720 or larger, landscape, MP4.</td></tr>
+    <tr><td>ID check</td><td><span class="yn priv">Private</span></td><td>Fiverr may verify your identity. Buyers never see it.</td></tr>
+  </tbody></table></div>
+  <p class="note"><b>Without your face:</b> keep your logo, skip the intro video, and give your gigs captioned videos of your real work instead. A headshot usually wins more clicks, so you can add one later if you change your mind.</p>
+</section>
+
+<div class="two">
+<section class="card" id="gig-video">
+  <div class="sechead"><h3>Gig video for Minecraft plugins <span class="iwill">(no face)</span></h3>
+  <p>Built from the Bayzyl timelapse in the README, which is 18 seconds of real commands. Play it at half speed, or twice through, between a title card and an end card for about 35 seconds. Export at 1280×720 with the 960×572 timelapse centered on a dark background.</p></div>
+  <div class="tablewrap"><table class="pk vid"><thead><tr><th>At</th><th>On screen</th><th>Caption</th></tr></thead><tbody>{{GIG_VIDEO_ROWS}}</tbody></table></div>
+  <p class="note"><b>Same idea for the other gigs:</b> scroll through Prismet Arcade for the app gig, or record a terminal and PrismCode for the AI gig, with three or four captions each.</p>
+</section>
+
+<section class="card" id="video">
+  <div class="sechead"><h3>Intro video <span class="iwill">(optional, on camera)</span></h3>
+  <p>Only if you decide to appear. About {{VIDEO_SECONDS}} seconds at a normal pace ({{VIDEO_WORDS}} words). Fiverr wants 20 to 60 seconds, at least 1280×720, with you on camera and nobody else. Leave out links and contact details.</p></div>
+  <ol class="script">{{VIDEO_ROWS}}</ol>
+  {{VIDEO_FULL}}
+  <p class="note"><b>Filming:</b> phone sideways at eye level, a window in front of you, a quiet room, and a teleprompter app. Do three takes and keep the best.</p>
+</section>
+</div>
+
+<section class="card" id="portfolio">
+  <div class="sechead"><h2>Portfolio projects</h2>
+  <p>Five projects. Each needs a 120 to 1,400 character description and takes up to five files. The Wizard King's Decree project is gone because it was scrapped. Upload the PNGs from <code>business/showcase/fiverr/out/</code> on your Mac, which have the corrected numbers.</p></div>
+  <div class="pgrid">{{PORTFOLIO}}</div>
+</section>
+
+<div class="band" id="gigs"><p class="eyebrow">Gigs</p><h2>Four launch gigs</h2>
+<p>New sellers get 4 gigs, and drafts count toward that. Create them one at a time and check the prices before you press Publish. Each card says what changed since the first kit.</p></div>
+
+{{GIGS}}
+
+<section class="card" id="held">
+  <div class="sechead"><h2>On hold until Level 1</h2>
+  <p>Fiverr raises the limit to 10 gigs at Level 1. These two are ready for then.</p></div>
+  {{HELD}}
+</section>
+
+<section class="card">
+  <div class="sechead"><h3>Fiverr rules this kit follows</h3></div>
+  <ul class="rules">
+    <li>New sellers can have 4 gigs, drafts included. Level 1 and 2 get 10.</li>
+    <li>About: 150 to 600 characters, with no URLs, company names, or contact details.</li>
+    <li>Title: letters, numbers, spaces, and punctuation only. Fiverr rejected "&amp;", so the live title says "and".</li>
+    <li>Gig descriptions: up to 1,200 characters. A gig may link your portfolio or website, never contact details.</li>
+    <li>Portfolio: 1 to 20 projects, up to 5 files each, with a description of 120 to 1,400 characters.</li>
+    <li>Intro video: 20 to 60 seconds, at least 1280×720, with you on camera.</li>
+    <li>Gig video: up to 75 seconds, at least 1280×720, landscape, MP4. You don't need to be in it.</li>
+    <li>Profile photo: a clear photo of you or your own logo. Nobody else's logo, no celebrities, no GIFs.</li>
+  </ul>
+  <div class="foot">
+    <p>Sources: <a href="https://help.fiverr.com/hc/en-us/articles/360010558598-Creating-editing-your-freelancer-profile">Creating &amp; editing your freelancer profile</a> · <a href="https://help.fiverr.com/hc/en-us/articles/360011421218-Gig-policies">Requirements and guidelines for your Gig</a> · <a href="https://help.fiverr.com/hc/en-us/articles/4413134063633-Using-your-Fiverr-Portfolio">Using your Fiverr Portfolio</a> · <a href="https://help.fiverr.com/hc/en-us/articles/13703724418961-Creating-your-Fiverr-intro-video">Creating your Fiverr intro video</a> · <a href="https://help.fiverr.com/hc/en-us/articles/360010451657-Adding-a-video-to-your-Gig">Adding a Gig video</a> · <a href="https://help.fiverr.com/hc/en-us/articles/360010560118-Understanding-Fiverr-s-freelancer-levels">Freelancer levels</a></p>
+    <p>Bayzyl numbers come from the v0.2.0-alpha.1 source: 109 registered commands and a 16-page <code>/bzlhelp</code> guide.</p>
+  </div>
+</section>
+
+</main>
+
+<script>
+(function(){
+  function flash(b, msg){ b.textContent = msg; setTimeout(function(){ b.textContent = 'Copy'; }, 1600); }
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('.copy'); if (!b) return;
+    var t = b.dataset.for ? document.getElementById(b.dataset.for) : null;
+    var s = b.dataset.textFor ? document.getElementById(b.dataset.textFor) : null;
+    var text = t ? t.value : (s ? s.textContent : '');
+    var p = navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(text) : Promise.reject();
+    p.then(function(){ flash(b, 'Copied'); }, function(){
+      if (t){ t.focus(); t.select(); }
+      else if (s){ var r = document.createRange(); r.selectNodeContents(s); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+      flash(b, 'Selected, press ⌘C');
+    });
+  });
+
+  function fit(){ document.querySelectorAll('textarea').forEach(function(t){ t.style.height = 'auto'; t.style.height = (t.scrollHeight + 2) + 'px'; }); }
+  fit(); addEventListener('resize', fit);
+  document.addEventListener('toggle', fit, true);
+
+  var KEY = 'fiverr-kit-ticks-v2';
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.board input:not(:disabled)'));
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (_) { saved = {}; }
+  function count(){ document.getElementById('done').textContent = boxes.filter(function(b){ return b.checked && b.closest('.st-todo'); }).length; }
+  boxes.forEach(function(b){
+    if (saved[b.dataset.key]) b.checked = true;
+    b.addEventListener('change', function(){
+      saved[b.dataset.key] = b.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (_) {}
+      count();
+    });
+  });
+  document.getElementById('reset').addEventListener('click', function(){
+    saved = {}; boxes.forEach(function(b){ b.checked = false; });
+    try { localStorage.removeItem(KEY); } catch (_) {}
+    count();
+  });
+  count();
+})();
+</script>

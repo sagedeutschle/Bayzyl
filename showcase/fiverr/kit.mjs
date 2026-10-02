@@ -61,7 +61,6 @@ ${['gig-mc-plugin', 'gig-mc-server', 'gig-ios-app', 'gig-web-tool', 'gig-ai-agen
 }).join('\n')}
 | | ![portfolio-mc-network](out/portfolio-mc-network.png) |
 | | ![portfolio-qr-suite](out/portfolio-qr-suite.png) |
-| | ![portfolio-oracle](out/portfolio-oracle.png) |
 
 Also: [\`out/linkedin-banner.png\`](out/linkedin-banner.png) (1584×396) refreshes your LinkedIn
 background with the full range instead of only the QR scanner.
