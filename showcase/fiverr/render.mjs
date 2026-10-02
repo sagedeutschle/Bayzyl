@@ -267,7 +267,7 @@ const IMAGES = {
   // ══════════════════════════════════════════════════════════════════════════════════════
   'portfolio-prismet-spread': () => page(`
     <div style="position:absolute;left:64px;top:56px;right:64px;display:flex;justify-content:space-between;align-items:flex-end">
-      <div><div class="eyebrow"><i></i>Prismet · App Store</div><h1 style="font-size:42px;margin-top:14px">Twenty classics, one lens</h1></div>
+      <div><div class="eyebrow"><i></i>Prismet · App Store</div><h1 style="font-size:42px;margin-top:14px">19 classics, one lens</h1></div>
       <img src="${A('icons/prismet-app.webp')}" style="width:96px;border-radius:22px;box-shadow:0 14px 34px rgba(0,0,0,.5)">
     </div>
     ${['store-01_home', 'store-03_chess', 'store-04_seabattle', 'store-02_wordgame', 'store-05_2048'].map((s, i) =>

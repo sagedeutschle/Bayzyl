@@ -5,11 +5,11 @@
 :root{color-scheme:dark;
   --bg:#10111A;--bg2:#0B0C13;--panel:#1B1D2A;--hi:#282B3C;--hair:rgba(255,255,255,.10);--line:rgba(255,255,255,.18);
   --ink:#F2F4FC;--ink2:rgba(242,244,252,.72);--ink3:rgba(242,244,252,.52);--gold:#E2B65C;--goldd:#B88A33;
-  --live:#5FB98A;--livebg:rgba(95,185,138,.14);--todo:#E2B65C;--todobg:rgba(226,182,92,.14);--opt:#9AA3C7;--optbg:rgba(154,163,199,.14);
+  --live:#5FB98A;--livebg:rgba(95,185,138,.14);--todo:#E2B65C;--todobg:rgba(226,182,92,.14);--opt:#9AA3C7;--optbg:rgba(154,163,199,.14);--block:#E8877A;--blockbg:rgba(232,135,122,.14);
   --display:"Unbounded","Arial Black",sans-serif;--body:"Hanken Grotesk",system-ui,sans-serif;--mono:"Martian Mono",ui-monospace,monospace}
-@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){color-scheme:light;--bg:#F6F2E8;--bg2:#EEE8DA;--panel:#FDFBF6;--hi:#E6E0D1;--hair:rgba(28,26,18,.14);--line:rgba(28,26,18,.28);--ink:#1C1A12;--ink2:rgba(28,26,18,.78);--ink3:rgba(28,26,18,.60);--gold:#8E6A22;--goldd:#8E6A22;--live:#2E7A52;--livebg:rgba(46,122,82,.12);--todo:#8E6A22;--todobg:rgba(142,106,34,.12);--opt:#55608A;--optbg:rgba(85,96,138,.12)}}
-:root[data-theme="light"]{color-scheme:light;--bg:#F6F2E8;--bg2:#EEE8DA;--panel:#FDFBF6;--hi:#E6E0D1;--hair:rgba(28,26,18,.14);--line:rgba(28,26,18,.28);--ink:#1C1A12;--ink2:rgba(28,26,18,.78);--ink3:rgba(28,26,18,.60);--gold:#8E6A22;--goldd:#8E6A22;--live:#2E7A52;--livebg:rgba(46,122,82,.12);--todo:#8E6A22;--todobg:rgba(142,106,34,.12);--opt:#55608A;--optbg:rgba(85,96,138,.12)}
-:root[data-theme="dark"]{color-scheme:dark;--bg:#10111A;--bg2:#0B0C13;--panel:#1B1D2A;--hi:#282B3C;--hair:rgba(255,255,255,.10);--line:rgba(255,255,255,.18);--ink:#F2F4FC;--ink2:rgba(242,244,252,.72);--ink3:rgba(242,244,252,.52);--gold:#E2B65C;--goldd:#B88A33;--live:#5FB98A;--livebg:rgba(95,185,138,.14);--todo:#E2B65C;--todobg:rgba(226,182,92,.14);--opt:#9AA3C7;--optbg:rgba(154,163,199,.14)}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){color-scheme:light;--bg:#F6F2E8;--bg2:#EEE8DA;--panel:#FDFBF6;--hi:#E6E0D1;--hair:rgba(28,26,18,.14);--line:rgba(28,26,18,.28);--ink:#1C1A12;--ink2:rgba(28,26,18,.78);--ink3:rgba(28,26,18,.60);--gold:#8E6A22;--goldd:#8E6A22;--live:#2E7A52;--livebg:rgba(46,122,82,.12);--todo:#8E6A22;--todobg:rgba(142,106,34,.12);--opt:#55608A;--optbg:rgba(85,96,138,.12);--block:#A4412F;--blockbg:rgba(164,65,47,.12)}}
+:root[data-theme="light"]{color-scheme:light;--bg:#F6F2E8;--bg2:#EEE8DA;--panel:#FDFBF6;--hi:#E6E0D1;--hair:rgba(28,26,18,.14);--line:rgba(28,26,18,.28);--ink:#1C1A12;--ink2:rgba(28,26,18,.78);--ink3:rgba(28,26,18,.60);--gold:#8E6A22;--goldd:#8E6A22;--live:#2E7A52;--livebg:rgba(46,122,82,.12);--todo:#8E6A22;--todobg:rgba(142,106,34,.12);--opt:#55608A;--optbg:rgba(85,96,138,.12);--block:#A4412F;--blockbg:rgba(164,65,47,.12)}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#10111A;--bg2:#0B0C13;--panel:#1B1D2A;--hi:#282B3C;--hair:rgba(255,255,255,.10);--line:rgba(255,255,255,.18);--ink:#F2F4FC;--ink2:rgba(242,244,252,.72);--ink3:rgba(242,244,252,.52);--gold:#E2B65C;--goldd:#B88A33;--live:#5FB98A;--livebg:rgba(95,185,138,.14);--todo:#E2B65C;--todobg:rgba(226,182,92,.14);--opt:#9AA3C7;--optbg:rgba(154,163,199,.14);--block:#E8877A;--blockbg:rgba(232,135,122,.14)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--body)}
 .wrap{max-width:1080px;margin-inline:auto;padding-inline:clamp(16px,4vw,40px)}
@@ -43,6 +43,7 @@ main{padding-block:28px 64px;display:grid;gap:22px}
 .st-live .pill{color:var(--live);background:var(--livebg)}
 .st-todo .pill{color:var(--todo);background:var(--todobg)}
 .st-optional .pill{color:var(--opt);background:var(--optbg)}
+.st-blocked .pill{color:var(--block);background:var(--blockbg)}
 .ck-name{font-weight:700}.ck-name a{color:inherit;text-decoration-color:var(--line);text-underline-offset:3px}
 .ck-note{color:var(--ink2);font-size:.94rem}
 .board input:checked:not(:disabled)+label .ck-name,.board input:checked:not(:disabled)+label .ck-note{text-decoration:line-through;text-decoration-color:var(--ink3);color:var(--ink3)}
@@ -142,7 +143,7 @@ html{scroll-behavior:smooth}
 
 <section id="status" class="card">
   <div class="sechead"><h2>Where your profile stands</h2>
-  <p>Two fields are live from Oct 1. Nothing else was saved. Nothing on this list needs your face.</p></div>
+  <p>Display name and title are live, and one gig is saved as a draft. Fiverr&#x27;s ID check and W-9 are waiting on you. Nothing on this list needs your face.</p></div>
   <ul class="board">{{CHECKLIST}}</ul>
   <div class="progress"><span><b id="done">0</b> of <b>{{TODO_COUNT}}</b> to-dos ticked</span><button type="button" class="reset" id="reset">Clear ticks</button></div>
 </section>
@@ -158,7 +159,7 @@ html{scroll-behavior:smooth}
 
 <div class="two">
   <section class="card" id="education">
-    <div class="sechead"><h3>Education</h3><p>Fiverr asks for a graduation year, so this uses 2027.</p></div>
+    <div class="sechead"><h3>Education</h3><p>Fiverr&#x27;s graduation-year list stops at 2026, so it can&#x27;t take 2027 yet. Leave Education empty for now, since your About already says you&#x27;re a student. The values are here for when it can.</p></div>
     <div class="tablewrap"><table class="kv"><tbody>{{EDU_ROWS}}</tbody></table></div>
   </section>
   <section class="card" id="work">
@@ -183,7 +184,7 @@ html{scroll-behavior:smooth}
     <tr><td>Profile photo</td><td><span class="yn no">No</span></td><td>A clear photo of you, or your own logo. No one else's logo, no celebrities, no GIFs.</td></tr>
     <tr><td>Intro video</td><td><span class="yn yes">Yes</span></td><td>Optional. If you add one, you must appear and speak, with nobody else in it.</td></tr>
     <tr><td>Gig video</td><td><span class="yn no">No</span></td><td>Optional. Screen recordings and captions are fine. Up to 75 seconds, 1280×720 or larger, landscape, MP4.</td></tr>
-    <tr><td>ID check</td><td><span class="yn priv">Private</span></td><td>Fiverr may verify your identity. Buyers never see it.</td></tr>
+    <tr><td>ID check</td><td><span class="yn priv">Private</span></td><td>Fiverr asked for it on Oct 2, along with a W-9 tax form. Buyers never see either.</td></tr>
   </tbody></table></div>
   <p class="note"><b>Without your face:</b> keep your logo, skip the intro video, and give your gigs captioned videos of your real work instead. A headshot usually wins more clicks, so you can add one later if you change your mind.</p>
 </section>

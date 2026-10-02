@@ -65,12 +65,13 @@ PORTFOLIO = [(p["title"], p["desc"], p["images"]) for p in KIT["portfolio"]]
 CHECKLIST = [
     ("display-name", "live", "Display name", "Sage Deutschle. Saved Oct 1.", None),
     ("title", "live", "Title", TITLE_LIVE + ". Saved Oct 1.", None),
+    ("verify", "blocked", "ID check and W-9", "Fiverr flagged an ID check and a W-9 tax form before your gigs can be seen (Astra saw this Oct 2). Only you can complete them.", "#face"),
     ("photo", "optional", "Profile photo", "Your \"B\" logo is allowed. A headshot usually gets more clicks, but your face is never required.", "#face"),
-    ("about", "todo", "About", "Paste the text below. It was never saved.", "#about"),
-    ("education", "todo", "Education", "Yesterday's form was left half-filled and unsaved. Values below.", "#education"),
+    ("about", "todo", "About", "You approved saving it on Oct 2. Not saved yet as of Astra's last report. Paste the text below.", "#about"),
+    ("education", "blocked", "Education", "Fiverr's year list stops at 2026, so 2027 can't be saved. Leave it empty for now.", "#education"),
     ("skills", "todo", "Skills", "Replace the 13 skills that are all set to Intermediate.", "#skills"),
-    ("portfolio", "todo", "Portfolio", "0 projects now. Add the 5 below.", "#portfolio"),
-    ("gigs", "todo", "Gigs", "0 now. Add the 4 launch gigs one at a time, and check prices before each Publish.", "#gigs"),
+    ("portfolio", "todo", "Portfolio", "0 projects as of Oct 1. Add the 5 below. You approved saving them on Oct 2.", "#portfolio"),
+    ("gigs", "todo", "Gigs", "1 draft saved: Minecraft plugins (Astra deleted an older duplicate on Oct 2). Add the other 3 launch gigs, and check prices before each Publish.", "#gigs"),
     ("languages", "todo", "Languages", "Make sure English has a proficiency level set.", None),
     ("video", "optional", "Intro video", "Needs you on camera. Skip it if you'd rather not show your face.", "#video"),
     ("gig-video", "optional", "Gig video", "No face needed. A captioned Bayzyl build video for the plugin gig.", "#gig-video"),
@@ -193,7 +194,7 @@ def held_card(g):
 </details>"""
 
 
-status_label = {"live": "Live", "todo": "To do", "optional": "Optional"}
+status_label = {"live": "Live", "todo": "To do", "blocked": "Blocked", "optional": "Optional"}
 rows = []
 for key, st, name, note, link in CHECKLIST:
     locked = st == "live"
