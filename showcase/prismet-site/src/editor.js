@@ -63,14 +63,14 @@
 
   const main = document.getElementById('main');
   const grid = document.getElementById('grid');
-  const selWrap = document.querySelector('[data-section="selected"] .wrap');
+  const selWrap = document.querySelector('[data-section="selected"] .doors') || document.querySelector('[data-section="selected"] .wrap');
 
   function applyLayout() {
     if (!layout || !main) return;
     layout.sections.forEach((id) => { const s = main.querySelector(`:scope > [data-section="${id}"]`); if (s) main.appendChild(s); });
     main.querySelectorAll(':scope > [data-section]').forEach((s) => s.classList.toggle('is-off', layout.hiddenSections.includes(s.dataset.section)));
     if (grid) {
-      layout.order.forEach((slug) => { const c = grid.querySelector(`.card[data-slug="${CSS.escape(slug)}"]`); if (c) grid.appendChild(c); });
+      layout.order.forEach((slug) => { const c = grid.querySelector(`.card[data-slug="${CSS.escape(slug)}"]`); if (c) c.parentElement.appendChild(c); });  // rows stay inside their ledger group
       grid.querySelectorAll('.card').forEach((c) => {
         const s = c.dataset.slug, wide = layout.wide.includes(s), img = c.querySelector('img[data-src-wide]');
         c.classList.toggle('wide', wide); c.classList.toggle('is-off', layout.hidden.includes(s));

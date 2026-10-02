@@ -94,6 +94,8 @@ catch { console.warn('⚠ ImageMagick not found: assets/og.jpg was not generated
 // ── shared pieces ───────────────────────────────────────────────────────────────────────────
 const hue = (id) => `--h:var(--${id});--hi:var(--${id}-ink)`;
 const arrow = '<svg class="ext" viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="M3 9.5 9.5 3M4.5 3h5v5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+// The artifact preview can't load fonts from its own files, so it uses Google Fonts; production self-hosts.
+const GOOGLE_FONTS = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Martian+Mono:wdth,wght@75..112.5,100..800&display=swap">';
 // The mark: the rotunda seen from above, with the prism inlaid in its floor.
 const mark = (size = 28) => `<svg class="mark" width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true">
   <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" stroke-width="2"/>
@@ -113,7 +115,7 @@ const head = ({ title, desc, root = '', noindex = false, url = '' }) => `<meta c
 <meta name="theme-color" content="#E4E8EA" media="(prefers-color-scheme: light)">
 <link rel="icon" href="${root}assets/icons/prismet-app.webp">
 <link rel="preload" href="${root}assets/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="${root}site.css">${PREVIEW ? `\n<link rel="stylesheet" href="${root}editor.css">` : ''}
+${PREVIEW ? GOOGLE_FONTS + '\n' : ''}<link rel="stylesheet" href="${root}site.css">${PREVIEW ? `\n<link rel="stylesheet" href="${root}editor.css">` : ''}
 <script src="${root}site.js"></script>`;
 const scripts = (root = '') => (PREVIEW ? `<script src="${root}editor.js"></script>` : '');
 
@@ -544,8 +546,9 @@ ${footer()}`;
 
 // ── artifact preview: the same page as a fragment (the artifact host supplies <head>/<body>) ─
 if (PREVIEW) {
-  writeFileSync(join(DIST, '_preview.html'), `<title>Prismet Redesign</title>
-<link rel="stylesheet" href="editor.css"><link rel="stylesheet" href="site.css">
+  writeFileSync(join(DIST, '_preview.html'), `<title>Prismet Workshop</title>
+${GOOGLE_FONTS}<link rel="stylesheet" href="editor.css"><link rel="stylesheet" href="site.css">
+<script src="site.js"></script>
 ${indexBody}`);
 }
 if (missing.size) {

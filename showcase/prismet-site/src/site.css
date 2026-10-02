@@ -386,6 +386,7 @@ footer a:hover { color: var(--ink); }
 .next a:hover strong { color: var(--brass-ink); }
 .next .back { font-style: italic; color: var(--ink-2); text-align: center; }
 @media (max-width: 860px) { .p-body { grid-template-columns: 1fr; } .next { grid-template-columns: 1fr 1fr; } .next .back { grid-column: 1 / -1; order: 3; } }
+@media (max-width: 600px) { .plate-grid { grid-template-columns: 1fr 1fr; gap: 18px 12px; } .plate-grid figure:not(.tall) { grid-column: 1 / -1; } .plate-grid figure.tall { max-width: none; } .plate-grid figure.tall figcaption { font-size: .8rem; } }
 .withdrawn, .colophon { padding-block: clamp(36px, 6vw, 80px); min-height: 50vh; }
 .withdrawn p, .colophon .prose { margin-top: 18px; color: var(--ink-2); font-size: var(--t-md); max-width: 40rem; }
 .colophon .prose p + p { margin-top: 14px; }

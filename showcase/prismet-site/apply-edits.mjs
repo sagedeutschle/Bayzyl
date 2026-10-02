@@ -56,7 +56,7 @@ if (layout) {
     if (hidden.has(p.slug)) p.hidden = true; else delete p.hidden;
   }
   data.featuredOrder = list(layout.featured);
-  const SECTIONS = ['lenses', 'selected', 'work', 'about'];
+  const SECTIONS = ['selected', 'work', 'plate', 'lenses', 'about'];
   data.layout = {
     sections: (layout.sections || []).filter((s) => SECTIONS.includes(s)),
     hiddenSections: (layout.hiddenSections || []).filter((s) => SECTIONS.includes(s)),
