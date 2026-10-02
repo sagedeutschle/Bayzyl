@@ -17,7 +17,8 @@ must not either.
   `projects.json` and `build.mjs`, seven project copy files, seven Mac-only projects, 29 assets).
   It was never pushed, so the redesign was built from the branch. **Reconcile it before any deploy**
   (wording and project list from the Mac; images, build and layout from this branch).
-- **Preview with Edit mode:** see "Preview" below. Its database starts empty.
+- **Preview with Edit mode:** artifact https://claude.ai/artifact/C51vasTVQgxsp6JLJjccCv (version 1, built
+  from `23d3ca1`). Its database starts empty. The older preview (`Nig6eZ26fLTtBzgiTzQfQ2`) shows the v18 design.
 - **Server code:** not in any repo. See "The live server". The server needs no change for the
   redesign: the site is still static files in `site/`.
 - **Open:** the decisions in "Waiting on Sage". Nothing else is in flight.
@@ -61,7 +62,7 @@ must not either.
 | Site images | `showcase/assets/{ai,bench,helm2,icons,live,minecraft,prismet,web,worlds,fonts}/` |
 | Captures not yet on the site | `showcase/shots/<project>/`; its `README.md` lists what only Sage can capture |
 | Fiverr | `showcase/fiverr/` (a separate workstream; the Mac copy is newer) |
-| Design brief and studio reports | not in the repo (they were session scratch files); this file and `README.md` carry what matters |
+| Design review | `showcase/prismet-site/REDESIGN-REVIEW.md` (the brief and studio reports were session scratch files) |
 | Deploy tools | `showcase/tools/deploy/push-overlay.py`, `showcase/tools/deploy/check-routes.sh` |
 
 ## The redesign, in short
