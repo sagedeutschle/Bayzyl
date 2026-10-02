@@ -28,7 +28,7 @@ These run on Sage's own machines, in games, or behind logins, so they can't be s
 | Project | Have now | Capture |
 |---|---|---|
 | Prismet app | iPhone only | The Mac app: home grid and two or three games, window capture. iPad and Watch if they exist. The 3D Catan board. |
-| The Helm | Widget renders from source, 3 old iPhone remote shots | A real full-desktop screenshot of each monitor, plus 2–3 close-ups of panels. |
+| The Helm | Widget renders from source (the old iPhone remote shots and the Fleet Radar face were removed: they show host names) | A real full-desktop screenshot of each monitor, plus 2–3 close-ups of panels. |
 | Bayzyl | Release shots (help page reads "1/13"; the current guide is 16 pages) | The wand selection outline, a before/after of a big edit, a brush in use, `/bzlhelp` at GUI scale 2, at 1920×1080 or larger. |
 | The Long Now | 3 shots at 1280×720 | Each era at 2560×1440, plus the court and campaign screens. |
 | Cicero | 1 shot | The council floor, a transcript and a verdict. |

@@ -12,7 +12,7 @@ Real screenshots of real work, sorted by the gig they prove. Nothing here is a m
 | [`00-fiverr-ready/`](00-fiverr-ready/) | 27 | Any gig | 1280×769 at 2× (2560×1538 JPG). Drop straight into a gig gallery or a portfolio project. |
 | [`01-iphone-mac-apps/`](01-iphone-mac-apps/) | 40 | SwiftUI apps | App Store screenshots, raw iPhone screens, the 3D Catan board, the app icon, and 22 game tiles. |
 | [`02-minecraft/`](02-minecraft/) | 3 | Minecraft plugins · Minecraft servers | Builds on the Paper server Bayzyl runs on (window borders trimmed). |
-| [`03-linux-desktop-helm/`](03-linux-desktop-helm/) | 27 | KDE / Linux desktops | 24 custom QML widgets rendered from their source at 2×, plus the Helm iPhone remote. |
+| [`03-linux-desktop-helm/`](03-linux-desktop-helm/) | 23 | KDE / Linux desktops | 23 custom QML widgets rendered from their source at 2× (the Fleet Radar face and the iPhone remote captures were removed: they show host names). |
 | [`04-web-tools/`](04-web-tools/) | 17 | Web tools & landing pages | QR Scanner suite captures, Steam Rewind (demo library), and the Accessible Debt Clock, desktop and phone. |
 | [`05-ai-agents/`](05-ai-agents/) | 6 | AI coding-agent setup | PrismCode, Cicero, HOI4 AI War Room, Usage Tracker. |
 | [`06-games-and-mods/`](06-games-and-mods/) | 5 | (portfolio) | The Long Now eras, Civ V Mod Profiles, WoW Sidepanel. |

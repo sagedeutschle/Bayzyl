@@ -39,7 +39,7 @@ for f in "$WEB_SHOTS"/*.png; do webp "$f" 1440x "$OUT/web/$(basename "${f%.png}"
 
 # THE HELM — QML faces rendered offscreen from source (render-helm-faces.py)
 # tailnet + comms are skipped on purpose: their sample data shows mesh IPs / clipboard text.
-for n in chronos cpu gpu reactor fleet net transit diskmap diskpie worldclock orbital breakout \
+for n in chronos cpu gpu reactor net transit diskmap diskpie worldclock orbital breakout \
          minesweeper procs citycontrol qlora forge snake vault toolbox theme llmbay; do
   convert "$HELM_SHOTS/org.helm.$n.png" -quality 88 "$OUT/helm/$n.webp"
 done

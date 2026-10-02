@@ -257,7 +257,7 @@ const IMAGES = {
       ${helmFace('chronos', 40, 52, 420)}
       ${helmFace('reactor', 476, 40, 196)}
       ${helmFace('cpu', 40, 268, 380)}
-      ${helmFace('fleet', 436, 252, 236)}
+      ${helmFace('diskmap', 436, 252, 236)}
       ${helmFace('transit', 40, 492, 300)}
       ${helmFace('net', 356, 470, 316)}
     </div>${foot('widgets rendered from source')}`, { hue: 'desktop', title: 'Linux desktops' }),
