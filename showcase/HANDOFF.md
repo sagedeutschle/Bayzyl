@@ -6,9 +6,21 @@ must not either.
 
 ## Where things stand
 
-- **Live:** prismet.xyz runs Fly release **v18** (2026-10-01 09:11 UTC), built from commit
-  **`fcba36c`**: the previous design (prism hero, card grid, 18 projects). It's healthy:
-  `/api/wordle`, `/steam`, `/debt` and `/rtc` all work. **The redesign below is not deployed.**
+- **Live:** prismet.xyz runs Fly release **v20** (2026-10-02 14:48 UTC), image tag
+  `redesign-20261002-1`, the workshop redesign built from commit **`1e69496`** on
+  `claude/funny-wozniak-4j636o`. `/api/wordle`, `/steam`, `/debt` and `/rtc` all work; every route in
+  `check-routes.sh` matches the v18 baseline. Sage approved the deploy in session
+  `session_01LNDcbCcy64DGsNuWVV1hR6`.
+- **Incident on the way there (read this before your first deploy):** release v19 was deployed with a
+  minimal `fly.toml` holding only the app name and region. `fly deploy` treats the toml as the whole
+  machine config, so it **stripped the HTTP service and the env vars** from both machines; Fly's edge
+  answered 503 for about 13 minutes until v20 redeployed the same image with
+  `showcase/tools/deploy/fly.toml` (http_service on port 8080, force_https, auto-stop/start). Always
+  deploy with that file, or run `fly config save -a prismet-site-restless-horizon-217` first and deploy
+  with the saved config. The old env vars `PROJECTS_URL` and `PROJECTS_CACHE_MS` were lost in the
+  process and their values are not in any repo; `/api/projects` now serves the bundled catalog
+  instead of the gist (nothing uses it). `GITHUB_USER` was set back to `sagedeutschle`, `PORT` to `8080`.
+  Ask Sage whether the gist URL should be restored.
 - **Source:** `showcase/prismet-site/` in this repo, on branch **`claude/funny-wozniak-4j636o`**
   (the redesign branch; it contains the old deploy branch `claude/kind-sagan-pbm82l` at `93e3987`
   plus the redesign commits). The content branch `claude/fiverr-prismet-redesign-jgyb6i` is still
@@ -63,7 +75,7 @@ must not either.
 | Captures not yet on the site | `showcase/shots/<project>/`; its `README.md` lists what only Sage can capture |
 | Fiverr | `showcase/fiverr/` (a separate workstream; the Mac copy is newer) |
 | Design review | `showcase/prismet-site/REDESIGN-REVIEW.md` (the brief and studio reports were session scratch files) |
-| Deploy tools | `showcase/tools/deploy/push-overlay.py`, `showcase/tools/deploy/check-routes.sh` |
+| Deploy tools | `showcase/tools/deploy/push-overlay.py`, `showcase/tools/deploy/check-routes.sh`, `showcase/tools/deploy/fly.toml` (the app's service config: deploy from its folder or copy it next to `server.js`) |
 
 ## The redesign, in short
 
@@ -148,18 +160,25 @@ fly deploy --image registry.fly.io/prismet-site-restless-horizon-217:redesign-YY
   -a prismet-site-restless-horizon-217     # run where a fly.toml for the app exists
 ```
 
-- **Tags so far:** `redesign-20261001-1` to `-5` became releases v14 to v18.
+- **Tags so far:** `redesign-20261001-1` to `-5` became releases v14 to v18; `redesign-20261002-1`
+  became v19 (broken config, see above) and v20 (the live redesign).
+- **The server code** is also recoverable from the image layers without Docker: the small zstd layers
+  hold `app/` (package.json, node_modules/ws, server.js, signaling.js, wordle-daily.js, project-*.js,
+  data/, public/); `pip install zstandard` and extract them with Python's tarfile. The v18+ `server.js`
+  is in the last gzip layer.
 - **Before deploying:** run the server locally (`npm ci`, `PORT=18081 node ./server.js`), run
   `check-routes.sh http://127.0.0.1:18081` and compare against the last run; confirm `dist/`
   has no `editor.js` and no `data-edit` attributes; load the pages in a browser at 1440 and 390.
 - **After deploying:** `check-routes.sh https://prismet.xyz`; `curl https://prismet.xyz/api/wordle`
   must return today's word; a WebSocket upgrade on `/rtc` must get `101`; load the pages.
-- **Rollback:** `fly deploy --image registry.fly.io/prismet-site-restless-horizon-217:<earlier tag>`.
-  v18 is `redesign-20261001-5`; the original is `deployment-01KYE5MM868CFCAWKRR3N9CKB1`.
+- **Rollback:** `fly deploy --image registry.fly.io/prismet-site-restless-horizon-217:<earlier tag>`
+  from the folder holding `showcase/tools/deploy/fly.toml`. v18 is `redesign-20261001-5`; the original
+  is `deployment-01KYE5MM868CFCAWKRR3N9CKB1`.
 
 ## Waiting on Sage
 
-1. **Deploy the redesign?** Only with Sage's yes, after the Mac reconciliation above.
+1. **The Mac reconciliation** (above) still has to happen; the redesign went live from the branch.
+   Also: should `PROJECTS_URL` (the old gist catalog) be restored on Fly? Its value is only on Sage's side.
 2. **Claims in Sage's wording that the studio could not verify** (left untouched, flagged):
    "Prismet" vs "Prismet Arcade" and "co-developed" (the Fiverr kit uses both); "three live-data
    lenses" (now two: the Oracle lens was the scrapped Decree); "Watch"; "(see Agent Ops)" (that
