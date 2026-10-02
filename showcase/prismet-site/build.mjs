@@ -277,7 +277,7 @@ function signature(p, root = '../') {
     return `<section class="sig museum" aria-labelledby="museum-title"><div class="wrap">
   <div class="sig-head"><h2 id="museum-title"${t.a}>${t.h}</h2></div>
   <div class="eras">
-    <div class="era-stage">${p.eras.map(([id], i) => img(`assets/worlds/long-now-${id}.webp`, { root, alt: (p.shotAlts || [])[i] || '', cls: `era era-${id}`, lazy: i !== 0 }))}</div>
+    <div class="era-stage">${p.eras.map(([id], i) => img(`assets/worlds/long-now-${id}.webp`, { root, alt: (p.shotAlts || [])[i] || '', cls: `era era-${id}`, lazy: i !== 0 })).join('')}</div>
     <fieldset class="era-dial"><legend class="sr-only">Era</legend>${p.eras.map(([id, label], i) => `<label><input type="radio" name="era" value="${id}"${i === 0 ? ' checked' : ''}><span>${esc(label)}</span></label>`).join('')}</fieldset>
   </div>
 </div></section>`;
@@ -327,10 +327,13 @@ const door = (p, isOff = false) => {
 };
 
 // ── home: the register (ledger) ─────────────────────────────────────────────────────────────
+// Row thumbnails are 96×60 boxes: use <cover>-thumb.webp when it exists, so the register doesn't pull full-size covers.
+// Make one with: convert <cover>.webp -strip -resize '320x200^' -define webp:method=6 <cover>-thumb.webp
+const thumbOf = (src) => { const t = src.replace(/\.webp$/, '-thumb.webp'); return t !== src && existsSync(join(SHOWCASE, t)) ? t : src; };
 const row = (p) => {
   const title = P(p.slug, 'title'), sub = P(p.slug, 'subtitle'), st = status(p), tl = typeLine(p);
   const links = accessOf(p);
-  const thumb = p.cover ? img(p.cover, { cls: 'row-thumb', alt: '' }) : '<span class="row-thumb blank" aria-hidden="true"></span>';
+  const thumb = p.cover ? img(thumbOf(p.cover), { cls: 'row-thumb', alt: '' }) : '<span class="row-thumb blank" aria-hidden="true"></span>';
   return `<div class="row card${off(p.hidden)}" data-slug="${p.slug}" data-beam="${p.beam}" data-group="${tierOf(p)}" style="${hue(p.beam)}">
     <span class="row-tick" aria-hidden="true"></span>
     ${thumb}

@@ -9,6 +9,9 @@
   };
   const saved = store.get('prismet.theme');
   if (saved === 'light' || saved === 'dark') root.dataset.theme = saved;
+  // A chosen theme overrides the system one, so the browser chrome (theme-color) follows the choice, not the system.
+  const tint = () => { if (!root.dataset.theme) return; const c = getComputedStyle(root).getPropertyValue('--ground').trim(); if (c) document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute('content', c)); };
+  tint();
   root.classList.add('js');
   const motionOK = () => !matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -19,6 +22,7 @@
       const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
       root.dataset.theme = dark ? 'light' : 'dark';
       store.set('prismet.theme', root.dataset.theme);
+      tint();
     });
 
     // The hall plan: draw it once per session; the lantern follows the wing in hand.
