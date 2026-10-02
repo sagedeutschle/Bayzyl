@@ -18,11 +18,13 @@
   document.addEventListener('DOMContentLoaded', () => {
     // Day / night
     const toggle = document.getElementById('theme-toggle');
+    const isDark = () => (root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
+    const labelToggle = () => { if (toggle && toggle.dataset.toDay) toggle.setAttribute('aria-label', isDark() ? toggle.dataset.toDay : toggle.dataset.toNight); };
+    labelToggle();
     if (toggle) toggle.addEventListener('click', () => {
-      const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-      root.dataset.theme = dark ? 'light' : 'dark';
+      root.dataset.theme = isDark() ? 'light' : 'dark';
       store.set('prismet.theme', root.dataset.theme);
-      tint();
+      tint(); labelToggle();
     });
 
     // The hall plan: draw it once per session; the lantern follows the wing in hand.

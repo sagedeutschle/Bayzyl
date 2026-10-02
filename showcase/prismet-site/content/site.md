@@ -372,3 +372,9 @@ Colophon
 
 ## footer.day_night
 Day or night
+
+## theme.to_day
+Switch to day
+
+## theme.to_night
+Switch to night

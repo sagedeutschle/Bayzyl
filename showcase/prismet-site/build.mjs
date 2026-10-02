@@ -128,7 +128,7 @@ const bar = (root = '') => {
     <a href="${root}index.html#lenses"${l.a}>${l.h}</a>
     <a href="${root}index.html#about"${a.a}>${a.h}</a>
     <a class="btn primary keep" href="${esc(owner.fiverr)}"${h.a}>${h.h}</a>
-    <button class="btn theme keep" type="button" id="theme-toggle" aria-label="${esc(T('footer.day_night').p)}"><span class="sun" aria-hidden="true"></span></button>
+    <button class="btn theme keep" type="button" id="theme-toggle" aria-label="${esc(T('footer.day_night').p)}" data-to-day="${esc(T('theme.to_day').p)}" data-to-night="${esc(T('theme.to_night').p)}"><span class="sun" aria-hidden="true"></span></button>
   </nav>
 </div></header>`;
 };
@@ -315,7 +315,7 @@ function signature(p, root = '../') {
 const door = (p, isOff = false) => {
   const title = P(p.slug, 'title'), sub = P(p.slug, 'subtitle'), st = status(p), tl = typeLine(p);
   return `<article class="door feature${off(isOff)}" data-slug="${p.slug}" data-room="${p.room || 'cabinet'}" style="${hue(p.beam)}">
-  <a class="door-media" href="${href(p)}" aria-label="${esc(title.p)}">${doorModule(p)}</a>
+  <a class="door-media" href="${href(p)}" tabindex="-1" aria-hidden="true">${doorModule(p)}</a>
   <div class="door-text">
     <p class="typeline"><i></i><span${tl.a}>${tl.h}</span></p>
     <h3><a href="${href(p)}"${title.a}>${title.h}</a></h3>
@@ -479,7 +479,7 @@ shown.forEach((p, i) => {
   const hl = listItems(work(s, 'highlights')), hlT = T('project.highlights');
   const roleK = T('project.role_label'), yearK = T('project.year_label');
   const isFlag = p.tier === 'flagship' || p.tier === 'featured';
-  const front = !isFlag && p.cover ? `<figure class="frontispiece"><div class="wrap">${img(p.cover, { root: '../', alt: (p.shotAlts || [])[0] || plain(work(s, 'title')), lazy: false, priority: true })}</div></figure>` : '';
+  const front = !isFlag && p.cover ? `<figure class="frontispiece${p.cover.includes('/icons/') ? ' icon' : ''}"><div class="wrap">${img(p.cover, { root: '../', alt: (p.shotAlts || [])[0] || plain(work(s, 'title')), lazy: false, priority: true })}</div></figure>` : '';
   const body = `${bar('../')}
 <main id="main" data-room="${p.room || 'cabinet'}" data-beam="${p.beam}" style="${hue(p.beam)}">
   <div class="wrap p-head">

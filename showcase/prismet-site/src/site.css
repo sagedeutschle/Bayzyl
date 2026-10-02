@@ -5,7 +5,7 @@
 
 /* ── fonts (self-hosted, SIL OFL; subset to Latin plus arrows and math symbols) ─────────── */
 @font-face { font-family: 'Newsreader'; font-style: normal; font-weight: 200 800; font-display: swap; src: url(assets/fonts/Newsreader.woff2) format('woff2'); }
-@font-face { font-family: 'Newsreader'; font-style: italic; font-weight: 200 800; font-display: swap; src: url(assets/fonts/Newsreader-Italic.woff2) format('woff2'); }
+@font-face { font-family: 'Newsreader'; font-style: italic; font-weight: 300 600; font-display: swap; src: url(assets/fonts/Newsreader-Italic.woff2) format('woff2'); }
 @font-face { font-family: 'Martian Mono'; font-style: normal; font-weight: 100 800; font-stretch: 75% 112.5%; font-display: swap; src: url(assets/fonts/MartianMono.woff2) format('woff2'); }
 /* Fallback with matched metrics, so the swap moves nothing much. */
 @font-face { font-family: 'Newsreader Fallback'; src: local('Georgia'), local('Times New Roman'); size-adjust: 104%; ascent-override: 92%; descent-override: 26%; line-gap-override: 0%; }
@@ -361,6 +361,7 @@ footer a:hover { color: var(--ink); }
 .p-head .sub { margin-top: 14px; font-size: var(--t-md); color: var(--ink-2); max-width: 42rem; font-variation-settings: 'opsz' 20; }
 .p-head .row { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .frontispiece { margin: 0; }
+.frontispiece.icon img { max-width: 320px; border: 0; background: none; }
 .frontispiece img { width: 100%; height: auto; max-height: 72vh; object-fit: contain; object-position: left top; border: 1px solid var(--hair); background: var(--surface); }
 .p-body { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: clamp(24px, 5vw, 64px); padding-block: 36px 24px; }
 .p-body .prose { font-size: var(--t-md); line-height: 1.6; color: var(--ink-2); max-width: 40rem; font-variation-settings: 'opsz' 20; }
