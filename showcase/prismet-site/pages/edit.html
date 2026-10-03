@@ -70,6 +70,17 @@
   </form>
 </section>
 
+<div id="picker" class="palette picker" hidden>
+  <div class="palette-box" role="dialog" aria-label="Media library">
+    <div class="picker-top">
+      <input id="picker-find" type="text" autocomplete="off" spellcheck="false" placeholder="Search images…" aria-controls="picker-grid">
+      <button id="picker-add" class="btn primary" type="button">Add images</button>
+      <input id="picker-file" type="file" accept="image/*" multiple hidden>
+    </div>
+    <div id="picker-grid" class="picker-grid"></div>
+  </div>
+</div>
+
 <div id="palette" class="palette" hidden>
   <div class="palette-box" role="dialog" aria-label="Search and commands">
     <input id="palette-input" type="text" autocomplete="off" spellcheck="false" placeholder="Search pages, records, words, tokens, commands…" aria-controls="palette-list">

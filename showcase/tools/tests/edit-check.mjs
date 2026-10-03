@@ -208,6 +208,11 @@ assert.equal(stripTheme('a{}' + css), 'a{}'); assert.equal(safeValue('url(x)'), 
   assert.match(draw(doc, { edit: true }).pages.get('about.html'), /data-edit="page\.about\.s-hero\.title"/); assert.match(draw(doc, { edit: true }).pages.get('about.html'), /is-off/); checks += 3;
   assert.equal(draw({ home: [], pages: [] }).pages.get('index.html'), renderSite({ data: { ...st.docs.projects, layout: { sections: ['selected', 'work', 'plate', 'lenses', 'about'], hiddenSections: [] } }, site: st.docs.site, work: st.docs.work, assets: fake, urls: { css: 'c', js: 'j', og: 'o' } }).pages.get('index.html'), 'no library sections, no change to the home page'); checks++;
   assert.deepEqual(['about', 'edit', 'index', 'A', 'a b', 'work', 'x'.repeat(42)].map(validSlug), [true, false, false, false, false, false, false]); assert.deepEqual(['https://x.y/z', 'about.html', '#work', '/steam', 'javascript:x', 'http://x', '//evil.com', 'data:x'].map((h) => Boolean(safeHref(h))), [true, true, true, true, false, false, false, false]); checks += 2;
+  const { validAsset } = await import(join(SITE, 'pages/lib/sections.js'));
+  assert.deepEqual(['assets/uploads/a.webp', 'assets/../server/x.webp', '../x.webp', 'assets/a"onerror="x.webp', 'https://x/y.webp', 'assets//x.webp'].map(validAsset), [true, false, false, false, false, false]);
+  const sneaky = draw({ home: [], pages: [{ slug: 'p', title: 'P', status: 'published', sections: [{ id: 's-p', type: 'split', props: { image: 'assets/../../secret.webp', heading: 'H', body: 'B' } }] }] });
+  assert.ok(!sneaky.pages.get('p.html').includes('<img'), 'an image path that leaves assets/ draws nothing');
+  assert.throws(() => renderSite({ data: { ...st.docs.projects, projects: st.docs.projects.projects.map((p) => (p.slug === 'quark' ? { ...p, cover: '../../x.webp' } : p)) }, site: st.docs.site, work: st.docs.work, assets: fake, urls: { css: 'c', js: 'j', og: 'o' } }), /not an image path/, 'a record cannot name a file outside assets/'); checks += 3;
   assert.equal(renderSection({ id: 's-x', type: 'nope' }, 'home', {}), ''); assert.ok(Object.values(SECTION_TYPES).every((t) => t.label && Array.isArray(t.fields) && t.defaults)); checks += 2;
   st.change('Add', (d) => { d.pages.pages.push({ slug: 'about', title: 'About', status: 'draft', sections: [{ id: 's-a', type: 'hero', props: { title: 'T' } }] }); });
   st.setText('page.about.s-a.title', 'Typed'); assert.equal(st.text('page.about.s-a.title'), 'Typed'); assert.equal(st.docs.pages.pages[0].sections[0].props.title, 'Typed'); assert.deepEqual(st.changedFiles().map((f) => f.label), ['pages.json']); checks += 3;
@@ -263,6 +268,24 @@ assert.equal(stripTheme('a{}' + css), 'a{}'); assert.equal(safeValue('url(x)'), 
   await refuse({ path: 'showcase/prismet-site/content/site2.md', text: 'x', sha: null }, 'a new file can only be a record');
   await refuse({ path: 'showcase/prismet-site/content/work/../x.md', text: 'x', sha: null }, 'no traversal');
   assert.ok(gh2.calls.every((c) => c.auth === 'Bearer github_pat_FAKE'), 'the server uses the stored token'); checks++;
+  // ── images: new WebP files go up with a publish, checked by the server ──
+  {
+    const chunk = (id, n) => Buffer.concat([Buffer.from(id), Buffer.from(Uint32Array.of(n).buffer), Buffer.alloc(n + (n & 1))]);
+    const webp = (...chunks) => { const body = Buffer.concat([Buffer.from('WEBP'), ...chunks]); return Buffer.concat([Buffer.from('RIFF'), Buffer.from(Uint32Array.of(body.length).buffer), body]).toString('base64'); };
+    const good = webp(chunk('VP8 ', 10)), text = { path: PROJECTS_FILE, text: (await get(PROJECTS_FILE)).text.replace('"owner"', '"owner" '), sha: (await get(PROJECTS_FILE)).sha };
+    const send = (media) => call2('POST', '/api/edit/commit', { cookie: sid3, body: { files: [text], media } });
+    for (const [m, why] of [[{ path: 'showcase/assets/uploads/x.webp', base64: Buffer.from('not an image at all, just text').toString('base64') }, 'not a WebP'],
+      [{ path: 'showcase/assets/uploads/x.webp', base64: webp(chunk('VP8 ', 10), chunk('EXIF', 6)) }, 'camera metadata'], [{ path: 'showcase/assets/minecraft/x.webp', base64: good }, 'outside uploads/'],
+      [{ path: 'showcase/assets/uploads/../x.webp', base64: good }, 'traversal'], [{ path: 'showcase/assets/uploads/X Y.webp', base64: good }, 'a plain lowercase name'], [{ path: 'showcase/assets/uploads/x.png', base64: good }, 'WebP only']]) {
+      r = await send([m]); assert.equal(r.status, 400, why); checks++;
+    }
+    r = await send([{ path: 'showcase/assets/uploads/plaza.webp', base64: good }]);
+    assert.equal(r.status, 200, JSON.stringify(r.body)); assert.deepEqual(r.body.media, ['showcase/assets/uploads/plaza.webp']);
+    assert.ok(Buffer.isBuffer(gh2.written.get('showcase/assets/uploads/plaza.webp')) && gh2.written.get('showcase/assets/uploads/plaza.webp').toString('base64') === good, 'the image arrives byte for byte, in the same commit'); checks += 3;
+    text.sha = r.body.files[0].sha; text.text += ' ';
+    r = await send([{ path: 'showcase/assets/uploads/plaza.webp', base64: good }]); assert.equal(r.status, 409, 'an image never replaces one with the same name'); checks++;
+  }
+
   // ── history: published revisions, and a revision opened as a draft ──
   r = await call2('GET', '/api/edit/history', { cookie: sid3 });
   assert.equal(r.status, 200); assert.equal(r.body.revisions.length, 2); assert.equal(r.body.revisions[0].message, 'Edit from prismet.xyz/edit: site.md (1)', 'first line only'); assert.match(r.body.revisions[0].sha, /^[0-9a-f]{40}$/); checks += 4;

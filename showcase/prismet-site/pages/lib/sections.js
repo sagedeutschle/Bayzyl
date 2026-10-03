@@ -31,6 +31,8 @@ export const SLUG = /^[a-z0-9][a-z0-9-]{0,40}$/;
 /** Names a page cannot take: the site's own pages and the server's routes. */
 export const RESERVED = new Set(['index', 'colophon', 'edit', 'steam', 'debt', 'privacy', 'support', 'work', 'assets', 'lib', 'api', 'rtc', 'healthz', 'shots', 'site', 'favicon', 'robots', 'style', 'icon', 'manifest', 'home']);
 export const validSlug = (s) => SLUG.test(s || '') && !RESERVED.has(s);
+/** An image a section or record may name: a file under assets/, no way out of that folder, nothing that could be markup. */
+export const validAsset = (p) => typeof p === 'string' && /^assets\/[A-Za-z0-9._/-]+$/.test(p) && !p.includes('..') && !p.includes('//');
 export const validId = (s) => /^[a-z][a-z0-9-]{0,40}$/.test(s || '');
 /** A link a section may carry: https, or a path inside the site. Anything else is dropped. */
 export const safeHref = (h) => { const v = String(h || '').trim(); return /^https:\/\/[^\s"'<>]+$/.test(v) || /^(?!\/\/)[a-z0-9#/][a-z0-9._#/-]*$/i.test(v) ? v : ''; };
@@ -51,7 +53,7 @@ export function renderSection(s, scope, ctx) {
   const has = (prop) => String(p[prop] ?? '').trim().length > 0;
   const h2 = (prop = 'heading') => (has(prop) || ctx.editing ? `<h2${a(prop)}>${inline(p[prop])}</h2>` : '');
   const button = () => { const href = safeHref(p.href); return has('cta') && href ? `<div class="ctas"><a class="btn primary" href="${esc(href)}"${a('cta')}>${inline(p.cta)}</a></div>` : ''; };
-  const picture = (src, alt) => (src && ctx.has(src) ? ctx.img(src, { alt: plain(alt || '') }) : '');
+  const picture = (src, alt) => (validAsset(src) && ctx.has(src) ? ctx.img(src, { alt: plain(alt || '') }) : '');
   const body = {
     hero: () => `<div class="wrap">${has('eyebrow') ? `<p class="plaque brass"${a('eyebrow')}>${inline(p.eyebrow)}</p>` : ''}<${ctx.top ? 'h1' : 'h2'} class="x-title"${a('title')}>${inline(p.title)}</${ctx.top ? 'h1' : 'h2'}>${has('lede') ? `<p class="lede"${a('lede')}>${inline(p.lede)}</p>` : ''}${button()}</div>`,
     text: () => `<div class="wrap">${h2()}<div class="prose paras"${a('body')}>${paras(p.body)}</div></div>`,

@@ -14,6 +14,7 @@ import { parseSections, writeSections } from './lib/format.js';
 import { stripTheme } from './lib/theme.js';
 import { createStore, findSection, SITE_FILE, PROJECTS_FILE, THEME_FILE, STYLES_FILE, PAGES_FILE } from './edit/store.js';
 import { createPreview } from './edit/preview.js';
+import { createMedia } from './edit/media.js';
 import { createPanels, ownerOf, pageOf, sameSel, sectionName, TOKEN_GROUPS, h } from './edit/panels.js';
 
 export { SITE_FILE, parseSections, writeSections };
@@ -40,7 +41,7 @@ export function makeClient(fetchImpl = globalThis.fetch, base = '') {
     history: async () => (await call('/api/edit/history')).revisions,
     putFile: (path, text, sha, message) => call('/api/edit/file', { method: 'PUT', body: JSON.stringify({ path, text, sha, message }) }),
     /** Publish: [{ path, text, sha }] in one commit. */
-    commit: (files, message) => call('/api/edit/commit', { method: 'POST', body: JSON.stringify({ files, message }) }),
+    commit: (files, message, media = []) => call('/api/edit/commit', { method: 'POST', body: JSON.stringify({ files, message, media }) }),
     getDraft: () => call('/api/edit/draft'),
     putDraft: (text, sha) => call('/api/edit/draft', { method: 'PUT', body: JSON.stringify({ text, sha }) }),
     runFor: async (sha) => (await call(`/api/edit/run?sha=${encodeURIComponent(sha)}`)).run,
@@ -57,6 +58,7 @@ async function init() {
   const UI = 'prismet.edit.ui';
   const ui = (() => { try { return JSON.parse(localStorage.getItem(UI) || '{}'); } catch { return {}; } })();
   const remember = (patch) => { Object.assign(ui, patch); try { localStorage.setItem(UI, JSON.stringify(ui)); } catch { /* storage blocked */ } };
+  let media = null;                                             // the media library (edit/media.js)
   let preview = null, panels = null, selection = null, tab = 'site', pollTimer = null;
   let items = [], hits = [], at = 0;                            // search and commands
   let revisions = null;                                         // the History tab: what was published, newest first
@@ -95,7 +97,7 @@ async function init() {
         fetch('site.css', { cache: 'no-cache' }).then((r) => r.text()),
       ]);
       const words = await Promise.all(paths.map((p) => client.getFile(p)));
-      if (!preview) start(manifest, stripTheme(css));
+      if (!preview) { media = await createMedia({ manifest, say }); start(manifest, stripTheme(css)); }
       store.load([...words, projects, theme, styles, sitePages].filter(Boolean));
       if (remote.on) await pullDraft();
     } catch (err) {
@@ -126,12 +128,13 @@ async function init() {
 
   // ── the workspace ─────────────────────────────────────────────────────────────────────────
   function start(manifest, baseCss) {
-    preview = createPreview({ frame: $('#frame'), stage: $('#stage'), store, manifest, baseCss, say, onKey,
+    preview = createPreview({ frame: $('#frame'), stage: $('#stage'), store, manifest, media, baseCss, say, onKey,
       onSelect: (sel) => select(sel, 'preview'),
       onNavigate: (page, hash) => { preview.setPage(page, hash); syncTop(); } });
     panels = createPanels({ treeEl: $('#tree'), inspectorEl: $('#inspector'), crumbsEl: $('#crumbs'), store, baseCss, say,
       select: (sel) => select(sel, 'panel'), getSelection: () => selection, getTab: () => tab,
-      setThemeMode: (t) => preview.setTheme(t), getWidth: () => preview.width, setDevice: (w) => setDevice(w), computed: (target, prop) => preview.computed(target, prop) });
+      setThemeMode: (t) => preview.setTheme(t), getWidth: () => preview.width, setDevice: (w) => setDevice(w), computed: (target, prop) => preview.computed(target, prop),
+      pickImage: (fn) => media.pick(fn), imageSrc: (p) => media.src(p) });
 
     store.subscribe((ev) => {
       if (ev.type === 'saving') { draft.textContent = 'Saving draft…'; draft.className = 'draft'; return; }
@@ -246,11 +249,14 @@ async function init() {
   // ── publish ───────────────────────────────────────────────────────────────────────────────
   async function publish() {
     if (preview.missing.size) return say(`Not published: a page asks for wording that is missing (${[...preview.missing][0]}).`, 'warn');
+    if (media.missing.size) return say(`Not published: an image is missing (${[...media.missing][0]}). Choose it again, or undo.`, 'warn');
     const files = store.changedFiles();
     if (!files.length) return;
-    save.disabled = true; say('Publishing…');
+    const images = media.toPublish(store.docs);
+    save.disabled = true; say(images.length ? `Publishing, with ${images.length} new image${images.length === 1 ? '' : 's'}…` : 'Publishing…');
     try {
-      const res = await client.commit(files.map(({ path, text, sha }) => ({ path, text, sha })), `Edit from prismet.xyz/edit: ${files.map((f) => f.label).join('; ')}`.slice(0, 190));
+      const res = await client.commit(files.map(({ path, text, sha }) => ({ path, text, sha })), `Edit from prismet.xyz/edit: ${files.map((f) => f.label).join('; ')}`.slice(0, 190), images);
+      media.sent(res.media || []);
       store.published(res.files, new Map(files.map((f) => [f.path, f.text])));
       say('Published. The site is rebuilding; it goes live in about three minutes.', 'ok');
       watch(res.commit.sha);
@@ -298,6 +304,7 @@ async function init() {
     cmd('Preview: desktop', () => $('#device [data-w="1440"]').click()); cmd('Preview: tablet', () => $('#device [data-w="820"]').click()); cmd('Preview: mobile', () => $('#device [data-w="390"]').click());
     cmd('Mode: edit', () => setMode('edit')); cmd('Mode: preview as a visitor', () => setMode('preview'));
     cmd('Theme: night', () => preview.setTheme('dark')); cmd('Theme: day', () => preview.setTheme('light'));
+    cmd('Open the media library', () => media.pick());
     cmd('Discard every change in this draft', () => store.discard()); cmd('Lock the editor', () => $('#lock').click());
     out.push({ kind: 'Page', name: 'Home', sel: { type: 'section', id: 'hero' } }, { kind: 'Page', name: 'Colophon', sel: { type: 'page', page: 'colophon.html' } }, { kind: 'Words', name: 'Shared words', sel: { type: 'shared' } });
     for (const id of ['selected', 'work', 'plate', 'lenses', 'about']) out.push({ kind: 'Section', name: `Home / ${sectionName(id)}`, sel: { type: 'section', id } });

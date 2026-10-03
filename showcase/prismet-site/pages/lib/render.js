@@ -20,7 +20,7 @@
 // a page asked for and did not find.
 import { inline, plain, listItems, factPairs } from './format.js';
 import { styledKeys } from './styles.js';
-import { renderSection, validSlug } from './sections.js';
+import { renderSection, validSlug, validAsset } from './sections.js';
 
 // Spectrum order, red deviates least: desktop, apps, worlds, minecraft, web, ai.
 export const SPECTRUM = ['desktop', 'apps', 'worlds', 'minecraft', 'web', 'ai'];
@@ -70,13 +70,15 @@ const DOOR = (k) => `(max-width: 400px) calc(${k} * (100vw - 34px)), (max-width:
 /** <img> with width/height from the file, lazy by default. root = '' on the home page, '../' on project pages.
  *  srcset comes from the variants on disk unless given; sizesAttr says how wide the image is drawn. */
 function img(p, { alt = '', root = '', cls = '', lazy = true, sizesAttr = '', srcset = '', priority = false } = {}) {
+  if (!validAsset(p)) throw new Error(`not an image path under assets/: ${String(p).slice(0, 80)}`);   // covers and galleries come from data files
   const out = asset(p), { w, h } = sizeOf(p);
+  const at = (u) => (u.startsWith('data:') ? u : root + u);          // an image added in the editor is drawn from its own data until it is on the site
   const vs = srcset ? [] : variantsOf(p);
   if (vs.length) {
-    srcset = [...vs.map((x) => `${root}${asset(x.v)} ${x.w}w`), `${root}${out} ${w}w`].join(', ');
+    srcset = [...vs.map((x) => `${at(asset(x.v))} ${x.w}w`), `${at(out)} ${w}w`].join(', ');
     sizesAttr = `${lazy ? 'auto, ' : ''}${sizesAttr || sizesFor(p)}`;
   }
-  return `<img${cls ? ` class="${cls}"` : ''} src="${root}${out}"${srcset ? ` srcset="${srcset}" sizes="${sizesAttr}"` : ''} width="${w}" height="${h}" alt="${esc(alt)}"${lazy ? ' loading="lazy" decoding="async"' : priority ? ' fetchpriority="high"' : ''}>`;
+  return `<img${cls ? ` class="${cls}"` : ''} src="${at(out)}"${srcset ? ` srcset="${srcset}" sizes="${sizesAttr}"` : ''} width="${w}" height="${h}" alt="${esc(alt)}"${lazy ? ' loading="lazy" decoding="async"' : priority ? ' fetchpriority="high"' : ''}>`;
 }
 // favicon: the app icon, at 128px when that variant exists (the 512px original is 15 KB on every first view)
 const FAVICON = asset(['assets/icons/prismet-app-128.webp', 'assets/icons/prismet-app.webp'].find((p) => has(p)));

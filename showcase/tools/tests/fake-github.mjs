@@ -15,15 +15,15 @@ const blobSha = (text) => { const b = Buffer.from(text, 'utf8'); return createHa
 const hex = (s) => createHash('sha1').update(s).digest('hex');
 
 export function fakeGitHub({ root, persist = false } = {}) {
-  const written = new Map(), trees = new Map(), commits = new Map(), calls = [];
+  const written = new Map(), trees = new Map(), commits = new Map(), blobs = new Map(), calls = [];
   let head = hex('head-0');
   const read = (path) => (written.has(path) ? written.get(path) : existsSync(join(root, path)) && statSync(join(root, path)).isFile() ? readFileSync(join(root, path), 'utf8') : null);
   const write = (path, text) => { written.set(path, text); if (persist) { mkdirSync(dirname(join(root, path)), { recursive: true }); writeFileSync(join(root, path), text); } };
   const answer = (status, body) => ({ status, body });
 
   function handle(method, url, body, auth) {
-    const u = new URL(url, 'http://fake'), m = u.pathname.match(/^\/repos\/[^/]+\/[^/]+\/(.*)$/);
-    calls.push({ method, path: u.pathname, query: u.search, auth, body });
+    const u = new URL(url, 'http://fake'), m = u.pathname.match(/^\/repos\/[^/]+\/[^/]+\/(.*)$/), rest_ = m ? m[1] : '';
+    calls.push({ method, path: u.pathname, query: u.search, auth, body: rest_ === 'git/blobs' ? null : body });
     if (!m) return answer(404, { message: 'Not Found' });
     const rest = decodeURIComponent(m[1]);
     if (rest.startsWith('contents/')) {
@@ -41,10 +41,12 @@ export function fakeGitHub({ root, persist = false } = {}) {
         return answer(200, [...names].sort().map((name) => ({ type: 'file', name, path: `${path}/${name}` })));
       }
       const text = read(path);
+      if (Buffer.isBuffer(text)) return answer(200, { sha: hex('bin' + path), content: text.toString('base64') });
       return text === null ? answer(404, { message: 'Not Found' }) : answer(200, { sha: blobSha(text), content: Buffer.from(text, 'utf8').toString('base64') });
     }
     if (rest.startsWith('git/ref/heads/')) return answer(200, { object: { sha: head } });
     if (rest.startsWith('git/commits/')) return answer(200, { sha: rest.slice(12), tree: { sha: hex('tree' + rest) } });
+    if (rest === 'git/blobs' && method === 'POST') { const sha = hex('blob' + body.content); blobs.set(sha, Buffer.from(body.content, body.encoding === 'base64' ? 'base64' : 'utf8')); return answer(201, { sha }); }
     if (rest === 'git/trees' && method === 'POST') { const sha = hex(JSON.stringify(body)); trees.set(sha, body.tree); return answer(201, { sha }); }
     if (rest === 'git/commits' && method === 'POST') {
       if (!trees.has(body.tree) || body.parents?.[0] !== head) return answer(422, { message: 'bad tree or parent' });
@@ -53,7 +55,7 @@ export function fakeGitHub({ root, persist = false } = {}) {
     if (rest.startsWith('git/refs/heads/') && method === 'PATCH') {
       const c = commits.get(body.sha);
       if (!c || c.parents[0] !== head) return answer(422, { message: 'not a fast-forward' });
-      for (const f of trees.get(c.tree)) write(f.path, f.content);
+      for (const f of trees.get(c.tree)) { if (f.sha) written.set(f.path, blobs.get(f.sha)); else write(f.path, f.content); }
       head = body.sha;
       return answer(200, { object: { sha: head } });
     }

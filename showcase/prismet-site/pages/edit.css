@@ -160,4 +160,19 @@ textarea:focus, input:focus { border-color: var(--sel); outline: none; }
 .palette-box li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .palette-box li small { color: var(--text-3); font: 10px/1.6 var(--mono); text-transform: uppercase; letter-spacing: .08em; flex: none; }
 
+/* ── media library ── */
+.picker .palette-box { width: min(760px, calc(100vw - 32px)); }
+.picker-top { display: flex; gap: 8px; padding: 8px; border-bottom: 1px solid var(--line); }
+.picker-top input { border: 1px solid var(--line); border-radius: 3px; height: 28px; padding: 0 8px; background: var(--field); }
+.picker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 8px; padding: 8px; max-height: 62vh; overflow: auto; }
+.pick { display: grid; gap: 4px; border: 1px solid var(--line); border-radius: 3px; background: var(--field); padding: 4px; text-align: left; position: relative; }
+.pick:hover { border-color: var(--sel); }
+.pick img { width: 100%; height: 80px; object-fit: cover; background: #0B1015; }
+.pick span { font: 10px/1.2 var(--mono); color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pick small { position: absolute; top: 6px; right: 6px; font: 600 9px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; padding: 3px 4px; background: var(--brass); color: var(--on-brass); border-radius: 2px; }
+.media-row { display: grid; grid-template-columns: 44px 1fr auto; gap: 6px; align-items: center; }
+.media-row img { width: 44px; height: 30px; object-fit: cover; border: 1px solid var(--line); background: #0B1015; }
+.media-row .tools { display: flex; gap: 1px; }
+.media-row .path { font: 10px/1.2 var(--mono); color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 @media (max-width: 900px) { body { --left: 200px; --right: 260px; } .width, .zoom, #live { display: none; } }

@@ -21,6 +21,17 @@ const CONTENT_ROOT = `${SITE_ROOT}content/`;
 const DATA_FILES = new Set(['projects', 'theme', 'styles', 'pages'].map((name) => `${SITE_ROOT}data/${name}.json`));
 const COMMIT_MAX_FILES = 40;
 const DRAFT_FILE = 'draft.json', DRAFT_LIMIT = 2 * 1024 * 1024;
+// Images: new WebP files under showcase/assets/uploads/, sent with a publish. The page makes them (resized, re-encoded,
+// so they carry no camera metadata); the server checks they are what they claim to be.
+const MEDIA_MAX = 12, MEDIA_BYTES = 2 * 1024 * 1024, COMMIT_BODY = 24 * 1024 * 1024;
+const mediaPath = (p) => typeof p === 'string' && /^showcase\/assets\/uploads\/[a-z0-9][a-z0-9-]{0,60}\.webp$/.test(p);
+function webpOk(base64) {
+  if (typeof base64 !== 'string' || base64.length > MEDIA_BYTES * 1.4 || !/^[A-Za-z0-9+/]+=*$/.test(base64)) return false;
+  const b = Buffer.from(base64, 'base64');
+  if (b.length < 20 || b.length > MEDIA_BYTES || b.toString('ascii', 0, 4) !== 'RIFF' || b.toString('ascii', 8, 12) !== 'WEBP') return false;
+  for (let i = 12; i + 8 <= b.length;) { const id = b.toString('ascii', i, i + 4), n = b.readUInt32LE(i + 4); if (id === 'EXIF' || id === 'XMP ') return false; i += 8 + n + (n & 1); }
+  return true;
+}
 const SESSION_MS = 8 * 60 * 60 * 1000;
 const PIN_WINDOW_MS = 15 * 60 * 1000, PIN_MAX_PER_IP = 5;     // 5 wrong guesses per address per 15 minutes
 const LOCK_WINDOW_MS = 60 * 60 * 1000, LOCK_AFTER = 25;        // 25 wrong guesses from anywhere in an hour locks the PIN for an hour
@@ -195,8 +206,9 @@ export function createEditApi({ env = process.env, fetchImpl = globalThis.fetch,
     // Publish: several files in ONE commit (one build, one deploy). Each file names the version it was edited from;
     // if any of them changed on GitHub since, nothing is written.
     if (p === '/api/edit/commit' && method === 'POST') {
-      let body; try { body = JSON.parse(await readBody(req, 4 * BODY_LIMIT) || '{}'); } catch { sendJSON(req, res, 400, { ok: false, error: 'Bad request.' }); return true; }
-      const files = Array.isArray(body.files) ? body.files : [];
+      let body; try { body = JSON.parse(await readBody(req, COMMIT_BODY) || '{}'); } catch { sendJSON(req, res, 400, { ok: false, error: 'Bad request.' }); return true; }
+      const files = Array.isArray(body.files) ? body.files : [], media = Array.isArray(body.media) ? body.media : [];
+      if (media.length > MEDIA_MAX || new Set(media.map((m) => m?.path)).size !== media.length || media.some((m) => !m || !mediaPath(m.path) || !webpOk(m.base64))) { sendJSON(req, res, 400, { ok: false, error: 'An image must be a WebP without camera metadata, at most 2 MB, with a plain lowercase name.' }); return true; }
       const bad = files.length === 0 || files.length > COMMIT_MAX_FILES || new Set(files.map((f) => f?.path)).size !== files.length || files.some((f) => !f || !allowedPath(f.path) || typeof f.text !== 'string' || f.text.length > BODY_LIMIT
         || !(f.sha === null ? creatablePath(f.path) : typeof f.sha === 'string' && /^[0-9a-f]{40}$/.test(f.sha))
         || (f.path.endsWith('.json') && !validJson(f.text)));
@@ -207,17 +219,22 @@ export function createEditApi({ env = process.env, fetchImpl = globalThis.fetch,
       if (!ref.ok || !ref.body?.object?.sha) return upstream(res, req, ref, 'reading the branch'), true;
       const head = ref.body.object.sha;
       const now_ = await Promise.all(files.map((f) => github(`${repo}/contents/${f.path}?ref=${head}`)));
+      const there = await Promise.all(media.map((m) => github(`${repo}/contents/${m.path}?ref=${head}`)));
+      const taken = media.filter((m, i) => there[i].status !== 404).map((m) => m.path.split('/').pop());
+      if (taken.length) { sendJSON(req, res, 409, { ok: false, error: `An image with that name is already on the site: ${taken.join(', ')}.`, taken }); return true; }
+      const blobs = [];
+      for (const m of media) { const b = await post(`${repo}/git/blobs`, { content: m.base64, encoding: 'base64' }); if (!b.ok || !b.body?.sha) return upstream(res, req, b, 'writing the images'), true; blobs.push({ path: m.path, mode: '100644', type: 'blob', sha: b.body.sha }); }
       const stale = files.filter((f, i) => (f.sha === null ? now_[i].status !== 404 : now_[i].body?.sha !== f.sha)).map((f) => f.path.split('/').pop());
       if (stale.length) { sendJSON(req, res, 409, { ok: false, error: `Changed on GitHub since it was loaded: ${stale.join(', ')}. Reload; your draft is kept in this browser.`, stale }); return true; }
       const commit = await github(`${repo}/git/commits/${head}`);
       if (!commit.ok || !commit.body?.tree?.sha) return upstream(res, req, commit, 'reading the branch'), true;
-      const tree = await post(`${repo}/git/trees`, { base_tree: commit.body.tree.sha, tree: files.map((f) => ({ path: f.path, mode: '100644', type: 'blob', content: f.text })) });
+      const tree = await post(`${repo}/git/trees`, { base_tree: commit.body.tree.sha, tree: [...files.map((f) => ({ path: f.path, mode: '100644', type: 'blob', content: f.text })), ...blobs] });
       if (!tree.ok || !tree.body?.sha) return upstream(res, req, tree, 'writing the files'), true;
       const made = await post(`${repo}/git/commits`, { message, tree: tree.body.sha, parents: [head] });
       if (!made.ok || !made.body?.sha) return upstream(res, req, made, 'writing the files'), true;
       const moved = await post(`${repo}/git/refs/heads/${encodeURIComponent(BRANCH)}`, { sha: made.body.sha, force: false }, 'PATCH');
       if (!moved.ok) return upstream(res, req, moved, 'writing the files'), true;
-      sendJSON(req, res, 200, { ok: true, commit: { sha: made.body.sha }, files: files.map((f) => ({ path: f.path, sha: blobSha(f.text) })) });
+      sendJSON(req, res, 200, { ok: true, commit: { sha: made.body.sha }, files: files.map((f) => ({ path: f.path, sha: blobSha(f.text) })), media: media.map((m) => m.path) });
       return true;
     }
     if (p === '/api/edit/run' && method === 'GET') {

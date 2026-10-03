@@ -20,13 +20,8 @@ const FRAME_CSS = `
 const norm = (s) => s.replace(/ /g, ' ').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
 const SELECTABLE = '[data-edit], [data-slug], [data-section], .entrance';
 
-export function createPreview({ frame, stage, store, manifest, baseCss, onSelect, onNavigate, onKey, say }) {
-  const files = manifest.files;
-  const assets = {
-    size: (p) => { const f = files[p]; return f ? { w: f[0], h: f[1] } : { w: 0, h: 0 }; },
-    has: (p) => p in files,
-    url: (p) => { if (!p) return null; const f = files[p]; if (!f) throw new Error(`missing image: ${p}`); return `${p}?v=${f[2]}`; },
-  };
+export function createPreview({ frame, stage, store, manifest, media, baseCss, onSelect, onNavigate, onKey, say }) {
+  const assets = media.assets;                                  // the site's images plus the ones added here (edit/media.js)
   let page = 'index.html', mode = 'edit', themeMode = '', device = 0, zoom = 'fit';
   let selection = null, missing = new Set(), pages = new Map(), pending = false, keepScroll = 0, editing = null, wantScroll = false;
   const doc = () => frame.contentDocument;
@@ -39,6 +34,7 @@ export function createPreview({ frame, stage, store, manifest, baseCss, onSelect
   function render({ keep = true } = {}) {
     const d = store.docs;
     let out;
+    media.missing.clear();
     try { out = renderSite({ data: d.projects, site: d.site, work: d.work, assets, urls: { css: 'site.css', js: manifest.urls.js, og: manifest.urls.og }, styles: d.styles, pages: d.pages, drafts: true, edit: mode === 'edit' }); }
     catch (e) { say(`The preview could not render: ${e.message}. Undo the last change.`, 'warn'); return; }
     pages = out.pages; missing = out.missing;

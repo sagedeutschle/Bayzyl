@@ -95,7 +95,7 @@ export function h(tag, attrs = {}, ...kids) {
 }
 const pretty = (key) => key.replace(/^work\.[a-z0-9-]+\./, '').replace(/[._-]/g, ' ').replace(/\b\w/, (c) => c.toUpperCase());
 
-export function createPanels({ treeEl, inspectorEl, crumbsEl, store, baseCss, select, getSelection, getTab, setThemeMode, getWidth, setDevice, computed, say }) {
+export function createPanels({ treeEl, inspectorEl, crumbsEl, store, baseCss, select, getSelection, getTab, setThemeMode, getWidth, setDevice, computed, pickImage, imageSrc, say }) {
   const defaults = parseDefaults(baseCss);
   let themeMode = 'root';                                     // which set of colours the token rows edit: root (night) or day
   const D = () => store.docs, B = () => store.base;
@@ -361,6 +361,10 @@ export function createPanels({ treeEl, inspectorEl, crumbsEl, store, baseCss, se
     });
   }
 
+  // An image in use: thumbnail, name, tools; middle is an optional field in place of the name (a description).
+  const mediaRow = (path, tools, middle = null) => h('div', { class: 'media-row' }, h('img', { src: imageSrc(path), alt: '', loading: 'lazy', width: 44, height: 30 }),
+    middle || h('span', { class: 'path', title: path || '' }, path ? path.split('/').pop() : 'None'), h('span', { class: 'tools' }, tools));
+
   // ── one element's own style, per width ────────────────────────────────────────────────────
   function styleRow(target, tier, c) {
     const rule = D().styles.rules[target] || {}, own = rule[tier]?.[c.prop];
@@ -430,9 +434,12 @@ export function createPanels({ treeEl, inspectorEl, crumbsEl, store, baseCss, se
       inspectorEl.append(group('Content', (SECTION_TYPES[sec.type]?.fields || []).map(([prop, label, kind]) => {
         const key = `page.${scope}.${sec.id}.${prop}`;
         if (kind.startsWith('choice:')) return choice(label, sec.props?.[prop], kind.slice(7).split(',').map((v) => [v, v]), (v) => actions.setSectionProp(scope, sec.id, prop, v));
-        if (kind === 'image' || kind === 'href') return input(label, sec.props?.[prop], (v) => actions.setSectionProp(scope, sec.id, prop, v.trim()), { placeholder: kind === 'image' ? 'assets/…/picture.webp' : 'https://… or page.html', 'data-fid': key });
+        if (kind === 'image') return h('div', { class: 'prop' }, h('span', {}, label), mediaRow(sec.props?.[prop], [tool('…', 'Choose an image', false, () => pickImage((p) => actions.setSectionProp(scope, sec.id, prop, p))), tool('×', 'Remove the image', false, () => actions.setSectionProp(scope, sec.id, prop, ''))]));
+        if (kind === 'href') return input(label, sec.props?.[prop], (v) => actions.setSectionProp(scope, sec.id, prop, v.trim()), { placeholder: 'https://… or page.html', 'data-fid': key });
         return field(key, label);
       })));
+      if (sec.type === 'gallery') inspectorEl.append(group('Images', h('button', { class: 'btn', type: 'button', onclick: () => pickImage((p) => actions.setSectionProp(scope, sec.id, 'images', `${(sec.props?.images || '').trim()}\n- ${p}: `.trim())) }, '+ Add image'),
+        h('p', { class: 'note' }, 'Each line in Images is a path, a colon, then a caption. The caption is also the picture\'s description.')));
       inspectorEl.append(group('Section',
         check('Shown', !hid, () => (page ? actions.togglePageSection(scope, sec.id) : actions.toggleSection(sec.id))),
         h('div', { class: 'actions-row' },
@@ -485,6 +492,18 @@ export function createPanels({ treeEl, inspectorEl, crumbsEl, store, baseCss, se
         choice('Tier', p.tier || 'record', [['flagship', 'Flagship'], ['featured', 'Featured'], ['record', 'Record'], ['cabinet', 'Cabinet']], (v) => set('Change tier', (x) => { x.tier = v; })),
         input('Stack (comma separated)', (p.stack || []).join(', '), (v) => set('Edit stack', (x) => { x.stack = v.split(',').map((s) => s.trim()).filter(Boolean); })),
         input('Slug (the page address)', p.slug, (v) => actions.renameProject(p.slug, v.trim()), { disabled: !isNew, title: isNew ? '' : 'A published record keeps its address.' })));
+      const swap = (arr, i, j) => { if (arr && j >= 0 && j < arr.length) [arr[i], arr[j]] = [arr[j], arr[i]]; };
+      const alts = (x) => { x.shotAlts ||= []; while (x.shotAlts.length < (x.gallery || []).length) x.shotAlts.push(''); return x.shotAlts; };
+      inspectorEl.append(group('Images',
+        h('div', { class: 'prop' }, h('span', {}, 'Cover'), mediaRow(p.cover, [tool('…', 'Choose the cover', false, () => pickImage((path) => set('Change cover', (x) => { x.cover = path; }))), tool('×', 'Remove the cover', false, () => set('Remove cover', (x) => { delete x.cover; }))])),
+        h('div', { class: 'prop' }, h('span', {}, 'Gallery (the description is read aloud and shown under the plate)'),
+          (p.gallery || []).map((path, i) => mediaRow(path, [
+            tool('↑', 'Earlier', false, () => set('Move image', (x) => { alts(x); swap(x.gallery, i, i - 1); swap(x.shotAlts, i, i - 1); })),
+            tool('↓', 'Later', false, () => set('Move image', (x) => { alts(x); swap(x.gallery, i, i + 1); swap(x.shotAlts, i, i + 1); })),
+            tool('×', 'Remove from the gallery', false, () => set('Remove image', (x) => { alts(x); x.gallery.splice(i, 1); x.shotAlts.splice(i, 1); }))],
+          h('input', { type: 'text', value: (p.shotAlts || [])[i] || '', placeholder: 'Describe the picture', 'data-fid': `alt|${p.slug}|${i}`, 'aria-label': 'Description', onchange: (e) => set('Describe image', (x) => { alts(x)[i] = e.target.value; }) })))),
+        h('button', { class: 'btn add-image', type: 'button', onclick: () => pickImage((path) => set('Add image', (x) => { (x.gallery ||= []).push(path); alts(x); })) }, '+ Add image'),
+        p.tier === 'flagship' || p.tier === 'featured' ? h('p', { class: 'note' }, 'This record\'s page places some pictures by their position in the gallery; moving them changes which appears where.') : null));
       inspectorEl.append(group('Links', (p.links || []).map((l, i) => h('div', { class: 'pair' },
         h('input', { type: 'text', value: l.label, placeholder: 'Label', 'aria-label': 'Link label', onchange: (e) => set('Edit link', (x) => { x.links[i].label = e.target.value; }) }),
         h('input', { type: 'text', value: l.href, placeholder: 'https://…', 'aria-label': 'Link address', onchange: (e) => set('Edit link', (x) => { x.links[i].href = e.target.value.trim(); }) }),

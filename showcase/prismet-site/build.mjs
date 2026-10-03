@@ -61,6 +61,8 @@ const versioned = (p, abs) => (PREVIEW ? p : `${p}?v=${hashOf(abs)}`);
 function asset(p) {
   if (!p) return null;
   if (copied.has(p)) return copied.get(p);
+  // Only files inside showcase/assets are ever copied: a path from a data file cannot reach outside it.
+  if (!/^assets\/[A-Za-z0-9._/-]+$/.test(p) || p.includes('..')) throw new Error(`not a path under assets/: ${p}`);
   const src = join(SHOWCASE, p);
   if (!existsSync(src)) throw new Error(`missing asset: ${p}`);
   mkdirSync(dirname(join(DIST, p)), { recursive: true });
@@ -103,10 +105,11 @@ for (const [path, html] of pages) writeFileSync(join(DIST, path), html);
 // every image's size and version, and the versioned URLs of the script and the share image.
 if (!PREVIEW) {
   const walk = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(dir, e.name)) : [join(dir, e.name)]));
-  const files = Object.fromEntries(walk(join(SHOWCASE, 'assets')).filter((f) => f.endsWith('.webp')).sort().map((abs) => {
-    const { w, h } = sizeOf(abs);
-    return [relative(SHOWCASE, abs).split('\\').join('/'), [w, h, hashOf(abs)]];
-  }));
+  // Images uploaded at /edit (assets/uploads/) always ship, so the editor can show them before a page uses them.
+  const all = walk(join(SHOWCASE, 'assets')).filter((f) => f.endsWith('.webp')).sort().map((abs) => [relative(SHOWCASE, abs).split('\\').join('/'), abs]);
+  for (const [p] of all) if (p.startsWith('assets/uploads/')) asset(p);
+  // [width, height, version, 1 when the file is on the site]
+  const files = Object.fromEntries(all.map(([p, abs]) => { const { w, h } = sizeOf(abs); return [p, [w, h, hashOf(abs), copied.has(p) ? 1 : 0]]; }));
   mkdirSync(join(DIST, 'edit'), { recursive: true });
   writeFileSync(join(DIST, 'edit/assets.json'), JSON.stringify({ urls: { js: JS_URL, og: OG_URL }, files }));
 }
