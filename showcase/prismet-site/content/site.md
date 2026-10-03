@@ -307,6 +307,15 @@ Previous step
 ## bench.next
 Next step
 
+## art.elevation_title
+Step {n}, in elevation
+
+## art.elevation_note
+Drawn from the numbers in the two commands, one unit per block.
+
+## art.elevation_alt
+The tower drawn in elevation: a hollow cylinder {w} blocks across and {h} high, under a stepped roof {s} layers high.
+
 ## arcade.title
 Each game with its own hand-built look
 

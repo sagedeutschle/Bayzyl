@@ -175,39 +175,54 @@ const href = (p, root = '') => `${root}work/${p.slug}.html`;
 
 // ── the hall plan (hero + navigation): six wings around a rotunda, the prism in its floor ────
 function plan() {
-  const W_ = 720, H_ = 540, cx = 360, cy = 270, R = 78;
+  // Surveyed, not sketched: every line ends on the surface it meets. Corridor walls start on the rotunda's circle and
+  // stop at the room's inner wall, which opens a doorway between them; the white beam runs on the cross axis from the
+  // inner ring to the prism's face; the beacon runs north from the rotunda to the court wall.
+  const W_ = 720, H_ = 540, cx = 360, cy = 270, R = 78, Ri = 60, half = 7;
   const count = (id) => shown.filter((p) => p.beam === id).length;
   const rooms = { desktop: [48, 60], apps: [48, 216], worlds: [48, 372], minecraft: [472, 60], web: [472, 216], ai: [472, 372] };
   const rw = 200, rh = 108;
+  const f = (v) => String(Math.round(v * 10) / 10);
   const wings = SPECTRUM.map((id, i) => {
     const [rx, ry] = rooms[id], left = rx < cx;
-    const ex = left ? rx + rw : rx, ey = ry + rh / 2;          // the room's inner door
-    const dx = ex - cx, dy = ey - cy, len = Math.hypot(dx, dy), ux = dx / len, uy = dy / len;
-    const sx = cx + ux * R, sy = cy + uy * R;                   // leave the rotunda
-    const px = -uy * 7, py = ux * 7;                            // corridor walls, 7px either side
+    const ex = left ? rx + rw : rx, ey = ry + rh / 2;          // the room's inner wall, at its middle
+    const dx = ex - cx, dy = ey - cy, len = Math.hypot(dx, dy), ux = dx / len, uy = dy / len, nx = -uy, ny = ux;
+    // A wall `half` either side of the corridor's axis: from the rotunda's circle to the room's inner wall (x = ex).
+    const wall = (s) => {
+      const fx = cx + nx * s * half, fy = cy + ny * s * half, t0 = Math.sqrt(R * R - half * half), t1 = (ex - fx) / ux;
+      return [fx + ux * t0, fy + uy * t0, ex, fy + uy * t1];
+    };
+    const [a, b] = [wall(1), wall(-1)], top = Math.min(a[3], b[3]), bot = Math.max(a[3], b[3]);
+    // The room's walls, open where the corridor comes in.
+    const room = left
+      ? `M${ex} ${f(bot)}V${ry + rh}H${rx}V${ry}H${ex}V${f(top)}`
+      : `M${ex} ${f(top)}V${ry}H${rx + rw}V${ry + rh}H${ex}V${f(bot)}`;
     const n = count(id), label = beamLabel(id), lead = shown.find((p) => p.beam === id);
-    const f = (v) => v.toFixed(1);
     return `<a class="wing" href="#work" data-beam="${id}" style="--i:${i}" aria-label="${esc(label.p)}: ${n} record${n === 1 ? '' : 's'}">
-      <path class="wall" d="M${f(sx + px)} ${f(sy + py)} L${f(ex + px)} ${f(ey + py)}" pathLength="1"/>
-      <path class="wall" d="M${f(sx - px)} ${f(sy - py)} L${f(ex - px)} ${f(ey - py)}" pathLength="1"/>
-      <path class="inlay" d="M${f(sx)} ${f(sy)} L${f(ex)} ${f(ey)}" stroke="var(--${id})" pathLength="1"/>
-      <rect class="room" x="${rx}" y="${ry}" width="${rw}" height="${rh}" pathLength="1"/>
+      <path class="wall" d="M${f(a[0])} ${f(a[1])}L${f(a[2])} ${f(a[3])}" pathLength="1"/>
+      <path class="wall" d="M${f(b[0])} ${f(b[1])}L${f(b[2])} ${f(b[3])}" pathLength="1"/>
+      <path class="inlay" d="M${f(cx + ux * R)} ${f(cy + uy * R)}L${ex} ${ey}" stroke="var(--${id})" pathLength="1"/>
       <rect class="room-fill" x="${rx}" y="${ry}" width="${rw}" height="${rh}"/>
-      <text class="room-name" x="${rx + rw / 2}" y="${ry + 48}" text-anchor="middle"${ed(`beam.${id}`, site(`beam.${id}`))}>${esc(label.p)}</text>
-      <text class="room-lead" x="${rx + rw / 2}" y="${ry + 76}" text-anchor="middle">${lead ? esc(plain(work(lead.slug, 'title'))) + (n > 1 ? ` + ${n - 1}` : '') : ''}</text>
+      <path class="room" d="${room}" pathLength="1"/>
+      <text class="room-name" x="${rx + rw / 2}" y="${ry + 46}" text-anchor="middle"${ed(`beam.${id}`, site(`beam.${id}`))}>${esc(label.p)}</text>
+      <text class="room-lead" x="${rx + rw / 2}" y="${ry + 74}" text-anchor="middle">${lead ? esc(plain(work(lead.slug, 'title'))) + (n > 1 ? ` + ${n - 1}` : '') : ''}</text>
     </a>`;
   }).join('');
-  const piers = [[300, 210], [420, 210], [300, 330], [420, 330]].map(([x, y]) => `<rect class="pier" x="${x - 6}" y="${y - 6}" width="12" height="12" pathLength="1"/>`).join('');
+  // Four piers carry the dome, standing in the ambulatory between the two rings on the diagonals, clear of every corridor.
+  const pd = (R + Ri) / 2 / Math.SQRT2;
+  const piers = [[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([sx, sy]) => `<rect class="pier" x="${f(cx + sx * pd - 4.5)}" y="${f(cy + sy * pd - 4.5)}" width="9" height="9" pathLength="1"/>`).join('');
+  // The prism: an equilateral triangle centred on the rotunda; the beam meets its left face on the cross axis.
+  const ph = 54, pw = 31, apex = cy - ph * 2 / 3, base = cy + ph / 3, face = cx - pw * (cy - apex) / ph;
   return `<figure class="plan" id="plan">
 <svg viewBox="0 0 ${W_} ${H_}" role="group" aria-label="${esc(T('plan.caption').p)}">
   <g class="g-court"><rect class="court" x="24" y="24" width="${W_ - 48}" height="${H_ - 48}" pathLength="1"/><rect class="court inner" x="34" y="34" width="${W_ - 68}" height="${H_ - 68}" pathLength="1"/></g>
   <g class="g-rotunda">
-    <path class="beacon" d="M${cx} ${cy - R} L${cx} 34" pathLength="1"/>
+    <path class="beacon" d="M${cx} ${cy - R}V34" pathLength="1"/>
     <circle class="rotunda" cx="${cx}" cy="${cy}" r="${R}" pathLength="1"/>
-    <circle class="rotunda inner" cx="${cx}" cy="${cy}" r="${R - 18}" pathLength="1"/>
+    <circle class="rotunda inner" cx="${cx}" cy="${cy}" r="${Ri}" pathLength="1"/>
     ${piers}
-    <path class="prism" d="M${cx} ${cy - 34} L${cx + 30} ${cy + 20} L${cx - 30} ${cy + 20} Z" pathLength="1"/>
-    <path class="beam-in" d="M${cx - 60} ${cy + 2} L${cx - 12} ${cy + 2}" pathLength="1"/>
+    <path class="prism" d="M${cx} ${f(apex)}L${cx + pw} ${f(base)}L${cx - pw} ${f(base)}Z" pathLength="1"/>
+    <path class="beam-in" d="M${cx - Ri} ${cy}H${f(face)}" pathLength="1"/>
   </g>
   <g class="g-wings">${wings}</g>
 </svg>
@@ -228,15 +243,61 @@ function doorModule(p, root = '') {
       const step = p.steps[3];
       return `<figure class="mod bench-door">${img('assets/minecraft/bayzyl-scene-plaza-dome.webp', { root, alt: (p.shotAlts || [])[0] || '' })}<figcaption><code>${esc(step.command)}</code><span>${esc(step.title)}</span></figcaption></figure>`;
     }
-    case 'arcade':
-      return `<div class="mod tile-mosaic" aria-hidden="true">${(p.tiles || []).slice(0, 9).map((t) => img(tileSrc(t), { root, alt: '' })).join('')}</div>`;
-    case 'bridge':
-      return `<div class="mod face-quad" aria-hidden="true">${['chronos', 'gpu', 'cpu', 'net'].map((n) => img(`assets/helm2/${n}.webp`, { root, alt: '' })).join('')}</div>`;
+    case 'arcade':     // two rows of three: the whole wall would not fit a door, and a hidden third row only costs requests
+      return `<div class="mod tile-mosaic" aria-hidden="true">${(p.tiles || []).slice(0, 6).map((t) => img(tileSrc(t), { root, alt: '' })).join('')}</div>`;
+    case 'bridge': {   // two justified rows: columns in proportion to each face, so every row is one height and no frame is cropped
+      const face = (n) => `assets/helm2/${n}.webp`, ratio = (n) => { const { w, h } = sizeOf(join(SHOWCASE, face(n))); return (w / h).toFixed(3); };
+      return `<div class="mod face-quad" aria-hidden="true">${[['chronos', 'net'], ['cpu', 'gpu']].map((r) => `<div class="face-row" style="grid-template-columns:${r.map((n) => `${ratio(n)}fr`).join(' ')}">${r.map((n) => img(face(n), { root, alt: '' })).join('')}</div>`).join('')}</div>`;
+    }
     case 'notebook':
       return `<figure class="mod plate-door">${img(p.doorCover || g[2] || p.cover, { root, alt: (p.shotAlts || [])[2] || '' })}</figure>`;
     default:
       return p.cover ? `<figure class="mod plate-door">${img(p.cover, { root, alt: '' })}</figure>` : '';
   }
+}
+
+// ── the bench's drawing: the tower in elevation, dimensioned from the command that built it ──
+// Read from the step (/hcyl <pattern> <r> <h>  +  /hpyramid <pattern> <s>) and drawn with Bayzyl's native generator
+// geometry (NativeShapeAdapter): a drum of true radius r + ½, so 2r + 1 blocks across, h layers high; a roof of s layers,
+// 2s − 1 blocks at the eaves, one block in on each side per layer. The fine lines on the drum fall where the
+// generator's circle steps back a block, which is why the built tower is fluted. One unit per block; chalk on stone.
+function elevation(p) {
+  const i = (p.steps || []).findIndex((st) => /\/hcyl\b/.test(st.command) && /\/hpyramid\b/.test(st.command));
+  if (i < 0) return '';
+  const [cyl, pyr = ''] = p.steps[i].command.split(/\s+\+\s+/);
+  const c = cyl.match(/^(\/hcyl\s+\S+)\s+(\d+)\s+(\d+)\s*$/), y = pyr.match(/^(\/hpyramid\s+\S+)\s+(\d+)\s*$/);
+  if (!c || !y) return '';
+  const r = +c[2], h = +c[3], s = +y[2], u = 12, f = (v) => String(Math.round(v * 100) / 100);
+  const rx = r + 0.5, half = rx * u;
+  const depth = (x) => Math.floor(rx * Math.sqrt(Math.max(0, 1 - (x / rx) ** 2)));   // the front-most block of column x
+  const eave = (k) => (s - 1 - k + 0.5) * u;                                          // half-width of roof layer k
+  const wide = Math.max(half, eave(0)), ax = 18 + wide, roofTop = 16, top = roofTop + s * u, gy = top + h * u;
+  const dx = ax + wide + 26, W = dx + 34, H = gy + 46, dy = gy + 22;
+  const tick = (x, yy) => `M${f(x - 4)} ${f(yy + 4)}L${f(x + 4)} ${f(yy - 4)}`;
+  let roof = `M${f(ax - eave(0))} ${top}`;
+  for (let k = 0; k < s; k++) { roof += `V${top - (k + 1) * u}`; if (k < s - 1) roof += `H${f(ax - eave(k + 1))}`; }
+  roof += `H${f(ax + eave(s - 1))}`;
+  for (let k = s - 1; k >= 0; k--) { roof += `V${top - k * u}`; if (k > 0) roof += `H${f(ax + eave(k - 1))}`; }
+  roof += 'Z';
+  const joints = Array.from({ length: s - 1 }, (_, j) => `M${f(ax - eave(j + 1))} ${top - (j + 1) * u}H${f(ax + eave(j + 1))}`).join('');
+  const flutes = Array.from({ length: r }, (_, x) => x).filter((x) => depth(x) !== depth(x + 1))
+    .flatMap((x) => [-1, 1].map((sg) => `M${f(ax + sg * (x + 0.5) * u)} ${top}V${gy}`)).join('');
+  const cmd = (m) => `<code class="cmd">${esc(m[1]).replace(/,/g, ',<wbr>')} <b>${esc(m.slice(2).join(' '))}</b></code>`;
+  const t = T('art.elevation_title', { n: i }), note = T('art.elevation_note'), alt = T('art.elevation_alt', { w: 2 * r + 1, h, s });
+  return `<figure class="elevation">
+      <svg viewBox="0 0 ${f(W)} ${f(H)}" role="img" aria-label="${esc(alt.p)}">
+        <path class="axis" d="M${ax} ${roofTop - 12}V${dy + 8}"/>
+        <path class="line" d="M${f(ax - half)} ${top}V${gy}H${f(ax + half)}V${top}"/>
+        <path class="line" d="${roof}"/>
+        <path class="fine" d="${joints}${flutes}"/>
+        <path class="ground" d="M${f(ax - wide - 14)} ${gy}H${f(ax + wide + 14)}"/>
+        <path class="dim" d="M${f(ax + half + 4)} ${gy}H${dx + 5}M${f(ax + wide + 4)} ${top}H${dx + 5}M${f(ax + eave(s - 1) + 4)} ${roofTop}H${dx + 5}M${dx} ${gy}V${roofTop}${tick(dx, gy)}${tick(dx, top)}${tick(dx, roofTop)}M${f(ax + half)} ${gy + 4}V${dy + 5}M${ax} ${dy}H${f(ax + half)}${tick(ax, dy)}${tick(ax + half, dy)}"/>
+        <text x="${dx + 8}" y="${f((gy + top) / 2)}">${h}</text>
+        <text x="${dx + 8}" y="${f((top + roofTop) / 2)}">${s}</text>
+        <text x="${f(ax + half / 2)}" y="${dy + 17}" text-anchor="middle">r ${r}</text>
+      </svg>
+      <figcaption><span class="elev-title"${t.a}>${t.h}</span>${cmd(c)}${cmd(y)}<small${note.a}>${note.h}</small></figcaption>
+    </figure>`;
 }
 
 function signature(p, root = '../') {
@@ -246,6 +307,7 @@ function signature(p, root = '../') {
     return `<section class="sig bench" aria-labelledby="bench-title">
   <div class="wrap">
     <div class="sig-head"><h2 id="bench-title"${t.a}>${t.h}</h2><p${c.a}>${c.h}</p></div>
+    <div class="bench-grid">
     <div class="stepper" data-stepper>
       <ol class="steps">${p.steps.map((st, i) => `<li class="step"${i === 0 ? ' aria-current="step"' : ''} data-step="${i}">
         ${img(`assets/bench/step-${i}.webp`, { root, alt: st.command ? `${st.title}: the test plaza after ${st.command}` : st.title, lazy: i !== 0 })}
@@ -253,6 +315,8 @@ function signature(p, root = '../') {
         <p class="step-title"><span class="step-n">${i}/${p.steps.length - 1}</span> ${esc(st.title)}</p>
       </li>`).join('')}</ol>
       <div class="step-nav"><button type="button" class="btn" data-prev aria-label="${esc(T('bench.previous').p)}"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M8 1.5 3.5 6 8 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><output aria-live="polite">${esc(T('bench.step').p)} 0 / ${p.steps.length - 1}</output><button type="button" class="btn" data-next aria-label="${esc(T('bench.next').p)}"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4 1.5 8.5 6 4 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    </div>
+    ${elevation(p)}
     </div>
   </div>
 </section>`;
@@ -293,14 +357,14 @@ function signature(p, root = '../') {
   <div class="schematic">
     <svg viewBox="0 0 720 300" role="img" aria-label="${esc(t.p)}">
       <path class="wire" d="M170 60 C 230 60, 230 150, 290 150" pathLength="1"/><path class="wire" d="M170 150 L290 150" pathLength="1"/><path class="wire" d="M170 240 C 230 240, 230 150, 290 150" pathLength="1"/>
-      <path class="wire" d="M470 150 L540 150" pathLength="1"/>
-      <path class="wire" d="M380 190 L380 240 L540 240" pathLength="1"/>
+      <path class="wire" d="M470 150 L525 150" pathLength="1"/>
+      <path class="wire" d="M380 190 L380 242 L525 242" pathLength="1"/>
       ${[['Claude Code', 60], ['Codex', 150], ['DeepSeek', 240]].map(([name, y]) => `<rect class="node" x="30" y="${y - 24}" width="140" height="48" pathLength="1"/><text x="100" y="${y + 5}" text-anchor="middle">${name}</text>`).join('')}
       <rect class="node hot" x="290" y="110" width="180" height="80" pathLength="1"/>
       <text x="380" y="144" text-anchor="middle"${n('stream').a}><tspan x="380">One AgentEvent</tspan><tspan x="380" dy="22">stream</tspan></text>
-      <rect class="node" x="540" y="120" width="150" height="60" pathLength="1"/>
+      <rect class="node" x="525" y="120" width="180" height="60" pathLength="1"/>
       <text x="615" y="155" text-anchor="middle"${n('ui').a}>${n('ui').h}</text>
-      <rect class="node" x="540" y="214" width="150" height="56" pathLength="1"/>
+      <rect class="node" x="525" y="214" width="180" height="56" pathLength="1"/>
       <text class="small" x="615" y="238" text-anchor="middle"><tspan x="615">PRISM A/B</tspan><tspan x="615" dy="18">two worktrees, one prompt</tspan></text>
       <text class="small muted" x="100" y="282" text-anchor="middle"${n('agents').a}>${n('agents').h}</text>
     </svg>
