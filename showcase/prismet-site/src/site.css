@@ -139,10 +139,18 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 .nav .btn { margin-left: 8px; }
 .theme { width: 44px; padding: 0; justify-content: center; }
 .theme .sun { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid currentColor; background: linear-gradient(90deg, currentColor 50%, transparent 50%); }
+.nav > * { flex: none; }                    /* the kept targets never squeeze below 44px; the brand gives way first */
+.nav .btn.primary { white-space: nowrap; }
 @media (max-width: 760px) {
   .nav a:not(.keep) { display: none; }
   .brand span { display: none; }
   .nav .btn.primary { padding-inline: 12px; }
+}
+/* Under 360px, Work, Hire me and the toggle need the room: the brand keeps its mark and says "Prismet" to readers only. */
+@media (max-width: 359px) {
+  .bar .wrap { gap: 10px; }
+  .brand { min-width: 44px; }
+  .brand strong { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
 
 /* ── entrance ─────────────────────────────────────────────────────────────────────────────── */
@@ -263,7 +271,8 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 .facts.small { grid-template-columns: 1fr 1fr; }
 
 /* ── the register: a ruled ledger ─────────────────────────────────────────────────────────── */
-.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+.filters .chip { padding-inline: 11px; }            /* the seven chips fit one line in the 1128px column at 1440 and up */
 .ledger { border-top: 3px solid var(--rule); }
 .ledger-head, .row { display: grid; grid-template-columns: 10px 96px minmax(0, 2.6fr) minmax(0, 1.1fr) minmax(0, 1.3fr) minmax(0, 1.3fr) minmax(0, .9fr); gap: 16px; align-items: center; }
 .ledger-head { padding: 10px 0; font-size: .86rem; color: var(--ink-3); border-bottom: 1px solid var(--rule); }
@@ -299,6 +308,51 @@ section { padding-block: clamp(40px, 6vw, 80px); }
   .row-status { grid-area: status; align-self: center; }
   .row-access { grid-area: access; justify-self: end; align-self: center; }
 }
+/* under 700px the wing chips take their short names (projects.json beams[].short); on phones they pair up under a
+   full-width "All" instead of one ragged chip per line. display:none swaps the label, so a chip's name is what it shows. */
+.chip .short { display: none; }
+@media (max-width: 699px) {
+  .filters .chip .long { display: none; }
+  .filters .chip .short { display: inline; }
+}
+@media (max-width: 520px) {
+  .filters { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .filters .chip { padding-inline: 12px; }
+  .filters .chip small { margin-left: auto; }
+  .filters .chip[data-filter="all"] { grid-column: 1 / -1; }
+}
+
+/* discovery: the seek line, the match Enter opens, threads. All of it needs JS, so without JS none of it shows. */
+.seek { display: none; }
+.js .seek { display: grid; grid-template-columns: 122px minmax(0, 26rem) minmax(0, 1fr); gap: 8px 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--rule); scroll-margin-top: calc(var(--bar) + 16px); }
+.seek label { display: inline-flex; align-items: center; min-height: 44px; font-family: var(--serif); font-variant-caps: all-small-caps; letter-spacing: .06em; font-weight: 500; font-variation-settings: 'opsz' 20; font-size: .95rem; color: var(--ink-2); }
+.seek-field { position: relative; display: block; }
+.seek input { display: block; width: 100%; min-height: 44px; margin: 0; padding: 9px 44px 9px 12px; font: 400 var(--t-base)/1.3 var(--serif); color: var(--ink); background: var(--ground); border: 1px solid var(--rule); border-radius: 2px; -webkit-appearance: none; appearance: none; }
+.seek input::placeholder { color: var(--ink-3); font-style: italic; opacity: 1; }
+.seek input:hover { border-color: var(--ink-3); }
+.seek input:focus { border-color: var(--brass); }
+.seek input::-webkit-search-cancel-button { cursor: pointer; }
+.seek kbd { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); min-width: 22px; padding: 3px 6px; text-align: center; font: 500 .75rem/1 var(--mono); color: var(--ink-3); border: 1px solid var(--rule); border-radius: 2px; pointer-events: none; }
+.seek input:focus + kbd, .seek input:not(:placeholder-shown) + kbd { visibility: hidden; }
+.seek-hint { font-size: var(--t-sm); font-style: italic; color: var(--ink-3); }
+.seek-none { padding: 18px 0 0; color: var(--ink-2); font-style: italic; }
+@media (hover: none), (pointer: coarse) { .seek kbd { display: none; } .seek input { padding-right: 12px; } }
+@media (max-width: 900px) { .js .seek { grid-template-columns: auto minmax(0, 1fr); gap: 8px 14px; } }
+@media (max-width: 900px), (hover: none) { .seek-hint { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } }
+.row.is-top { background: color-mix(in srgb, var(--raised) 70%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brass) 60%, transparent); }
+/* threads: the ticks of a held row's related records take a brass ring (box-shadow, so nothing moves) */
+.row-tick { transition: box-shadow .16s var(--ease); }
+.row.is-thread .row-tick { box-shadow: 0 0 0 2px var(--surface), 0 0 0 3.5px var(--brass); }
+
+/* the Wordgame note on the Prismet page: with JS the tile is a button and the note takes the row under the tile's row */
+.tiles { grid-auto-flow: dense; }
+.tiles .tile-note { grid-column: 1 / -1; text-align: left; font-size: var(--t-sm); font-style: italic; color: var(--ink-2); padding: 10px 14px; border-left: 2px solid var(--live); background: var(--surface); }
+.tiles .tile-note code { font-style: normal; color: var(--ink); overflow-wrap: anywhere; }
+.js .tiles .tile-note:not(.is-open) { display: none; }
+.tile-btn { display: block; width: 100%; margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: center; cursor: pointer; border-radius: 4px; -webkit-tap-highlight-color: transparent; }
+.tile-btn:hover span, .tile-btn[aria-expanded="true"] span { color: var(--brass-ink); }
+.tile-btn small::after { content: ""; display: inline-block; width: .38em; height: .38em; margin-left: .45em; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-.2em) rotate(45deg); transition: transform .16s var(--ease); }
+.tile-btn[aria-expanded="true"] small::after { transform: translateY(.05em) rotate(-135deg); }
 
 /* ── the plate ────────────────────────────────────────────────────────────────────────────── */
 #plate { padding-block: clamp(20px, 3vw, 40px); }

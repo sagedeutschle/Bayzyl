@@ -130,7 +130,8 @@
         "brushgen",
         "gen brushes",
         "formula",
-        "torus"
+        "torus",
+        "bzl"
       ],
       "steps": [
         {
@@ -251,7 +252,8 @@
         "app store",
         "iphone",
         "ipad",
-        "mac"
+        "mac",
+        "wordle"
       ],
       "tiles": [
         "wordle",
@@ -378,7 +380,8 @@
         "qml",
         "widgets",
         "arch linux",
-        "linux desktop"
+        "linux desktop",
+        "plasma"
       ],
       "rack": [
         [
@@ -501,7 +504,8 @@
         "industrial",
         "dyson",
         "eras",
-        "charter of the vale"
+        "charter of the vale",
+        "wizard"
       ],
       "eras": [
         [
@@ -609,7 +613,8 @@
         "accessibility",
         "reduced motion",
         "read current values",
-        "pause motion"
+        "pause motion",
+        "debt"
       ]
     },
     {

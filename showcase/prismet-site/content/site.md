@@ -411,3 +411,22 @@ A night view of a Minecraft server build: a giant tree hung with lanterns on a s
 
 ## og.image_alt
 The prismet.xyz entrance: Sage Deutschle's name and introduction beside a hall plan of six wings, from Desktop & Systems to AI & Agents, around a prism.
+<!-- 2026-10 round 2 (discovery): the seek line over the register and the Wordgame note. Proposed wording, flagged for Sage. -->
+
+## seek.label
+Find a record
+
+## seek.placeholder
+Name, tool or wing
+
+## seek.hint
+Enter opens the first match. Esc clears.
+
+## seek.none
+Nothing in the register matches that.
+
+## arcade.note_hint
+Daily word
+
+## arcade.note_wordgame
+Today's word comes from prismet.xyz/api/wordle, and the shipping apps call it every day.

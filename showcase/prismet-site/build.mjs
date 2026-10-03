@@ -262,7 +262,7 @@ function signature(p, root = '../') {
     const lensHref = { steamrewind: '/steam', debtclock: '/debt' };
     return `<section class="sig arcade" aria-labelledby="arcade-title"><div class="wrap">
   <div class="sig-head"><h2 id="arcade-title"${t.a}>${t.h}</h2></div>
-  <ul class="tiles">${p.tiles.map((id) => { const name = p.tileNames[id] || id, lens = lensHref[id]; const inner = `${img(tileSrc(id), { root, alt: '' })}<span>${esc(name)}</span>${lens ? `<small${oh.a}>${oh.h}</small>` : ''}`; return `<li${lens ? ' class="lens-tile"' : ''}>${lens ? `<a href="${lens}">${inner}</a>` : inner}</li>`; }).join('')}</ul>
+  <ul class="tiles">${p.tiles.map((id) => { const name = p.tileNames[id] || id, lens = lensHref[id]; const inner = `${img(tileSrc(id), { root, alt: '' })}<span>${esc(name)}</span>${lens ? `<small${oh.a}>${oh.h}</small>` : ''}`; return id === 'wordle' ? wordTile(inner) : `<li${lens ? ' class="lens-tile"' : ''}>${lens ? `<a href="${lens}">${inner}</a>` : inner}</li>`; }).join('')}</ul>
 </div></section>`;
   }
   if (p.rack) {
@@ -332,11 +332,16 @@ const door = (p, isOff = false) => {
 // Row thumbnails are 96×60 boxes: use <cover>-thumb.webp when it exists, so the register doesn't pull full-size covers.
 // Make one with: convert <cover>.webp -strip -resize '320x200^' -define webp:method=6 <cover>-thumb.webp
 const thumbOf = (src) => { const t = src.replace(/\.webp$/, '-thumb.webp'); return t !== src && existsSync(join(SHOWCASE, t)) ? t : src; };
+// data-seek: what the seek line matches besides the visible title, subtitle, wing and status (projects.json `aliases`,
+// the full stack, the type line, the wing's short name). data-related: the record's Threads, lit on hover or focus.
+const seekWords = (p) => [...(p.aliases || []), ...(p.stack || []), W[p.slug].tag ? plain(work(p.slug, 'tag')) : '', beamById[p.beam]?.short || ''].filter(Boolean).join(' ');
+const threadSlugs = (p) => (p.related || []).filter((s) => bySlug[s] && shown.includes(bySlug[s])).join(' ');
 const row = (p) => {
   const title = P(p.slug, 'title'), sub = P(p.slug, 'subtitle'), st = status(p), tl = typeLine(p);
   const links = accessOf(p);
   const thumb = p.cover ? img(thumbOf(p.cover), { cls: 'row-thumb', alt: '' }) : '<span class="row-thumb blank" aria-hidden="true"></span>';
-  return `<div class="row card${off(p.hidden)}" data-slug="${p.slug}" data-beam="${p.beam}" data-group="${tierOf(p)}" style="${hue(p.beam)}">
+  const rel = threadSlugs(p);
+  return `<div class="row card${off(p.hidden)}" data-slug="${p.slug}" data-beam="${p.beam}" data-group="${tierOf(p)}" data-seek="${esc(seekWords(p))}"${rel ? ` data-related="${rel}"` : ''} style="${hue(p.beam)}">
     <span class="row-tick" aria-hidden="true"></span>
     ${thumb}
     <span class="row-record"><a class="row-link" href="${href(p)}"${title.a}>${title.h}</a><em${sub.a}>${sub.h}</em></span>
@@ -352,11 +357,26 @@ function ledger() {
   const list = PREVIEW ? projects.filter((p) => !isTodo(p)) : shown;
   const drafting = projects.filter((p) => p.hidden && (isTodo(p) || !p.cover)).filter((p) => !/decree|sidepanel/.test(p.slug));
   const cols = ['work.col_record', 'work.col_wing', 'work.col_stack', 'work.col_status', 'work.col_access'].map((k) => T(k));
+  // The seek line heads the ledger. It is display:none until site.js runs (.js), so without JS nothing is promised.
+  const [sl, sh, sn] = ['seek.label', 'seek.hint', 'seek.none'].map((key) => T(key));
   return `<div class="ledger" id="grid" data-ledger>
+  <div class="seek" role="search">
+    <label for="seek"${sl.a}>${sl.h}</label>
+    <span class="seek-field"><input id="seek" type="search" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" placeholder="${esc(T('seek.placeholder').p)}" aria-describedby="seek-hint" aria-keyshortcuts="/"><kbd aria-hidden="true">/</kbd></span>
+    <p class="seek-hint" id="seek-hint"${sh.a}>${sh.h}</p>
+  </div>
   <div class="ledger-head" aria-hidden="true"><span></span><span></span>${cols.map((c) => `<span${c.a}>${c.h}</span>`).join('')}</div>
   ${groups.map(([g, key]) => { const rows = list.filter((p) => tierOf(p) === g); if (!rows.length) return ''; const gt = T(key); return `<div class="ledger-group" data-group="${g}"><h3${gt.a}>${gt.h}</h3>${rows.map(row).join('')}</div>`; }).join('\n')}
+  <p class="seek-none" hidden${sn.a}>${sn.h}</p>
   ${drafting.length ? `<p class="drafting"><span${T('work.drafting').a}>${T('work.drafting').h}</span>: ${drafting.map((p) => inline(work(p.slug, 'title'))).join(' · ')}</p>` : ''}
 </div>`;
+}
+
+// The Wordgame tile on the Prismet page carries a one-line note: where today's word comes from. Without JS the note is
+// simply on the page; site.js turns the tile into a button (aria-expanded) that shows and hides it. The route is text.
+function wordTile(inner) {
+  const hint = T('arcade.note_hint'), note = T('arcade.note_wordgame');
+  return `<li class="word-tile" data-note="word-note">${inner}<small${hint.a}>${hint.h}</small></li><li class="tile-note" id="word-note"><p${note.a}>${note.h.replace('prismet.xyz/api/wordle', '<code>prismet.xyz/api/wordle</code>')}</p></li>`;
 }
 
 // ── home: skills from the stacks of the shown projects, each linked to its evidence ─────────
@@ -384,7 +404,7 @@ const SECTIONS = {
     <p class="count" role="status" data-count-template="${esc(site('work.count'))}" data-total="${shown.length}"${k('work.count').a}>${inline(site('work.count'), { shown: shown.length, total: shown.length })}</p></div>
   <div class="filters" role="group" aria-label="Filter by wing">
     <button class="chip" type="button" data-filter="all" aria-pressed="true" style="--h:var(--brass)"><i></i><span${k('work.filter_all').a}>${k('work.filter_all').h}</span></button>
-    ${SPECTRUM.map((id) => { const b = beamLabel(id), n = shown.filter((p) => p.beam === id).length; return `<button class="chip" type="button" data-filter="${id}" aria-pressed="false" style="--h:var(--${id})"><i></i><span${b.a}>${b.h}</span><small>${n}</small></button>`; }).join('')}
+    ${SPECTRUM.map((id) => { const b = beamLabel(id), n = shown.filter((p) => p.beam === id).length; return `<button class="chip" type="button" data-filter="${id}" aria-pressed="false" style="--h:var(--${id})"><i></i><span class="long"${b.a}>${b.h}</span><span class="short">${esc(beamById[id]?.short || plain(site(`beam.${id}`)))}</span><small>${n}</small></button>`; }).join('')}
   </div>
   ${ledger()}
 </div>`),
