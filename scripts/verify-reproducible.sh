@@ -9,7 +9,7 @@ work="$(mktemp -d "${TMPDIR:-/tmp}/bayzyl-repro.XXXXXX")"
 trap 'rm -rf "$work"' EXIT
 
 revision="$(cd "$here" && git rev-parse --short=12 HEAD 2>/dev/null || echo unknown)"
-if [[ "$revision" != unknown && -n "$(cd "$here" && git status --porcelain -- . 2>/dev/null)" ]]; then
+if [[ "$revision" != unknown && -n "$(cd "$here" && git status --porcelain -- src build.gradle settings.gradle gradle.properties gradle gradlew scripts 2>/dev/null)" ]]; then
   revision="$revision-dirty"
 fi
 

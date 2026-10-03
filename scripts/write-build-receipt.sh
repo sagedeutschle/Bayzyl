@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Usage: scripts/write-build-receipt.sh <jar-path>
 # Writes a non-release receipt naming the exact jar: SHA-256, version, revision, and creation time (UTC).
-# Output goes to $RECEIPT_DIR, default paperdevelopment/build/receipts/. Never touches releases/.
+# Output goes to $RECEIPT_DIR, default build/receipts/.
 set -euo pipefail
 
 jar="${1:-}"

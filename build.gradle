@@ -6,10 +6,13 @@ group = 'com.bayzyl'
 version = '0.2.0-alpha.2'
 
 /**
- * Short commit of HEAD, with "-dirty" when this project directory has uncommitted changes, or "unknown" without
- * git. A ValueSource so the configuration cache re-checks it on every build.
+ * Short commit of HEAD, with "-dirty" when a plugin build input has uncommitted changes, or "unknown" without
+ * git. A ValueSource so the configuration cache re-checks it on every build. Only plugin inputs count: website
+ * edits under showcase/ must not mark the jar dirty.
  */
 abstract class GitRevision implements ValueSource<String, GitRevision.Params> {
+    static final String[] PLUGIN_INPUTS = ['src', 'build.gradle', 'settings.gradle', 'gradle.properties', 'gradle', 'gradlew', 'scripts']
+
     interface Params extends ValueSourceParameters {
         DirectoryProperty getProjectDir()
     }
@@ -24,7 +27,7 @@ abstract class GitRevision implements ValueSource<String, GitRevision.Params> {
         if (!head) {
             return 'unknown'
         }
-        return run(dir, 'git', 'status', '--porcelain', '--', '.') ? head + '-dirty' : head
+        return run(dir, 'git', 'status', '--porcelain', '--', *PLUGIN_INPUTS) ? head + '-dirty' : head
     }
 
     private String run(File dir, String... command) {
