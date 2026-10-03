@@ -74,7 +74,9 @@ jobs:
         run: |
           npm install --no-save --no-package-lock playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: site-check.mjs (44 checks at 1440 and 390)
+      - name: Install the server's dependency (edit-smoke starts the real server)
+        run: cd showcase/server && npm ci --omit=dev
+      - name: site-check.mjs (44 checks at 1440 and 390) and edit-smoke.mjs (the editor against the real server)
         run: |
           export CHROMIUM="$(node -e "console.log(require('playwright').chromium.executablePath())")"
           node showcase/tools/tests/site-check.mjs
