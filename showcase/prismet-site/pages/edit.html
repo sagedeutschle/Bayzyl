@@ -17,15 +17,15 @@
   <nav class="nav" aria-label="Main"><a href="index.html">Back to the site</a></nav>
 </div></header>
 <main id="main" class="wrap edit">
-  <section id="connect">
+  <section id="connect" hidden>
     <h1>Edit the site</h1>
-    <p class="lede">Every word on prismet.xyz lives in a few text files. Change the text below and press Publish: the site rebuilds and goes live in about three minutes, with no HTML to write.</p>
-    <form id="token-form">
-      <label for="token">GitHub token</label>
-      <input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…">
-      <button class="btn primary" type="submit">Connect</button>
+    <p class="lede">Every word on prismet.xyz lives in a few text files. Enter the PIN, change the text below and press Publish: the site rebuilds and goes live in about three minutes, with no HTML to write.</p>
+    <form id="pin-form">
+      <label for="pin">PIN</label>
+      <input id="pin" type="password" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="••••••">
+      <button class="btn primary" type="submit">Unlock</button>
     </form>
-    <p class="note">A fine-grained token for this one repository with <strong>Contents: read and write</strong> (and <strong>Actions: read</strong> to follow the build). It stays in this tab and is sent only to api.github.com. Branch: <code id="branch"></code>.</p>
+    <p class="note">The PIN opens an eight-hour session in this browser. The GitHub token that writes the files stays on the server. Branch: <code id="branch">main</code>.</p>
   </section>
   <p id="status" class="status" role="status" aria-live="polite"></p>
   <nav id="files" class="files" aria-label="Files" hidden></nav>
@@ -33,7 +33,7 @@
   <div id="actions" class="actions" hidden>
     <button id="save" class="btn primary" type="button" disabled>Nothing to publish</button>
     <span id="deploy" class="deploy" role="status" aria-live="polite"></span>
-    <button id="forget" class="btn" type="button">Forget token</button>
+    <button id="lock" class="btn" type="button">Lock</button>
   </div>
 </main>
 </body>

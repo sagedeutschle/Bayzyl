@@ -1,19 +1,14 @@
 // prismet.xyz/edit: change every word on the site without touching HTML or JSON.
 //
-// The page reads content/site.md and content/work/*.md straight from GitHub, shows one field per block of text, and
-// commits the edited file back to the branch. The repository's GitHub Action then rebuilds and deploys the site, so a
-// saved change is live about three minutes later. No dependencies. The GitHub token you paste is kept in this tab's
-// sessionStorage only and is sent to api.github.com and nowhere else.
+// The page reads content/site.md and content/work/*.md and writes them back through the site's own server
+// (/api/edit/*, see showcase/server/edit-api.js), which holds the GitHub token and talks to GitHub. A PIN unlocks an
+// eight-hour session; nothing secret ever reaches the browser. The repository's GitHub Action then rebuilds and
+// deploys the site, so a saved change is live about three minutes later. No dependencies.
 //
 // The parser and writer below are the same as showcase/prismet-site/content.mjs, so what you save is exactly what the
 // build reads. The functions are exported so tools/tests can round-trip them in Node.
 
-export const REPO = 'sagedeutschle/Bayzyl';
-export const DEFAULT_BRANCH = 'main';
 export const SITE_FILE = 'showcase/prismet-site/content/site.md';
-export const WORK_DIR = 'showcase/prismet-site/content/work';
-const API = 'https://api.github.com';
-const TOKEN_KEY = 'prismet-edit-token';
 
 // ── the content format (mirror of content.mjs) ──────────────────────────────────────────────────────────────────────
 export const stripComments = (s) => s.replace(/<!--[\s\S]*?-->/g, '');
@@ -65,60 +60,67 @@ export const isLong = (key, body) => LIST_KEYS.has(key) || body.includes('\n') |
 /** Placeholders like {count} must survive an edit, or the build prints them wrong. */
 export const lostVars = (before, after) => (before.match(/\{\w+\}/g) || []).filter((v) => !after.includes(v));
 
-// ── GitHub ──────────────────────────────────────────────────────────────────────────────────────────────────────────
-const utf8ToB64 = (s) => { const b = new TextEncoder().encode(s); let bin = ''; for (const c of b) bin += String.fromCharCode(c); return btoa(bin); };
-const b64ToUtf8 = (s) => { const bin = atob(s.replace(/\s/g, '')); const b = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i); return new TextDecoder().decode(b); };
-
-export function makeClient(token, branch = DEFAULT_BRANCH, fetchImpl = globalThis.fetch) {
+// ── the site's edit API ─────────────────────────────────────────────────────────────────────────────────────────────
+export function makeClient(fetchImpl = globalThis.fetch, base = '') {
   const call = async (path, init = {}) => {
-    const r = await fetchImpl(API + path, { ...init, headers: { accept: 'application/vnd.github+json', authorization: `Bearer ${token}`, 'x-github-api-version': '2022-11-28', ...(init.headers || {}) } });
-    if (!r.ok) { const t = await r.text().catch(() => ''); throw new Error(`GitHub said ${r.status}${t ? `: ${t.slice(0, 160)}` : ''}`); }
-    return r.status === 204 ? null : r.json();
+    const r = await fetchImpl(base + path, { credentials: 'same-origin', ...init, headers: { accept: 'application/json', 'x-prismet-edit': '1', ...(init.body ? { 'content-type': 'application/json' } : {}), ...(init.headers || {}) } });
+    let body = null; try { body = await r.json(); } catch { body = null; }
+    if (!r.ok) { const e = new Error(body?.error || `The server answered ${r.status}.`); e.status = r.status; e.body = body; throw e; }
+    return body;
   };
   return {
-    whoami: () => call('/user'),
-    listWork: async () => (await call(`/repos/${REPO}/contents/${WORK_DIR}?ref=${encodeURIComponent(branch)}`)).filter((f) => f.type === 'file' && f.name.endsWith('.md')).map((f) => f.path),
-    getFile: async (path) => { const f = await call(`/repos/${REPO}/contents/${path}?ref=${encodeURIComponent(branch)}`); return { path, sha: f.sha, text: b64ToUtf8(f.content) }; },
-    putFile: (path, text, sha, message) => call(`/repos/${REPO}/contents/${path}`, { method: 'PUT', body: JSON.stringify({ message, content: utf8ToB64(text), sha, branch }) }),
-    runFor: async (sha) => { const r = await call(`/repos/${REPO}/actions/runs?head_sha=${sha}&per_page=1`); return r.workflow_runs?.[0] || null; },
+    status: () => call('/api/edit/status'),
+    unlock: (pin) => call('/api/edit/session', { method: 'POST', body: JSON.stringify({ pin }) }),
+    lock: () => call('/api/edit/session', { method: 'DELETE' }),
+    listFiles: async () => (await call('/api/edit/files')).files,
+    getFile: (path) => call(`/api/edit/file?path=${encodeURIComponent(path)}`),
+    putFile: (path, text, sha, message) => call('/api/edit/file', { method: 'PUT', body: JSON.stringify({ path, text, sha, message }) }),
+    runFor: async (sha) => (await call(`/api/edit/run?sha=${encodeURIComponent(sha)}`)).run,
   };
 }
 
 // ── the page ────────────────────────────────────────────────────────────────────────────────────────────────────────
 function init() {
   const $ = (s) => document.querySelector(s);
-  const branch = new URLSearchParams(location.search).get('branch') || DEFAULT_BRANCH;
   const status = $('#status'), filesNav = $('#files'), form = $('#editor'), actions = $('#actions'), deploy = $('#deploy');
   const say = (msg, kind = '') => { status.textContent = msg; status.className = `status ${kind}`; };
-  let client = null, files = new Map(), current = null, pollTimer = null;
+  const client = makeClient();
+  let files = new Map(), current = null, pollTimer = null, branch = 'main';
   const dirtyCount = () => [...files.values()].reduce((n, f) => n + f.dirty.size, 0);
 
-  $('#branch').textContent = branch;
-  if (location.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(location.hostname)) say('This page is not on https; do not paste a token here.', 'warn');
-  const saved = sessionStorage.getItem(TOKEN_KEY);
-  if (saved) { $('#token').value = saved; connect(saved); }
+  if (location.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(location.hostname)) say('This page is not on https; the session cookie will not be set.', 'warn');
 
-  $('#token-form').addEventListener('submit', (e) => { e.preventDefault(); connect($('#token').value.trim()); });
-  $('#forget').addEventListener('click', () => { sessionStorage.removeItem(TOKEN_KEY); location.reload(); });
+  $('#pin-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pin = $('#pin').value;
+    if (!pin) return say('Enter the PIN.', 'warn');
+    say('Checking…');
+    try { await client.unlock(pin); $('#pin').value = ''; await load(); }
+    catch (err) { say(err.status === 401 && err.body?.remaining != null ? `Wrong PIN. ${err.body.remaining} ${err.body.remaining === 1 ? 'try' : 'tries'} left before a pause.` : err.message, 'warn'); }
+  });
+  $('#lock').addEventListener('click', async () => { if (dirtyCount() && !confirm('Unsaved changes will be lost. Lock anyway?')) return; try { await client.lock(); } catch {} location.reload(); });
   window.addEventListener('beforeunload', (e) => { if (dirtyCount()) { e.preventDefault(); e.returnValue = ''; } });
 
-  async function connect(token) {
-    if (!token) return say('Paste a token first.', 'warn');
-    say('Connecting…');
+  (async () => {
     try {
-      client = makeClient(token, branch);
-      const me = await client.whoami();
-      sessionStorage.setItem(TOKEN_KEY, token);
-      $('#connect').hidden = true;
-      say(`Connected as ${me.login}. Loading the words…`);
-      const paths = [SITE_FILE, ...(await client.listWork())];
-      for (const p of paths) {
-        const f = await client.getFile(p);
-        files.set(p, { ...f, sections: parseSections(f.text), dirty: new Set(), fields: new Map() });
-      }
-      renderNav(); open(SITE_FILE);
-      say(`Loaded ${files.size} files from ${branch}. Change any text and press Publish.`, 'ok');
-    } catch (err) { client = null; say(`Could not connect: ${err.message}`, 'warn'); }
+      const st = await client.status();
+      branch = st.branch; $('#branch').textContent = branch;
+      if (!st.configured) { $('#connect').hidden = true; say(`The editor is not set up on the server yet: ${st.reason}. See showcase/EDITING.md.`, 'warn'); return; }
+      if (st.authed) await load(); else { $('#connect').hidden = false; $('#pin').focus(); }
+    } catch (err) { say(`The server did not answer: ${err.message}`, 'warn'); }
+  })();
+
+  async function load() {
+    $('#connect').hidden = true;
+    say('Loading the words…');
+    const paths = await client.listFiles();
+    files = new Map();
+    for (const p of paths) {
+      const f = await client.getFile(p);
+      files.set(p, { ...f, sections: parseSections(f.text), dirty: new Set(), fields: new Map() });
+    }
+    renderNav(); open(SITE_FILE);
+    say(`Loaded ${files.size} files from ${branch}. Change any text and press Publish.`, 'ok');
   }
 
   function titleOf(path) {
@@ -151,7 +153,7 @@ function init() {
     for (const [key, body] of Object.entries(f.sections)) {
       const wrap = document.createElement('div'); wrap.className = 'field'; wrap.dataset.key = key;
       const lab = document.createElement('label'); lab.textContent = label(key); lab.htmlFor = `f-${key}`;
-      const ta = document.createElement('textarea'); ta.id = `f-${key}`; ta.value = body; ta.rows = isLong(key, body) ? Math.min(14, Math.max(3, body.split('\n').length + 1)) : 1;
+      const ta = document.createElement('textarea'); ta.id = `f-${key}`; ta.value = f.fields.get(key)?.value ?? body; ta.rows = isLong(key, body) ? Math.min(14, Math.max(3, body.split('\n').length + 1)) : 1;
       ta.spellcheck = true; ta.addEventListener('input', () => edited(f, key, ta));
       const hint = document.createElement('small'); hint.textContent = HINTS[key] || (body.includes('{') ? 'Keep the {placeholders}; they are filled in by the build.' : '');
       wrap.append(lab, ta, hint); form.append(wrap); f.fields.set(key, ta);
@@ -188,13 +190,16 @@ function init() {
       markNav(); updateSave();
       say('Saved. The site is rebuilding; it goes live in about three minutes.', 'ok');
       watch(lastSha);
-    } catch (err) { say(`Not saved: ${err.message}`, 'warn'); updateSave(); }
+    } catch (err) {
+      if (err.status === 401) { say('The session ended. Enter the PIN again; your changes are still in the fields.', 'warn'); $('#connect').hidden = false; }
+      else say(`Not saved: ${err.message}`, 'warn');
+      updateSave();
+    }
   });
 
   function watch(sha) {
     clearInterval(pollTimer);
-    const link = `https://github.com/${REPO}/actions`;
-    deploy.innerHTML = ''; const a = document.createElement('a'); a.href = link; a.textContent = 'Watch the build on GitHub'; a.target = '_blank'; a.rel = 'noopener';
+    deploy.innerHTML = ''; const a = document.createElement('a'); a.href = 'https://github.com/sagedeutschle/Bayzyl/actions'; a.textContent = 'Watch the build on GitHub'; a.target = '_blank'; a.rel = 'noopener';
     const span = document.createElement('span'); deploy.append(span, ' ', a);
     let ticks = 0;
     const tick = async () => {
