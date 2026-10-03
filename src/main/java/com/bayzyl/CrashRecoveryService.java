@@ -347,6 +347,18 @@ public final class CrashRecoveryService {
             completeSession(playerId);
             return;
         }
+        String unloadedWorld = entry.liveData() == null ? CrashRecoveryBridge.unloadedWorld(entry.record().data()) : null;
+        if (unloadedWorld != null) {
+            // Temporary: the world may simply not have loaded yet. Keep the session (still offered for /resume).
+            synchronized (this) {
+                if (sessions.get(playerId) == entry) {
+                    restoredSessions.add(playerId);
+                }
+            }
+            player.sendMessage("§6[Bayzyl] §7World §f" + unloadedWorld + "§7 is not loaded yet, so §f/"
+                    + session.command() + "§7 can't resume. Try §f/resume§7 again once it is.");
+            return;
+        }
         try {
             player.sendMessage("§6[Bayzyl] §7Resuming interrupted command: §f" + session.command());
             handler.resume(player, session);

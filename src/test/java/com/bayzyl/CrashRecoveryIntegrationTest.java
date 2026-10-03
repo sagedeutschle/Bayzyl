@@ -149,6 +149,39 @@ class CrashRecoveryIntegrationTest {
     }
 
     @Test
+    void resumeKeepsTheSessionWhileItsWorldIsNotLoadedThenRunsAndClearsOnceItIs() throws Exception {
+        Path target = file("world-later");
+        Selection selection = new Selection(CrashRecoveryTransactionTest.location(1, 2, 3),
+                CrashRecoveryTransactionTest.location(4, 5, 6), SelectionType.CUBOID);
+        service(target).startSession(PLAYER, "copy", "starting", Map.of("selection", selection), null);
+
+        CrashRecoveryService restarted;
+        List<CrashRecoveryService.ActiveCommandSession> resumed = new ArrayList<>();
+        Player player = player();
+        try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
+            restarted = service(target);
+            restarted.registerResumeHandler("copy", (ignored, session) -> resumed.add(session));
+            restarted.resumeSession(player);
+
+            assertTrue(resumed.isEmpty(), "the handler must not run against a world that is not loaded");
+            assertNotNull(restarted.getSession(PLAYER));
+            assertTrue(restarted.hasInterruptedSession(PLAYER), "still offered for /resume");
+            assertTrue(restarted.flushRecovery());
+            assertTrue(Files.readString(target).contains("command: copy"), "still on disk");
+            ArgumentCaptor<String> messages = ArgumentCaptor.forClass(String.class);
+            verify(player, atLeastOnce()).sendMessage(messages.capture());
+            assertTrue(messages.getValue().contains("not loaded yet"), messages.getValue());
+        }
+
+        try (MockedStatic<Bukkit> bukkit = server()) {
+            restarted.resumeSession(player);
+            assertEquals(1, resumed.size());
+            assertNull(restarted.getSession(PLAYER));
+            assertFalse(restarted.hasInterruptedSession(PLAYER));
+        }
+    }
+
+    @Test
     void resumeWithoutAHandlerTellsThePlayerAndClears() {
         Path target = file("no-handler");
         service(target).startSession(PLAYER, "stack", "starting", Map.of(), null);

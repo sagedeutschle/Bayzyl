@@ -21,6 +21,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.EntitySnapshot;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
@@ -231,6 +232,28 @@ final class CrashRecoveryBridge {
         }
         if (value instanceof SessionValue.MaskValue mask) {
             return BlockMask.deferred(mask.raw());
+        }
+        return null;
+    }
+
+    /**
+     * The name of the first world a session value points at that is not loaded right now, or null when every
+     * referenced world is loaded. Such a value materializes as missing only until its world loads.
+     */
+    @Nullable
+    static String unloadedWorld(Map<String, SessionValue> data) {
+        for (SessionValue value : data.values()) {
+            if (value instanceof SessionValue.LocationValue location) {
+                if (Bukkit.getWorld(location.value().world()) == null) {
+                    return location.value().world();
+                }
+            } else if (value instanceof SessionValue.SelectionValue selection) {
+                for (DetachedLocation position : new DetachedLocation[]{selection.value().pos1(), selection.value().pos2()}) {
+                    if (position != null && Bukkit.getWorld(position.world()) == null) {
+                        return position.world();
+                    }
+                }
+            }
         }
         return null;
     }
