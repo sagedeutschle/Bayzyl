@@ -35,8 +35,9 @@ export function makeClient(fetchImpl = globalThis.fetch, base = '') {
     status: () => call('/api/edit/status'),
     unlock: (pin) => call('/api/edit/session', { method: 'POST', body: JSON.stringify({ pin }) }),
     lock: () => call('/api/edit/session', { method: 'DELETE' }),
-    listFiles: async () => (await call('/api/edit/files')).files,
-    getFile: (path) => call(`/api/edit/file?path=${encodeURIComponent(path)}`),
+    listFiles: async (ref = '') => (await call(`/api/edit/files${ref ? `?ref=${ref}` : ''}`)).files,
+    getFile: (path, ref = '') => call(`/api/edit/file?path=${encodeURIComponent(path)}${ref ? `&ref=${ref}` : ''}`),
+    history: async () => (await call('/api/edit/history')).revisions,
     putFile: (path, text, sha, message) => call('/api/edit/file', { method: 'PUT', body: JSON.stringify({ path, text, sha, message }) }),
     /** Publish: [{ path, text, sha }] in one commit. */
     commit: (files, message) => call('/api/edit/commit', { method: 'POST', body: JSON.stringify({ files, message }) }),
@@ -58,6 +59,7 @@ async function init() {
   const remember = (patch) => { Object.assign(ui, patch); try { localStorage.setItem(UI, JSON.stringify(ui)); } catch { /* storage blocked */ } };
   let preview = null, panels = null, selection = null, tab = 'site', pollTimer = null;
   let items = [], hits = [], at = 0;                            // search and commands
+  let revisions = null;                                         // the History tab: what was published, newest first
   let remote = { on: false, sha: null, timer: null, saved: '' };   // the draft in the private drafts repository
 
   if (location.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(location.hostname)) say('This page is not on https; the session cookie will not be set.', 'warn');
@@ -144,9 +146,9 @@ async function init() {
         if (ev.kind === 'text') panels.refreshField(ev.key, ev.source);
         else { if (selection && !valid(selection)) selection = null; panels.renderInspector(); }
         if (ev.kind === 'history') say(`${ev.label}.`);
-        panels.renderTree();
+        drawTree();
       }
-      if (ev.type === 'published') { panels.renderTree(); panels.renderInspector(); }
+      if (ev.type === 'published') { revisions = null; drawTree(); panels.renderInspector(); if (tab === 'history') loadHistory(); }
       syncTop();
     });
 
@@ -171,9 +173,39 @@ async function init() {
   function setTab(next) {
     tab = next;
     document.querySelectorAll('.tabs [role="tab"]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
+    if (tab === 'history') { drawTree(); return loadHistory(); }
     if (tab === 'design' && selection?.type !== 'tokens') return select({ type: 'tokens', group: 'colors' }, 'panel');
     if (tab === 'site' && selection?.type === 'tokens') return select({ type: 'section', id: 'hero' }, 'panel');
-    panels.renderTree();
+    drawTree();
+  }
+
+  // ── history ───────────────────────────────────────────────────────────────────────────────
+  // Every publish is a commit. A revision opens as a draft: the preview shows the site as it was, Undo comes back,
+  // Publish makes it the site again.
+  const when = (iso) => { const d = new Date(iso); return Number.isNaN(d.getTime()) ? '' : d.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); };
+  function drawTree() {
+    if (tab !== 'history') return panels.renderTree();
+    const tree = $('#tree');
+    tree.replaceChildren(h('div', { class: 'tree-head' }, 'Published revisions'));
+    if (!revisions) return tree.append(h('p', { class: 'note' }, 'Loading…'));
+    if (!revisions.length) return tree.append(h('p', { class: 'note' }, 'Nothing published yet.'));
+    revisions.forEach((r, i) => tree.append(h('button', { class: 'revision', type: 'button', title: `${r.message}\n${r.sha.slice(0, 7)}`, onclick: () => openRevision(r) },
+      h('span', { class: 'rev-when' }, when(r.date), i === 0 ? h('span', { class: 'badge' }, 'Live') : null), h('span', { class: 'rev-what' }, r.message.replace(/^Edit from prismet\.xyz\/edit: /, '')))));
+    tree.append(h('p', { class: 'note' }, 'Click a revision to see the site as it was. It opens as a draft: Undo comes back, Publish restores it.'));
+  }
+  async function loadHistory() {
+    try { revisions = await client.history(); } catch (err) { revisions = []; if (err.status === 401) askPin('The session ended. Enter the PIN again.'); else say(`Could not read the history: ${err.message}`, 'warn'); }
+    drawTree();
+  }
+  async function openRevision(r) {
+    say(`Opening the site as of ${when(r.date)}…`);
+    try {
+      const optional = (p) => client.getFile(p, r.sha).catch((e) => (e.status === 404 ? null : Promise.reject(e)));
+      const [paths, ...data] = await Promise.all([client.listFiles(r.sha), optional(PROJECTS_FILE), optional(THEME_FILE), optional(STYLES_FILE)]);
+      const words = await Promise.all(paths.map((p) => client.getFile(p, r.sha)));
+      const took = store.restore(when(r.date), [...words, ...data].filter(Boolean));
+      say(took ? `This is the site as of ${when(r.date)}, as a draft. Undo comes back; Publish restores it.` : 'That revision is what the draft already shows.', took ? 'ok' : '');
+    } catch (err) { if (err.status === 401) askPin('The session ended. Enter the PIN again.'); else say(`Could not open that revision: ${err.message}`, 'warn'); }
   }
 
   /** The one place a selection changes. source: preview (a click on the page), panel, load or palette. */
@@ -183,12 +215,12 @@ async function init() {
     const moved = !sameSel(sel, selection) || sel?.key !== selection?.key;
     selection = sel;
     if (sel) remember({ selection: { ...sel, key: undefined } });
-    tab = sel?.type === 'tokens' ? 'design' : sel ? 'site' : tab;
+    if (tab !== 'history' || source !== 'load') tab = sel?.type === 'tokens' ? 'design' : sel ? 'site' : tab;
     document.querySelectorAll('.tabs [role="tab"]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
     const page = pageOf(sel);
     if (page && source !== 'preview') preview.setPage(page);
     preview.select(sel?.key ? { type: 'text', key: sel.key } : sel, { scroll: source !== 'preview' && source !== 'load' });
-    if (moved || source !== 'preview') { panels.renderTree(); panels.renderInspector(); }
+    if (moved || source !== 'preview') { drawTree(); panels.renderInspector(); }
     syncTop();
   }
 

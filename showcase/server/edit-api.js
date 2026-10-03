@@ -94,6 +94,9 @@ export function createEditApi({ env = process.env, fetchImpl = globalThis.fetch,
     return sendJSON(req, res, 502, { ok: false, error: `GitHub answered ${r.status} while ${what}.` });
   };
 
+  // Reads take the branch's newest files, or a past revision's when ?ref=<commit> is given (the history).
+  const refOf = (url) => { const ref = url.searchParams.get('ref') || ''; return /^[0-9a-f]{40}$/.test(ref) ? ref : encodeURIComponent(BRANCH); };
+
   /** Returns true when the request was handled. */
   async function handle(req, res, url, method) {
     const ip = clientAddress(req);
@@ -136,8 +139,15 @@ export function createEditApi({ env = process.env, fetchImpl = globalThis.fetch,
     if (!sessionOf(req)) { sendJSON(req, res, 401, { ok: false, error: 'Unlock the editor with the PIN first.' }); return true; }
     if (method !== 'GET' && req.headers['x-prismet-edit'] !== '1') { sendJSON(req, res, 400, { ok: false, error: 'Missing request header.' }); return true; }
 
+    // History: what was published, newest first. A revision's files are read with ?ref=<its commit>.
+    if (p === '/api/edit/history' && method === 'GET') {
+      const r = await github(`/repos/${REPO}/commits?sha=${encodeURIComponent(BRANCH)}&path=${SITE_ROOT.slice(0, -1)}&per_page=40`);
+      if (!r.ok || !Array.isArray(r.body)) return upstream(res, req, r, 'reading the history'), true;
+      sendJSON(req, res, 200, { ok: true, revisions: r.body.filter((c) => /^[0-9a-f]{40}$/.test(c?.sha || '')).map((c) => ({ sha: c.sha, date: clean(c.commit?.committer?.date, 40), message: clean(String(c.commit?.message || '').split('\n')[0], 200) })) });
+      return true;
+    }
     if (p === '/api/edit/files' && method === 'GET') {
-      const r = await github(`/repos/${REPO}/contents/${CONTENT_ROOT}work?ref=${encodeURIComponent(BRANCH)}`);
+      const r = await github(`/repos/${REPO}/contents/${CONTENT_ROOT}work?ref=${refOf(url)}`);
       if (!r.ok || !Array.isArray(r.body)) return upstream(res, req, r, 'listing the files'), true;
       const work = r.body.filter((f) => f.type === 'file' && /\.md$/.test(f.name)).map((f) => f.path).filter(allowedPath).sort();
       sendJSON(req, res, 200, { ok: true, files: [`${CONTENT_ROOT}site.md`, ...work] });
@@ -146,7 +156,7 @@ export function createEditApi({ env = process.env, fetchImpl = globalThis.fetch,
     if (p === '/api/edit/file' && method === 'GET') {
       const path = url.searchParams.get('path') || '';
       if (!allowedPath(path)) { sendJSON(req, res, 400, { ok: false, error: 'Only the content files can be edited.' }); return true; }
-      const r = await github(`/repos/${REPO}/contents/${path}?ref=${encodeURIComponent(BRANCH)}`);
+      const r = await github(`/repos/${REPO}/contents/${path}?ref=${refOf(url)}`);
       if (!r.ok || typeof r.body?.content !== 'string') return upstream(res, req, r, 'reading the file'), true;
       sendJSON(req, res, 200, { ok: true, path, sha: r.body.sha, text: Buffer.from(String(r.body.content).replace(/\s/g, ''), 'base64').toString('utf8') });
       return true;

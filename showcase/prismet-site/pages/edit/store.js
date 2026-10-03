@@ -32,15 +32,15 @@ export function createStore({ storage = globalThis.localStorage, now = Date.now 
   const listeners = new Set();
   const emit = (ev) => listeners.forEach((fn) => fn(ev));
 
-  const parse = () => {
+  const parse = (from = files) => {
     const work = {};
-    for (const [path, f] of files) if (path.startsWith(`${ROOT}content/work/`)) work[slugOf(path)] = parseSections(f.text);
+    for (const [path, f] of from) if (path.startsWith(`${ROOT}content/work/`)) work[slugOf(path)] = parseSections(f.text);
     return {
-      site: parseSections(files.get(SITE_FILE)?.text || ''),
+      site: parseSections(from.get(SITE_FILE)?.text || ''),
       work,
-      projects: JSON.parse(files.get(PROJECTS_FILE)?.text || '{"projects":[]}'),
-      theme: (() => { const t = JSON.parse(files.get(THEME_FILE)?.text || '{}'); return { ...t, root: t.root || {}, day: t.day || {} }; })(),
-      styles: (() => { const t = JSON.parse(files.get(STYLES_FILE)?.text || '{}'); return { ...t, rules: t.rules || {} }; })(),
+      projects: JSON.parse(from.get(PROJECTS_FILE)?.text || '{"projects":[]}'),
+      theme: (() => { const t = JSON.parse(from.get(THEME_FILE)?.text || '{}'); return { ...t, root: t.root || {}, day: t.day || {} }; })(),
+      styles: (() => { const t = JSON.parse(from.get(STYLES_FILE)?.text || '{}'); return { ...t, rules: t.rules || {} }; })(),
     };
   };
   const shas = () => Object.fromEntries([...files].map(([p, f]) => [p, f.sha]));
@@ -146,6 +146,12 @@ export function createStore({ storage = globalThis.localStorage, now = Date.now 
       const took = change('Draft from another device', (d) => { Object.assign(d, clone(saved.docs)); });
       if (took) draftAt = saved.at;
       return took;
+    },
+    /** Makes the draft what the site was at a past revision: list is that revision's files. Undoable; Publish restores it. */
+    restore(label, list) {
+      // A file the revision does not have (a data file added since) keeps today's contents.
+      const then = parse(new Map([...files, ...list.map((f) => [f.path, { text: f.text }])]));
+      return change(`Restore ${label}`, (d) => { for (const k of Object.keys(d)) delete d[k]; Object.assign(d, then); });
     },
     /** Back to the published copy. Undoable. */
     discard: () => change('Discard all changes', (d) => { Object.assign(d, clone(base)); }),

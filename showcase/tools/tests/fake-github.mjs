@@ -23,7 +23,7 @@ export function fakeGitHub({ root, persist = false } = {}) {
 
   function handle(method, url, body, auth) {
     const u = new URL(url, 'http://fake'), m = u.pathname.match(/^\/repos\/[^/]+\/[^/]+\/(.*)$/);
-    calls.push({ method, path: u.pathname, auth, body });
+    calls.push({ method, path: u.pathname, query: u.search, auth, body });
     if (!m) return answer(404, { message: 'Not Found' });
     const rest = decodeURIComponent(m[1]);
     if (rest.startsWith('contents/')) {
@@ -57,6 +57,7 @@ export function fakeGitHub({ root, persist = false } = {}) {
       head = body.sha;
       return answer(200, { object: { sha: head } });
     }
+    if (rest === 'commits') return answer(200, [{ sha: head, commit: { message: 'Edit from prismet.xyz/edit: site.md (1)\n\nbody', committer: { date: '2026-10-03T22:54:18Z' } } }, { sha: hex('older'), commit: { message: 'An older revision', committer: { date: '2026-10-02T10:00:00Z' } } }]);
     if (rest.startsWith('actions/runs')) return answer(200, { workflow_runs: [{ status: 'completed', conclusion: 'success', html_url: 'https://github.com/sagedeutschle/Bayzyl/actions/runs/1' }] });
     return answer(404, { message: 'Not Found' });
   }

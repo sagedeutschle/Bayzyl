@@ -233,6 +233,15 @@ assert.equal(stripTheme('a{}' + css), 'a{}'); assert.equal(safeValue('url(x)'), 
   await refuse({ path: 'showcase/prismet-site/content/site2.md', text: 'x', sha: null }, 'a new file can only be a record');
   await refuse({ path: 'showcase/prismet-site/content/work/../x.md', text: 'x', sha: null }, 'no traversal');
   assert.ok(gh2.calls.every((c) => c.auth === 'Bearer github_pat_FAKE'), 'the server uses the stored token'); checks++;
+  // ── history: published revisions, and a revision opened as a draft ──
+  r = await call2('GET', '/api/edit/history', { cookie: sid3 });
+  assert.equal(r.status, 200); assert.equal(r.body.revisions.length, 2); assert.equal(r.body.revisions[0].message, 'Edit from prismet.xyz/edit: site.md (1)', 'first line only'); assert.match(r.body.revisions[0].sha, /^[0-9a-f]{40}$/); checks += 4;
+  r = await call2('GET', `/api/edit/file?path=${SITE_PATH}&ref=${'d'.repeat(40)}`, { cookie: sid3 }); assert.equal(r.status, 200);
+  assert.ok(gh2.calls.at(-1).path.endsWith('site.md') && gh2.calls.some((c) => c.query === `?ref=${'d'.repeat(40)}`), 'a revision is read by its commit'); checks += 2;
+  r = await call2('GET', `/api/edit/file?path=${SITE_PATH}&ref=main;rm`, { cookie: sid3 }); assert.ok(gh2.calls.at(-1).query === '?ref=main', 'anything but a commit id falls back to the branch'); checks++;
+  const past = createStore({ storage: memory() }); past.load(published()); past.setText('hero.lede', 'Changed today.');
+  assert.equal(past.restore('yesterday', published().filter((f) => !f.path.endsWith('styles.json'))), true); assert.equal(past.dirty, false, 'a restored revision replaces the draft'); past.undo(); assert.equal(past.text('hero.lede'), 'Changed today.', 'and undo comes back'); checks += 3;
+
   // ── the draft in the private drafts repository ──
   r = await call2('GET', '/api/edit/draft', { cookie: sid3 }); assert.equal(r.status, 404, 'no drafts repository, no server drafts'); checks++;
   const gh3 = checkoutGitHub({ root: REPO_ROOT });

@@ -107,6 +107,11 @@ try {
   check('the first words were "' + before.slice(0, 12) + '…": nothing else in site.md changed', parseSections(gh.written.get(SITE_PATH))['hero.title'] === parseSections(siteText)['hero.title']);
   const pageSource = await page.content();
   check('the token never reaches the browser', !pageSource.includes('github_pat') && !(await page.evaluate(() => JSON.stringify(Object.entries(sessionStorage)) + JSON.stringify(Object.entries(localStorage)))).includes('github_pat'));
+  // history
+  await page.click('[data-tab="history"]'); await page.waitForSelector('.revision', { timeout: 10000 });
+  check('History lists what was published', (await page.$$('.revision')).length === 2);
+  await page.locator('.revision').nth(1).click();
+  check('a revision opens as a draft', await until(() => /as a draft|already shows/.test(document.querySelector('#status').textContent)), await page.textContent('#status'));
   await page.click('#lock'); await page.waitForSelector('#pin-form:visible', { timeout: 10000 });
   check('Lock ends the session', (await (await fetch(`${base}/api/edit/status`)).json()).authed === false);
   check('no console or page errors', errors.length === 0, errors.join('; '));
