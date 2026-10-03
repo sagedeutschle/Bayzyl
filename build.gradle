@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.bayzyl'
-version = '0.2.0-alpha.1'
+version = '0.2.0-alpha.2'
 
 /**
  * Short commit of HEAD, with "-dirty" when this project directory has uncommitted changes, or "unknown" without
