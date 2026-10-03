@@ -4,8 +4,8 @@
 // browser. A visitor unlocks the editor with a PIN; the server answers with an HttpOnly session cookie and then
 // proxies a small, allow-listed slice of the GitHub API: list the content files, read one, write one, publish several
 // in one commit, read the workflow run for a commit. Wrong PINs are rate-limited per address and globally.
-// What can be read and written: the wording (content/**.md) and three data files (data/projects.json, theme.json,
-// styles.json).
+// What can be read and written: the wording (content/**.md) and four data files (data/projects.json, theme.json,
+// styles.json, pages.json).
 //
 // Environment: EDIT_GITHUB_TOKEN (fine-grained token: Contents read/write, Actions read, this repository only),
 // EDIT_PIN (6+ characters), EDIT_REPO (default sagedeutschle/Bayzyl), EDIT_BRANCH (default main),
@@ -18,7 +18,7 @@ import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 
 const SITE_ROOT = 'showcase/prismet-site/';
 const CONTENT_ROOT = `${SITE_ROOT}content/`;
-const DATA_FILES = new Set(['projects', 'theme', 'styles'].map((name) => `${SITE_ROOT}data/${name}.json`));
+const DATA_FILES = new Set(['projects', 'theme', 'styles', 'pages'].map((name) => `${SITE_ROOT}data/${name}.json`));
 const COMMIT_MAX_FILES = 40;
 const DRAFT_FILE = 'draft.json', DRAFT_LIMIT = 2 * 1024 * 1024;
 const SESSION_MS = 8 * 60 * 60 * 1000;

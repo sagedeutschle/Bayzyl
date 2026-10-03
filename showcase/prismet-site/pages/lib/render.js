@@ -10,6 +10,8 @@
 //            p is a path under showcase/, such as assets/minecraft/x.webp
 //   urls     { css, js, og }: the URLs of site.css, site.js and the share image
 //   styles   data/styles.json, parsed (optional): the wording it styles is marked so its rules can find it
+//   pages    data/pages.json, parsed (optional): sections added to the home page and whole pages, built from the
+//            section library (sections.js). drafts: true also renders pages still marked draft (the editor's preview)
 //   preview  true for the artifact preview: every piece of wording carries its key (data-edit), plus its own editor
 //   edit     true for the editor at /edit: wording carries its key and hidden sections and records stay on the page
 //            (class is-off), so they can be selected and brought back
@@ -18,12 +20,13 @@
 // a page asked for and did not find.
 import { inline, plain, listItems, factPairs } from './format.js';
 import { styledKeys } from './styles.js';
+import { renderSection, validSlug } from './sections.js';
 
 // Spectrum order, red deviates least: desktop, apps, worlds, minecraft, web, ai.
 export const SPECTRUM = ['desktop', 'apps', 'worlds', 'minecraft', 'web', 'ai'];
 export const SECTION_IDS = ['selected', 'work', 'plate', 'lenses', 'about'];
 
-export function renderSite({ data, site: S, work: W, assets, urls, styles = null, preview: PREVIEW = false, edit: EDIT = false }) {
+export function renderSite({ data, site: S, work: W, assets, urls, styles = null, pages: PAGES = null, drafts: DRAFTS = false, preview: PREVIEW = false, edit: EDIT = false }) {
 const ANNOTATE = PREVIEW || EDIT;
 // The body below is not indented: its template literals carry the pages' own whitespace.
 const { size: sizeOf, has, url: asset } = assets;
@@ -122,7 +125,7 @@ const bar = (root = '') => {
   <nav class="nav" aria-label="Main">
     <a class="keep" href="${HOME(root)}#work"${w.a}>${w.h}</a>
     <a href="${HOME(root)}#lenses"${l.a}>${l.h}</a>
-    <a href="${HOME(root)}#about"${a.a}>${a.h}</a>
+    <a href="${HOME(root)}#about"${a.a}>${a.h}</a>${navPages(root)}
     <a class="wide" href="${esc(owner.github)}"${g.a}>${g.h}</a>
     <a class="wide" href="${esc(owner.linkedin)}"${li.a}>${li.h}</a>
     <a class="btn primary keep" href="${esc(owner.fiverr)}"${h.a}>${h.h}</a>
@@ -133,7 +136,7 @@ const bar = (root = '') => {
 
 const footer = (root = '') => `<footer><div class="wrap">
   <span${T('footer.copyright').a}>${T('footer.copyright').h}</span>
-  <nav aria-label="Footer"><a href="${HOME(root)}#work">${T('nav.work').h}</a><a href="${HOME(root)}#lenses">${T('nav.lenses').h}</a><a href="${HOME(root)}#about">${T('nav.about').h}</a><a href="${root}colophon.html"${T('footer.colophon').a}>${T('footer.colophon').h}</a><a href="${esc(owner.github)}">GitHub</a><a href="${esc(owner.linkedin)}">LinkedIn</a><a href="${esc(owner.fiverr)}">Fiverr</a></nav>
+  <nav aria-label="Footer"><a href="${HOME(root)}#work">${T('nav.work').h}</a><a href="${HOME(root)}#lenses">${T('nav.lenses').h}</a><a href="${HOME(root)}#about">${T('nav.about').h}</a>${navPages(root)}<a href="${root}colophon.html"${T('footer.colophon').a}>${T('footer.colophon').h}</a><a href="${esc(owner.github)}">GitHub</a><a href="${esc(owner.linkedin)}">LinkedIn</a><a href="${esc(owner.fiverr)}">Fiverr</a></nav>
 </div></footer>`;
 
 const factRows = (slug, extra = [], limit = Infinity) => [...extra, ...factPairs(work(slug, 'facts')).map(([k, v], i) => ({
@@ -161,7 +164,14 @@ const accessLinks = (p, root = '', withLabel = false) => accessOf(p, root).map((
 // ── layout (projects.json → layout, featuredOrder, per-project hidden) ──────────────────────
 const bySlug = Object.fromEntries(projects.map((p) => [p.slug, p]));
 const L = data.layout || {};
-const sectionOrder = [...(L.sections || []).filter((id) => SECTION_IDS.includes(id)), ...SECTION_IDS.filter((id) => !(L.sections || []).includes(id))];
+// Library sections added to the home page (data/pages.json → home) take part in the same order and hiding as the built-in ones.
+const HOME_CUSTOM = (PAGES?.home || []).filter((s) => s && typeof s.id === 'string' && !SECTION_IDS.includes(s.id));
+const ALL_IDS = [...SECTION_IDS, ...HOME_CUSTOM.map((s) => s.id)];
+const sectionOrder = [...(L.sections || []).filter((id) => ALL_IDS.includes(id)), ...ALL_IDS.filter((id) => !(L.sections || []).includes(id))];
+// Pages made at /edit. A draft is not built; a hidden page is built but kept out of the navigation and of search.
+const CUSTOM = (PAGES?.pages || []).filter((p) => p && validSlug(p.slug) && (ANNOTATE || DRAFTS || p.status !== 'draft'));
+const NAV_PAGES = CUSTOM.filter((p) => p.nav && p.status === 'published');
+const navPages = (root) => NAV_PAGES.map((p) => `<a href="${root}${p.slug}.html">${esc(p.navLabel || p.title || p.slug)}</a>`).join('');
 const hiddenSections = new Set(L.hiddenSections || []);
 const shown = projects.filter((p) => !p.hidden && !isTodo(p));
 const featuredSlugs = (data.featuredOrder || []).filter((s) => bySlug[s] && shown.includes(bySlug[s]));
@@ -503,6 +513,13 @@ const SECTIONS = {
 </div>`),
 };
 
+// What a library section may use from this page: the image helper, the doors, the records.
+const sectionCtx = (top) => ({ esc, img, has, ed, door, bySlug, shown, featured: featuredSlugs.map((slug) => bySlug[slug]), top, editing: ANNOTATE });
+const homeSection = (id) => {
+  const s = HOME_CUSTOM.find((x) => x.id === id);
+  return !s || (hiddenSections.has(id) && !ANNOTATE) ? '' : renderSection({ ...s, hidden: hiddenSections.has(id) }, 'home', sectionCtx(false));
+};
+
 // The editor starts from this; "apply my edits" writes its changes back into projects.json.
 const layoutState = {
   sections: sectionOrder, hiddenSections: [...hiddenSections],
@@ -528,7 +545,7 @@ const indexBody = `${bar()}
   </div>
   ${plan()}
 </div></section>
-${sectionOrder.map((id) => SECTIONS[id]()).join('\n')}
+${sectionOrder.map((id) => (SECTIONS[id] ? SECTIONS[id]() : homeSection(id))).join('\n')}
 </main>
 ${footer()}
 ${PREVIEW ? `<script type="application/json" id="bz-layout">${JSON.stringify(layoutState).replace(/</g, '\\u003c')}</script>` : ''}
@@ -635,6 +652,18 @@ projects.filter((p) => !shown.includes(p)).forEach((p) => {
 </div></main>
 ${footer('../')}`;
   emit(`work/${s}.html`, `<!doctype html><html lang="en"><head>${head({ title: `${plain(work(s, 'title'))} · Prismet`, desc: w.p, root: '../', noindex: true })}</head><body>${body}</body></html>`);
+});
+
+// ── pages from the section library ──────────────────────────────────────────────────────────
+CUSTOM.forEach((pg) => {
+  const list = (pg.sections || []).filter((s) => s && (ANNOTATE || !s.hidden));
+  const body = `${bar()}
+<main id="main" class="x-page">
+${list.map((s, i) => renderSection(s, pg.slug, sectionCtx(i === 0))).join('\n')}
+</main>
+${footer()}
+${scripts()}`;
+  emit(`${pg.slug}.html`, `<!doctype html><html lang="en"><head>${head({ title: `${plain(pg.title || pg.slug)} · Prismet`, desc: plain(pg.description || pg.title || pg.slug), noindex: pg.status !== 'published', url: `${pg.slug}.html` })}</head><body>${body}</body></html>`);
 });
 
 // ── colophon ────────────────────────────────────────────────────────────────────────────────

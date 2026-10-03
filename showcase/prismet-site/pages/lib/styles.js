@@ -21,7 +21,7 @@ export function selectorOf(target, attr = 'data-s') {
   const m = String(target).match(/^(text|section):([A-Za-z0-9._-]{1,120})$/);
   if (!m) return null;
   if (m[1] === 'text') return `[${attr}="${m[2]}"]`;
-  return m[2] === 'hero' ? '.entrance' : /^[a-z]+$/.test(m[2]) ? `#main > [data-section="${m[2]}"]` : null;
+  return m[2] === 'hero' ? '.entrance' : /^[a-z][a-z0-9-]*$/.test(m[2]) ? `#main > [data-section="${m[2]}"]` : null;
 }
 const decls = (o) => Object.entries(o || {}).filter(([k, v]) => PROPS.has(k) && safe(v)).map(([k, v]) => `${k}: ${v.trim()} !important;`).join(' ');
 

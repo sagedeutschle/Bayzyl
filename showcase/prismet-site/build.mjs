@@ -72,7 +72,7 @@ cpSync(join(SHOWCASE, 'assets/fonts'), join(DIST, 'assets/fonts'), { recursive: 
 // site.css = the design's defaults (src/site.css) plus whatever data/theme.json (tokens) and data/styles.json (single
 // elements) change; nothing is added when they are empty.
 const readData = (name) => (existsSync(join(HERE, 'data', name)) ? JSON.parse(readFileSync(join(HERE, 'data', name), 'utf8')) : {});
-const theme = readData('theme.json'), styles = readData('styles.json');
+const theme = readData('theme.json'), styles = readData('styles.json'), sitePages = readData('pages.json');
 writeFileSync(join(DIST, 'site.css'), readFileSync(join(HERE, 'src/site.css'), 'utf8') + themeCss(theme) + stylesCss(styles));
 copyFileSync(join(HERE, 'src/site.js'), join(DIST, 'site.js'));
 const CSS_URL = versioned('site.css', join(DIST, 'site.css')), JS_URL = versioned('site.js', join(HERE, 'src/site.js'));
@@ -94,6 +94,7 @@ const { pages, missing, shown, projects } = renderSite({
   assets: { size: (p) => sizeOf(join(SHOWCASE, p)), has: (p) => existsSync(join(SHOWCASE, p)), url: asset },
   urls: { css: CSS_URL, js: JS_URL, og: OG_URL },
   styles,
+  pages: sitePages,
   preview: PREVIEW,
 });
 for (const [path, html] of pages) writeFileSync(join(DIST, path), html);

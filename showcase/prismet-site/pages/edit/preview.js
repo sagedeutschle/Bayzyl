@@ -39,7 +39,7 @@ export function createPreview({ frame, stage, store, manifest, baseCss, onSelect
   function render({ keep = true } = {}) {
     const d = store.docs;
     let out;
-    try { out = renderSite({ data: d.projects, site: d.site, work: d.work, assets, urls: { css: 'site.css', js: manifest.urls.js, og: manifest.urls.og }, styles: d.styles, edit: mode === 'edit' }); }
+    try { out = renderSite({ data: d.projects, site: d.site, work: d.work, assets, urls: { css: 'site.css', js: manifest.urls.js, og: manifest.urls.og }, styles: d.styles, pages: d.pages, drafts: true, edit: mode === 'edit' }); }
     catch (e) { say(`The preview could not render: ${e.message}. Undo the last change.`, 'warn'); return; }
     pages = out.pages; missing = out.missing;
     if (!pages.has(page)) page = 'index.html';
@@ -73,7 +73,7 @@ export function createPreview({ frame, stage, store, manifest, baseCss, onSelect
   const targets = (sel) => {
     const d = doc(); if (!d || !sel) return [];
     if (sel.type === 'text') return [...d.querySelectorAll(`[data-edit="${esc(sel.key)}"]`)];
-    if (sel.type === 'section') return [...d.querySelectorAll(sel.id === 'hero' ? '.entrance' : `[data-section="${esc(sel.id)}"]`)];
+    if (sel.type === 'section' || sel.type === 'psection') return [...d.querySelectorAll(sel.id === 'hero' ? '.entrance' : `[data-section="${esc(sel.id)}"]`)];
     if (sel.type === 'project') return [...d.querySelectorAll(`[data-slug="${esc(sel.slug)}"]`)];
     return [];
   };
@@ -134,7 +134,7 @@ export function createPreview({ frame, stage, store, manifest, baseCss, onSelect
     const el = editing?.el;
     if (el && e.target === el) {
       if (e.key === 'Escape') { el.textContent = editing.before; store.setText(editing.key, editing.before, { source: 'preview' }); el.blur(); e.stopPropagation(); return; }
-      if (e.key === 'Enter' && !e.shiftKey && !el.matches('.summary, p, li')) { e.preventDefault(); el.blur(); return; }
+      if (e.key === 'Enter' && !e.shiftKey && !el.matches('.summary, .paras, p, li')) { e.preventDefault(); el.blur(); return; }
       if (e.key === ' ' && el.closest('button')) { e.preventDefault(); doc().execCommand('insertText', false, ' '); }
       if (!(e.metaKey || e.ctrlKey) || /^[zZ]$/.test(e.key)) return;        // the browser's own undo while typing
     }
@@ -146,6 +146,7 @@ export function createPreview({ frame, stage, store, manifest, baseCss, onSelect
     const d = doc(); if (!d) return;
     const text = store.text(key);
     if (/\{\w+\}/.test(text)) return schedule();                            // placeholders are filled by the renderer
+    if (d.querySelector(`.paras[data-edit="${esc(key)}"]`)) return schedule();   // paragraphs and lists: the renderer lays them out
     d.querySelectorAll(`[data-edit="${esc(key)}"]`).forEach((el) => {
       if (el === editing?.el) return;
       if (el instanceof frame.contentWindow.SVGElement) el.textContent = plain(text);

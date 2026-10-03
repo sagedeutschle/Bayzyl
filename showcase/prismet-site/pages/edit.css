@@ -111,6 +111,11 @@ textarea:focus, input:focus { border-color: var(--sel); outline: none; }
 .token input[type="text"] { grid-column: 3; font: 11px/1 var(--mono); height: 24px; }
 .token .reset { grid-column: 4; margin: 0; }
 
+/* the section library and pages */
+.adder { display: block; height: 22px; margin: 2px 6px 6px 34px; padding: 0 4px; border: 1px dashed var(--line-2); background: none; color: var(--text-2); font: 11px/1 var(--mono); max-width: 120px; }
+.adder.head { margin: 0; border-style: solid; }
+.row .badge { font-size: 8px; padding: 2px 4px; }
+
 /* history */
 .revision { display: grid; gap: 2px; width: 100%; text-align: left; border: 0; border-bottom: 1px solid var(--line); background: none; padding: 7px 10px; }
 .revision:hover { background: var(--panel-2); }

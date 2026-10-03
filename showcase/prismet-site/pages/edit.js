@@ -12,7 +12,7 @@
 //   edit/panels.js   the tree and the inspector
 import { parseSections, writeSections } from './lib/format.js';
 import { stripTheme } from './lib/theme.js';
-import { createStore, SITE_FILE, PROJECTS_FILE, THEME_FILE, STYLES_FILE } from './edit/store.js';
+import { createStore, findSection, SITE_FILE, PROJECTS_FILE, THEME_FILE, STYLES_FILE, PAGES_FILE } from './edit/store.js';
 import { createPreview } from './edit/preview.js';
 import { createPanels, ownerOf, pageOf, sameSel, sectionName, TOKEN_GROUPS, h } from './edit/panels.js';
 
@@ -89,14 +89,14 @@ async function init() {
     say('Loading the site…');
     try {
       const optional = (p) => client.getFile(p).catch((e) => (e.status === 404 ? null : Promise.reject(e)));
-      const [paths, projects, theme, styles, manifest, css] = await Promise.all([
-        client.listFiles(), client.getFile(PROJECTS_FILE), optional(THEME_FILE), optional(STYLES_FILE),
+      const [paths, projects, theme, styles, sitePages, manifest, css] = await Promise.all([
+        client.listFiles(), client.getFile(PROJECTS_FILE), optional(THEME_FILE), optional(STYLES_FILE), optional(PAGES_FILE),
         fetch('edit/assets.json', { cache: 'no-cache' }).then((r) => r.json()),
         fetch('site.css', { cache: 'no-cache' }).then((r) => r.text()),
       ]);
       const words = await Promise.all(paths.map((p) => client.getFile(p)));
       if (!preview) start(manifest, stripTheme(css));
-      store.load([...words, projects, theme, styles].filter(Boolean));
+      store.load([...words, projects, theme, styles, sitePages].filter(Boolean));
       if (remote.on) await pullDraft();
     } catch (err) {
       if (err.status === 401) return askPin('The session ended. Enter the PIN again.');
@@ -168,7 +168,11 @@ async function init() {
     setDevice(ui.device || 1440);
   }
 
-  function valid(sel) { return Boolean(sel) && (sel.type !== 'project' || store.docs.projects.projects.some((p) => p.slug === sel.slug)) && (sel.type !== 'tokens' || TOKEN_GROUPS.some((g) => g.id === sel.group)); }
+  function valid(sel) {
+    const d = store.docs;
+    return Boolean(sel) && (sel.type !== 'project' || d.projects.projects.some((p) => p.slug === sel.slug)) && (sel.type !== 'tokens' || TOKEN_GROUPS.some((g) => g.id === sel.group))
+      && (sel.type !== 'cpage' || d.pages.pages.some((p) => p.slug === sel.slug)) && (sel.type !== 'psection' || Boolean(findSection(d.pages, sel.page, sel.id)));
+  }
   function setMode(mode) { preview.setMode(mode); document.querySelectorAll('#mode button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === mode))); }
   function setTab(next) {
     tab = next;
@@ -201,7 +205,7 @@ async function init() {
     say(`Opening the site as of ${when(r.date)}…`);
     try {
       const optional = (p) => client.getFile(p, r.sha).catch((e) => (e.status === 404 ? null : Promise.reject(e)));
-      const [paths, ...data] = await Promise.all([client.listFiles(r.sha), optional(PROJECTS_FILE), optional(THEME_FILE), optional(STYLES_FILE)]);
+      const [paths, ...data] = await Promise.all([client.listFiles(r.sha), optional(PROJECTS_FILE), optional(THEME_FILE), optional(STYLES_FILE), optional(PAGES_FILE)]);
       const words = await Promise.all(paths.map((p) => client.getFile(p, r.sha)));
       const took = store.restore(when(r.date), [...words, ...data].filter(Boolean));
       say(took ? `This is the site as of ${when(r.date)}, as a draft. Undo comes back; Publish restores it.` : 'That revision is what the draft already shows.', took ? 'ok' : '');
@@ -211,6 +215,8 @@ async function init() {
   /** The one place a selection changes. source: preview (a click on the page), panel, load or palette. */
   function select(sel, source) {
     if (sel?.type === 'text') sel = { ...ownerOf(sel.key, store.slugs()), key: sel.key };
+    // A section clicked on a made page: the preview only knows its id.
+    if (sel?.type === 'section' && source === 'preview') { const pg = store.docs.pages.pages.find((p) => p.sections.some((x) => x.id === sel.id)); if (pg) sel = { type: 'psection', page: pg.slug, id: sel.id }; }
     if (sel && !valid(sel)) sel = null;
     const moved = !sameSel(sel, selection) || sel?.key !== selection?.key;
     selection = sel;
@@ -231,7 +237,7 @@ async function init() {
     save.disabled = n === 0; save.textContent = n ? `Publish ${n} file${n === 1 ? '' : 's'}` : 'Nothing to publish';
     save.title = files.map((f) => f.label).join('\n');
     draft.textContent = !n ? 'Same as the live site' : remote.on ? (JSON.stringify(store.snapshot()) === remote.saved ? 'Draft saved ✓' : 'Draft saved here, syncing…') : 'Draft saved in this browser ✓'; draft.className = `draft ${n ? 'ok' : ''}`;
-    const sel = $('#page'), opts = [[{ type: 'section', id: 'hero' }, 'Home'], [{ type: 'page', page: 'colophon.html' }, 'Colophon'], ...store.docs.projects.projects.map((p) => [{ type: 'project', slug: p.slug }, panels.title(p.slug)])];
+    const sel = $('#page'), opts = [[{ type: 'section', id: 'hero' }, 'Home'], ...store.docs.pages.pages.map((p) => [{ type: 'cpage', slug: p.slug }, p.title || p.slug]), [{ type: 'page', page: 'colophon.html' }, 'Colophon'], ...store.docs.projects.projects.map((p) => [{ type: 'project', slug: p.slug }, panels.title(p.slug)])];
     sel.disabled = false;
     sel.replaceChildren(...opts.map(([s, t]) => h('option', { value: JSON.stringify(s), selected: pageOf(s) === preview.page }, t)));
     $('#live').href = preview.page;
@@ -288,13 +294,15 @@ async function init() {
     const d = store.docs, out = [];
     const cmd = (name, run) => out.push({ kind: 'Command', name, run });
     cmd('Undo', () => store.undo()); cmd('Redo', () => store.redo()); cmd('Publish changes', publish);
-    cmd('New record', () => panels.actions.newProject());
+    cmd('New record', () => panels.actions.newProject()); cmd('New page', () => panels.actions.newPage('article'));
     cmd('Preview: desktop', () => $('#device [data-w="1440"]').click()); cmd('Preview: tablet', () => $('#device [data-w="820"]').click()); cmd('Preview: mobile', () => $('#device [data-w="390"]').click());
     cmd('Mode: edit', () => setMode('edit')); cmd('Mode: preview as a visitor', () => setMode('preview'));
     cmd('Theme: night', () => preview.setTheme('dark')); cmd('Theme: day', () => preview.setTheme('light'));
     cmd('Discard every change in this draft', () => store.discard()); cmd('Lock the editor', () => $('#lock').click());
     out.push({ kind: 'Page', name: 'Home', sel: { type: 'section', id: 'hero' } }, { kind: 'Page', name: 'Colophon', sel: { type: 'page', page: 'colophon.html' } }, { kind: 'Words', name: 'Shared words', sel: { type: 'shared' } });
     for (const id of ['selected', 'work', 'plate', 'lenses', 'about']) out.push({ kind: 'Section', name: `Home / ${sectionName(id)}`, sel: { type: 'section', id } });
+    out.push({ kind: 'Settings', name: 'Site settings', sel: { type: 'settings' } });
+    for (const p of d.pages.pages) out.push({ kind: 'Page', name: p.title || p.slug, more: p.slug, sel: { type: 'cpage', slug: p.slug } });
     for (const p of d.projects.projects) out.push({ kind: 'Record', name: panels.title(p.slug), more: p.slug, sel: { type: 'project', slug: p.slug } });
     for (const g of TOKEN_GROUPS) for (const [name, lab] of g.tokens) out.push({ kind: 'Token', name: `${g.label} / ${lab}`, more: name, sel: { type: 'tokens', group: g.id } });
     for (const [key, text] of Object.entries(d.site)) out.push({ kind: 'Text', name: `${key}: ${text.slice(0, 80)}`, sel: { type: 'text', key } });

@@ -59,9 +59,12 @@ export const plain = (s, vars = {}) => String(s ?? '').replace(/\{(\w+)\}/g, (m,
  *   work.<slug>.summary                → { file: 'work', slug, field: 'summary' }
  *   work.<slug>.highlights.<n>         → the nth "- " line of that record's highlights
  *   work.<slug>.facts.<n>.label|value  → one side of the nth "- Label: Value" line
+ *   page.<home|slug>.<section id>.<field> → that field of a library section in data/pages.json
  * slugs is the list of records that exist: site.md has keys that start with "work." too.
  */
 export function editTarget(key, slugs) {
+  const pg = key.match(/^page\.([a-z0-9-]+)\.([a-z][a-z0-9-]*)\.([a-z]+)$/);     // a library section's field (data/pages.json)
+  if (pg) return { file: 'pages', page: pg[1], section: pg[2], prop: pg[3] };
   const m = key.match(/^work\.([a-z0-9-]+)\.(.+)$/);
   return m && slugs.includes(m[1]) ? { file: 'work', slug: m[1], field: m[2] } : { file: 'site', key };
 }

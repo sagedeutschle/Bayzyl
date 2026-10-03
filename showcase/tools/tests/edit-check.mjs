@@ -138,7 +138,7 @@ const { createStore, PROJECTS_FILE, THEME_FILE, workFile } = await import(join(S
 const { fakeGitHub: checkoutGitHub } = await import(join(HERE, 'fake-github.mjs'));
 const REPO_ROOT = join(HERE, '..', '..', '..');
 const disk = (rel) => ({ path: `showcase/prismet-site/${rel}`, text: readFileSync(join(SITE, rel), 'utf8'), sha: 'a'.repeat(40) });
-const published = () => [...files.map(disk), disk('data/projects.json'), disk('data/theme.json'), disk('data/styles.json')];
+const published = () => [...files.map(disk), disk('data/projects.json'), disk('data/theme.json'), disk('data/styles.json'), disk('data/pages.json')];
 const memory = () => { const m = new Map(); return { getItem: (k) => m.get(k) ?? null, setItem: (k, v) => m.set(k, v), removeItem: (k) => m.delete(k) }; };
 const tick = (ms = 450) => new Promise((r) => setTimeout(r, ms));
 
@@ -148,7 +148,7 @@ if (existsSync(join(SITE, 'dist/edit/assets.json'))) {
     url: (p) => { if (!p) return null; const f = manifest.files[p]; if (!f) throw new Error(`missing image: ${p}`); return `${p}?v=${f[2]}`; } };
   const st = createStore({ storage: memory() }); st.load(published());
   const cssUrl = readFileSync(join(SITE, 'dist/index.html'), 'utf8').match(/href="(site\.css\?v=[0-9a-f]+)"/)[1];
-  const out = renderSite({ data: st.docs.projects, site: st.docs.site, work: st.docs.work, assets, urls: { css: cssUrl, js: manifest.urls.js, og: manifest.urls.og }, styles: st.docs.styles });
+  const out = renderSite({ data: st.docs.projects, site: st.docs.site, work: st.docs.work, assets, urls: { css: cssUrl, js: manifest.urls.js, og: manifest.urls.og }, styles: st.docs.styles, pages: st.docs.pages });
   for (const [path, html] of out.pages) { assert.equal(html, readFileSync(join(SITE, 'dist', path), 'utf8'), `${path}: the editor's render differs from the build's`); checks++; }
   assert.equal(out.missing.size, 0); checks++;
   const ed = renderSite({ data: st.docs.projects, site: st.docs.site, work: st.docs.work, assets, urls: { css: 'site.css', js: manifest.urls.js, og: manifest.urls.og }, edit: true });
@@ -183,6 +183,36 @@ assert.equal(stripTheme('a{}' + css), 'a{}'); assert.equal(safeValue('url(x)'), 
   assert.deepEqual(s2.changedFiles().map((f) => f.label), ['styles.json']); checks++;
 }
 
+// ── the section library: sections on the home page, and whole pages ──
+{
+  const { SECTION_TYPES, validSlug, safeHref, renderSection } = await import(join(SITE, 'pages/lib/sections.js'));
+  const st = createStore({ storage: memory() }); st.load([...published(), disk('data/pages.json')]);
+  const fake = { size: () => ({ w: 800, h: 600 }), has: () => true, url: (p) => p };
+  const draw = (pages, extra = {}) => renderSite({ data: { ...st.docs.projects, layout: { sections: ['selected', 's-intro', 'work', 'plate', 'lenses', 'about'], hiddenSections: [] } }, site: st.docs.site, work: st.docs.work, assets: fake, urls: { css: 'c', js: 'j', og: 'o' }, pages, ...extra });
+  const doc = { home: [{ id: 's-intro', type: 'text', props: { heading: 'Why', body: 'One.\n\nTwo with *gold*.\n\n- a\n- b' } }],
+    pages: [{ slug: 'about', title: 'About', description: 'About Sage', status: 'published', nav: true, navLabel: 'About me', sections: [
+        { id: 's-hero', type: 'hero', props: { title: 'About <me>', lede: 'Hello', cta: 'Go', href: 'javascript:alert(1)' } },
+        { id: 's-stats', type: 'stats', props: { heading: 'Numbers', items: '- Records: 13\n- Years: 4' } },
+        { id: 's-pic', type: 'split', props: { image: 'assets/minecraft/x.webp', alt: 'A build', heading: 'H', body: 'B', side: 'right' } },
+        { id: 's-rec', type: 'records', props: { heading: 'Work', slugs: 'bayzyl, nope' } }, { id: 's-off', type: 'quote', hidden: true, props: { quote: 'Hidden' } }] },
+      { slug: 'wip', title: 'WIP', status: 'draft', sections: [] }, { slug: 'secret', title: 'Secret', status: 'hidden', nav: true, sections: [] }, { slug: 'edit', title: 'Bad', status: 'published', sections: [] }] };
+  const out = draw(doc), home = out.pages.get('index.html'), about = out.pages.get('about.html');
+  assert.ok(home.indexOf('id="selected"') < home.indexOf('id="s-intro"') && home.indexOf('id="s-intro"') < home.indexOf('id="work"'), 'a library section takes its place in the home page\'s order');
+  assert.match(home, /<section id="s-intro" data-section="s-intro" class="x-sec x-text"><div class="wrap"><h2>Why<\/h2><div class="prose paras"><p>One\.<\/p><p>Two with <em>gold<\/em>\.<\/p><ul><li>a<\/li><li>b<\/li><\/ul>/); checks += 2;
+  assert.match(home, /#about"[^>]*>[^<]*<\/a><a href="about\.html">About me<\/a>/, 'a published page marked for the navigation joins the bar'); assert.ok(!home.includes('secret.html') && !home.includes('wip.html'), 'hidden and draft pages stay out of the navigation'); checks += 2;
+  assert.ok(about && out.pages.has('secret.html') && !out.pages.has('wip.html') && !out.pages.has('edit.html'), 'drafts are not built; a reserved name is refused');
+  assert.match(about, /<title>About · Prismet<\/title>/); assert.match(about, /<h1 class="x-title">About &lt;me&gt;<\/h1>/); assert.ok(!about.includes('javascript:') && !about.includes('>Go<'), 'a link that is not https or a site path is dropped with its button');
+  assert.match(about, /<dt>Records<\/dt><dd>13<\/dd>/); assert.match(about, /class="x-sec x-split flip"/); assert.match(about, /<img src="assets\/minecraft\/x\.webp"[^>]* width="800" height="600" alt="A build"/); assert.ok(about.includes('data-slug="bayzyl"') && !about.includes('Hidden'), 'records draw the doors; a hidden section is left out'); checks += 8;
+  assert.match(out.pages.get('secret.html'), /<meta name="robots" content="noindex">/); assert.ok(!/<script(?![^>]*src=)/.test(about) && !/\son[a-z]+=/.test(about), 'no inline script or handler'); checks += 2;
+  assert.ok(draw(doc, { drafts: true }).pages.has('wip.html'), 'the editor previews drafts');
+  assert.match(draw(doc, { edit: true }).pages.get('about.html'), /data-edit="page\.about\.s-hero\.title"/); assert.match(draw(doc, { edit: true }).pages.get('about.html'), /is-off/); checks += 3;
+  assert.equal(draw({ home: [], pages: [] }).pages.get('index.html'), renderSite({ data: { ...st.docs.projects, layout: { sections: ['selected', 'work', 'plate', 'lenses', 'about'], hiddenSections: [] } }, site: st.docs.site, work: st.docs.work, assets: fake, urls: { css: 'c', js: 'j', og: 'o' } }).pages.get('index.html'), 'no library sections, no change to the home page'); checks++;
+  assert.deepEqual(['about', 'edit', 'index', 'A', 'a b', 'work', 'x'.repeat(42)].map(validSlug), [true, false, false, false, false, false, false]); assert.deepEqual(['https://x.y/z', 'about.html', '#work', '/steam', 'javascript:x', 'http://x', '//evil.com', 'data:x'].map((h) => Boolean(safeHref(h))), [true, true, true, true, false, false, false, false]); checks += 2;
+  assert.equal(renderSection({ id: 's-x', type: 'nope' }, 'home', {}), ''); assert.ok(Object.values(SECTION_TYPES).every((t) => t.label && Array.isArray(t.fields) && t.defaults)); checks += 2;
+  st.change('Add', (d) => { d.pages.pages.push({ slug: 'about', title: 'About', status: 'draft', sections: [{ id: 's-a', type: 'hero', props: { title: 'T' } }] }); });
+  st.setText('page.about.s-a.title', 'Typed'); assert.equal(st.text('page.about.s-a.title'), 'Typed'); assert.equal(st.docs.pages.pages[0].sections[0].props.title, 'Typed'); assert.deepEqual(st.changedFiles().map((f) => f.label), ['pages.json']); checks += 3;
+}
+
 // ── the draft ──
 {
   const storage = memory(), st = createStore({ storage }); st.load(published());
@@ -215,7 +245,7 @@ assert.equal(stripTheme('a{}' + css), 'a{}'); assert.equal(safeValue('url(x)'), 
   const get = async (path) => (await call2('GET', `/api/edit/file?path=${path}`, { cookie: sid3 })).body;
   assert.equal((await get(PROJECTS_FILE)).text, disk('data/projects.json').text, 'the data files can be read'); checks++;
   const real = createStore({ storage: memory() });
-  real.load(await Promise.all([...files.map((f) => `showcase/prismet-site/${f}`), PROJECTS_FILE, THEME_FILE, 'showcase/prismet-site/data/styles.json'].map(get)));
+  real.load(await Promise.all([...files.map((f) => `showcase/prismet-site/${f}`), PROJECTS_FILE, THEME_FILE, 'showcase/prismet-site/data/styles.json', 'showcase/prismet-site/data/pages.json'].map(get)));
   real.setText('hero.lede', 'Published lede.'); real.change('Hide plate', (d) => { d.projects.layout.hiddenSections = ['plate']; });
   real.change('New record', (d) => { d.projects.projects.push({ slug: 'new-record', beam: 'web', stack: [], hidden: true }); d.work['new-record'] = { title: 'New', subtitle: 's', status: 'x', year: '2026', role: 'r', summary: 's', facts: '- a: b', highlights: '- c' }; });
   const batch = real.changedFiles().map(({ path, text, sha }) => ({ path, text, sha }));
@@ -228,7 +258,7 @@ assert.equal(stripTheme('a{}' + css), 'a{}'); assert.equal(safeValue('url(x)'), 
   r = await call2('POST', '/api/edit/commit', { cookie: sid3, body: { files: batch } }); assert.equal(r.status, 409, 'a file that changed since it was loaded stops the publish'); assert.ok(r.body.stale.includes('site.md')); checks += 2;
   const refuse = async (file, why) => { const x = await call2('POST', '/api/edit/commit', { cookie: sid3, body: { files: [file] } }); assert.equal(x.status, 400, why); checks++; };
   await refuse({ path: 'showcase/server/server.js', text: 'x', sha: 'a'.repeat(40) }, 'only content and data files');
-  await refuse({ path: 'showcase/prismet-site/data/other.json', text: '{}', sha: 'a'.repeat(40) }, 'only the three data files');
+  await refuse({ path: 'showcase/prismet-site/data/other.json', text: '{}', sha: 'a'.repeat(40) }, 'only the four data files');
   await refuse({ path: PROJECTS_FILE, text: '{not json', sha: 'a'.repeat(40) }, 'a data file must be JSON');
   await refuse({ path: 'showcase/prismet-site/content/site2.md', text: 'x', sha: null }, 'a new file can only be a record');
   await refuse({ path: 'showcase/prismet-site/content/work/../x.md', text: 'x', sha: null }, 'no traversal');
@@ -240,7 +270,7 @@ assert.equal(stripTheme('a{}' + css), 'a{}'); assert.equal(safeValue('url(x)'), 
   assert.ok(gh2.calls.at(-1).path.endsWith('site.md') && gh2.calls.some((c) => c.query === `?ref=${'d'.repeat(40)}`), 'a revision is read by its commit'); checks += 2;
   r = await call2('GET', `/api/edit/file?path=${SITE_PATH}&ref=main;rm`, { cookie: sid3 }); assert.ok(gh2.calls.at(-1).query === '?ref=main', 'anything but a commit id falls back to the branch'); checks++;
   const past = createStore({ storage: memory() }); past.load(published()); past.setText('hero.lede', 'Changed today.');
-  assert.equal(past.restore('yesterday', published().filter((f) => !f.path.endsWith('styles.json'))), true); assert.equal(past.dirty, false, 'a restored revision replaces the draft'); past.undo(); assert.equal(past.text('hero.lede'), 'Changed today.', 'and undo comes back'); checks += 3;
+  assert.equal(past.restore('yesterday', published().filter((f) => !f.path.endsWith('styles.json') && !f.path.endsWith('pages.json'))), true); assert.equal(past.dirty, false, 'a restored revision replaces the draft'); past.undo(); assert.equal(past.text('hero.lede'), 'Changed today.', 'and undo comes back'); checks += 3;
 
   // ── the draft in the private drafts repository ──
   r = await call2('GET', '/api/edit/draft', { cookie: sid3 }); assert.equal(r.status, 404, 'no drafts repository, no server drafts'); checks++;

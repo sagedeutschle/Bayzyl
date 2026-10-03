@@ -617,3 +617,30 @@ footer a:hover { color: var(--ink); }
 .lede, .p-head .sub, .p-body .prose, .about-text .prose { font-weight: 400; }
 .hire h3, .hire h4, .lens h3, .sec-head h2 { font-family: var(--display); }
 .btn, .chip, .nav a:not(.btn) { font-weight: 600; }
+
+/* ── library sections: pages and home sections made at /edit (pages/lib/sections.js) ─────── */
+.x-sec { padding: clamp(40px, 7vw, 88px) 0; }
+.x-page > .x-sec:first-child { padding-top: clamp(56px, 9vw, 120px); }
+.x-sec h2 { font: 600 var(--t-xl)/1.1 var(--display); margin-bottom: .7em; }
+.x-title { font: 700 var(--t-2xl)/1.02 var(--display); margin-top: .35em; max-width: 18ch; }
+.x-sec .prose { color: var(--ink-2); font-size: var(--t-md); line-height: 1.6; max-width: 40rem; }
+.x-sec .prose p + p, .x-sec .prose ul { margin-top: 14px; }
+.x-sec .prose ul { padding-left: 1.2em; }
+.x-split .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 4vw, 56px); align-items: center; }
+.x-split.flip .x-media { order: 2; }
+.x-media { margin: 0; }
+.x-media img, .x-gallery img { display: block; width: 100%; height: auto; border: 1px solid var(--hair); border-radius: var(--radius); }
+.x-stats dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px; }
+.x-stats dt { font: 500 var(--t-xs)/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--brass-ink); }
+.x-stats dd { margin: 8px 0 0; font: 600 var(--t-xl)/1 var(--display); }
+.x-quote figure { margin: 0; }
+.x-quote blockquote { margin: 0; max-width: 24ch; font: 500 var(--t-xl)/1.2 var(--display); }
+.x-quote figcaption { margin-top: 1em; color: var(--ink-3); font: var(--t-xs)/1.3 var(--mono); }
+.x-box { border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); padding: clamp(24px, 4vw, 48px); }
+.x-gallery .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.x-gallery figure { margin: 0; }
+.x-gallery figcaption { font: var(--t-xs)/1.3 var(--mono); color: var(--ink-3); margin-top: 6px; }
+.x-divider { padding: 0; }
+.x-divider hr { border: 0; border-top: 1px solid var(--rule); }
+.x-spacer { padding: 0; }
+@media (max-width: 760px) { .x-split .wrap { grid-template-columns: 1fr; } .x-split.flip .x-media { order: 0; } }

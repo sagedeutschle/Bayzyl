@@ -79,6 +79,21 @@ try {
   check('and leaves the desktop size alone', await until(() => { const f = document.getElementById('frame'); return f.contentWindow.innerWidth > 1000 && f.contentWindow.getComputedStyle(f.contentDocument.querySelector('[data-edit="hero.title"]')).fontSize !== '40px'; }), await sizeOf());
   await row('Register').click();
 
+  // a new page from the section library
+  await page.selectOption('#tree .adder.head', 'article');
+  check('a new page opens in the preview', await until(() => document.getElementById('frame').contentDocument?.querySelector('main.x-page .x-title')?.textContent === 'A new page') && await row('New page').count() === 1);
+  await page.frameLocator('#frame').locator('.x-title').click();
+  await page.keyboard.press('ControlOrMeta+A'); await page.keyboard.type('About this workshop');
+  await row('New page').click();
+  await page.fill('#inspector [data-fid="page|title"]', 'About'); await page.keyboard.press('Tab');
+  await page.selectOption('#inspector .prop:has-text("Status") select', 'published');
+  await page.click('#inspector .prop.check:has-text("In the navigation") input');
+  check('a published page in the navigation shows in the bar', await until(() => [...document.getElementById('frame').contentDocument.querySelectorAll('.nav a')].some((a) => a.textContent === 'About' && a.getAttribute('href') === 'new-page.html')));
+  await row('Home').click();
+  await page.selectOption('#tree .adder:not(.head)', 'quote');
+  check('a library section joins the home page', await until(() => document.getElementById('frame').contentDocument?.querySelector('#main > .x-quote blockquote')));
+  await row('Register').click();
+
   // move a section, then undo
   await page.click('[data-tab="site"]');
   const order0 = await sections();
@@ -90,7 +105,7 @@ try {
 
   // the draft survives a reload
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('#tree .row', { timeout: 15000 });
-  check('the draft survives a reload', await until(() => /Publish 3 files/.test(document.getElementById('save').textContent)), await page.textContent('#save'));
+  check('the draft survives a reload', await until(() => /Publish 5 files/.test(document.getElementById('save').textContent)), await page.textContent('#save'));
 
   // publish
   await page.click('#save');
@@ -100,7 +115,9 @@ try {
   check('site.md arrives exactly as writeSections writes it', gh.written.get(SITE_PATH) === writeSections(siteText, { 'hero.lede': 'A lede typed on the page.' }));
   check('theme.json arrives with the token', JSON.parse(gh.written.get('showcase/prismet-site/data/theme.json') || '{}').root?.['--brass'] === '#D07A2C');
   check('styles.json arrives with the size for phones only', JSON.stringify(JSON.parse(gh.written.get('showcase/prismet-site/data/styles.json') || '{}').rules) === '{"text:hero.title":{"mobile":{"font-size":"40px"}}}', gh.written.get('showcase/prismet-site/data/styles.json'));
-  check('the commit message names the files', /site\.md \(1\); theme\.json/.test(commits[0]?.body.message || ''), commits[0]?.body.message);
+  { const pg = JSON.parse(gh.written.get('showcase/prismet-site/data/pages.json') || '{}'), pj = JSON.parse(gh.written.get('showcase/prismet-site/data/projects.json') || '{}');
+    check('pages.json arrives with the page and the home section, and the home order names it', pg.pages?.[0]?.title === 'About' && pg.pages[0].status === 'published' && pg.pages[0].sections[0].props.title === 'About this workshop' && pg.home?.[0]?.type === 'quote' && pj.layout.sections.includes(pg.home[0].id), JSON.stringify(pg).slice(0, 200)); }
+  check('the commit message names the files', /site\.md \(1\); projects\.json; theme\.json/.test(commits[0]?.body.message || ''), commits[0]?.body.message);
   check('only the server ever showed GitHub the token', gh.calls.every((c) => c.auth === 'Bearer github_pat_FAKE'));
   await until(() => /Live on prismet.xyz/.test(document.querySelector('#deploy').textContent));
   check('the page reports the deploy result and an empty draft', /Live on prismet.xyz/.test(await page.textContent('#deploy')) && /Nothing to publish/.test(await page.textContent('#save')));
