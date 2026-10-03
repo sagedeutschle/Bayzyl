@@ -11,7 +11,11 @@ site rebuilds and goes live by itself in about three minutes. No HTML, no server
 3. Change things. Click any text on the page and type. Drag a section or a record in the list to move it; the dot
    beside it hides or shows it; the star puts a record among the Principal works. **+** adds a record. Under Design,
    a token (the accent, the corner radius, a type size) changes everything that uses it, for night and day separately.
-4. Every change is a **draft**. It shows at once in the preview, saves by itself, survives a reload, and can be undone
+4. One element, one width: click a piece of text (or pick a section) and the right side shows its own style: size,
+   weight, colour, spacing, hidden or shown. **Desktop / Tablet / Mobile** above those fields choose where the style
+   applies: Desktop is every width, Tablet is 900px and narrower, Mobile is 600px and narrower, and a narrower width
+   inherits whatever it does not set. A greyed value is what the page draws now; a dot marks what you set; ↺ removes it.
+5. Every change is a **draft**. It shows at once in the preview, saves by itself, survives a reload, and can be undone
    (⌘Z, ⇧⌘Z). Nothing reaches the site until you press **Publish**: one commit with every changed file. The bar at
    the bottom follows the build; "Live on prismet.xyz" means done. **Lock** ends the session; the draft stays.
 
@@ -57,6 +61,7 @@ Open the file on github.com, press the pencil, edit, press "Commit changes". The
 | Which projects show, their order, their rooms, their images and links | `showcase/prismet-site/data/projects.json` |
 | A screenshot | upload it under `showcase/assets/<area>/`, then name it in `projects.json` (`cover`, `gallery`, `shotAlts`) |
 | Design tokens changed at /edit | `showcase/prismet-site/data/theme.json` (only what differs from `src/site.css`) |
+| One element's style, per width, set at /edit | `showcase/prismet-site/data/styles.json` |
 | The project pages' structure, the design | `showcase/prismet-site/pages/lib/render.js`, `src/site.css` (this is code) |
 
 Hiding a project: set `"hidden": true` on its entry in `projects.json`. Featuring one: add its slug to
@@ -83,6 +88,5 @@ Secrets the workflow uses, under Settings → Secrets and variables → Actions:
 
 ## What the edit page cannot do yet
 
-Add images, add pages, change one element's size or spacing for one screen width, or show the history of what was
-published (GitHub's commit list is that history; **Revert** there undoes a publish). Those are next; until then they
+Add images, add pages, or show the history of what was published (GitHub's commit list is that history; **Revert** there undoes a publish). Those are next; until then they
 are the JSON file and the code, edited on GitHub.

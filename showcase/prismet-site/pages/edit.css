@@ -111,6 +111,15 @@ textarea:focus, input:focus { border-color: var(--sel); outline: none; }
 .token input[type="text"] { grid-column: 3; font: 11px/1 var(--mono); height: 24px; }
 .token .reset { grid-column: 4; margin: 0; }
 
+/* one element's own style */
+.element { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px 0; }
+.element-name { font: 11px/1.2 var(--mono); color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.element .seg button { height: 22px; padding: 0 7px; gap: 4px; }
+.seg .dot { display: inline-block; }
+.note.tier { padding: 6px 12px 8px; font-size: 11px; color: var(--text-3); border-bottom: 1px solid var(--line); }
+.token select { grid-column: 3; height: 24px; padding: 0 4px; font: 11px/1 var(--mono); }
+.token input::placeholder { color: var(--text-3); }
+
 /* ── foot ── */
 .foot { grid-area: foot; display: flex; align-items: center; gap: 12px; padding: 0 10px; background: var(--panel); border-top: 1px solid var(--line); font: 11px/1 var(--mono); color: var(--text-2); min-width: 0; }
 .crumbs { display: flex; align-items: center; gap: 6px; min-width: 0; overflow: hidden; white-space: nowrap; }

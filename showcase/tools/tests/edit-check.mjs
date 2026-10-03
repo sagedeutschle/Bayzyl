@@ -138,7 +138,7 @@ const { createStore, PROJECTS_FILE, THEME_FILE, workFile } = await import(join(S
 const { fakeGitHub: checkoutGitHub } = await import(join(HERE, 'fake-github.mjs'));
 const REPO_ROOT = join(HERE, '..', '..', '..');
 const disk = (rel) => ({ path: `showcase/prismet-site/${rel}`, text: readFileSync(join(SITE, rel), 'utf8'), sha: 'a'.repeat(40) });
-const published = () => [...files.map(disk), disk('data/projects.json'), disk('data/theme.json')];
+const published = () => [...files.map(disk), disk('data/projects.json'), disk('data/theme.json'), disk('data/styles.json')];
 const memory = () => { const m = new Map(); return { getItem: (k) => m.get(k) ?? null, setItem: (k, v) => m.set(k, v), removeItem: (k) => m.delete(k) }; };
 const tick = (ms = 450) => new Promise((r) => setTimeout(r, ms));
 
@@ -148,7 +148,7 @@ if (existsSync(join(SITE, 'dist/edit/assets.json'))) {
     url: (p) => { if (!p) return null; const f = manifest.files[p]; if (!f) throw new Error(`missing image: ${p}`); return `${p}?v=${f[2]}`; } };
   const st = createStore({ storage: memory() }); st.load(published());
   const cssUrl = readFileSync(join(SITE, 'dist/index.html'), 'utf8').match(/href="(site\.css\?v=[0-9a-f]+)"/)[1];
-  const out = renderSite({ data: st.docs.projects, site: st.docs.site, work: st.docs.work, assets, urls: { css: cssUrl, js: manifest.urls.js, og: manifest.urls.og } });
+  const out = renderSite({ data: st.docs.projects, site: st.docs.site, work: st.docs.work, assets, urls: { css: cssUrl, js: manifest.urls.js, og: manifest.urls.og }, styles: st.docs.styles });
   for (const [path, html] of out.pages) { assert.equal(html, readFileSync(join(SITE, 'dist', path), 'utf8'), `${path}: the editor's render differs from the build's`); checks++; }
   assert.equal(out.missing.size, 0); checks++;
   const ed = renderSite({ data: st.docs.projects, site: st.docs.site, work: st.docs.work, assets, urls: { css: 'site.css', js: manifest.urls.js, og: manifest.urls.og }, edit: true });
@@ -161,6 +161,27 @@ const css = themeCss({ root: { '--brass': '#D08A3C', '--radius': '6px', 'color':
 assert.match(css, /:root \{ --brass: #D08A3C; --radius: 6px; \}/); assert.match(css, /:root\[data-theme="light"\] \{ --brass: #7A4A12; \}/);
 assert.ok(!css.includes('display: none') && !css.includes('color: red'), 'only custom properties with one declaration\'s worth of value');
 assert.equal(stripTheme('a{}' + css), 'a{}'); assert.equal(safeValue('url(x)'), false); assert.equal(safeValue('clamp(1rem, 2vw, 3rem)'), true); checks += 7;
+
+// ── one element's style, per width ──
+{
+  const { stylesCss, styledKeys, tierFor, selectorOf } = await import(join(SITE, 'pages/lib/styles.js'));
+  assert.equal(stylesCss({ rules: {} }), '', 'no rules add nothing to site.css');
+  const st = { rules: { 'text:hero.title': { base: { 'font-size': '64px' }, mobile: { 'font-size': '40px', position: 'fixed', color: 'red; } body { display: none' } },
+    'section:lenses': { mobile: { display: 'none' } }, 'section:hero': { base: { 'padding-top': '96px' } }, 'text:x"] body, [y': { base: { color: 'red' } }, 'script:x': { base: { color: 'red' } } } };
+  const out = stylesCss(st);
+  assert.match(out, /\[data-s="hero\.title"\] \{ font-size: 64px !important; \}/); assert.match(out, /\.entrance \{ padding-top: 96px !important; \}/);
+  assert.match(out, /@media \(max-width: 600px\) \{ \[data-s="hero\.title"\] \{ font-size: 40px !important; \} #main > \[data-section="lenses"\] \{ display: none !important; \} \}/);
+  assert.ok(!out.includes('position') && !out.includes('body') && !out.includes('script'), 'only listed properties, one declaration each, known targets'); checks += 5;
+  assert.ok(out.indexOf('64px') < out.indexOf('40px'), 'narrower tiers come later, so they win');
+  assert.match(stylesCss(st, { attr: 'data-edit' }), /\[data-edit="hero\.title"\]/); assert.deepEqual([...styledKeys(st)], ['hero.title']);
+  assert.deepEqual([1440, 901, 900, 601, 600, 390].map(tierFor), ['base', 'base', 'tablet', 'tablet', 'mobile', 'mobile']); assert.equal(selectorOf('section:../x'), null);
+  assert.equal(stripTheme('a{}' + themeCss({ root: { '--brass': '#fff' } }) + out), 'a{}'); assert.equal(stripTheme('a{}' + out), 'a{}'); checks += 7;
+  const s2 = createStore({ storage: memory() }); s2.load([...published(), disk('data/styles.json')]);
+  const plain = renderSite({ data: s2.docs.projects, site: s2.docs.site, work: s2.docs.work, assets: { size: () => ({ w: 1, h: 1 }), has: () => true, url: (p) => p }, urls: { css: 'c', js: 'j', og: 'o' }, styles: st });
+  assert.match(plain.pages.get('index.html'), /class="salute" data-s="hero\.title"/, 'the site marks the wording a style targets'); assert.equal((plain.pages.get('index.html').match(/data-s=/g) || []).length, 1, 'and only that'); checks += 2;
+  s2.change('Size', (d) => { d.styles.rules['text:hero.title'] = { mobile: { 'font-size': '40px' } }; }, { kind: 'styles' });
+  assert.deepEqual(s2.changedFiles().map((f) => f.label), ['styles.json']); checks++;
+}
 
 // ── the draft ──
 {
@@ -194,7 +215,7 @@ assert.equal(stripTheme('a{}' + css), 'a{}'); assert.equal(safeValue('url(x)'), 
   const get = async (path) => (await call2('GET', `/api/edit/file?path=${path}`, { cookie: sid3 })).body;
   assert.equal((await get(PROJECTS_FILE)).text, disk('data/projects.json').text, 'the data files can be read'); checks++;
   const real = createStore({ storage: memory() });
-  real.load(await Promise.all([...files.map((f) => `showcase/prismet-site/${f}`), PROJECTS_FILE, THEME_FILE].map(get)));
+  real.load(await Promise.all([...files.map((f) => `showcase/prismet-site/${f}`), PROJECTS_FILE, THEME_FILE, 'showcase/prismet-site/data/styles.json'].map(get)));
   real.setText('hero.lede', 'Published lede.'); real.change('Hide plate', (d) => { d.projects.layout.hiddenSections = ['plate']; });
   real.change('New record', (d) => { d.projects.projects.push({ slug: 'new-record', beam: 'web', stack: [], hidden: true }); d.work['new-record'] = { title: 'New', subtitle: 's', status: 'x', year: '2026', role: 'r', summary: 's', facts: '- a: b', highlights: '- c' }; });
   const batch = real.changedFiles().map(({ path, text, sha }) => ({ path, text, sha }));
@@ -207,7 +228,7 @@ assert.equal(stripTheme('a{}' + css), 'a{}'); assert.equal(safeValue('url(x)'), 
   r = await call2('POST', '/api/edit/commit', { cookie: sid3, body: { files: batch } }); assert.equal(r.status, 409, 'a file that changed since it was loaded stops the publish'); assert.ok(r.body.stale.includes('site.md')); checks += 2;
   const refuse = async (file, why) => { const x = await call2('POST', '/api/edit/commit', { cookie: sid3, body: { files: [file] } }); assert.equal(x.status, 400, why); checks++; };
   await refuse({ path: 'showcase/server/server.js', text: 'x', sha: 'a'.repeat(40) }, 'only content and data files');
-  await refuse({ path: 'showcase/prismet-site/data/other.json', text: '{}', sha: 'a'.repeat(40) }, 'only the two data files');
+  await refuse({ path: 'showcase/prismet-site/data/other.json', text: '{}', sha: 'a'.repeat(40) }, 'only the three data files');
   await refuse({ path: PROJECTS_FILE, text: '{not json', sha: 'a'.repeat(40) }, 'a data file must be JSON');
   await refuse({ path: 'showcase/prismet-site/content/site2.md', text: 'x', sha: null }, 'a new file can only be a record');
   await refuse({ path: 'showcase/prismet-site/content/work/../x.md', text: 'x', sha: null }, 'no traversal');

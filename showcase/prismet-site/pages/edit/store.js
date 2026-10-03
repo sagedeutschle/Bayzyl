@@ -5,6 +5,7 @@
 //   work      { slug: content/work/<slug>.md as { key: text } }
 //   projects  data/projects.json (records, section order, hidden flags, featured list)
 //   theme     data/theme.json ({ root, day }: design tokens changed from site.css's defaults)
+//   styles    data/styles.json ({ rules }: single elements, per width)
 // The published copy of each is kept beside it (store.base), so every field can say whether it differs and go back.
 // The draft autosaves to this browser and survives a reload; nothing reaches the site until Publish.
 import { parseSections, writeSections, editTarget, workUpdate, workValue } from '../lib/format.js';
@@ -13,6 +14,7 @@ export const ROOT = 'showcase/prismet-site/';
 export const SITE_FILE = `${ROOT}content/site.md`;
 export const PROJECTS_FILE = `${ROOT}data/projects.json`;
 export const THEME_FILE = `${ROOT}data/theme.json`;
+export const STYLES_FILE = `${ROOT}data/styles.json`;
 export const workFile = (slug) => `${ROOT}content/work/${slug}.md`;
 const slugOf = (path) => path.slice(`${ROOT}content/work/`.length, -3);
 const KEY = 'prismet.edit.draft.v1';
@@ -38,6 +40,7 @@ export function createStore({ storage = globalThis.localStorage, now = Date.now 
       work,
       projects: JSON.parse(files.get(PROJECTS_FILE)?.text || '{"projects":[]}'),
       theme: (() => { const t = JSON.parse(files.get(THEME_FILE)?.text || '{}'); return { ...t, root: t.root || {}, day: t.day || {} }; })(),
+      styles: (() => { const t = JSON.parse(files.get(STYLES_FILE)?.text || '{}'); return { ...t, rules: t.rules || {} }; })(),
     };
   };
   const shas = () => Object.fromEntries([...files].map(([p, f]) => [p, f.sha]));
@@ -62,7 +65,7 @@ export function createStore({ storage = globalThis.localStorage, now = Date.now 
     try {
       const saved = JSON.parse(storage.getItem(KEY) || 'null');
       if (saved?.docs) {
-        if (same(saved.shas, shas())) { docs = saved.docs; draftAt = saved.at || 0; restored = !same(docs, base); }
+        if (same(saved.shas, shas())) { docs = { ...clone(base), ...saved.docs }; draftAt = saved.at || 0; restored = !same(docs, base); }
         else { storage.setItem(`${KEY}.stale`, JSON.stringify(saved)); storage.removeItem(KEY); stale = true; }   // kept, not applied
       }
     } catch { /* storage blocked or corrupt: start from the published copy */ }
@@ -105,6 +108,7 @@ export function createStore({ storage = globalThis.localStorage, now = Date.now 
     }
     if (!same(docs.projects, base.projects)) out.push({ path: PROJECTS_FILE, text: json(docs.projects), sha: files.get(PROJECTS_FILE)?.sha ?? null, label: 'projects.json' });
     if (!same(docs.theme, base.theme)) out.push({ path: THEME_FILE, text: json(docs.theme), sha: files.get(THEME_FILE)?.sha ?? null, label: 'theme.json' });
+    if (!same(docs.styles, base.styles)) out.push({ path: STYLES_FILE, text: json(docs.styles), sha: files.get(STYLES_FILE)?.sha ?? null, label: 'styles.json' });
     return out;
   }
 

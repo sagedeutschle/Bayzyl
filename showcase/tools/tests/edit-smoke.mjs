@@ -68,6 +68,17 @@ try {
   await page.fill('[data-token="--brass"] input[type="text"]', '#D07A2C'); await page.keyboard.press('Tab');
   check('a token changes the whole preview at once', await until(() => getComputedStyle(document.getElementById('frame').contentDocument.documentElement).getPropertyValue('--brass').trim() === '#D07A2C'));
 
+  // one element, one width: the hero's first line is smaller on phones only
+  await page.click('[data-tab="site"]');
+  await page.frameLocator('#frame').locator('[data-edit="hero.title"]').click();
+  await page.click('#inspector .element .seg button:has-text("Mobile")');
+  await page.fill('#inspector [data-style="font-size"] input[type="text"]', '40'); await page.keyboard.press('Tab');
+  const sizeOf = () => page.evaluate(() => { const f = document.getElementById('frame'); return f.contentWindow.getComputedStyle(f.contentDocument.querySelector('[data-edit="hero.title"]')).fontSize; });
+  check('a size set at Mobile shows at mobile width', await until(() => { const f = document.getElementById('frame'); return f.contentWindow.innerWidth < 420 && f.contentWindow.getComputedStyle(f.contentDocument.querySelector('[data-edit="hero.title"]')).fontSize === '40px'; }), await sizeOf());
+  await page.click('#device [data-w="1440"]');
+  check('and leaves the desktop size alone', await until(() => { const f = document.getElementById('frame'); return f.contentWindow.innerWidth > 1000 && f.contentWindow.getComputedStyle(f.contentDocument.querySelector('[data-edit="hero.title"]')).fontSize !== '40px'; }), await sizeOf());
+  await row('Register').click();
+
   // move a section, then undo
   await page.click('[data-tab="site"]');
   const order0 = await sections();
@@ -79,7 +90,7 @@ try {
 
   // the draft survives a reload
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('#tree .row', { timeout: 15000 });
-  check('the draft survives a reload', await until(() => /Publish 2 files/.test(document.getElementById('save').textContent)), await page.textContent('#save'));
+  check('the draft survives a reload', await until(() => /Publish 3 files/.test(document.getElementById('save').textContent)), await page.textContent('#save'));
 
   // publish
   await page.click('#save');
@@ -88,6 +99,7 @@ try {
   check('GitHub receives one commit', commits.length === 1, `${commits.length} commits`);
   check('site.md arrives exactly as writeSections writes it', gh.written.get(SITE_PATH) === writeSections(siteText, { 'hero.lede': 'A lede typed on the page.' }));
   check('theme.json arrives with the token', JSON.parse(gh.written.get('showcase/prismet-site/data/theme.json') || '{}').root?.['--brass'] === '#D07A2C');
+  check('styles.json arrives with the size for phones only', JSON.stringify(JSON.parse(gh.written.get('showcase/prismet-site/data/styles.json') || '{}').rules) === '{"text:hero.title":{"mobile":{"font-size":"40px"}}}', gh.written.get('showcase/prismet-site/data/styles.json'));
   check('the commit message names the files', /site\.md \(1\); theme\.json/.test(commits[0]?.body.message || ''), commits[0]?.body.message);
   check('only the server ever showed GitHub the token', gh.calls.every((c) => c.auth === 'Bearer github_pat_FAKE'));
   await until(() => /Live on prismet.xyz/.test(document.querySelector('#deploy').textContent));

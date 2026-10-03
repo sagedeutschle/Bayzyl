@@ -5,6 +5,7 @@
 // navigating. Token changes repaint without a reload; structural changes re-render and keep the scroll position.
 import { renderSite } from '../lib/render.js';
 import { themeCss } from '../lib/theme.js';
+import { stylesCss, selectorOf } from '../lib/styles.js';
 import { inline, plain } from '../lib/format.js';
 
 const FRAME_CSS = `
@@ -32,15 +33,18 @@ export function createPreview({ frame, stage, store, manifest, baseCss, onSelect
   const esc = (s) => frame.contentWindow.CSS.escape(s);
 
   // ── rendering ─────────────────────────────────────────────────────────────────────────────
+  // In Edit mode every piece of wording carries data-edit, so a style shows the moment it is set; in Preview mode the
+  // page is the site's own HTML, where only styled wording is marked (data-s).
+  const STYLE_ATTR = () => (mode === 'edit' ? 'data-edit' : 'data-s');
   function render({ keep = true } = {}) {
     const d = store.docs;
     let out;
-    try { out = renderSite({ data: d.projects, site: d.site, work: d.work, assets, urls: { css: 'site.css', js: manifest.urls.js, og: manifest.urls.og }, edit: mode === 'edit' }); }
+    try { out = renderSite({ data: d.projects, site: d.site, work: d.work, assets, urls: { css: 'site.css', js: manifest.urls.js, og: manifest.urls.og }, styles: d.styles, edit: mode === 'edit' }); }
     catch (e) { say(`The preview could not render: ${e.message}. Undo the last change.`, 'warn'); return; }
     pages = out.pages; missing = out.missing;
     if (!pages.has(page)) page = 'index.html';
     const root = page.includes('/') ? '../' : '';
-    const styles = `<style>${baseCss}</style><style id="pe-theme">${themeCss(d.theme)}</style>${mode === 'edit' ? `<style>${FRAME_CSS}</style>` : ''}`;
+    const styles = `<style>${baseCss}</style><style id="pe-theme">${themeCss(d.theme)}</style><style id="pe-styles">${stylesCss(d.styles, { attr: STYLE_ATTR() })}</style>${mode === 'edit' ? `<style>${FRAME_CSS}</style>` : ''}`;
     keepScroll = keep && doc()?.body ? frame.contentWindow.scrollY : 0;
     frame.srcdoc = pages.get(page).replace(`<link rel="stylesheet" href="${root}site.css">`, () => styles);
   }
@@ -155,6 +159,7 @@ export function createPreview({ frame, stage, store, manifest, baseCss, onSelect
     if (ev.type !== 'change') return;
     if (ev.kind === 'text') return paint(ev.key);
     if (ev.kind === 'theme') { const s = doc()?.getElementById('pe-theme'); if (s) s.textContent = themeCss(store.docs.theme); else schedule(); return; }
+    if (ev.kind === 'styles') { const s = doc()?.getElementById('pe-styles'); if (s && mode === 'edit') s.textContent = stylesCss(store.docs.styles, { attr: 'data-edit' }); else schedule(); return; }
     schedule();
   });
 
@@ -172,8 +177,17 @@ export function createPreview({ frame, stage, store, manifest, baseCss, onSelect
   }
   new ResizeObserver(layout).observe(stage);
 
+  /** What the browser draws for a style target right now (at the frame's current width): the value a control shows
+   *  when nothing is set. */
+  function computed(target, prop) {
+    const d = doc(), sel = selectorOf(target, 'data-edit'); if (!d || !sel) return '';
+    const el = d.querySelector(sel);
+    return el ? frame.contentWindow.getComputedStyle(el).getPropertyValue(prop).trim() : '';
+  }
+
   return {
-    render, select, layout,
+    render, select, layout, computed,
+    get width() { return device || frame.getBoundingClientRect().width; },
     get page() { return page; },
     get mode() { return mode; },
     get missing() { return missing; },

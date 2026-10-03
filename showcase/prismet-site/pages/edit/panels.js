@@ -6,10 +6,12 @@
 //   { type: 'page', page }         a page with no parts of its own (the colophon)
 //   { type: 'shared' }             words used on every page (navigation, footer, labels)
 //   { type: 'tokens', group }      a group of design tokens
-// plus an optional key: the one field to bring into view (set when text is clicked in the preview).
+// plus an optional key: the one field to bring into view (set when text is clicked in the preview). With a key the
+// inspector also offers that element's own style, per width (data/styles.json); a section offers its layout.
 import { editTarget } from '../lib/format.js';
 import { SECTION_IDS } from '../lib/render.js';
 import { safeValue } from '../lib/theme.js';
+import { TIERS, tierFor } from '../lib/styles.js';
 
 const AREAS = [
   ['hero', /^(hero|plan|beam)\./, 'Hero'],
@@ -29,6 +31,33 @@ export const TOKEN_GROUPS = [
   { id: 'type', label: 'Typography', tokens: [['--display', 'Display font'], ['--sans', 'Reading font'], ['--mono', 'Label font'], ['--t-2xl', 'Display size'], ['--t-xl', 'H2 size'], ['--t-lg', 'H3 size'], ['--t-md', 'Lede size'], ['--t-base', 'Body size'], ['--t-sm', 'Small size'], ['--t-xs', 'Caption size']] },
   { id: 'shape', label: 'Shape and layout', tokens: [['--radius', 'Corner radius', ['0', '2px', '4px', '6px', '8px', '12px', '16px']], ['--maxw', 'Page width'], ['--gutter', 'Page gutter'], ['--bar', 'Top bar height']] },
 ];
+// What can be styled on one element (data/styles.json). Each list is short on purpose: common changes, values that
+// come from the design's scales first, anything else typed. unit is added to a bare number.
+const SPACE = ['0', '4px', '8px', '12px', '16px', '24px', '32px', '48px', '64px', '96px', '128px'];
+const COLORS = [['var(--ink)', 'Text primary'], ['var(--ink-2)', 'Text secondary'], ['var(--ink-3)', 'Text muted'], ['var(--brass)', 'Accent'], ['var(--brass-ink)', 'Accent text'], ['var(--lantern)', 'Lantern'], ['var(--live)', 'Live'], ['var(--ground)', 'Background'], ['var(--surface)', 'Surface'], ['var(--raised)', 'Surface raised']];
+const STYLE_CONTROLS = {
+  text: [
+    ['Typography', [
+      { prop: 'font-size', label: 'Size', unit: 'px', steps: [['var(--t-2xl)', 'Display'], ['var(--t-xl)', 'H2'], ['var(--t-lg)', 'H3'], ['var(--t-md)', 'Lede'], ['var(--t-base)', 'Body'], ['var(--t-sm)', 'Small'], ['var(--t-xs)', 'Caption']] },
+      { prop: 'font-weight', label: 'Weight', options: ['300', '400', '500', '600', '700', '800', '900'] },
+      { prop: 'line-height', label: 'Line height' },
+      { prop: 'letter-spacing', label: 'Letter spacing', unit: 'em' },
+      { prop: 'font-family', label: 'Font', options: [['var(--display)', 'Display'], ['var(--sans)', 'Reading'], ['var(--mono)', 'Label']] },
+      { prop: 'text-transform', label: 'Case', options: ['none', 'uppercase', 'lowercase', 'capitalize'] },
+      { prop: 'text-align', label: 'Align', options: ['left', 'center', 'right'] },
+      { prop: 'color', label: 'Color', color: true, steps: COLORS },
+      { prop: 'opacity', label: 'Opacity' },
+      { prop: 'max-width', label: 'Max width', unit: 'px' },
+    ]],
+    ['Spacing', [{ prop: 'margin-top', label: 'Space above', unit: 'px', steps: SPACE }, { prop: 'margin-bottom', label: 'Space below', unit: 'px', steps: SPACE }]],
+  ],
+  section: [
+    ['Layout', [{ prop: 'padding-top', label: 'Padding top', unit: 'px', steps: SPACE }, { prop: 'padding-bottom', label: 'Padding bottom', unit: 'px', steps: SPACE }, { prop: 'background-color', label: 'Background', color: true, steps: COLORS }]],
+  ],
+};
+const DEVICE = { base: 1440, tablet: 820, mobile: 390 };       // the preview width that shows each tier
+const rgbHex = (v) => { const m = String(v).match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/); return m ? `#${[m[1], m[2], m[3]].map((n) => Number(n).toString(16).padStart(2, '0')).join('')}` : null; };
+
 /** site.css's own values: { root, day }. */
 export function parseDefaults(css) {
   const text = css.replace(/\/\*[\s\S]*?\*\//g, '');
@@ -60,7 +89,7 @@ export function h(tag, attrs = {}, ...kids) {
 }
 const pretty = (key) => key.replace(/^work\.[a-z0-9-]+\./, '').replace(/[._-]/g, ' ').replace(/\b\w/, (c) => c.toUpperCase());
 
-export function createPanels({ treeEl, inspectorEl, crumbsEl, store, baseCss, select, getSelection, getTab, setThemeMode, say }) {
+export function createPanels({ treeEl, inspectorEl, crumbsEl, store, baseCss, select, getSelection, getTab, setThemeMode, getWidth, setDevice, computed, say }) {
   const defaults = parseDefaults(baseCss);
   let themeMode = 'root';                                     // which set of colours the token rows edit: root (night) or day
   const D = () => store.docs, B = () => store.base;
@@ -116,6 +145,17 @@ export function createPanels({ treeEl, inspectorEl, crumbsEl, store, baseCss, se
         if (!B().work[slug]) delete d.work[slug];           // a published record keeps its wording file; only the entry goes
       });
       select({ type: 'section', id: 'work' });
+    },
+    /** One property of one element at one tier; an empty value removes it (the element inherits again). */
+    setStyle(target, tier, prop, value) {
+      const v = String(value).trim();
+      if (v && !safeValue(v)) return say('That value has characters a style cannot hold.', 'warn');
+      store.change(`Style ${prop}`, (d) => {
+        const rules = d.styles.rules, r = (rules[target] ||= {}), t = (r[tier] ||= {});
+        if (v) t[prop] = v; else delete t[prop];
+        if (!Object.keys(t).length) delete r[tier];
+        if (!Object.keys(r).length) delete rules[target];
+      }, { kind: 'styles', merge: `style:${target}:${tier}:${prop}` });
     },
     setToken(bucket, name, value) {
       const v = String(value).trim();
@@ -227,7 +267,7 @@ export function createPanels({ treeEl, inspectorEl, crumbsEl, store, baseCss, se
     return g.tokens.map(([name, label, steps]) => {
       const def = bucket === 'day' ? defaults.day[name] ?? theme.root[name] ?? defaults.root[name] : defaults.root[name];
       const own = theme[bucket][name], value = own ?? def ?? '', color = g.modes ? hex6(value) : null;
-      const text = h('input', { type: 'text', value, spellcheck: false, list: steps ? `steps-${name}` : null, 'aria-label': label, onchange: (e) => actions.setToken(bucket, name, e.target.value) });
+      const text = h('input', { type: 'text', 'data-fid': `token|${bucket}|${name}`, value, spellcheck: false, list: steps ? `steps-${name}` : null, 'aria-label': label, onchange: (e) => actions.setToken(bucket, name, e.target.value) });
       return h('div', { class: `token${own != null ? ' dirty' : ''}`, 'data-token': name },
         h('span', { class: 'token-name', title: name }, label, h('span', { class: 'dot', title: `Custom. Default: ${def}` })),
         color ? h('input', { type: 'color', value: color, 'aria-label': `${label} colour`, oninput: (e) => { text.value = e.target.value.toUpperCase(); actions.setToken(bucket, name, e.target.value.toUpperCase()); } }) : null,
@@ -237,7 +277,49 @@ export function createPanels({ treeEl, inspectorEl, crumbsEl, store, baseCss, se
     });
   }
 
+  // ── one element's own style, per width ────────────────────────────────────────────────────
+  function styleRow(target, tier, c) {
+    const rule = D().styles.rules[target] || {}, own = rule[tier]?.[c.prop];
+    const order = TIERS.map((t) => t[0]), wider = order.slice(0, order.indexOf(tier)).reverse().find((t) => rule[t]?.[c.prop] != null);
+    const from = wider ? `${rule[wider][c.prop]} (${TIERS.find((t) => t[0] === wider)[1]})` : '', now = computed(target, c.prop);
+    const fid = `${target}|${c.prop}`, set = (v) => actions.setStyle(target, tier, c.prop, c.unit && /^-?\d*\.?\d+$/.test(v.trim()) ? `${v.trim()}${c.unit}` : v);
+    const pair = (o) => (Array.isArray(o) ? o : [o, o]);
+    let control, swatch = null;
+    if (c.options) control = h('select', { 'data-fid': fid, 'aria-label': c.label, onchange: (e) => set(e.target.value) }, h('option', { value: '', selected: own == null }, from || 'Default'), c.options.map(pair).map(([v, t]) => h('option', { value: v, selected: v === own }, t)));
+    else {
+      control = h('input', { type: 'text', 'data-fid': fid, value: own ?? '', placeholder: from || now, spellcheck: false, list: c.steps ? `steps-${fid}` : null, 'aria-label': c.label, onchange: (e) => set(e.target.value) });
+      if (c.color) swatch = h('input', { type: 'color', value: hex6(own) || rgbHex(now) || '#000000', 'aria-label': `${c.label}: custom colour`, oninput: (e) => { control.value = e.target.value.toUpperCase(); }, onchange: (e) => set(e.target.value.toUpperCase()) });
+    }
+    return h('div', { class: `token${own != null ? ' dirty' : ''}`, 'data-style': c.prop },
+      h('span', { class: 'token-name', title: wider ? `Set for ${from}` : now ? `Drawn now: ${now}` : '' }, c.label, h('span', { class: 'dot', title: 'Set for this element at this width' })),
+      swatch, control,
+      c.steps && !c.options ? h('datalist', { id: `steps-${fid}` }, c.steps.map(pair).map(([v, t]) => h('option', { value: v, label: t === v ? null : t }))) : null,
+      h('button', { class: 'reset', type: 'button', title: wider ? `Back to ${from}` : 'Back to the design\'s own value', onclick: () => actions.setStyle(target, tier, c.prop, '') }, '↺'));
+  }
+  // text: the wording itself heads the block, so a click on the page lands on its words and its style together.
+  function styleBlock(target, kind, name, key = null) {
+    const tier = tierFor(getWidth()), rule = D().styles.rules[target] || {}, [, label, media] = TIERS.find((t) => t[0] === tier);
+    const hidden = rule[tier]?.display === 'none';
+    return [
+      h('div', { class: 'element' }, h('span', { class: 'element-name', title: target }, name),
+        h('div', { class: 'seg' }, TIERS.map(([id, t]) => h('button', { type: 'button', 'aria-pressed': String(id === tier), title: `Style this at ${t.toLowerCase()} width`, onclick: () => setDevice(DEVICE[id]) }, t, rule[id] ? h('span', { class: 'dot' }) : null)))),
+      key ? group('Text', field(key, key)) : null,
+      h('p', { class: 'note tier' }, media ? `${label}: applies at ${media.match(/\d+/)[0]}px and narrower. Empty fields inherit from the wider widths.` : 'Desktop: applies at every width unless Tablet or Mobile says otherwise.'),
+      STYLE_CONTROLS[kind].map(([title, list]) => group(title, list.map((c) => styleRow(target, tier, c)))),
+      group('Visibility', check(media ? `Hidden at ${label.toLowerCase()} width and narrower` : 'Hidden at every width', hidden, () => actions.setStyle(target, tier, 'display', hidden ? '' : 'none'))),
+    ].flat(Infinity).filter(Boolean);
+  }
+
+  // Redrawing the panel must not take the keyboard away: the field that had focus gets it back.
+  // Nor move the panel under the reader: the scroll position stays while the selection does.
+  let drawn = '';
   function renderInspector() {
+    const fid = document.activeElement?.closest?.('[data-fid]')?.dataset.fid, top = inspectorEl.scrollTop, now = JSON.stringify(getSelection());
+    drawInspector();
+    inspectorEl.scrollTop = now === drawn ? top : 0; drawn = now;
+    if (fid) inspectorEl.querySelector(`[data-fid="${CSS.escape(fid)}"]`)?.focus({ preventScroll: true });
+  }
+  function drawInspector() {
     const sel = getSelection();
     inspectorEl.replaceChildren(); crumbsEl.replaceChildren();
     const crumb = (label, to) => { if (crumbsEl.childNodes.length) crumbsEl.append(h('span', { class: 'sep' }, '/')); crumbsEl.append(to ? h('button', { type: 'button', onclick: () => select(to) }, label) : h('span', {}, label)); };
@@ -259,7 +341,8 @@ export function createPanels({ treeEl, inspectorEl, crumbsEl, store, baseCss, se
       const isNew = !B().work[p.slug], set = (label, fn) => actions.setProject(p.slug, label, fn);
       crumb('Records', { type: 'section', id: 'work' }); crumb(title(p.slug), { type: 'project', slug: p.slug }); if (sel.key) crumb(pretty(sel.key));
       inspectorEl.append(h('h2', {}, title(p.slug), isNew ? h('span', { class: 'badge' }, 'Draft') : null, p.hidden ? h('span', { class: 'badge off' }, 'Hidden') : null));
-      inspectorEl.append(group('Content', keysOf(sel).map((key) => field(key))));
+      if (sel.key) inspectorEl.append(...styleBlock(`text:${sel.key}`, 'text', pretty(sel.key), sel.key));
+      inspectorEl.append(group('Content', keysOf(sel).filter((key) => key !== sel.key).map((key) => field(key))));
       const feat = (D().projects.featuredOrder || []).includes(p.slug);
       inspectorEl.append(group('Record',
         check('Shown on the site', !p.hidden, () => actions.toggleProject(p.slug)),
@@ -284,9 +367,11 @@ export function createPanels({ treeEl, inspectorEl, crumbsEl, store, baseCss, se
       if (movable) inspectorEl.append(group('Section',
         check('Shown on the home page', !hid, () => actions.toggleSection(sel.id)),
         h('div', { class: 'actions-row' }, h('button', { class: 'btn', type: 'button', onclick: () => actions.nudgeSection(sel.id, -1) }, '↑ Move up'), h('button', { class: 'btn', type: 'button', onclick: () => actions.nudgeSection(sel.id, 1) }, '↓ Move down'))));
-      inspectorEl.append(group('Content', keysOf(sel).map((key) => field(key, key))));
+      if (sel.key) inspectorEl.append(...styleBlock(`text:${sel.key}`, 'text', sel.key, sel.key));
+      else if (sel.type === 'section') inspectorEl.append(...styleBlock(`section:${sel.id}`, 'section', `${name} section`));
+      inspectorEl.append(group('Content', keysOf(sel).filter((key) => key !== sel.key).map((key) => field(key, key))));
     }
-    if (sel.key) { const f = inspectorEl.querySelector(`[data-key="${CSS.escape(sel.key)}"]`); if (f) { f.classList.add('focus'); f.scrollIntoView({ block: 'center' }); } }
+    if (sel.key) { const f = inspectorEl.querySelector(`[data-key="${CSS.escape(sel.key)}"]`); if (f) f.classList.add('focus'); }
   }
 
   /** After a text change made somewhere else: refresh that one field without rebuilding the panel (keeps the cursor). */

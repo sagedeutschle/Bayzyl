@@ -9,6 +9,7 @@
 //   assets   { size(p) → { w, h }, has(p) → boolean, url(p) → the URL to write for p (throws when p is missing) };
 //            p is a path under showcase/, such as assets/minecraft/x.webp
 //   urls     { css, js, og }: the URLs of site.css, site.js and the share image
+//   styles   data/styles.json, parsed (optional): the wording it styles is marked so its rules can find it
 //   preview  true for the artifact preview: every piece of wording carries its key (data-edit), plus its own editor
 //   edit     true for the editor at /edit: wording carries its key and hidden sections and records stay on the page
 //            (class is-off), so they can be selected and brought back
@@ -16,12 +17,13 @@
 // pages maps a path in the site (index.html, work/<slug>.html, colophon.html) to its HTML. missing lists content keys
 // a page asked for and did not find.
 import { inline, plain, listItems, factPairs } from './format.js';
+import { styledKeys } from './styles.js';
 
 // Spectrum order, red deviates least: desktop, apps, worlds, minecraft, web, ai.
 export const SPECTRUM = ['desktop', 'apps', 'worlds', 'minecraft', 'web', 'ai'];
 export const SECTION_IDS = ['selected', 'work', 'plate', 'lenses', 'about'];
 
-export function renderSite({ data, site: S, work: W, assets, urls, preview: PREVIEW = false, edit: EDIT = false }) {
+export function renderSite({ data, site: S, work: W, assets, urls, styles = null, preview: PREVIEW = false, edit: EDIT = false }) {
 const ANNOTATE = PREVIEW || EDIT;
 // The body below is not indented: its template literals carry the pages' own whitespace.
 const { size: sizeOf, has, url: asset } = assets;
@@ -38,7 +40,9 @@ const ABOUT_PARAS = Object.keys(S).filter((key) => /^about\.p\d+$/.test(key)).so
 const work = (slug, f) => { const v = W[slug][f]; if (v === undefined) { missing.add(`content/work/${slug}.md → ## ${f}`); return ''; } return v; };
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 // In --preview every piece of wording carries its key, so the page editor can save edits back.
-const ed = (key, raw) => (ANNOTATE ? ` data-edit="${esc(key)}" data-src="${esc(raw)}"` : '');
+// On the site only wording that data/styles.json styles is marked (data-s), so its rules can find it.
+const STYLED = styledKeys(styles);
+const ed = (key, raw) => (ANNOTATE ? ` data-edit="${esc(key)}" data-src="${esc(raw)}"` : STYLED.has(key) ? ` data-s="${esc(key)}"` : '');
 const T = (key, vars) => ({ a: ed(key, site(key)), h: inline(site(key), vars), p: plain(site(key), vars) });
 const P = (slug, f) => ({ a: ed(`work.${slug}.${f}`, work(slug, f)), h: inline(work(slug, f)), p: plain(work(slug, f)) });
 const isTodo = (p) => p.todo === true;

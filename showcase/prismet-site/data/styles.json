@@ -1,0 +1,4 @@
+{
+  "_readme": "Styles for single elements, changed at prismet.xyz/edit. A target is text:<wording key> or section:<id>; base applies at every width, tablet at 900px and narrower, mobile at 600px and narrower. Empty means every element looks exactly as site.css says.",
+  "rules": {}
+}

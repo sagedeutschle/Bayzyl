@@ -12,7 +12,7 @@
 //   edit/panels.js   the tree and the inspector
 import { parseSections, writeSections } from './lib/format.js';
 import { stripTheme } from './lib/theme.js';
-import { createStore, SITE_FILE, PROJECTS_FILE, THEME_FILE } from './edit/store.js';
+import { createStore, SITE_FILE, PROJECTS_FILE, THEME_FILE, STYLES_FILE } from './edit/store.js';
 import { createPreview } from './edit/preview.js';
 import { createPanels, ownerOf, pageOf, sameSel, sectionName, TOKEN_GROUPS, h } from './edit/panels.js';
 
@@ -87,14 +87,14 @@ async function init() {
     say('Loading the site…');
     try {
       const optional = (p) => client.getFile(p).catch((e) => (e.status === 404 ? null : Promise.reject(e)));
-      const [paths, projects, theme, manifest, css] = await Promise.all([
-        client.listFiles(), client.getFile(PROJECTS_FILE), optional(THEME_FILE),
+      const [paths, projects, theme, styles, manifest, css] = await Promise.all([
+        client.listFiles(), client.getFile(PROJECTS_FILE), optional(THEME_FILE), optional(STYLES_FILE),
         fetch('edit/assets.json', { cache: 'no-cache' }).then((r) => r.json()),
         fetch('site.css', { cache: 'no-cache' }).then((r) => r.text()),
       ]);
       const words = await Promise.all(paths.map((p) => client.getFile(p)));
       if (!preview) start(manifest, stripTheme(css));
-      store.load([...words, projects, theme].filter(Boolean));
+      store.load([...words, projects, theme, styles].filter(Boolean));
       if (remote.on) await pullDraft();
     } catch (err) {
       if (err.status === 401) return askPin('The session ended. Enter the PIN again.');
@@ -129,7 +129,7 @@ async function init() {
       onNavigate: (page, hash) => { preview.setPage(page, hash); syncTop(); } });
     panels = createPanels({ treeEl: $('#tree'), inspectorEl: $('#inspector'), crumbsEl: $('#crumbs'), store, baseCss, say,
       select: (sel) => select(sel, 'panel'), getSelection: () => selection, getTab: () => tab,
-      setThemeMode: (t) => preview.setTheme(t) });
+      setThemeMode: (t) => preview.setTheme(t), getWidth: () => preview.width, setDevice: (w) => setDevice(w), computed: (target, prop) => preview.computed(target, prop) });
 
     store.subscribe((ev) => {
       if (ev.type === 'saving') { draft.textContent = 'Saving draft…'; draft.className = 'draft'; return; }
@@ -156,7 +156,7 @@ async function init() {
     $('#save').addEventListener('click', publish);
     $('#find').addEventListener('click', () => openPalette());
     $('#page').addEventListener('change', (e) => select(JSON.parse(e.target.value), 'panel'));
-    const setDevice = (w) => { remember({ device: w }); preview.setDevice(w); $('#width').value = w || ''; $('#device').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.w) === w))); };
+    const setDevice = (w) => { remember({ device: w }); preview.setDevice(w); if (store.loaded) panels.renderInspector(); $('#width').value = w || ''; $('#device').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.w) === w))); };
     $('#device').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setDevice(Number(b.dataset.w)); });
     $('#width').addEventListener('change', (e) => setDevice(Math.max(280, Math.min(2560, Number(e.target.value) || 1440))));
     $('#zoom').addEventListener('change', (e) => preview.setZoom(e.target.value === 'fit' ? 'fit' : Number(e.target.value)));
