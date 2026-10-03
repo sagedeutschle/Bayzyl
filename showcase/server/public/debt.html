@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b3d2e">
+<!-- iOS "Add to Home Screen" support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Debt Clock">
+<title>Accessible U.S. Debt Clock — proof of concept</title>
+<link rel="apple-touch-icon" href="/icon.svg">
+<link rel="icon" href="/icon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<style>
+  :root {
+    /* High-contrast palette; meaning never relies on colour alone. */
+    --bg: #07261c;
+    --panel: #0f3b2c;
+    --panel-2: #11442f;
+    --ink: #eafff5;
+    --ink-dim: #b7e6cf;
+    --accent: #7ef0b8;
+    --accent-ink: #053024;
+    --warn: #ffd27d;
+    --focus: #ffffff;
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f3faf6; --panel: #ffffff; --panel-2: #eef7f1;
+      --ink: #06281d; --ink-dim: #2f5a48; --accent: #0a7a4f;
+      --accent-ink: #ffffff; --warn: #8a5a00; --focus: #06281d;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    line-height: 1.4;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: clamp(1rem, 4vw, 2rem); }
+  header h1 { font-size: clamp(1.4rem, 5vw, 2rem); margin: 0 0 .25rem; }
+  .tagline { color: var(--ink-dim); margin: 0 0 1.25rem; font-size: 1rem; }
+
+  /* Visible focus for every interactive element. */
+  a:focus-visible, button:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--panel-2);
+    border-radius: var(--radius);
+    padding: clamp(1rem, 3vw, 1.5rem);
+    margin: 0 0 1rem;
+  }
+  .panel h2 {
+    margin: 0 0 .35rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink-dim);
+    letter-spacing: .02em;
+  }
+  /* The big ticking number. Scales with viewport AND with browser zoom (rem/ch based). */
+  .figure {
+    font-variant-numeric: tabular-nums;
+    font-weight: 800;
+    font-size: clamp(1.8rem, 9vw, 3.4rem);
+    line-height: 1.1;
+    word-break: break-word;
+  }
+  .figure.primary { color: var(--accent); }
+  .spoken { color: var(--ink-dim); font-size: 1rem; margin-top: .35rem; }
+
+  .grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  @media (min-width: 560px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+  .controls {
+    display: flex; flex-wrap: wrap; gap: .6rem; margin: 0 0 1rem;
+  }
+  button {
+    font: inherit;
+    font-weight: 600;
+    min-height: 44px;           /* comfortable touch target */
+    padding: .6rem 1rem;
+    border-radius: 10px;
+    border: 2px solid var(--accent);
+    background: var(--accent);
+    color: var(--accent-ink);
+    cursor: pointer;
+  }
+  button.secondary { background: transparent; color: var(--ink); }
+  button[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--focus); }
+
+  .meta { color: var(--ink-dim); font-size: .9rem; }
+  .source { margin-top: 1.25rem; }
+  .source a { color: var(--accent); }
+  .status { font-size: .9rem; }
+  .status.warn { color: var(--warn); }
+
+  /* Screen-reader-only utility. */
+  .visually-hidden {
+    position: absolute !important; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0);
+    white-space: nowrap; border: 0;
+  }
+  /* Respect users who don't want motion: the count-up easing is disabled in JS,
+     and we also kill any incidental transitions here. */
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+  <!-- Skip link for keyboard users -->
+  <a href="#main" class="visually-hidden">Skip to main content</a>
+
+  <div class="wrap">
+    <header>
+      <h1>U.S. Debt Clock <span class="meta">— accessible proof of concept</span></h1>
+      <p class="tagline">Live federal figures, built to be read by everyone — screen readers, keyboards, zoom, and reduced-motion included.</p>
+    </header>
+
+    <div class="controls" role="group" aria-label="Display controls">
+      <button id="announce" class="secondary" type="button">🔊 Read current values</button>
+      <button id="motion" class="secondary" type="button" aria-pressed="false">⏸ Pause motion</button>
+    </div>
+
+    <main id="main">
+      <section class="panel" aria-labelledby="debt-label">
+        <h2 id="debt-label">Gross U.S. National Debt</h2>
+        <!-- aria-hidden: the fast-ticking digits would spam a screen reader.
+             The polite live-region summary below handles announcements instead. -->
+        <p class="figure primary" id="debt" aria-hidden="true">—</p>
+        <p class="spoken" id="debt-spoken" aria-hidden="true"></p>
+      </section>
+
+      <div class="grid">
+        <section class="panel" aria-labelledby="cit-label">
+          <h2 id="cit-label">Debt per Citizen</h2>
+          <p class="figure" id="per-citizen" aria-hidden="true">—</p>
+        </section>
+        <section class="panel" aria-labelledby="tax-label">
+          <h2 id="tax-label">Debt per Taxpayer</h2>
+          <p class="figure" id="per-taxpayer" aria-hidden="true">—</p>
+        </section>
+        <section class="panel" aria-labelledby="day-label">
+          <h2 id="day-label">Increase Today</h2>
+          <p class="figure" id="today" aria-hidden="true">—</p>
+        </section>
+        <section class="panel" aria-labelledby="rate-label">
+          <h2 id="rate-label">Growing By</h2>
+          <p class="figure" id="rate" aria-hidden="true">—</p>
+          <p class="meta" id="rate-unit" aria-hidden="true">per second (estimated)</p>
+        </section>
+      </div>
+
+      <!-- The accessible heart of the demo: a single polite live region.
+           It announces a digestible summary on a slow cadence and on demand,
+           NOT on every tick. This is what makes a "clock" usable non-visually. -->
+      <p id="live" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
+
+      <p class="status" id="status" role="status">Loading the latest figures from the U.S. Treasury…</p>
+    </main>
+
+    <p class="source meta">
+      Source: <a id="src" href="https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/debt-to-the-penny" rel="noopener">U.S. Treasury — “Debt to the Penny”</a>.
+      Per-citizen and per-taxpayer use published population/taxpayer estimates (see notes in the code).
+      Between daily Treasury updates the figure ticks via interpolation — an estimate, like every debt clock.
+      <span id="asof"></span>
+    </p>
+  </div>
+
+<script src="/debt.js"></script>
+</body>
+</html>

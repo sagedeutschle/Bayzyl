@@ -1,0 +1,299 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-07-26T03:00:00.000Z",
+  "projects": [
+    {
+      "id": "prismet",
+      "title": "Prismet / Kaleidoscope",
+      "summary": "A native Apple playground where games, daily rituals, and useful data lenses share one shifting home.",
+      "history": "Chess Hotswap began as the archived origin of Kaleidoscope, built to hot-swap between 2D and 3D chess.",
+      "category": "apps",
+      "status": "Live + Building",
+      "platforms": ["iPhone", "Mac", "Watch"],
+      "art": "prismet",
+      "layout": "wide",
+      "featured": true,
+      "action": "https://apps.apple.com/us/app/kaleidescope/id6785993194",
+      "repo": "sagedeutschle/kaleidoscope",
+      "shots": [
+        { "src": "prismet-1", "w": 461, "h": 1000, "alt": "Kaleidoscope home screen on iPhone: a Daily section with Wordgame, then puzzle tiles for 2048, Snake, Minesweeper, and Sudoku." },
+        { "src": "prismet-2", "w": 461, "h": 1000, "alt": "The 2D chess board inside Kaleidoscope, mid-game on iPhone." },
+        { "src": "prismet-3", "w": 461, "h": 1000, "alt": "Kaleidoscope's Sea Battle grid on iPhone." },
+        { "src": "prismet-4", "w": 461, "h": 1000, "alt": "Solitaire laid out in Kaleidoscope on iPhone." },
+        { "src": "prismet-5", "w": 1000, "h": 773, "alt": "The 3D Catan board in its meadow theme, rendered in Kaleidoscope." }
+      ]
+    },
+    {
+      "id": "the-long-now",
+      "title": "The Long Now",
+      "summary": "An evolving desktop game world where courts, campaigns, and small human decisions accumulate over time.",
+      "category": "games",
+      "status": "Building",
+      "platforms": ["Desktop"],
+      "art": "long-now",
+      "layout": "tall",
+      "featured": false,
+      "version": "0.2.0-charter-of-the-vale",
+      "shots": [
+        { "src": "the-long-now-1", "w": 1000, "h": 563, "alt": "The medieval era of The Long Now: a pixel-art river crossing with tents, a campfire, and a stone keep in the trees." },
+        { "src": "the-long-now-2", "w": 1000, "h": 563, "alt": "The same world dressed for its industrial era." },
+        { "src": "the-long-now-3", "w": 1000, "h": 563, "alt": "The far-future Dyson era of the world's dressing pass." }
+      ]
+    },
+    {
+      "id": "prismcode",
+      "title": "PrismCode",
+      "summary": "A Mac-native coding workspace exploring a calmer relationship between projects, terminals, and AI collaborators.",
+      "category": "apps",
+      "status": "Building",
+      "platforms": ["Mac"],
+      "art": "prismcode",
+      "layout": "standard",
+      "featured": false,
+      "version": "0.1.0",
+      "shots": [
+        { "src": "prismcode-1", "w": 1000, "h": 625, "alt": "PrismCode's Mission Control on a fresh launch, offering to add a DeepSeek, Claude, or Codex pane, with a file sidebar and a prompt bar across the bottom." }
+      ]
+    },
+    {
+      "id": "steam-rewind",
+      "title": "Steam Rewind",
+      "summary": "A playful set of lenses that turns a sprawling Steam library into stories about time, value, and unfinished adventures.",
+      "category": "tools",
+      "status": "Live",
+      "platforms": ["Web", "Mac", "iPhone"],
+      "art": "steam",
+      "layout": "wide",
+      "featured": false,
+      "action": "/steam",
+      "shots": [
+        { "src": "steam-rewind-1", "w": 1000, "h": 730, "alt": "Steam Rewind's most-played lens over the demo fixture, listing games with hours played, price, and Deck time." },
+        { "src": "steam-rewind-2", "w": 1000, "h": 730, "alt": "The same library re-sorted by the cost-per-hour lens." }
+      ]
+    },
+    {
+      "id": "debt-clock",
+      "title": "Accessible Debt Clock",
+      "summary": "A calm, screen-reader-friendly view of the U.S. national debt using current Treasury data.",
+      "category": "tools",
+      "status": "Live",
+      "platforms": ["Web", "iPhone"],
+      "art": "debt",
+      "layout": "standard",
+      "featured": false,
+      "action": "/debt",
+      "shots": [
+        { "src": "debt-clock-1", "w": 1000, "h": 695, "alt": "The debt clock showing the gross U.S. national debt in large green figures, with a spoken-value button, a pause-motion button, and per-citizen and per-taxpayer cards below." }
+      ]
+    },
+    {
+      "id": "cicero",
+      "title": "Cicero",
+      "summary": "A desktop council app with a native iPhone companion for the Forum, Historian, and a consensus-gated inbox.",
+      "category": "experiments",
+      "status": "Building",
+      "platforms": ["Desktop", "iPhone"],
+      "art": "cicero",
+      "layout": "tall",
+      "featured": false,
+      "shots": [
+        { "src": "cicero-1", "w": 1000, "h": 705, "alt": "Cicero's council floor: a Legion panel, a running transcript of the Curia, an All-Hands fleet panel, and a long verdict under the heading Cicero Speaks." }
+      ]
+    },
+    {
+      "id": "helix-research-desk",
+      "title": "Helix Research Desk",
+      "summary": "A local-first desktop workbench for transparent genetics research.",
+      "category": "systems",
+      "status": "Building",
+      "platforms": ["Desktop"],
+      "art": "helix",
+      "layout": "tall",
+      "featured": false
+    },
+    {
+      "id": "axiomextd",
+      "title": "AxiomEXTD",
+      "summary": "A Minecraft extension experiment that preserves Conquest block states and improves rotated Smart Paste.",
+      "category": "experiments",
+      "status": "Experiment",
+      "platforms": ["Minecraft"],
+      "art": "axiom",
+      "layout": "standard",
+      "featured": false,
+      "shots": [
+        { "src": "axiomextd-1", "w": 1000, "h": 693, "alt": "A detailed Minecraft build on the server this extension targets: a dark spire above the clouds, ringed by towers and terraced ground." }
+      ]
+    },
+    {
+      "id": "qr-scanner",
+      "title": "QR Scanner",
+      "summary": "A tiny browser QR scanner using camera APIs and native BarcodeDetector, with a bundled fallback.",
+      "category": "tools",
+      "status": "Live",
+      "platforms": ["Web"],
+      "art": "qr",
+      "layout": "standard",
+      "featured": false,
+      "action": "https://sagedeutschle.github.io/qr-scanner/",
+      "repo": "sagedeutschle/qr-scanner",
+      "shots": [
+        { "src": "qr-scanner-1", "w": 1000, "h": 730, "alt": "The QR scanner before camera access: a start button, a camera picker, the framing reticle, and a field where decoded text appears." }
+      ]
+    },
+    {
+      "id": "screen-protection",
+      "title": "Screen Protection",
+      "summary": "A desktop privacy concept for hiding sensitive content when macOS screen recording is active.",
+      "category": "tools",
+      "status": "Concept",
+      "platforms": ["Mac"],
+      "art": "screen",
+      "layout": "wide",
+      "featured": false
+    },
+    {
+      "id": "escape-revert",
+      "title": "Escape Revert",
+      "summary": "A Mac utility that turns three rapid Escape presses into Cmd+[ to recover from wrong screens and loading states.",
+      "category": "tools",
+      "status": "Working",
+      "platforms": ["Mac"],
+      "art": "escape",
+      "layout": "standard",
+      "featured": false
+    },
+    {
+      "id": "hoi4-war-room",
+      "title": "HOI4 AI War Room",
+      "summary": "A local Mac cockpit combining a live game stream with a control and standings board.",
+      "category": "systems",
+      "status": "Working",
+      "platforms": ["Mac", "LAN web"],
+      "art": "war-room",
+      "layout": "wide-tall",
+      "featured": false,
+      "shots": [
+        { "src": "hoi4-war-room-1", "w": 1000, "h": 563, "alt": "The Hearts of Iron IV map the war room streams, showing central Europe in March 1936 with division counters and theatre panels." },
+        { "src": "hoi4-war-room-2", "w": 1000, "h": 563, "alt": "The same game in 1940 with the observer console open in the corner, logging the AI agents' turns." }
+      ]
+    },
+    {
+      "id": "civ5-mod-profiles",
+      "title": "Civilization V Mod Profiles",
+      "summary": "A Mac launcher workflow for moving between distinct Civilization V mod setups with less friction.",
+      "category": "tools",
+      "status": "Working",
+      "platforms": ["Mac"],
+      "art": "civ",
+      "layout": "standard",
+      "featured": false,
+      "shots": [
+        { "src": "civ5-mod-profiles-1", "w": 965, "h": 1000, "alt": "The launcher's Choose Your Build window: a green Stable Build card and a red Risky Build card, each listing the mods in its stack." }
+      ]
+    },
+    {
+      "id": "yggdrasil",
+      "title": "Yggdrasil",
+      "summary": "A project to unify the FromSoft catalog inside one Elden Ring instance, starting with a Dark Souls III port.",
+      "category": "experiments",
+      "status": "Building",
+      "platforms": ["Games"],
+      "art": "yggdrasil",
+      "layout": "tall",
+      "featured": false,
+      "version": "M1"
+    },
+    {
+      "id": "wow-sidepanel",
+      "title": "WoW Sidepanel",
+      "summary": "A World of Warcraft addon that reserves a partial right-side UI strip for multi-monitor layouts.",
+      "category": "tools",
+      "status": "Working",
+      "platforms": ["WoW Addon"],
+      "art": "wow",
+      "layout": "wide",
+      "featured": false,
+      "version": "1.0.0",
+      "shots": [
+        { "src": "wow-sidepanel-1", "w": 1000, "h": 338, "alt": "World of Warcraft filling an ultrawide display, with the character roster held in the narrow right-hand strip the addon reserves." }
+      ]
+    },
+    {
+      "id": "usage-tracker",
+      "title": "Usage Tracker",
+      "summary": "An always-on local dashboard for agent-session usage, daily account totals, and estimated equivalent costs.",
+      "category": "systems",
+      "status": "Building",
+      "platforms": ["Desktop"],
+      "art": "generic",
+      "layout": "standard",
+      "featured": false,
+      "shots": [
+        { "src": "usage-tracker-1", "w": 1000, "h": 679, "alt": "The usage dashboard: token totals per provider and account, a weekly limit meter, and a seven-day combined chart with estimated API-equivalent costs." }
+      ]
+    },
+    {
+      "id": "helm",
+      "title": "Helm",
+      "summary": "A native iPhone master remote for home services, lifecycle controls, backups, consoles, and quick actions.",
+      "category": "systems",
+      "status": "Working",
+      "platforms": ["iPhone"],
+      "art": "generic",
+      "layout": "wide",
+      "featured": false,
+      "shots": [
+        { "src": "helm-1", "w": 462, "h": 1000, "alt": "Helm's Mesh tab on iPhone, listing hosts and Minecraft servers with live status dots, resource use, and a tap-to-wake action." },
+        { "src": "helm-2", "w": 462, "h": 1000, "alt": "Helm's PlexSquish tab, showing the media optimizer's queue and progress." },
+        { "src": "helm-3", "w": 462, "h": 1000, "alt": "Helm's Misc tab of quick actions." }
+      ]
+    },
+    {
+      "id": "plexsquish",
+      "title": "PlexSquish",
+      "summary": "A Mac and Windows media optimizer with scanning, HEVC conversion, verification, atomic replacement, and live progress.",
+      "category": "tools",
+      "status": "Working",
+      "platforms": ["Mac", "Windows"],
+      "art": "generic",
+      "layout": "wide",
+      "featured": false,
+      "version": "v0"
+    },
+    {
+      "id": "airhorn",
+      "title": "Airhorn",
+      "summary": "A deliberately simple offline desktop app: one large button and an attributed air-horn recording.",
+      "category": "apps",
+      "status": "Complete",
+      "platforms": ["Desktop"],
+      "art": "generic",
+      "layout": "standard",
+      "featured": false,
+      "shots": [
+        { "src": "airhorn-1", "w": 1000, "h": 667, "alt": "The whole app: the word AIRHORN over one big red button, and a line noting you can press Space instead." }
+      ]
+    },
+    {
+      "id": "bayzyl",
+      "title": "Bayzyl",
+      "summary": "An in-game building toolkit for Paper servers with selections, brushes, shapes, shared kits, and builder profiles.",
+      "category": "tools",
+      "status": "Alpha",
+      "platforms": ["Minecraft"],
+      "art": "generic",
+      "layout": "tall",
+      "featured": false,
+      "action": "https://github.com/sagedeutschle/Bayzyl",
+      "repo": "sagedeutschle/Bayzyl",
+      "version": "0.1.0-alpha",
+      "language": "Java",
+      "release": "v0.1.0-alpha",
+      "shots": [
+        { "src": "bayzyl-1", "w": 1000, "h": 693, "alt": "A cherry-blossom village built on the Paper server this toolkit runs on, lit up at night." },
+        { "src": "bayzyl-2", "w": 1000, "h": 693, "alt": "Another build from the same server, seen from above the cloud layer." }
+      ]
+    }
+  ]
+}

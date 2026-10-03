@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Steam Rewind — prismet</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 16px 20px 24px; }
+    .head { display: grid; gap: 16px; }
+    h1 { margin: 4px 0 6px; font-size: 34px; }
+    .muted { color: var(--ink2); }
+    .panel { margin-top: 12px; padding: 14px; display: grid; gap: 12px; }
+    .row {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+    }
+    .controls { display: grid; gap: 10px; }
+    .controls input, .controls select {
+      width: 100%;
+      background: var(--panel2);
+      color: var(--ink);
+      border: 1px solid var(--line2);
+      border-radius: 10px;
+      padding: 10px 11px;
+      font: inherit;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .toolbar .btn {
+      background: var(--accent2);
+      color: #07171a;
+      border: none;
+    }
+    .toolbar .meta {
+      margin-left: auto;
+      font-size: 13px;
+      color: var(--ink3);
+    }
+    .status { min-height: 22px; color: var(--ink2); font-size: 14px; }
+
+    .result {
+      margin-top: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: clip;
+      background: #121723;
+    }
+    .result-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: #111827;
+    }
+    .result-head strong { color: var(--ink); }
+    .result-grid {
+      display: grid;
+      gap: 8px;
+      max-height: 72vh;
+      overflow: auto;
+      padding: 10px;
+    }
+    .game {
+      padding: 10px;
+      border-radius: 10px;
+      background: var(--panel);
+      border: 1px solid var(--line2);
+      display: grid;
+      gap: 6px;
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .title {
+      font-weight: 700;
+      color: var(--ink);
+      font-size: 14px;
+      word-break: break-word;
+      margin-right: 8px;
+    }
+    .value {
+      color: var(--gold);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .meta-line {
+      display: grid;
+      gap: 6px;
+      color: var(--ink2);
+      font-size: 13px;
+    }
+    .pill { display: inline-block; font-size: 11.5px; color: var(--ink3); padding: 2px 8px; border-radius: 999px; background: #151e2e; border: 1px solid var(--line2); margin-right: 6px; margin-top: 3px; }
+    .subline { color: var(--ink3); font-size: 12px; }
+    .legend { margin: 10px 2px 0; color: var(--ink3); font-size: 12px; }
+
+    @media (min-width: 900px) {
+      .row { grid-template-columns: 3fr 1fr 1fr auto; }
+      .row .toolbar { grid-column: 1 / -1; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="/"><span class="dot"></span>prismet</a>
+    <span class="spacer"></span>
+    <a href="/steam" class="active">Steam Rewind</a>
+    <a href="/debt">Debt Clock</a>
+  </nav>
+
+  <main class="wrap">
+    <section class="head">
+      <h1>Steam Rewind Explorer</h1>
+      <p class="muted">Search a Steam ID, vanity name, or profile URL. Data is pulled server-side so no key is needed in your browser.</p>
+    </section>
+
+    <section class="card panel" aria-live="polite">
+      <form id="form" class="row" autocomplete="off">
+        <label class="controls" for="q">
+          <input id="q" name="q" placeholder="Steam profile id, vanity, or profile URL" aria-label="Steam profile search" />
+        </label>
+        <div class="controls">
+          <select id="lens" aria-label="Ranking lens">
+            <option value="playtime">Most played</option>
+            <option value="recent">Recent activity</option>
+            <option value="cost">Most expensive</option>
+            <option value="costPerHour">Best value (cost/hour)</option>
+            <option value="recentCost">Recent value score</option>
+            <option value="metacritic">Highest Metacritic</option>
+            <option value="achievement">Highest completion</option>
+            <option value="achievementRarity">Rarest unlock progress</option>
+            <option value="deck">Longest Deck time</option>
+            <option value="age">Oldest titles</option>
+            <option value="genre">Genre bucket popularity</option>
+            <option value="backlog">Backlog of shame</option>
+            <option value="newest">Latest release</option>
+          </select>
+        </div>
+        <button class="btn" type="submit">Search / Load</button>
+        <button class="btn ghost" id="reset" type="button">Load demo fixture</button>
+      </form>
+      <div class="toolbar">
+        <span id="status" class="status">Demo data loaded.</span>
+        <span id="meta" class="meta">fixture: 32 games</span>
+      </div>
+    </section>
+
+    <section id="out" class="result"></section>
+    <p class="legend">This page uses the server proxy game shape: <code>n,h,w,p,rev,ap,rare,g,y,dk,last</code>. Acquisition date is unavailable in that response, so backlog-of-shame notes are tolerance-safe when purchase info is missing.</p>
+  </main>
+
+  <script src="/steam.js"></script>
+</body>
+</html>

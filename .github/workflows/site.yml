@@ -1,0 +1,116 @@
+# prismet.xyz: build, verify and gate the site on every push that touches it; deploy it to Fly from main.
+#
+# Secrets (repository settings → Secrets and variables → Actions):
+#   FLY_API_TOKEN          required for the deploy job (a deploy token for the app is enough)
+#   PRISMET_PRIVATE_WORDS  optional, comma-separated words that must never appear in the built site (host names etc.)
+#
+# An edit saved from prismet.xyz/edit (or any commit to main under showcase/) is live about three minutes later.
+# Roll back by reverting the commit on GitHub; the workflow redeploys the previous content.
+name: site
+
+on:
+  push:
+    paths: ['showcase/**', '.github/workflows/site.yml']
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Deploy to Fly after the build (any branch)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: prismet-site
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build, verify, gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with: { node-version: '22' }
+      - name: Build the site (verify.mjs runs at the end and fails the build on any problem)
+        env:
+          PRISMET_PRIVATE_WORDS: ${{ secrets.PRISMET_PRIVATE_WORDS }}
+        run: node showcase/prismet-site/build.mjs
+      - name: The edit page reads and writes the content files exactly as the build does
+        run: node showcase/tools/tests/edit-check.mjs
+      - name: Start the live server locally with this build and gate every route
+        env:
+          GATE_WORDLE: require
+        run: |
+          cd showcase/server
+          npm ci --omit=dev
+          rm -rf site && cp -r ../prismet-site/dist site
+          (PORT=18081 node server.js > /tmp/server.log 2>&1 &)
+          for i in $(seq 1 100); do curl -sf -o /dev/null http://127.0.0.1:18081/healthz && break; sleep 0.2; done
+          ../tools/deploy/gate.sh http://127.0.0.1:18081 local || { cat /tmp/server.log; exit 1; }
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: dist
+          path: showcase/prismet-site/dist
+          retention-days: 7
+          if-no-files-found: error
+
+  browser-check:
+    name: Browser checks (does not block the deploy)
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with: { node-version: '22' }
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with: { name: dist, path: showcase/prismet-site/dist }
+      - name: Install Playwright's Chromium
+        run: |
+          npm install --no-save --no-package-lock playwright@1.49.1
+          npx playwright install --with-deps chromium
+      - name: site-check.mjs (44 checks at 1440 and 390)
+        run: |
+          export CHROMIUM="$(node -e "console.log(require('playwright').chromium.executablePath())")"
+          node showcase/tools/tests/site-check.mjs
+          node showcase/tools/tests/edit-smoke.mjs
+
+  deploy:
+    name: Deploy to Fly
+    needs: build
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && inputs.deploy)
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 20
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      APP: prismet-site-restless-horizon-217
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with: { name: dist, path: showcase/prismet-site/dist }
+      - name: Refuse to deploy without a Fly token
+        run: |
+          if [ -z "$FLY_API_TOKEN" ]; then
+            echo "::error::FLY_API_TOKEN is not set. Add it under Settings → Secrets and variables → Actions, then re-run."; exit 1; fi
+      - name: Assemble the overlay (server.js + site/ + scrubbed public/ + whiteouts)
+        run: showcase/tools/deploy/assemble-overlay.sh /tmp/overlay
+      - name: Push the image (the v13 base plus one layer)
+        id: push
+        run: |
+          TAG="site-${{ github.run_number }}-$(echo "${{ github.sha }}" | cut -c1-7)"
+          IMAGE=$(python3 showcase/tools/deploy/push-overlay.py /tmp/overlay "$TAG" | tail -1)
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
+          echo "pushed $IMAGE"
+      - name: Install flyctl
+        run: |
+          curl -sSL https://fly.io/install.sh | sh -s -- --non-interactive
+          echo "$HOME/.fly/bin" >> "$GITHUB_PATH"
+      - name: Deploy with the app's own fly.toml (never a minimal one; see showcase/HANDOFF.md, the v19 incident)
+        working-directory: showcase/tools/deploy
+        run: fly deploy --image "${{ steps.push.outputs.image }}" -a "$APP" --strategy rolling
+      - name: Gate the live site
+        run: showcase/tools/deploy/gate.sh https://prismet.xyz live

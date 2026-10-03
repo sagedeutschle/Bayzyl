@@ -4,3 +4,10 @@ out/
 bin/
 .DS_Store
 *.class
+
+# Claude Code agent worktrees (temporary, per-session)
+.claude/worktrees/
+
+# the live server source (showcase/server): installed deps and the site copy the local gate makes
+showcase/server/node_modules/
+showcase/server/site/
