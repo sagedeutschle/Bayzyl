@@ -15,7 +15,17 @@ site rebuilds and goes live by itself in about three minutes. No HTML, no server
    weight, colour, spacing, hidden or shown. **Desktop / Tablet / Mobile** above those fields choose where the style
    applies: Desktop is every width, Tablet is 900px and narrower, Mobile is 600px and narrower, and a narrower width
    inherits whatever it does not set. A greyed value is what the page draws now; a dot marks what you set; ↺ removes it.
-5. Every change is a **draft**. It shows at once in the preview, saves by itself, survives a reload, and can be undone
+5. Pages and sections: **+ Page** makes a page (blank, article, showcase) out of library sections: hero, text, image +
+   text, records, statistics, quote, call to action, gallery, divider, spacer. A page has a title, an address, a
+   status (Draft is not built; Hidden is reachable by its address only; Published is on the site), and can join the
+   navigation. **+ Section** under a page, or under Home, adds a section; on the home page it sits in the same order
+   as the built-in sections. **Site settings** holds your name, the three links and the search description.
+6. Images: wherever an image is chosen (a record's cover and gallery, a section's image) the media library opens.
+   **Add images** (or drop files on it) takes any picture, resizes it, turns it into WebP and removes camera data. A new
+   image shows at once and goes to the site with the next Publish. Describe each picture: the description is its alt text.
+7. History: the **History** tab lists what was published. Click a revision to see the site as it was; it opens as a
+   draft, so Undo comes back and Publish restores it.
+8. Every change is a **draft**. It shows at once in the preview, saves by itself, survives a reload, and can be undone
    (⌘Z, ⇧⌘Z). Nothing reaches the site until you press **Publish**: one commit with every changed file. The bar at
    the bottom follows the build; "Live on prismet.xyz" means done. **Lock** ends the session; the draft stays.
 
@@ -62,6 +72,8 @@ Open the file on github.com, press the pencil, edit, press "Commit changes". The
 | A screenshot | upload it under `showcase/assets/<area>/`, then name it in `projects.json` (`cover`, `gallery`, `shotAlts`) |
 | Design tokens changed at /edit | `showcase/prismet-site/data/theme.json` (only what differs from `src/site.css`) |
 | One element's style, per width, set at /edit | `showcase/prismet-site/data/styles.json` |
+| Pages and sections made at /edit | `showcase/prismet-site/data/pages.json` (the kinds of section: `pages/lib/sections.js`) |
+| Images added at /edit | `showcase/assets/uploads/` |
 | The project pages' structure, the design | `showcase/prismet-site/pages/lib/render.js`, `src/site.css` (this is code) |
 
 Hiding a project: set `"hidden": true` on its entry in `projects.json`. Featuring one: add its slug to
@@ -88,5 +100,6 @@ Secrets the workflow uses, under Settings → Secrets and variables → Actions:
 
 ## What the edit page cannot do yet
 
-Add images, add pages, or show the history of what was published (GitHub's commit list is that history; **Revert** there undoes a publish). Those are next; until then they
-are the JSON file and the code, edited on GitHub.
+Delete or replace an image file, schedule a page, change the built-in pages' structure (the hall plan, the register,
+the record pages' modules), or animate. Those stay in the code. New images wait in the browser they were added in until
+published; a draft opened on another device does not carry them.
