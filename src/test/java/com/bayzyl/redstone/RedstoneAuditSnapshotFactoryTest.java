@@ -43,11 +43,75 @@ class RedstoneAuditSnapshotFactoryTest {
     }
 
     @Test
-    void selectionAtTheCapIsCaptured() {
-        Capture capture = new RedstoneAuditSnapshotFactory((x, y, z) -> null, List.of(), -64, 319)
-                .capture(new AuditPosition(0, 0, 0), new AuditPosition(63, 31, 63));
+    void thinLongSelectionUnderTheRawCapButOverTheHaloedCapIsRefusedWithoutReads() {
+        AtomicInteger reads = new AtomicInteger();
+        AtomicInteger frameLookups = new AtomicInteger();
+        RedstoneAuditSnapshotFactory factory = new RedstoneAuditSnapshotFactory((x, y, z) -> {
+            reads.incrementAndGet();
+            return null;
+        }, () -> {
+            frameLookups.incrementAndGet();
+            return List.of();
+        }, -64, 319);
+
+        Capture capture = factory.capture(new AuditPosition(0, 64, 0), new AuditPosition(0, 64, 131_071));
+
+        assertNull(capture.snapshot());
+        assertNotNull(capture.refusal());
+        assertTrue(capture.refusal().contains("too large"), capture.refusal());
+        assertEquals(0, reads.get(), "the halo counts against the cap, so nothing may be read");
+        assertEquals(0, frameLookups.get());
+    }
+
+    @Test
+    void selectionWhoseHaloedVolumeIsExactlyTheCapIsCaptured() {
+        AtomicInteger reads = new AtomicInteger();
+        RedstoneAuditSnapshotFactory factory = new RedstoneAuditSnapshotFactory((x, y, z) -> {
+            reads.incrementAndGet();
+            return null;
+        }, List.of(), -64, 319);
+
+        // (60 + 4) * (28 + 4) * (60 + 4) = 131072 cells read
+        Capture capture = factory.capture(new AuditPosition(0, 0, 0), new AuditPosition(59, 27, 59));
+
         assertNotNull(capture.snapshot());
         assertNull(capture.refusal());
+        assertEquals(131_072, reads.get());
+    }
+
+    @Test
+    void selectionOneBlockOverTheHaloedCapIsRefused() {
+        Capture capture = new RedstoneAuditSnapshotFactory((x, y, z) -> null, List.of(), -64, 319)
+                .capture(new AuditPosition(0, 0, 0), new AuditPosition(59, 27, 60));
+        assertNull(capture.snapshot());
+        assertNotNull(capture.refusal());
+    }
+
+    @Test
+    void unloadedChunksAreNeverReadAndComeBackAsAir() {
+        AtomicInteger probes = new AtomicInteger();
+        List<int[]> reads = new java.util.ArrayList<>();
+        BlockData repeater = repeater(BlockFace.EAST);
+        // chunk x=0 loaded, chunk x=1 (blocks 16..31) not loaded
+        RedstoneAuditSnapshotFactory.BlockReader reader = RedstoneAuditSnapshotFactory.loadedOnly((chunkX, chunkZ) -> {
+            probes.incrementAndGet();
+            return chunkX == 0 && chunkZ == 0;
+        }, (x, y, z) -> {
+            reads.add(new int[]{x, y, z});
+            return repeater;
+        });
+
+        Capture capture = new RedstoneAuditSnapshotFactory(reader, List.of(), -64, 319)
+                .capture(new AuditPosition(14, 64, 0), new AuditPosition(17, 64, 0));
+
+        assertNotNull(capture.snapshot());
+        assertTrue(reads.stream().allMatch(read -> read[0] < 16), "no read may touch the unloaded chunk");
+        assertFalse(reads.isEmpty());
+        assertEquals(AuditCell.repeater(Side.EAST), capture.snapshot().at(new AuditPosition(15, 64, 0)));
+        assertSame(AuditCell.EMPTY, capture.snapshot().at(new AuditPosition(16, 64, 0)));
+        assertSame(AuditCell.EMPTY, capture.snapshot().at(new AuditPosition(19, 64, 0)));
+        // x -2..19 spans chunks 0 and 1, z -2..2 spans chunks -1 and 0: 4 chunks, each probed once
+        assertEquals(4, probes.get());
     }
 
     @Test

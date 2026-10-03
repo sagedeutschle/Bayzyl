@@ -1,5 +1,6 @@
 package com.bayzyl.redstone;
 
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.Iterator;
@@ -29,7 +30,7 @@ public final class RedstoneAuditMarkerService implements RedstoneAuditCommand.Ma
         void spawn(Player player, AuditPosition position, AuditConfidence confidence);
     }
 
-    private record Markers(Player player, List<AuditFinding> findings, long expiresAt) {
+    private record Markers(Player player, List<AuditFinding> findings, UUID worldId, long expiresAt) {
     }
 
     private final Ticker ticker;
@@ -57,9 +58,9 @@ public final class RedstoneAuditMarkerService implements RedstoneAuditCommand.Ma
     }
 
     @Override
-    public void show(Player player, List<AuditFinding> findings) {
+    public void show(Player player, List<AuditFinding> findings, UUID worldId) {
         List<AuditFinding> shown = findings.size() > MAX_MARKERS ? findings.subList(0, MAX_MARKERS) : findings;
-        active.put(player.getUniqueId(), new Markers(player, List.copyOf(shown), now + LIFETIME_TICKS));
+        active.put(player.getUniqueId(), new Markers(player, List.copyOf(shown), worldId, now + LIFETIME_TICKS));
         if (cancel == null) {
             cancel = ticker.start(this::tick, PERIOD_TICKS);
         }
@@ -86,11 +87,20 @@ public final class RedstoneAuditMarkerService implements RedstoneAuditCommand.Ma
                 iterator.remove();
                 continue;
             }
+            if (markers.worldId() != null && !inWorld(markers.player(), markers.worldId())) {
+                continue;
+            }
             for (AuditFinding finding : markers.findings()) {
                 particles.spawn(markers.player(), finding.position(), finding.confidence());
             }
         }
         stopIfIdle();
+    }
+
+    /** Markers sit at the audited coordinates, so they are only drawn while the player is in that world. */
+    private static boolean inWorld(Player player, UUID worldId) {
+        World world = player.getWorld();
+        return world != null && worldId.equals(world.getUID());
     }
 
     private void stopIfIdle() {

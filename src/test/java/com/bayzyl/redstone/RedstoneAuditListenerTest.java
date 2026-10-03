@@ -27,7 +27,7 @@ class RedstoneAuditListenerTest {
                 player -> Capture.of(RedstoneAuditSnapshot.builder(new AuditPosition(0, 0, 0), new AuditPosition(3, 3, 3)).build()),
                 new RedstoneAuditCommand.MarkerSink() {
                     @Override
-                    public void show(Player player, List<AuditFinding> findings) {
+                    public void show(Player player, List<AuditFinding> findings, java.util.UUID worldId) {
                     }
 
                     @Override

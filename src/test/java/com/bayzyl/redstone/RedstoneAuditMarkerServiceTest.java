@@ -1,5 +1,6 @@
 package com.bayzyl.redstone;
 
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +27,7 @@ class RedstoneAuditMarkerServiceTest {
     void markersAreDrawnOnlyForTheRequestingPlayer() {
         Player alice = player();
         Player bob = player();
-        markers.show(alice, List.of(finding(1, 2, 3)));
+        markers.show(alice, List.of(finding(1, 2, 3)), null);
 
         ticker.tick();
 
@@ -37,8 +38,8 @@ class RedstoneAuditMarkerServiceTest {
     void clearingRemovesOnlyTheCallersMarkers() {
         Player alice = player();
         Player bob = player();
-        markers.show(alice, List.of(finding(1, 0, 0)));
-        markers.show(bob, List.of(finding(2, 0, 0)));
+        markers.show(alice, List.of(finding(1, 0, 0)), null);
+        markers.show(bob, List.of(finding(2, 0, 0)), null);
 
         markers.clear(alice.getUniqueId());
         ticker.tick();
@@ -49,8 +50,8 @@ class RedstoneAuditMarkerServiceTest {
     @Test
     void showingAgainReplacesThePreviousHighlight() {
         Player alice = player();
-        markers.show(alice, List.of(finding(1, 0, 0), finding(2, 0, 0)));
-        markers.show(alice, List.of(finding(2, 0, 0)));
+        markers.show(alice, List.of(finding(1, 0, 0), finding(2, 0, 0)), null);
+        markers.show(alice, List.of(finding(2, 0, 0)), null);
 
         ticker.tick();
 
@@ -60,7 +61,7 @@ class RedstoneAuditMarkerServiceTest {
     @Test
     void markersExpireAndTheTickerStopsWhenNothingIsLeft() {
         Player alice = player();
-        markers.show(alice, List.of(finding(1, 0, 0)));
+        markers.show(alice, List.of(finding(1, 0, 0)), null);
         assertTrue(ticker.running());
 
         for (long elapsed = 0; elapsed <= RedstoneAuditMarkerService.LIFETIME_TICKS; elapsed += RedstoneAuditMarkerService.PERIOD_TICKS) {
@@ -76,13 +77,36 @@ class RedstoneAuditMarkerServiceTest {
     @Test
     void offlinePlayersLoseTheirMarkers() {
         Player alice = player();
-        markers.show(alice, List.of(finding(1, 0, 0)));
+        markers.show(alice, List.of(finding(1, 0, 0)), null);
         when(alice.isOnline()).thenReturn(false);
 
         ticker.tick();
 
         assertTrue(spawns.isEmpty());
         assertFalse(ticker.running());
+    }
+
+    @Test
+    void markersAreSkippedWhileThePlayerIsInAnotherWorld() {
+        UUID auditedWorld = UUID.randomUUID();
+        Player alice = player();
+        World elsewhere = world(UUID.randomUUID());
+        when(alice.getWorld()).thenReturn(elsewhere);
+        markers.show(alice, List.of(finding(1, 0, 0)), auditedWorld);
+
+        ticker.tick();
+        assertTrue(spawns.isEmpty(), "no particles at audit coordinates in a different world");
+
+        World audited = world(auditedWorld);
+        when(alice.getWorld()).thenReturn(audited);
+        ticker.tick();
+        assertEquals(List.of(new Spawn(alice, new AuditPosition(1, 0, 0))), spawns);
+    }
+
+    private static World world(UUID id) {
+        World world = mock(World.class);
+        when(world.getUID()).thenReturn(id);
+        return world;
     }
 
     private static Player player() {

@@ -33,9 +33,11 @@ final class RedstoneAuditSelectionCapture implements RedstoneAuditCommand.Select
         int halo = RedstoneAuditSnapshot.HALO;
         BoundingBox area = new BoundingBox(min.x() - halo, min.y() - halo, min.z() - halo,
                 max.x() + halo + 1, max.y() + halo + 1, max.z() + halo + 1);
-        RedstoneAuditSnapshotFactory factory = new RedstoneAuditSnapshotFactory(world::getBlockData,
+        RedstoneAuditSnapshotFactory factory = new RedstoneAuditSnapshotFactory(
+                RedstoneAuditSnapshotFactory.loadedOnly(world::isChunkLoaded, world::getBlockData),
                 () -> itemFrames(world, area), world.getMinHeight(), world.getMaxHeight() - 1);
-        return factory.capture(min, max);
+        Capture captured = factory.capture(min, max);
+        return captured.snapshot() == null ? captured : Capture.of(captured.snapshot(), world.getUID());
     }
 
     private static List<AuditPosition> itemFrames(World world, BoundingBox area) {

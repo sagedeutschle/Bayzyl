@@ -30,7 +30,7 @@ public final class RedstoneAuditCommand {
     public interface MarkerSink {
         MarkerSink NONE = new MarkerSink() {
             @Override
-            public void show(Player player, List<AuditFinding> findings) {
+            public void show(Player player, List<AuditFinding> findings, UUID worldId) {
             }
 
             @Override
@@ -38,7 +38,8 @@ public final class RedstoneAuditCommand {
             }
         };
 
-        void show(Player player, List<AuditFinding> findings);
+        /** {@code worldId} is the world the findings were captured in (null if unknown). */
+        void show(Player player, List<AuditFinding> findings, UUID worldId);
 
         void clear(UUID playerId);
     }
@@ -47,6 +48,7 @@ public final class RedstoneAuditCommand {
     private final SelectionCapture capture;
     private final MarkerSink markers;
     private final Map<UUID, List<AuditFinding>> lastFindings = new ConcurrentHashMap<>();
+    private final Map<UUID, UUID> lastWorlds = new ConcurrentHashMap<>();
 
     public RedstoneAuditCommand(RedstoneAuditService service, SelectionCapture capture, MarkerSink markers) {
         this.service = service;
@@ -81,6 +83,7 @@ public final class RedstoneAuditCommand {
     /** Forget a player's results (on quit). */
     public void forget(UUID playerId) {
         lastFindings.remove(playerId);
+        lastWorlds.remove(playerId);
         markers.clear(playerId);
     }
 
@@ -92,13 +95,18 @@ public final class RedstoneAuditCommand {
         }
         List<AuditFinding> findings = service.audit(captured.snapshot());
         lastFindings.put(player.getUniqueId(), findings);
+        if (captured.worldId() != null) {
+            lastWorlds.put(player.getUniqueId(), captured.worldId());
+        } else {
+            lastWorlds.remove(player.getUniqueId());
+        }
         if (findings.isEmpty()) {
             markers.clear(player.getUniqueId());
             ChatOutput.send(player, "&aNo likely wiring faults found in this selection.");
             ChatOutput.send(player, "&7The audit checks static wiring only; it does not simulate timing.");
             return;
         }
-        markers.show(player, findings);
+        markers.show(player, findings, captured.worldId());
         render(player, findings, 1);
     }
 
@@ -135,7 +143,7 @@ public final class RedstoneAuditCommand {
             return;
         }
         AuditFinding finding = findings.get(number - 1);
-        markers.show(player, List.of(finding));
+        markers.show(player, List.of(finding), lastWorlds.get(player.getUniqueId()));
         ChatOutput.send(player, "&f#" + number + " " + colour(finding.confidence()) + finding.confidence().name()
                 + " &7— &f" + finding.title());
         ChatOutput.send(player, "&7" + finding.position());

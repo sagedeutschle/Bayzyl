@@ -88,7 +88,7 @@ class RedstoneAuditCommandTest {
         RedstoneAuditCommand command = new RedstoneAuditCommand(new RedstoneAuditService(List.of(snapshot -> findings(3))),
                 player -> Capture.of(EMPTY_MACHINE), new RedstoneAuditCommand.MarkerSink() {
                     @Override
-                    public void show(Player player, List<AuditFinding> findings) {
+                    public void show(Player player, List<AuditFinding> findings, java.util.UUID worldId) {
                         shown.addAll(findings);
                     }
 
@@ -107,6 +107,29 @@ class RedstoneAuditCommandTest {
         assertTrue(shown.isEmpty());
         command.handle(player, new String[]{"show", "2"});
         assertEquals(List.of(findings(3).get(1)), shown);
+    }
+
+    @Test
+    void markersAreGivenTheWorldTheSelectionWasCapturedIn() {
+        UUID auditedWorld = UUID.randomUUID();
+        List<UUID> worlds = new ArrayList<>();
+        RedstoneAuditCommand command = new RedstoneAuditCommand(new RedstoneAuditService(List.of(snapshot -> findings(3))),
+                player -> Capture.of(EMPTY_MACHINE, auditedWorld), new RedstoneAuditCommand.MarkerSink() {
+                    @Override
+                    public void show(Player player, List<AuditFinding> findings, UUID worldId) {
+                        worlds.add(worldId);
+                    }
+
+                    @Override
+                    public void clear(UUID playerId) {
+                    }
+                });
+        Player player = player();
+
+        command.handle(player, new String[0]);
+        command.handle(player, new String[]{"show", "2"});
+
+        assertEquals(List.of(auditedWorld, auditedWorld), worlds);
     }
 
     @Test
