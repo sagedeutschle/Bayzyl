@@ -94,6 +94,7 @@ function init() {
   const dirtyCount = () => [...files.values()].reduce((n, f) => n + f.dirty.size, 0);
 
   $('#branch').textContent = branch;
+  if (location.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(location.hostname)) say('This page is not on https; do not paste a token here.', 'warn');
   const saved = sessionStorage.getItem(TOKEN_KEY);
   if (saved) { $('#token').value = saved; connect(saved); }
 
