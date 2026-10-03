@@ -11,7 +11,7 @@ it, in this file included.
 | Live | https://prismet.xyz, Fly app `prismet-site-restless-horizon-217`, release **v22** (2026-10-03 18:17 UTC), image tag `site-11-0ca1c66`, built from `main` at `0ca1c66` by the GitHub Action: the first automatic deploy |
 | Source of truth | this repository, `showcase/`, on `main` (merged from `claude/funny-wozniak-4j636o` through [PR #2](https://github.com/sagedeutschle/Bayzyl/pull/2) on 2026-10-03) |
 | Deploys | the GitHub Action `site` (`.github/workflows/site.yml`): every push under `showcase/` builds, verifies and gates the site; from `main` it deploys to Fly. The `FLY_API_TOKEN` secret is set (Sage, 2026-10-03); every commit to `main` under `showcase/` now goes live by itself |
-| Editing | https://prismet.xyz/edit: enter the PIN, edit, Publish; the server commits to `main` with its stored token and the Action deploys. Guide: `showcase/EDITING.md`. Locked out until the `EDIT_GITHUB_TOKEN` and `EDIT_PIN` secrets exist |
+| Editing | https://prismet.xyz/edit: enter the PIN, edit, Publish; the server commits to `main` with its stored token and the Action deploys. Guide: `showcase/EDITING.md`. Both secrets set (2026-10-03, synced to Fly; `/api/edit/status` reports `configured: true`) |
 | Preview with Edit mode | https://claude.ai/artifact/C51vasTVQgxsp6JLJjccCv (private; the round-3 build). Its database (`edits`, `layout/main`) is empty as of 2026-10-03; the `/edit` page supersedes it for words |
 | Decisions only Sage can make | `showcase/prismet-site/ASK-SAGE.md` (wording claims, captures, authorship, `PROJECTS_URL`, the Mac copy, Volhaven) |
 | In flight elsewhere | Codex (at Sage's request) holds a local, unpushed candidate limited to `content/work` reconciliation, selected asset metadata, the `/privacy` and `/support` pages and route coverage. The server already maps those two routes (v22); the pages themselves are not in the repo yet |
@@ -171,7 +171,8 @@ after the commit protects the site.
 
 ## 9. Waiting on Sage
 
-1. **The two editor secrets** (section 6): `EDIT_GITHUB_TOKEN` and `EDIT_PIN` as repository secrets, then one deploy.
+1. **The editor token never expires** (made without an expiry on 2026-10-03). Regenerate it with a one-year expiry when
+   convenient and update the `EDIT_GITHUB_TOKEN` secret, then run the workflow once.
 2. **The Mac copy** of `~/Desktop/GtrktscrB/business/showcase` was never pushed: a different `projects.json` and
    `build.mjs`, seven project copy files, seven Mac-only projects, 29 assets, `ART-CANON.md`, more Long Now captures.
    Codex is reconciling `content/work` from it; the rest is still Sage's call.
