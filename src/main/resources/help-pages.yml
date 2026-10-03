@@ -32,6 +32,7 @@ pages:
     - "&6/measure &f— Show dimensions and totals."
     - "&6/biomeinfo &f— Show which biomes the selection covers."
     - "&6/selcenter &f— Mark the exact center of the selection with particles."
+    - "&6/redstoneaudit &f(or &6/bzl audit&f) &f— Rank likely wiring faults in the selected redstone. &6/redstoneaudit clear &fremoves the markers."
   4:
     - "&a&lVisuals &f& &aQuality of Life &f| &6Page 4/16"
     - "&bNifty tools to make life easier."
@@ -64,6 +65,7 @@ pages:
     - "&6/overlay <BLOCK> &f— Lay one block on top of every solid surface inside the selection."
     - "&6/smooth &f— Soften jagged terrain inside the selection."
     - "&6/oops &f— Undo the last edit and broadcast that you did."
+    - "&6/resume &f— Re-run a &6/copy &fthat a server restart interrupted."
     - "&bMask&f:<block,..> &f— The mask can be used on many functions to limit them to only effect certain blocks "
     - "(e.g. &6/set stone mask:dirt&f)."
   7:
