@@ -18,6 +18,8 @@ const content = await import(join(SITE, 'content.mjs'));
 const { createEditApi } = await import(join(HERE, '..', '..', 'server', 'edit-api.js'));
 
 let checks = 0;
+const parseOf = (text) => content.parseSections(text);
+const SITE_PATH = 'showcase/prismet-site/content/site.md';
 const files = ['content/site.md', ...readdirSync(join(SITE, 'content/work')).filter((f) => f.endsWith('.md')).map((f) => `content/work/${f}`)];
 for (const rel of files) {
   const text = readFileSync(join(SITE, rel), 'utf8');
@@ -127,4 +129,110 @@ r = await call('GET', '/api/edit/files', { cookie: sid2 }); assert.equal(r.statu
 const off = createEditApi({ env: { EDIT_PIN: '12' }, fetchImpl: fakeGitHub, clientAddress: () => '1.1.1.1', sendJSON: (q, res, status, payload) => { res.status = status; res.body = payload; } });
 assert.equal(off.configured, false); assert.match(off.reason, /EDIT_GITHUB_TOKEN/); checks++;
 
-console.log(`✓ edit-check: ${checks} checks over ${files.length} content files; the page, its client and the server's edit API agree`);
+// ── the editor's preview renders what the build renders ──
+// lib/render.js with the manifest the build wrote (edit/assets.json) must give the pages in dist/, byte for byte.
+const { existsSync } = await import('node:fs');
+const { renderSite } = await import(join(SITE, 'pages/lib/render.js'));
+const { themeCss, stripTheme, safeValue } = await import(join(SITE, 'pages/lib/theme.js'));
+const { createStore, PROJECTS_FILE, THEME_FILE, workFile } = await import(join(SITE, 'pages/edit/store.js'));
+const { fakeGitHub: checkoutGitHub } = await import(join(HERE, 'fake-github.mjs'));
+const REPO_ROOT = join(HERE, '..', '..', '..');
+const disk = (rel) => ({ path: `showcase/prismet-site/${rel}`, text: readFileSync(join(SITE, rel), 'utf8'), sha: 'a'.repeat(40) });
+const published = () => [...files.map(disk), disk('data/projects.json'), disk('data/theme.json')];
+const memory = () => { const m = new Map(); return { getItem: (k) => m.get(k) ?? null, setItem: (k, v) => m.set(k, v), removeItem: (k) => m.delete(k) }; };
+const tick = (ms = 450) => new Promise((r) => setTimeout(r, ms));
+
+if (existsSync(join(SITE, 'dist/edit/assets.json'))) {
+  const manifest = JSON.parse(readFileSync(join(SITE, 'dist/edit/assets.json'), 'utf8'));
+  const assets = { size: (p) => { const f = manifest.files[p]; return f ? { w: f[0], h: f[1] } : { w: 0, h: 0 }; }, has: (p) => p in manifest.files,
+    url: (p) => { if (!p) return null; const f = manifest.files[p]; if (!f) throw new Error(`missing image: ${p}`); return `${p}?v=${f[2]}`; } };
+  const st = createStore({ storage: memory() }); st.load(published());
+  const cssUrl = readFileSync(join(SITE, 'dist/index.html'), 'utf8').match(/href="(site\.css\?v=[0-9a-f]+)"/)[1];
+  const out = renderSite({ data: st.docs.projects, site: st.docs.site, work: st.docs.work, assets, urls: { css: cssUrl, js: manifest.urls.js, og: manifest.urls.og } });
+  for (const [path, html] of out.pages) { assert.equal(html, readFileSync(join(SITE, 'dist', path), 'utf8'), `${path}: the editor's render differs from the build's`); checks++; }
+  assert.equal(out.missing.size, 0); checks++;
+  const ed = renderSite({ data: st.docs.projects, site: st.docs.site, work: st.docs.work, assets, urls: { css: 'site.css', js: manifest.urls.js, og: manifest.urls.og }, edit: true });
+  assert.match(ed.pages.get('index.html'), /data-edit="hero\.title"/, 'edit mode labels the wording'); assert.ok(!ed.pages.get('index.html').includes('editor.js'), 'edit mode loads no preview editor'); checks += 2;
+} else console.log('  (skipped the render check: build first to compare with dist/)');
+
+// ── theme tokens ──
+assert.equal(themeCss({ root: {}, day: {} }), '', 'an empty theme adds nothing to site.css');
+const css = themeCss({ root: { '--brass': '#D08A3C', '--radius': '6px', 'color': 'red', '--x': 'red; } body { display: none' }, day: { '--brass': '#7A4A12' } });
+assert.match(css, /:root \{ --brass: #D08A3C; --radius: 6px; \}/); assert.match(css, /:root\[data-theme="light"\] \{ --brass: #7A4A12; \}/);
+assert.ok(!css.includes('display: none') && !css.includes('color: red'), 'only custom properties with one declaration\'s worth of value');
+assert.equal(stripTheme('a{}' + css), 'a{}'); assert.equal(safeValue('url(x)'), false); assert.equal(safeValue('clamp(1rem, 2vw, 3rem)'), true); checks += 7;
+
+// ── the draft ──
+{
+  const storage = memory(), st = createStore({ storage }); st.load(published());
+  assert.equal(st.dirty, false); assert.deepEqual(st.changedFiles(), []); checks += 2;
+  st.setText('hero.lede', 'A new lede.'); st.setText('work.bayzyl.subtitle', 'A new subtitle.'); st.setText('work.bayzyl.facts.0.value', 'Changed');
+  let out = st.changedFiles();
+  assert.deepEqual(out.map((f) => f.path.split('/').pop()), ['site.md', 'bayzyl.md']);
+  assert.equal(out[0].text, content.writeSections(disk('content/site.md').text, { 'hero.lede': 'A new lede.' }), 'site.md is written exactly as writeSections writes it');
+  assert.match(out[1].text, /## subtitle\nA new subtitle\./); assert.match(out[1].text, /^- [^:\n]+: Changed$/m); assert.equal(st.text('work.bayzyl.facts.0.value'), 'Changed'); checks += 5;
+  st.undo(); st.undo(); st.undo(); assert.equal(st.dirty, false, 'three undos, three edits'); st.redo(); assert.equal(st.text('hero.lede'), 'A new lede.'); checks += 2;
+  st.change('Move work first', (d) => { d.projects.layout.sections = ['work', 'selected', 'plate', 'lenses', 'about']; });
+  st.change('Accent', (d) => { d.theme.root['--brass'] = '#D08A3C'; }, { kind: 'theme' });
+  st.change('New record', (d) => { d.projects.projects.push({ slug: 'new-record', beam: 'web', stack: [], hidden: true }); d.work['new-record'] = { title: 'New', subtitle: 's', status: 'x', year: '2026', role: 'r', summary: 's', facts: '- a: b', highlights: '- c' }; });
+  out = st.changedFiles();
+  assert.deepEqual(out.map((f) => f.path.split('/').pop()).sort(), ['new-record.md', 'projects.json', 'site.md', 'theme.json']);
+  assert.equal(out.find((f) => f.path === workFile('new-record')).sha, null, 'a new record is a new file');
+  assert.deepEqual(parseOf(out.find((f) => f.path === workFile('new-record')).text).title, 'New'); assert.equal(JSON.parse(out.find((f) => f.path === THEME_FILE).text).root['--brass'], '#D08A3C'); checks += 4;
+  await tick();
+  const again = createStore({ storage }); again.load(published());
+  assert.equal(again.text('hero.lede'), 'A new lede.', 'the draft survives a reload'); assert.equal(again.docs.projects.layout.sections[0], 'work'); checks += 2;
+  const moved = createStore({ storage }); moved.load(published().map((f) => (f.path.endsWith('site.md') ? { ...f, sha: 'b'.repeat(40) } : f)));
+  assert.equal(moved.dirty, false, 'a draft made from an older version is set aside, not applied'); assert.ok(storage.getItem('prismet.edit.draft.v1.stale')); checks += 2;
+
+  // ── publish: one commit, through the server, against a fake GitHub that reads this checkout ──
+  const gh2 = checkoutGitHub({ root: REPO_ROOT });
+  const api2 = createEditApi({ env: { EDIT_GITHUB_TOKEN: 'github_pat_FAKE', EDIT_PIN: '123456', EDIT_COOKIE_SECURE: '0' }, fetchImpl: gh2.fetch, clientAddress: () => '4.4.4.4',
+    sendJSON: (q, res, status, payload, headers = {}) => { res.status = status; res.body = payload; res.headers = headers; } });
+  const call2 = async (method, path, opts) => { const res = {}; await api2.handle(req(method, path, opts), res, new URL(path, 'http://x'), method); return res; };
+  const sid3 = (await call2('POST', '/api/edit/session', { body: { pin: '123456' } })).headers['set-cookie'].split(';')[0];
+  const get = async (path) => (await call2('GET', `/api/edit/file?path=${path}`, { cookie: sid3 })).body;
+  assert.equal((await get(PROJECTS_FILE)).text, disk('data/projects.json').text, 'the data files can be read'); checks++;
+  const real = createStore({ storage: memory() });
+  real.load(await Promise.all([...files.map((f) => `showcase/prismet-site/${f}`), PROJECTS_FILE, THEME_FILE].map(get)));
+  real.setText('hero.lede', 'Published lede.'); real.change('Hide plate', (d) => { d.projects.layout.hiddenSections = ['plate']; });
+  real.change('New record', (d) => { d.projects.projects.push({ slug: 'new-record', beam: 'web', stack: [], hidden: true }); d.work['new-record'] = { title: 'New', subtitle: 's', status: 'x', year: '2026', role: 'r', summary: 's', facts: '- a: b', highlights: '- c' }; });
+  const batch = real.changedFiles().map(({ path, text, sha }) => ({ path, text, sha }));
+  r = await call2('POST', '/api/edit/commit', { body: { files: batch } }); assert.equal(r.status, 401, 'publishing needs a session'); checks++;
+  r = await call2('POST', '/api/edit/commit', { cookie: sid3, body: { files: batch, message: 'Publish' } });
+  assert.equal(r.status, 200, JSON.stringify(r.body)); assert.match(r.body.commit.sha, /^[0-9a-f]{40}$/); assert.equal(r.body.files.length, 3);
+  assert.equal(gh2.calls.filter((c) => c.method === 'POST' && c.path.endsWith('/git/commits')).length, 1, 'one commit for every file');
+  assert.equal(gh2.written.get(SITE_PATH), batch.find((f) => f.path === SITE_PATH).text); assert.ok(gh2.written.has(workFile('new-record'))); checks += 6;
+  assert.equal((await get(SITE_PATH)).sha, r.body.files.find((f) => f.path === SITE_PATH).sha, 'the page learns each file\'s new version from the answer'); checks++;
+  r = await call2('POST', '/api/edit/commit', { cookie: sid3, body: { files: batch } }); assert.equal(r.status, 409, 'a file that changed since it was loaded stops the publish'); assert.ok(r.body.stale.includes('site.md')); checks += 2;
+  const refuse = async (file, why) => { const x = await call2('POST', '/api/edit/commit', { cookie: sid3, body: { files: [file] } }); assert.equal(x.status, 400, why); checks++; };
+  await refuse({ path: 'showcase/server/server.js', text: 'x', sha: 'a'.repeat(40) }, 'only content and data files');
+  await refuse({ path: 'showcase/prismet-site/data/other.json', text: '{}', sha: 'a'.repeat(40) }, 'only the two data files');
+  await refuse({ path: PROJECTS_FILE, text: '{not json', sha: 'a'.repeat(40) }, 'a data file must be JSON');
+  await refuse({ path: 'showcase/prismet-site/content/site2.md', text: 'x', sha: null }, 'a new file can only be a record');
+  await refuse({ path: 'showcase/prismet-site/content/work/../x.md', text: 'x', sha: null }, 'no traversal');
+  assert.ok(gh2.calls.every((c) => c.auth === 'Bearer github_pat_FAKE'), 'the server uses the stored token'); checks++;
+  // ── the draft in the private drafts repository ──
+  r = await call2('GET', '/api/edit/draft', { cookie: sid3 }); assert.equal(r.status, 404, 'no drafts repository, no server drafts'); checks++;
+  const gh3 = checkoutGitHub({ root: REPO_ROOT });
+  const api3 = createEditApi({ env: { EDIT_GITHUB_TOKEN: 'github_pat_FAKE', EDIT_PIN: '123456', EDIT_COOKIE_SECURE: '0', EDIT_DRAFT_REPO: 'sagedeutschle/prismet-drafts', EDIT_DRAFT_TOKEN: 'github_pat_DRAFTS' }, fetchImpl: gh3.fetch, clientAddress: () => '5.5.5.5',
+    sendJSON: (q, res, status, payload, headers = {}) => { res.status = status; res.body = payload; res.headers = headers; } });
+  const call3 = async (method, path, opts) => { const res = {}; await api3.handle(req(method, path, opts), res, new URL(path, 'http://x'), method); return res; };
+  r = await call3('GET', '/api/edit/status'); assert.equal(r.body.drafts, true); checks++;
+  r = await call3('GET', '/api/edit/draft'); assert.equal(r.status, 401, 'the draft needs a session'); checks++;
+  const sid4 = (await call3('POST', '/api/edit/session', { body: { pin: '123456' } })).headers['set-cookie'].split(';')[0];
+  r = await call3('GET', '/api/edit/draft', { cookie: sid4 }); assert.equal(r.status, 200); assert.equal(r.body.text, null, 'no draft yet'); checks += 2;
+  const phone = createStore({ storage: memory() }); phone.load(published()); phone.setText('hero.lede', 'Written on the phone.'); await tick();
+  r = await call3('PUT', '/api/edit/draft', { cookie: sid4, body: { text: JSON.stringify(phone.snapshot()), sha: null } }); assert.equal(r.status, 200, JSON.stringify(r.body)); checks++;
+  const draftCalls = gh3.calls.filter((c) => c.path.includes('/contents/draft.json'));
+  assert.ok(draftCalls.length === 2 && draftCalls.every((c) => c.path.startsWith('/repos/sagedeutschle/prismet-drafts/') && c.auth === 'Bearer github_pat_DRAFTS'), 'the draft goes to the drafts repository with its own token, nowhere else'); checks++;
+  const saved = (await call3('GET', '/api/edit/draft', { cookie: sid4 })).body;
+  const laptop = createStore({ storage: memory() }); laptop.load(published());
+  assert.equal(laptop.adopt(JSON.parse(saved.text)), true); assert.equal(laptop.text('hero.lede'), 'Written on the phone.', 'another device opens to the draft'); laptop.undo(); assert.equal(laptop.dirty, false, 'and can undo it'); checks += 3;
+  const newer = createStore({ storage: memory() }); newer.load(published().map((f) => (f.path.endsWith('site.md') ? { ...f, sha: 'b'.repeat(40) } : f)));
+  assert.equal(newer.adopt(JSON.parse(saved.text)), false, 'a draft made from older files is not applied'); checks++;
+  r = await call3('PUT', '/api/edit/draft', { cookie: sid4, body: { text: '{"a":1}', sha: 'f'.repeat(40) } }); assert.equal(r.status, 409, 'a save over a stale version is refused'); checks++;
+  r = await call3('PUT', '/api/edit/draft', { cookie: sid4, body: { text: 'not json', sha: saved.sha } }); assert.equal(r.status, 400); checks++;
+}
+
+console.log(`✓ edit-check: ${checks} checks over ${files.length} content files; the page, its client, the draft, the renderer and the server's edit API agree`);
