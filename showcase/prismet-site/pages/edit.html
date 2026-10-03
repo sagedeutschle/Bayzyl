@@ -42,6 +42,7 @@
   <div class="tabs" role="tablist">
     <button type="button" role="tab" data-tab="site" aria-selected="true">Site</button>
     <button type="button" role="tab" data-tab="design" aria-selected="false">Design</button>
+    <button type="button" role="tab" data-tab="history" aria-selected="false">History</button>
     <button type="button" id="find" class="find" title="Search and commands (⌘K)">⌘K</button>
   </div>
   <div id="tree" class="tree" role="tree"></div>
@@ -68,6 +69,17 @@
     <p id="pin-status" class="status" role="status" aria-live="polite"></p>
   </form>
 </section>
+
+<div id="picker" class="palette picker" hidden>
+  <div class="palette-box" role="dialog" aria-label="Media library">
+    <div class="picker-top">
+      <input id="picker-find" type="text" autocomplete="off" spellcheck="false" placeholder="Search images…" aria-controls="picker-grid">
+      <button id="picker-add" class="btn primary" type="button">Add images</button>
+      <input id="picker-file" type="file" accept="image/*" multiple hidden>
+    </div>
+    <div id="picker-grid" class="picker-grid"></div>
+  </div>
+</div>
 
 <div id="palette" class="palette" hidden>
   <div class="palette-box" role="dialog" aria-label="Search and commands">

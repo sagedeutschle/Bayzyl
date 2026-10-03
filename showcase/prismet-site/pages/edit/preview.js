@@ -5,6 +5,7 @@
 // navigating. Token changes repaint without a reload; structural changes re-render and keep the scroll position.
 import { renderSite } from '../lib/render.js';
 import { themeCss } from '../lib/theme.js';
+import { stylesCss, selectorOf } from '../lib/styles.js';
 import { inline, plain } from '../lib/format.js';
 
 const FRAME_CSS = `
@@ -19,28 +20,27 @@ const FRAME_CSS = `
 const norm = (s) => s.replace(/ /g, ' ').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
 const SELECTABLE = '[data-edit], [data-slug], [data-section], .entrance';
 
-export function createPreview({ frame, stage, store, manifest, baseCss, onSelect, onNavigate, onKey, say }) {
-  const files = manifest.files;
-  const assets = {
-    size: (p) => { const f = files[p]; return f ? { w: f[0], h: f[1] } : { w: 0, h: 0 }; },
-    has: (p) => p in files,
-    url: (p) => { if (!p) return null; const f = files[p]; if (!f) throw new Error(`missing image: ${p}`); return `${p}?v=${f[2]}`; },
-  };
+export function createPreview({ frame, stage, store, manifest, media, baseCss, onSelect, onNavigate, onKey, say }) {
+  const assets = media.assets;                                  // the site's images plus the ones added here (edit/media.js)
   let page = 'index.html', mode = 'edit', themeMode = '', device = 0, zoom = 'fit';
   let selection = null, missing = new Set(), pages = new Map(), pending = false, keepScroll = 0, editing = null, wantScroll = false;
   const doc = () => frame.contentDocument;
   const esc = (s) => frame.contentWindow.CSS.escape(s);
 
   // ── rendering ─────────────────────────────────────────────────────────────────────────────
+  // In Edit mode every piece of wording carries data-edit, so a style shows the moment it is set; in Preview mode the
+  // page is the site's own HTML, where only styled wording is marked (data-s).
+  const STYLE_ATTR = () => (mode === 'edit' ? 'data-edit' : 'data-s');
   function render({ keep = true } = {}) {
     const d = store.docs;
     let out;
-    try { out = renderSite({ data: d.projects, site: d.site, work: d.work, assets, urls: { css: 'site.css', js: manifest.urls.js, og: manifest.urls.og }, edit: mode === 'edit' }); }
+    media.missing.clear();
+    try { out = renderSite({ data: d.projects, site: d.site, work: d.work, assets, urls: { css: 'site.css', js: manifest.urls.js, og: manifest.urls.og }, styles: d.styles, pages: d.pages, drafts: true, edit: mode === 'edit' }); }
     catch (e) { say(`The preview could not render: ${e.message}. Undo the last change.`, 'warn'); return; }
     pages = out.pages; missing = out.missing;
     if (!pages.has(page)) page = 'index.html';
     const root = page.includes('/') ? '../' : '';
-    const styles = `<style>${baseCss}</style><style id="pe-theme">${themeCss(d.theme)}</style>${mode === 'edit' ? `<style>${FRAME_CSS}</style>` : ''}`;
+    const styles = `<style>${baseCss}</style><style id="pe-theme">${themeCss(d.theme)}</style><style id="pe-styles">${stylesCss(d.styles, { attr: STYLE_ATTR() })}</style>${mode === 'edit' ? `<style>${FRAME_CSS}</style>` : ''}`;
     keepScroll = keep && doc()?.body ? frame.contentWindow.scrollY : 0;
     frame.srcdoc = pages.get(page).replace(`<link rel="stylesheet" href="${root}site.css">`, () => styles);
   }
@@ -69,7 +69,7 @@ export function createPreview({ frame, stage, store, manifest, baseCss, onSelect
   const targets = (sel) => {
     const d = doc(); if (!d || !sel) return [];
     if (sel.type === 'text') return [...d.querySelectorAll(`[data-edit="${esc(sel.key)}"]`)];
-    if (sel.type === 'section') return [...d.querySelectorAll(sel.id === 'hero' ? '.entrance' : `[data-section="${esc(sel.id)}"]`)];
+    if (sel.type === 'section' || sel.type === 'psection') return [...d.querySelectorAll(sel.id === 'hero' ? '.entrance' : `[data-section="${esc(sel.id)}"]`)];
     if (sel.type === 'project') return [...d.querySelectorAll(`[data-slug="${esc(sel.slug)}"]`)];
     return [];
   };
@@ -130,7 +130,7 @@ export function createPreview({ frame, stage, store, manifest, baseCss, onSelect
     const el = editing?.el;
     if (el && e.target === el) {
       if (e.key === 'Escape') { el.textContent = editing.before; store.setText(editing.key, editing.before, { source: 'preview' }); el.blur(); e.stopPropagation(); return; }
-      if (e.key === 'Enter' && !e.shiftKey && !el.matches('.summary, p, li')) { e.preventDefault(); el.blur(); return; }
+      if (e.key === 'Enter' && !e.shiftKey && !el.matches('.summary, .paras, p, li')) { e.preventDefault(); el.blur(); return; }
       if (e.key === ' ' && el.closest('button')) { e.preventDefault(); doc().execCommand('insertText', false, ' '); }
       if (!(e.metaKey || e.ctrlKey) || /^[zZ]$/.test(e.key)) return;        // the browser's own undo while typing
     }
@@ -142,6 +142,7 @@ export function createPreview({ frame, stage, store, manifest, baseCss, onSelect
     const d = doc(); if (!d) return;
     const text = store.text(key);
     if (/\{\w+\}/.test(text)) return schedule();                            // placeholders are filled by the renderer
+    if (d.querySelector(`.paras[data-edit="${esc(key)}"]`)) return schedule();   // paragraphs and lists: the renderer lays them out
     d.querySelectorAll(`[data-edit="${esc(key)}"]`).forEach((el) => {
       if (el === editing?.el) return;
       if (el instanceof frame.contentWindow.SVGElement) el.textContent = plain(text);
@@ -155,6 +156,7 @@ export function createPreview({ frame, stage, store, manifest, baseCss, onSelect
     if (ev.type !== 'change') return;
     if (ev.kind === 'text') return paint(ev.key);
     if (ev.kind === 'theme') { const s = doc()?.getElementById('pe-theme'); if (s) s.textContent = themeCss(store.docs.theme); else schedule(); return; }
+    if (ev.kind === 'styles') { const s = doc()?.getElementById('pe-styles'); if (s && mode === 'edit') s.textContent = stylesCss(store.docs.styles, { attr: 'data-edit' }); else schedule(); return; }
     schedule();
   });
 
@@ -172,8 +174,17 @@ export function createPreview({ frame, stage, store, manifest, baseCss, onSelect
   }
   new ResizeObserver(layout).observe(stage);
 
+  /** What the browser draws for a style target right now (at the frame's current width): the value a control shows
+   *  when nothing is set. */
+  function computed(target, prop) {
+    const d = doc(), sel = selectorOf(target, 'data-edit'); if (!d || !sel) return '';
+    const el = d.querySelector(sel);
+    return el ? frame.contentWindow.getComputedStyle(el).getPropertyValue(prop).trim() : '';
+  }
+
   return {
-    render, select, layout,
+    render, select, layout, computed,
+    get width() { return device || frame.getBoundingClientRect().width; },
     get page() { return page; },
     get mode() { return mode; },
     get missing() { return missing; },

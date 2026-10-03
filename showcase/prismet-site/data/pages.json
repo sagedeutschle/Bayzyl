@@ -1,0 +1,5 @@
+{
+  "_readme": "Sections and pages made at prismet.xyz/edit from the section library (pages/lib/sections.js). home = sections added to the home page (their order and hiding live in projects.json → layout, beside the built-in sections). pages = whole pages: slug, title, description, status (draft | published | hidden), nav, navLabel, sections. A section is { id, type, props }.",
+  "home": [],
+  "pages": []
+}

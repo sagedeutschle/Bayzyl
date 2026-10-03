@@ -19,6 +19,7 @@ import { createHash } from 'node:crypto';
 import { loadSite, loadWork } from './content.mjs';
 import { renderSite } from './pages/lib/render.js';
 import { themeCss } from './pages/lib/theme.js';
+import { stylesCss } from './pages/lib/styles.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SHOWCASE = join(HERE, '..');
@@ -60,6 +61,8 @@ const versioned = (p, abs) => (PREVIEW ? p : `${p}?v=${hashOf(abs)}`);
 function asset(p) {
   if (!p) return null;
   if (copied.has(p)) return copied.get(p);
+  // Only files inside showcase/assets are ever copied: a path from a data file cannot reach outside it.
+  if (!/^assets\/[A-Za-z0-9._/-]+$/.test(p) || p.includes('..')) throw new Error(`not a path under assets/: ${p}`);
   const src = join(SHOWCASE, p);
   if (!existsSync(src)) throw new Error(`missing asset: ${p}`);
   mkdirSync(dirname(join(DIST, p)), { recursive: true });
@@ -68,9 +71,11 @@ function asset(p) {
   return copied.get(p);
 }
 cpSync(join(SHOWCASE, 'assets/fonts'), join(DIST, 'assets/fonts'), { recursive: true });
-// site.css = the design's defaults (src/site.css) plus whatever data/theme.json changes; nothing is added when it is empty.
-const theme = existsSync(join(HERE, 'data/theme.json')) ? JSON.parse(readFileSync(join(HERE, 'data/theme.json'), 'utf8')) : {};
-writeFileSync(join(DIST, 'site.css'), readFileSync(join(HERE, 'src/site.css'), 'utf8') + themeCss(theme));
+// site.css = the design's defaults (src/site.css) plus whatever data/theme.json (tokens) and data/styles.json (single
+// elements) change; nothing is added when they are empty.
+const readData = (name) => (existsSync(join(HERE, 'data', name)) ? JSON.parse(readFileSync(join(HERE, 'data', name), 'utf8')) : {});
+const theme = readData('theme.json'), styles = readData('styles.json'), sitePages = readData('pages.json');
+writeFileSync(join(DIST, 'site.css'), readFileSync(join(HERE, 'src/site.css'), 'utf8') + themeCss(theme) + stylesCss(styles));
 copyFileSync(join(HERE, 'src/site.js'), join(DIST, 'site.js'));
 const CSS_URL = versioned('site.css', join(DIST, 'site.css')), JS_URL = versioned('site.js', join(HERE, 'src/site.js'));
 if (PREVIEW) for (const f of ['editor.js', 'editor.css']) if (existsSync(join(HERE, 'src', f))) copyFileSync(join(HERE, 'src', f), join(DIST, f));
@@ -90,6 +95,8 @@ const { pages, missing, shown, projects } = renderSite({
   work: Object.fromEntries(data.projects.map((p) => [p.slug, loadWork(p.slug)])),
   assets: { size: (p) => sizeOf(join(SHOWCASE, p)), has: (p) => existsSync(join(SHOWCASE, p)), url: asset },
   urls: { css: CSS_URL, js: JS_URL, og: OG_URL },
+  styles,
+  pages: sitePages,
   preview: PREVIEW,
 });
 for (const [path, html] of pages) writeFileSync(join(DIST, path), html);
@@ -98,10 +105,11 @@ for (const [path, html] of pages) writeFileSync(join(DIST, path), html);
 // every image's size and version, and the versioned URLs of the script and the share image.
 if (!PREVIEW) {
   const walk = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(dir, e.name)) : [join(dir, e.name)]));
-  const files = Object.fromEntries(walk(join(SHOWCASE, 'assets')).filter((f) => f.endsWith('.webp')).sort().map((abs) => {
-    const { w, h } = sizeOf(abs);
-    return [relative(SHOWCASE, abs).split('\\').join('/'), [w, h, hashOf(abs)]];
-  }));
+  // Images uploaded at /edit (assets/uploads/) always ship, so the editor can show them before a page uses them.
+  const all = walk(join(SHOWCASE, 'assets')).filter((f) => f.endsWith('.webp')).sort().map((abs) => [relative(SHOWCASE, abs).split('\\').join('/'), abs]);
+  for (const [p] of all) if (p.startsWith('assets/uploads/')) asset(p);
+  // [width, height, version, 1 when the file is on the site]
+  const files = Object.fromEntries(all.map(([p, abs]) => { const { w, h } = sizeOf(abs); return [p, [w, h, hashOf(abs), copied.has(p) ? 1 : 0]]; }));
   mkdirSync(join(DIST, 'edit'), { recursive: true });
   writeFileSync(join(DIST, 'edit/assets.json'), JSON.stringify({ urls: { js: JS_URL, og: OG_URL }, files }));
 }

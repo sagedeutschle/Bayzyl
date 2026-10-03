@@ -33,6 +33,7 @@ const check = (name, cond, detail = '') => { console.log(`${cond ? '✓' : '✗'
 const browser = await chromium.launch({ executablePath: CHROMIUM });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 page.on('pageerror', (e) => errors.push(`pageerror ${e.message}`));
+page.on('response', (r) => { if (r.status() === 404) errors.push(`404 ${r.url().replace(base, '')}`); });
 page.on('console', (m) => { if (m.type() === 'error' && !/status of 401/.test(m.text())) errors.push(`console ${m.text()}`); });   // the wrong-PIN step answers 401 on purpose
 const until = async (fn, arg, ms = 10000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await page.evaluate(fn, arg).catch(() => false)) return true; await new Promise((r) => setTimeout(r, 100)); } return false; };
 const inFrame = (fn, arg) => page.evaluate(`(${fn})(document.getElementById('frame').contentDocument, ${JSON.stringify(arg ?? null)})`);
@@ -68,6 +69,41 @@ try {
   await page.fill('[data-token="--brass"] input[type="text"]', '#D07A2C'); await page.keyboard.press('Tab');
   check('a token changes the whole preview at once', await until(() => getComputedStyle(document.getElementById('frame').contentDocument.documentElement).getPropertyValue('--brass').trim() === '#D07A2C'));
 
+  // one element, one width: the hero's first line is smaller on phones only
+  await page.click('[data-tab="site"]');
+  await page.frameLocator('#frame').locator('[data-edit="hero.title"]').click();
+  await page.click('#inspector .element .seg button:has-text("Mobile")');
+  await page.fill('#inspector [data-style="font-size"] input[type="text"]', '40'); await page.keyboard.press('Tab');
+  const sizeOf = () => page.evaluate(() => { const f = document.getElementById('frame'); return f.contentWindow.getComputedStyle(f.contentDocument.querySelector('[data-edit="hero.title"]')).fontSize; });
+  check('a size set at Mobile shows at mobile width', await until(() => { const f = document.getElementById('frame'); return f.contentWindow.innerWidth < 420 && f.contentWindow.getComputedStyle(f.contentDocument.querySelector('[data-edit="hero.title"]')).fontSize === '40px'; }), await sizeOf());
+  await page.click('#device [data-w="1440"]');
+  check('and leaves the desktop size alone', await until(() => { const f = document.getElementById('frame'); return f.contentWindow.innerWidth > 1000 && f.contentWindow.getComputedStyle(f.contentDocument.querySelector('[data-edit="hero.title"]')).fontSize !== '40px'; }), await sizeOf());
+  await row('Register').click();
+
+  // a new page from the section library
+  await page.selectOption('#tree .adder.head', 'article');
+  check('a new page opens in the preview', await until(() => document.getElementById('frame').contentDocument?.querySelector('main.x-page .x-title')?.textContent === 'A new page') && await row('New page').count() === 1);
+  await page.frameLocator('#frame').locator('.x-title').click();
+  await page.keyboard.press('ControlOrMeta+A'); await page.keyboard.type('About this workshop');
+  await row('New page').click();
+  await page.fill('#inspector [data-fid="page|title"]', 'About'); await page.keyboard.press('Tab');
+  await page.selectOption('#inspector .prop:has-text("Status") select', 'published');
+  await page.click('#inspector .prop.check:has-text("In the navigation") input');
+  check('a published page in the navigation shows in the bar', await until(() => [...document.getElementById('frame').contentDocument.querySelectorAll('.nav a')].some((a) => a.textContent === 'About' && a.getAttribute('href') === 'new-page.html')));
+  await row('Home').click();
+  await page.selectOption('#tree .adder:not(.head)', 'quote');
+  check('a library section joins the home page', await until(() => document.getElementById('frame').contentDocument?.querySelector('#main > .x-quote blockquote')));
+  await row('Register').click();
+
+  // an image: added in the picker, used by a record, published with the draft
+  await row('Quark').click();
+  const galleryRows = () => page.locator('#inspector .media-row').count();
+  const rows0 = await galleryRows();
+  await page.click('#inspector .add-image');
+  await page.setInputFiles('#picker-file', join(ROOT, 'showcase/assets/icons/prismet-app-128.webp'));
+  check('an added image is chosen and joins the gallery', await until((n) => document.getElementById('picker').hidden && document.querySelectorAll('#inspector .media-row').length === n + 1, rows0), `${await galleryRows()} rows`);
+  await row('Register').click();
+
   // move a section, then undo
   await page.click('[data-tab="site"]');
   const order0 = await sections();
@@ -79,7 +115,7 @@ try {
 
   // the draft survives a reload
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('#tree .row', { timeout: 15000 });
-  check('the draft survives a reload', await until(() => /Publish 2 files/.test(document.getElementById('save').textContent)), await page.textContent('#save'));
+  check('the draft survives a reload', await until(() => /Publish 5 files/.test(document.getElementById('save').textContent)), await page.textContent('#save'));
 
   // publish
   await page.click('#save');
@@ -88,13 +124,23 @@ try {
   check('GitHub receives one commit', commits.length === 1, `${commits.length} commits`);
   check('site.md arrives exactly as writeSections writes it', gh.written.get(SITE_PATH) === writeSections(siteText, { 'hero.lede': 'A lede typed on the page.' }));
   check('theme.json arrives with the token', JSON.parse(gh.written.get('showcase/prismet-site/data/theme.json') || '{}').root?.['--brass'] === '#D07A2C');
-  check('the commit message names the files', /site\.md \(1\); theme\.json/.test(commits[0]?.body.message || ''), commits[0]?.body.message);
+  check('styles.json arrives with the size for phones only', JSON.stringify(JSON.parse(gh.written.get('showcase/prismet-site/data/styles.json') || '{}').rules) === '{"text:hero.title":{"mobile":{"font-size":"40px"}}}', gh.written.get('showcase/prismet-site/data/styles.json'));
+  { const pg = JSON.parse(gh.written.get('showcase/prismet-site/data/pages.json') || '{}'), pj = JSON.parse(gh.written.get('showcase/prismet-site/data/projects.json') || '{}');
+    check('pages.json arrives with the page and the home section, and the home order names it', pg.pages?.[0]?.title === 'About' && pg.pages[0].status === 'published' && pg.pages[0].sections[0].props.title === 'About this workshop' && pg.home?.[0]?.type === 'quote' && pj.layout.sections.includes(pg.home[0].id), JSON.stringify(pg).slice(0, 200)); }
+  { const up = [...gh.written.keys()].find((k) => k.startsWith('showcase/assets/uploads/')), bytes = up && gh.written.get(up);
+    check('the image arrives as a WebP in the same commit, and the record names it', Boolean(bytes) && bytes.toString('ascii', 0, 4) === 'RIFF' && bytes.toString('ascii', 8, 12) === 'WEBP' && gh.written.get('showcase/prismet-site/data/projects.json').includes(up.replace('showcase/', '')), up || 'no upload'); }
+  check('the commit message names the files', /site\.md \(1\); projects\.json; theme\.json/.test(commits[0]?.body.message || ''), commits[0]?.body.message);
   check('only the server ever showed GitHub the token', gh.calls.every((c) => c.auth === 'Bearer github_pat_FAKE'));
   await until(() => /Live on prismet.xyz/.test(document.querySelector('#deploy').textContent));
   check('the page reports the deploy result and an empty draft', /Live on prismet.xyz/.test(await page.textContent('#deploy')) && /Nothing to publish/.test(await page.textContent('#save')));
   check('the first words were "' + before.slice(0, 12) + '…": nothing else in site.md changed', parseSections(gh.written.get(SITE_PATH))['hero.title'] === parseSections(siteText)['hero.title']);
   const pageSource = await page.content();
   check('the token never reaches the browser', !pageSource.includes('github_pat') && !(await page.evaluate(() => JSON.stringify(Object.entries(sessionStorage)) + JSON.stringify(Object.entries(localStorage)))).includes('github_pat'));
+  // history
+  await page.click('[data-tab="history"]'); await page.waitForSelector('.revision', { timeout: 10000 });
+  check('History lists what was published', (await page.$$('.revision')).length === 2);
+  await page.locator('.revision').nth(1).click();
+  check('a revision opens as a draft', await until(() => /as a draft|already shows/.test(document.querySelector('#status').textContent)), await page.textContent('#status'));
   await page.click('#lock'); await page.waitForSelector('#pin-form:visible', { timeout: 10000 });
   check('Lock ends the session', (await (await fetch(`${base}/api/edit/status`)).json()).authed === false);
   check('no console or page errors', errors.length === 0, errors.join('; '));

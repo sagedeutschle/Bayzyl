@@ -111,6 +111,26 @@ textarea:focus, input:focus { border-color: var(--sel); outline: none; }
 .token input[type="text"] { grid-column: 3; font: 11px/1 var(--mono); height: 24px; }
 .token .reset { grid-column: 4; margin: 0; }
 
+/* the section library and pages */
+.adder { display: block; height: 22px; margin: 2px 6px 6px 34px; padding: 0 4px; border: 1px dashed var(--line-2); background: none; color: var(--text-2); font: 11px/1 var(--mono); max-width: 120px; }
+.adder.head { margin: 0; border-style: solid; }
+.row .badge { font-size: 8px; padding: 2px 4px; }
+
+/* history */
+.revision { display: grid; gap: 2px; width: 100%; text-align: left; border: 0; border-bottom: 1px solid var(--line); background: none; padding: 7px 10px; }
+.revision:hover { background: var(--panel-2); }
+.rev-when { display: flex; align-items: center; gap: 6px; font: 11px/1.2 var(--mono); color: var(--text-2); }
+.rev-what { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* one element's own style */
+.element { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px 0; }
+.element-name { font: 11px/1.2 var(--mono); color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.element .seg button { height: 22px; padding: 0 7px; gap: 4px; }
+.seg .dot { display: inline-block; }
+.note.tier { padding: 6px 12px 8px; font-size: 11px; color: var(--text-3); border-bottom: 1px solid var(--line); }
+.token select { grid-column: 3; height: 24px; padding: 0 4px; font: 11px/1 var(--mono); }
+.token input::placeholder { color: var(--text-3); }
+
 /* ── foot ── */
 .foot { grid-area: foot; display: flex; align-items: center; gap: 12px; padding: 0 10px; background: var(--panel); border-top: 1px solid var(--line); font: 11px/1 var(--mono); color: var(--text-2); min-width: 0; }
 .crumbs { display: flex; align-items: center; gap: 6px; min-width: 0; overflow: hidden; white-space: nowrap; }
@@ -139,5 +159,20 @@ textarea:focus, input:focus { border-color: var(--sel); outline: none; }
 .palette-box li[aria-selected="true"] { background: #1D3350; color: #fff; }
 .palette-box li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .palette-box li small { color: var(--text-3); font: 10px/1.6 var(--mono); text-transform: uppercase; letter-spacing: .08em; flex: none; }
+
+/* ── media library ── */
+.picker .palette-box { width: min(760px, calc(100vw - 32px)); }
+.picker-top { display: flex; gap: 8px; padding: 8px; border-bottom: 1px solid var(--line); }
+.picker-top input { border: 1px solid var(--line); border-radius: 3px; height: 28px; padding: 0 8px; background: var(--field); }
+.picker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 8px; padding: 8px; max-height: 62vh; overflow: auto; }
+.pick { display: grid; gap: 4px; border: 1px solid var(--line); border-radius: 3px; background: var(--field); padding: 4px; text-align: left; position: relative; }
+.pick:hover { border-color: var(--sel); }
+.pick img { width: 100%; height: 80px; object-fit: cover; background: #0B1015; }
+.pick span { font: 10px/1.2 var(--mono); color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pick small { position: absolute; top: 6px; right: 6px; font: 600 9px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; padding: 3px 4px; background: var(--brass); color: var(--on-brass); border-radius: 2px; }
+.media-row { display: grid; grid-template-columns: 44px 1fr auto; gap: 6px; align-items: center; }
+.media-row img { width: 44px; height: 30px; object-fit: cover; border: 1px solid var(--line); background: #0B1015; }
+.media-row .tools { display: flex; gap: 1px; }
+.media-row .path { font: 10px/1.2 var(--mono); color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 @media (max-width: 900px) { body { --left: 200px; --right: 260px; } .width, .zoom, #live { display: none; } }

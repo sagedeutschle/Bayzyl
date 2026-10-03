@@ -5,6 +5,8 @@
 //   work      { slug: content/work/<slug>.md as { key: text } }
 //   projects  data/projects.json (records, section order, hidden flags, featured list)
 //   theme     data/theme.json ({ root, day }: design tokens changed from site.css's defaults)
+//   styles    data/styles.json ({ rules }: single elements, per width)
+//   pages     data/pages.json ({ home, pages }: sections and pages made from the section library)
 // The published copy of each is kept beside it (store.base), so every field can say whether it differs and go back.
 // The draft autosaves to this browser and survives a reload; nothing reaches the site until Publish.
 import { parseSections, writeSections, editTarget, workUpdate, workValue } from '../lib/format.js';
@@ -13,6 +15,10 @@ export const ROOT = 'showcase/prismet-site/';
 export const SITE_FILE = `${ROOT}content/site.md`;
 export const PROJECTS_FILE = `${ROOT}data/projects.json`;
 export const THEME_FILE = `${ROOT}data/theme.json`;
+export const STYLES_FILE = `${ROOT}data/styles.json`;
+export const PAGES_FILE = `${ROOT}data/pages.json`;
+/** A library section in the pages document: scope is 'home' or a page's slug. */
+export const findSection = (pages, scope, id) => (scope === 'home' ? pages.home : pages.pages.find((p) => p.slug === scope)?.sections || []).find((s) => s.id === id);
 export const workFile = (slug) => `${ROOT}content/work/${slug}.md`;
 const slugOf = (path) => path.slice(`${ROOT}content/work/`.length, -3);
 const KEY = 'prismet.edit.draft.v1';
@@ -30,14 +36,16 @@ export function createStore({ storage = globalThis.localStorage, now = Date.now 
   const listeners = new Set();
   const emit = (ev) => listeners.forEach((fn) => fn(ev));
 
-  const parse = () => {
+  const parse = (from = files) => {
     const work = {};
-    for (const [path, f] of files) if (path.startsWith(`${ROOT}content/work/`)) work[slugOf(path)] = parseSections(f.text);
+    for (const [path, f] of from) if (path.startsWith(`${ROOT}content/work/`)) work[slugOf(path)] = parseSections(f.text);
     return {
-      site: parseSections(files.get(SITE_FILE)?.text || ''),
+      site: parseSections(from.get(SITE_FILE)?.text || ''),
       work,
-      projects: JSON.parse(files.get(PROJECTS_FILE)?.text || '{"projects":[]}'),
-      theme: (() => { const t = JSON.parse(files.get(THEME_FILE)?.text || '{}'); return { ...t, root: t.root || {}, day: t.day || {} }; })(),
+      projects: JSON.parse(from.get(PROJECTS_FILE)?.text || '{"projects":[]}'),
+      theme: (() => { const t = JSON.parse(from.get(THEME_FILE)?.text || '{}'); return { ...t, root: t.root || {}, day: t.day || {} }; })(),
+      styles: (() => { const t = JSON.parse(from.get(STYLES_FILE)?.text || '{}'); return { ...t, rules: t.rules || {} }; })(),
+      pages: (() => { const t = JSON.parse(from.get(PAGES_FILE)?.text || '{}'); return { ...t, home: t.home || [], pages: t.pages || [] }; })(),
     };
   };
   const shas = () => Object.fromEntries([...files].map(([p, f]) => [p, f.sha]));
@@ -62,7 +70,7 @@ export function createStore({ storage = globalThis.localStorage, now = Date.now 
     try {
       const saved = JSON.parse(storage.getItem(KEY) || 'null');
       if (saved?.docs) {
-        if (same(saved.shas, shas())) { docs = saved.docs; draftAt = saved.at || 0; restored = !same(docs, base); }
+        if (same(saved.shas, shas())) { docs = { ...clone(base), ...saved.docs }; draftAt = saved.at || 0; restored = !same(docs, base); }
         else { storage.setItem(`${KEY}.stale`, JSON.stringify(saved)); storage.removeItem(KEY); stale = true; }   // kept, not applied
       }
     } catch { /* storage blocked or corrupt: start from the published copy */ }
@@ -89,7 +97,7 @@ export function createStore({ storage = globalThis.localStorage, now = Date.now 
   };
 
   const slugs = () => Object.keys(docs.work);
-  const textIn = (d, key) => { const t = editTarget(key, Object.keys(d.work)); return t.file === 'site' ? d.site[key] : workValue(d.work[t.slug] || {}, t.field); };
+  const textIn = (d, key) => { const t = editTarget(key, Object.keys(d.work)); return t.file === 'pages' ? findSection(d.pages, t.page, t.section)?.props?.[t.prop] : t.file === 'site' ? d.site[key] : workValue(d.work[t.slug] || {}, t.field); };
 
   /** What Publish would write: [{ path, text, sha, label }], sha null for a file that does not exist yet. */
   function changedFiles() {
@@ -105,6 +113,8 @@ export function createStore({ storage = globalThis.localStorage, now = Date.now 
     }
     if (!same(docs.projects, base.projects)) out.push({ path: PROJECTS_FILE, text: json(docs.projects), sha: files.get(PROJECTS_FILE)?.sha ?? null, label: 'projects.json' });
     if (!same(docs.theme, base.theme)) out.push({ path: THEME_FILE, text: json(docs.theme), sha: files.get(THEME_FILE)?.sha ?? null, label: 'theme.json' });
+    if (!same(docs.styles, base.styles)) out.push({ path: STYLES_FILE, text: json(docs.styles), sha: files.get(STYLES_FILE)?.sha ?? null, label: 'styles.json' });
+    if (!same(docs.pages, base.pages)) out.push({ path: PAGES_FILE, text: json(docs.pages), sha: files.get(PAGES_FILE)?.sha ?? null, label: 'pages.json' });
     return out;
   }
 
@@ -126,7 +136,8 @@ export function createStore({ storage = globalThis.localStorage, now = Date.now 
     setText(key, text, { source = null } = {}) {
       return change(`Edit ${key}`, (d) => {
         const t = editTarget(key, Object.keys(d.work));
-        if (t.file === 'site') d.site[key] = text; else Object.assign(d.work[t.slug], workUpdate(d.work[t.slug], t.field, text));
+        if (t.file === 'pages') { const s = findSection(d.pages, t.page, t.section); if (s) (s.props ||= {})[t.prop] = text; }
+        else if (t.file === 'site') d.site[key] = text; else Object.assign(d.work[t.slug], workUpdate(d.work[t.slug], t.field, text));
       }, { kind: 'text', merge: `text:${key}`, key, source });
     },
     /** After a publish: the files now on the server become the published copy; the draft keeps anything changed since. */
@@ -142,6 +153,12 @@ export function createStore({ storage = globalThis.localStorage, now = Date.now 
       const took = change('Draft from another device', (d) => { Object.assign(d, clone(saved.docs)); });
       if (took) draftAt = saved.at;
       return took;
+    },
+    /** Makes the draft what the site was at a past revision: list is that revision's files. Undoable; Publish restores it. */
+    restore(label, list) {
+      // A file the revision does not have (a data file added since) keeps today's contents.
+      const then = parse(new Map([...files, ...list.map((f) => [f.path, { text: f.text }])]));
+      return change(`Restore ${label}`, (d) => { for (const k of Object.keys(d)) delete d[k]; Object.assign(d, then); });
     },
     /** Back to the published copy. Undoable. */
     discard: () => change('Discard all changes', (d) => { Object.assign(d, clone(base)); }),
