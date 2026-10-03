@@ -4,3 +4,6 @@ out/
 bin/
 .DS_Store
 *.class
+
+# Claude Code agent worktrees (temporary, per-session)
+.claude/worktrees/
