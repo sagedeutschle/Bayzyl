@@ -1,0 +1,96 @@
+# Bayzyl plugin: build, test and archive the exact candidate jar on every plugin change.
+#
+# Read-only and secret-free: no publish, release, tag or deploy step exists here. The artifact is a candidate
+# for a human to inspect; releasing stays a manual decision. Site changes are handled by site.yml.
+name: plugin
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'build.gradle'
+      - 'settings.gradle'
+      - 'gradle.properties'
+      - 'gradle/**'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - 'scripts/**'
+      - '.github/workflows/plugin.yml'
+  push:
+    paths:
+      - 'src/**'
+      - 'build.gradle'
+      - 'settings.gradle'
+      - 'gradle.properties'
+      - 'gradle/**'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - 'scripts/**'
+      - '.github/workflows/plugin.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One group per ref: a newer push to the same branch or PR cancels the superseded run.
+concurrency:
+  group: plugin-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build, test, archive the jar
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.9.1
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+      - name: Build and test (runs the whole Gradle build, tests included)
+        run: ./gradlew build --console=plain
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: test-reports-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            build/reports/tests/test/
+            build/test-results/test/
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Select the exact jar for this version, hash it and write the build receipt
+        id: candidate
+        run: |
+          set -euo pipefail
+          version="$(sed -n "s/^version = '\(.*\)'.*/\1/p" build.gradle)"
+          [ -n "$version" ] || { echo "::error::could not read version from build.gradle"; exit 1; }
+          short="$(git rev-parse --short=12 HEAD)"
+          jar="build/libs/bayzyl-${version}.jar"
+          [ -f "$jar" ] || { echo "::error::expected $jar is missing"; ls -l build/libs; exit 1; }
+          # Outside the workspace so the tree stays clean: a dirty tree would stamp "-dirty" into the revision
+          # that the reproducibility step below computes.
+          cand="$RUNNER_TEMP/candidate"
+          mkdir -p "$cand"
+          cp "$jar" "$cand/"
+          (cd "$cand" && sha256sum "bayzyl-${version}.jar" | tee "bayzyl-${version}.jar.sha256")
+          RECEIPT_DIR="$cand" scripts/write-build-receipt.sh "$jar"
+          cat "$cand/bayzyl-${version}.jar.receipt"
+          ls -l "$cand"
+          echo "name=bayzyl-${version}-${short}" >> "$GITHUB_OUTPUT"
+      - name: Upload the candidate jar with its SHA-256 and receipt
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ${{ steps.candidate.outputs.name }}
+          path: ${{ runner.temp }}/candidate/
+          retention-days: 30
+          if-no-files-found: error
+      # Same job on purpose: the Gradle cache the build step just warmed is what the script's --offline builds
+      # need, a separate job would be a cold runner. It runs after the archive upload so a failure here cannot
+      # lose the candidate; it still fails the run.
+      - name: Reproducibility check (two isolated offline builds must give byte-identical jars)
+        run: scripts/verify-reproducible.sh
