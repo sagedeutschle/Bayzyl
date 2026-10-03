@@ -6,11 +6,16 @@ must not either.
 
 ## Where things stand
 
-- **Live:** prismet.xyz runs Fly release **v20** (2026-10-02 14:48 UTC), image tag
-  `redesign-20261002-1`, the workshop redesign built from commit **`1e69496`** on
-  `claude/funny-wozniak-4j636o`. `/api/wordle`, `/steam`, `/debt` and `/rtc` all work; every route in
-  `check-routes.sh` matches the v18 baseline. Sage approved the deploy in session
-  `session_01LNDcbCcy64DGsNuWVV1hR6`.
+- **Live:** prismet.xyz runs Fly release **v21** (2026-10-03 16:59 UTC), image tag
+  `redesign-20261003-1`, built from commit **`74213d1`** on `claude/funny-wozniak-4j636o`: round 2 (the
+  studio's second pass), round 3 (Sage's type voice) and the v21 server patch (`/shots/*` retired and
+  removed from the image, the Steam ID scrubbed from `/steam`, static rate limit 600/min with a plain-text
+  429, `vary: accept-encoding`, immutable caching for `?v=` site files). `/api/wordle`, `/steam`, `/debt`
+  and `/rtc` all work; `check-routes.sh` against prismet.xyz matches the local gate status for status, apart from the two upstream routes that have no network locally
+  (`scratchpad` copies: routes-local-v21.txt / routes-live-v21.txt). Sage approved in session
+  `session_01LNDcbCcy64DGsNuWVV1hR6` ("deploy it claude"). The first push attempt was refused by the
+  cloud harness's production-deploy guard; it went through once Sage repeated the instruction.
+- **Earlier:** v20 (2026-10-02, `redesign-20261002-1`, commit `1e69496`) was the round-1 redesign.
 - **Incident on the way there (read this before your first deploy):** release v19 was deployed with a
   minimal `fly.toml` holding only the app name and region. `fly deploy` treats the toml as the whole
   machine config, so it **stripped the HTTP service and the env vars** from both machines; Fly's edge
@@ -33,7 +38,7 @@ must not either.
   from `23d3ca1`). Its database starts empty. The older preview (`Nig6eZ26fLTtBzgiTzQfQ2`) shows the v18 design.
 - **Server code:** not in any repo. See "The live server". The server needs no change for the
   redesign: the site is still static files in `site/`.
-- **Round 2 (2026-10-03), built and pushed, NOT deployed:** the branch head carries the studio's second
+- **Round 2 (2026-10-03), live in v21:** the branch head carries the studio's second
   round: the surveyed hall plan, doors as one family, the Bayzyl elevation, the seek line and thread ticks
   in the register, responsive images (`srcset` variants next to every source), `?v=<hash>` cache-busting,
   `verify.mjs` at the end of every build, `tools/tests/site-check.mjs`, corrected alt text, search
@@ -41,16 +46,12 @@ must not either.
   opens on the name, `favicon.ico`, and privacy fixes in the tree (WoW captures gone, PrismCode plates
   masked). `showcase/prismet-site/ROUND2-REVIEW.md` is the review for Sage; `ASK-SAGE.md` is the list of
   decisions only Sage can make.
-- **v21 candidate (server-side privacy and rate-limit fix), waiting on Sage's yes:** the live image still
-  serves the old `public/shots/` captures (one Helm screen lists host names) and `/steam` opens with a
-  SteamID64 in its search box; the static rate limit (75/min/IP) is lower than one real visit (about 70
-  requests). `showcase/tools/deploy/server-v21.patch` + `scrub-public.sh` + a `whiteouts.txt` line
-  (`public/shots`) fix all three. See "Deploying from a cloud session".
+- **v21 server patch:** deployed (above). `showcase/tools/deploy/server-v21.patch` + `scrub-public.sh` + the
+  `whiteouts.txt` line (`public/shots`) are what the live image carries on top of the v13 base; the next
+  overlay must include them again (the overlay always starts from the base image).
 - **Round 3 (2026-10-03):** Sage saw round 2 and asked for "less claudy font and something more Sage". The serif
   (Newsreader) is gone; the type is Sage's own v18 trio (see "The redesign, in short"). Sage answered the deploy
-  question with "whatever you think is best"; the creative director chose to deploy both the site and the v21
-  server patch, but the cloud harness's production-deploy guard refused the registry push, so the deploy waits on
-  Sage running or allowing the two commands in "Deploying from a cloud session".
+  question with "whatever you think is best" and then "deploy it claude"; v21 went live the same day.
 - **Open:** the decisions in "Waiting on Sage" and in `ASK-SAGE.md`. Nothing else is in flight.
 
 ## Rules
@@ -194,7 +195,7 @@ fly deploy --image registry.fly.io/prismet-site-restless-horizon-217:redesign-YY
   6. Push the overlay, deploy with the real `fly.toml`, re-run `check-routes.sh` against prismet.xyz.
 
 - **Tags so far:** `redesign-20261001-1` to `-5` became releases v14 to v18; `redesign-20261002-1`
-  became v19 (broken config, see above) and v20 (the live redesign).
+  became v19 (broken config, see above) and v20 (the round-1 redesign); `redesign-20261003-1` is v21 (live).
 - **The server code** is also recoverable from the image layers without Docker: the small zstd layers
   hold `app/` (package.json, node_modules/ws, server.js, signaling.js, wordle-daily.js, project-*.js,
   data/, public/); `pip install zstandard` and extract them with Python's tarfile. The v18+ `server.js`
