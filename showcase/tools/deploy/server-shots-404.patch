@@ -1,0 +1,16 @@
+--- server.js	2026-10-03 02:55:14.629373651 +0000
++++ server.js	2026-10-03 02:55:14.640383981 +0000
+@@ -313,6 +313,13 @@
+ }
+ 
+ async function serveStatic(req, res, urlPath) {
++  // The old site's capture folder (public/shots/) is retired: nothing links it and some
++  // captures showed host names. The folder is removed from the image; refuse the path too.
++  if (urlPath === '/shots' || urlPath.startsWith('/shots/')) {
++    return sendResponse(req, res, 404, '<h1>404 — not found</h1><p><a href="/">prismet</a></p>', {
++      'content-type': 'text/html; charset=utf-8',
++    });
++  }
+   for (const staticRoot of STATIC_ROOTS) {
+     const file = safeStaticPath(urlPath, staticRoot);
+     if (!file) {
