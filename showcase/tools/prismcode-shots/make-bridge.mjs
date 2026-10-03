@@ -10,7 +10,7 @@ import { execSync } from 'node:child_process';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = process.argv[2] || '/home/user/sagedeutschle/qr-scanner';
-const ROOT = '/Users/sage/code/qr-scanner'; // the path the demo shows
+const ROOT = '/code/qr-scanner'; // the path the demo shows (keep home-folder and account names out of captures)
 
 // --- workspace: tree + text files ----------------------------------------------------------
 const files = {};

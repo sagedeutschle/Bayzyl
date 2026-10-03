@@ -378,3 +378,36 @@ Switch to day
 
 ## theme.to_night
 Switch to night
+
+## case.why_title
+Why it exists
+
+## case.hard_title
+The hard part
+
+## case.next_title
+What comes next
+
+## bench.why
+WorldEdit-style brushes are universal but generic: a sphere of stained glass with random weights does not look like fire. And /sphere stone 12 gives you a stone sphere, the right output if you wanted a sphere but not if you wanted "a hill that looks like Minecraft put it here." Bayzyl's detail brushes (fire, clouds, lightning, vines, bark) and gen brushes (ridges, valleys, caves, dunes, mesas and more) encode that knowledge, with settings named for builders, like heat and flicker, instead of octaves.
+
+## bench.hard
+A natural-looking edit has to fit the ground it lands on. Before placing a block, a gen brush samples a 25×25 area around the target (surface, subsurface, biome, water level, terrain shape), picks its palette from what it finds and blends the edges "so the seam is invisible." Each click stays one undoable action, and gen brushes are capped at radius 48 and 750k blocks per click. The palettes are tuned by playtest: wool was removed from clouds, and white glass is limited to hotter cores "so fire does not wash out."
+
+## bench.next
+The plan for /tool is a Bayzyl-native equivalent for every WorldEdit /tool subcommand, delivered in five phases. The v2 roadmap adds BzlBlender, an optional Fabric companion mod for client-side ghost rendering and floating GUI panels; Redstone Audit, static analysis of redstone circuits with fault localization; and ports to Spigot, Folia, Forge and Fabric. Detail brushes still have their headline feature ahead: /detailbrush capture, which would analyze a selection and fit a preset variant to it.
+
+## bench.plan_note
+Built, in the 0.2.0-alpha.1 source: every command on this page, the detail brushes and the gen brushes. Plans, not built yet: /tool parity with WorldEdit, /detailbrush capture and the v2 roadmap.
+
+## prismet.why
+Prismet began as Chess Hotswap, built to hot-swap between 2D and 3D chess, and grew into a calm home for classic games. It still leans on this site: the shipping iPhone and Mac apps fetch the daily Wordgame from prismet.xyz, multiplayer rooms meet through its signaling channel, and the app's settings open Steam Rewind and Debt Clock here.
+
+## helm.why
+Helm runs the machines at home, and a written design-language spec keeps every face consistent. Each face also renders standalone with sample data: the faces on this page were drawn offscreen from their own QML with PySide6, with a small stub standing in for KDE's plasma5support module, so every widget can be previewed and screenshotted headless.
+
+## plate.alt
+A night view of a Minecraft server build: a giant tree hung with lanterns on a stone plinth, a walled farm village with a white beacon beam, cherry trees, a lit castle with a red beam, a dark tower lit purple and a snowy ridge under a starry sky.
+
+## og.image_alt
+The prismet.xyz entrance: Sage Deutschle's name and introduction beside a hall plan of six wings, from Desktop & Systems to AI & Agents, around a prism.

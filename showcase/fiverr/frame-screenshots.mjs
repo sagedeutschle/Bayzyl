@@ -40,7 +40,6 @@ const PICKS = [
   ['05-ai-agents/usage-tracker-dashboard.jpg', 'ai', 'Usage Tracker', 'Agent token use and costs per provider and account'],
   ['06-games-and-mods/the-long-now-medieval-era.jpg', 'worlds', 'The Long Now', 'A pixel-art game world that changes across eras'],
   ['06-games-and-mods/civ5-mod-profiles-choose-your-build.jpg', 'worlds', 'Civ V Mod Profiles', 'Pick a stable or a risky mod build before launch'],
-  ['06-games-and-mods/wow-sidepanel-ultrawide.jpg', 'worlds', 'WoW Sidepanel', 'A World of Warcraft addon for ultrawide setups'],
 ];
 
 const fonts = pathToFileURL(join(HERE, '../assets/fonts/fonts.css')).href;
