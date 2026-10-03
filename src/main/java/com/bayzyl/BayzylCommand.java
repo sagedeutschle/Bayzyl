@@ -2118,41 +2118,53 @@ DecoyTabListService decoyTabListService,
     /** Copies {@code selection} for {@code player}; also the resume path for a copy a restart interrupted. */
     private void runCopy(org.bukkit.entity.Player player, Selection selection, BlockMask mask) {
         CommandSender sender = player;
+        UUID playerId = player.getUniqueId();
+        // Validate before tracking: a copy that never starts must not leave an "interrupted command" behind.
+        if (selection == null || !selection.isComplete()) {
+            ChatOutput.send(sender, ChatColor.RED + "Selection is incomplete.");
+            return;
+        }
+        if (editService.hasCopyTask(playerId)) {
+            ChatOutput.send(sender, ChatColor.RED + "A copy is already running. Wait for it to finish before starting another.");
+            return;
+        }
         // Track copy session for crash recovery
+        boolean tracked = false;
         if (crashRecoveryService != null) {
             Map<String, Object> sessionData = new HashMap<>();
             sessionData.put("selection", selection);
             sessionData.put("mask", mask);
-            crashRecoveryService.startSession(player.getUniqueId(), "copy", "starting", sessionData, 
+            crashRecoveryService.startSession(playerId, "copy", "starting", sessionData,
                 session -> {
                     // Resumed within the same run (the callback does not survive a restart; see CopyResumeHandler)
                     player.sendMessage("§6[Bayzyl] §7Resuming copy operation...");
                     runCopy(player, selection, mask);
                 });
+            tracked = true;
         }
-        
-        if (editService.shouldCopyResponsively(selection)) {
-            editService.startResponsiveCopy(player, selection, mask, clipboard -> {
-                recentEditTrailService.record(player.getUniqueId(), "copy " + clipboard.getSizeX() + "x" + clipboard.getSizeY() + "x" + clipboard.getSizeZ());
-                ChatOutput.send(player, ChatColor.WHITE + "Copied " + clipboard.getSizeX() + "x" + clipboard.getSizeY() + "x" + clipboard.getSizeZ() + ".");
-                // Complete session on success
-                if (crashRecoveryService != null) {
-                    crashRecoveryService.completeSession(player.getUniqueId());
-                }
-            });
-            return;
-        }
-        if (editService.hasCopyTask(player.getUniqueId())) {
-            ChatOutput.send(sender, ChatColor.RED + "A copy is already running. Wait for it to finish before starting another.");
-            return;
-        }
-        Clipboard clipboard = editService.copySelection(player, selection, mask);
-        if (clipboard != null) {
-            recentEditTrailService.record(player.getUniqueId(), "copy " + clipboard.getSizeX() + "x" + clipboard.getSizeY() + "x" + clipboard.getSizeZ());
-            ChatOutput.send(sender, ChatColor.WHITE + "Copied " + clipboard.getSizeX() + "x" + clipboard.getSizeY() + "x" + clipboard.getSizeZ() + ".");
-            // Complete session on success
-            if (crashRecoveryService != null) {
-                crashRecoveryService.completeSession(player.getUniqueId());
+
+        // The session ends here on every path except a copy handed to the responsive task, which ends it itself.
+        boolean handedOff = false;
+        try {
+            if (editService.shouldCopyResponsively(selection)) {
+                handedOff = editService.startResponsiveCopy(player, selection, mask, clipboard -> {
+                    recentEditTrailService.record(playerId, "copy " + clipboard.getSizeX() + "x" + clipboard.getSizeY() + "x" + clipboard.getSizeZ());
+                    ChatOutput.send(player, ChatColor.WHITE + "Copied " + clipboard.getSizeX() + "x" + clipboard.getSizeY() + "x" + clipboard.getSizeZ() + ".");
+                    // Complete session on success
+                    if (crashRecoveryService != null) {
+                        crashRecoveryService.completeSession(playerId);
+                    }
+                });
+                return;
+            }
+            Clipboard clipboard = editService.copySelection(player, selection, mask);
+            if (clipboard != null) {
+                recentEditTrailService.record(playerId, "copy " + clipboard.getSizeX() + "x" + clipboard.getSizeY() + "x" + clipboard.getSizeZ());
+                ChatOutput.send(sender, ChatColor.WHITE + "Copied " + clipboard.getSizeX() + "x" + clipboard.getSizeY() + "x" + clipboard.getSizeZ() + ".");
+            }
+        } finally {
+            if (tracked && !handedOff) {
+                crashRecoveryService.completeSession(playerId);
             }
         }
     }
