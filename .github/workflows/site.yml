@@ -111,6 +111,17 @@ jobs:
         run: |
           curl -sSL https://fly.io/install.sh | sh -s -- --non-interactive
           echo "$HOME/.fly/bin" >> "$GITHUB_PATH"
+      - name: Sync the editor's secrets to Fly (EDIT_GITHUB_TOKEN, EDIT_PIN; staged, applied by the deploy below)
+        env:
+          EDIT_GITHUB_TOKEN: ${{ secrets.EDIT_GITHUB_TOKEN }}
+          EDIT_PIN: ${{ secrets.EDIT_PIN }}
+        run: |
+          args=()
+          [ -n "$EDIT_GITHUB_TOKEN" ] && args+=("EDIT_GITHUB_TOKEN=$EDIT_GITHUB_TOKEN")
+          [ -n "$EDIT_PIN" ] && args+=("EDIT_PIN=$EDIT_PIN")
+          if [ ${#args[@]} -eq 0 ]; then echo "No EDIT_GITHUB_TOKEN / EDIT_PIN secrets set; the edit page stays locked out until they exist."; exit 0; fi
+          [ -n "$EDIT_PIN" ] && [ ${#EDIT_PIN} -lt 6 ] && { echo "::error::EDIT_PIN must be at least 6 characters."; exit 1; }
+          fly secrets set --stage -a "$APP" "${args[@]}" || echo "::warning::Could not stage the editor's secrets (does the Fly token allow secrets?); the deploy continues."
       - name: Deploy with the app's own fly.toml (never a minimal one; see showcase/HANDOFF.md, the v19 incident)
         working-directory: showcase/tools/deploy
         run: fly deploy --image "${{ steps.push.outputs.image }}" -a "$APP" --strategy rolling

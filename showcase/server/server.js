@@ -8,6 +8,7 @@ import { serializePublicCatalog, validateCatalog } from './project-catalog.js';
 import { createProjectFeed } from './project-feed.js';
 import { readCurrentDailyWordCache, sanitizeDailyWordPayload } from './wordle-daily.js';
 import { createSignaling } from './signaling.js';
+import { createEditApi } from './edit-api.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PUBLIC_ROOT = resolve(__dirname, 'public');
@@ -68,7 +69,7 @@ const MIME = {
 };
 
 const SECURITY_HEADERS = {
-  'content-security-policy': "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.steampowered.com https://store.steampowered.com https://api.fiscaldata.treasury.gov https://api.github.com; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none';",
+  'content-security-policy': "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.steampowered.com https://store.steampowered.com https://api.fiscaldata.treasury.gov; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none';",
   'strict-transport-security': 'max-age=31536000; includeSubDomains',
   'referrer-policy': 'strict-origin-when-cross-origin',
   'x-content-type-options': 'nosniff',
@@ -121,6 +122,7 @@ export function createBoundedCache(maxEntries) {
 }
 
 const rateBuckets = createBoundedCache(MAX_RATE_BUCKETS);
+const editApi = createEditApi({ clientAddress, sendJSON });   // prismet.xyz/edit: PIN session + GitHub proxy (edit-api.js)
 const RATE_LIMITS = {
   steam: { max: 12, windowMs: 60_000 },
   wordle: { max: 30, windowMs: 60_000 },
@@ -635,6 +637,9 @@ async function routeRequest(req, res, projectFeed) {
       allow: 'GET, HEAD, OPTIONS',
     });
     return;
+  }
+  if (url.pathname.startsWith('/api/edit/')) {
+    if (await editApi.handle(req, res, url, method)) return;
   }
   if (method !== 'GET' && method !== 'HEAD') {
     sendMethodNotAllowed(req, res);

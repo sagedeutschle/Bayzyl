@@ -60,6 +60,8 @@ with tarfile.open(fileobj=raw, mode='w', format=tarfile.PAX_FORMAT) as tar:
             with open(path, 'rb') as f:
                 tar.addfile(ti, f)
     add(os.path.join(deploy_dir, 'server.js'), 'app/server.js')
+    if os.path.exists(os.path.join(deploy_dir, 'edit-api.js')):
+        add(os.path.join(deploy_dir, 'edit-api.js'), 'app/edit-api.js')
     site = os.path.join(deploy_dir, 'site')
     for root, dirs, files in os.walk(site):
         dirs.sort()

@@ -11,7 +11,7 @@ it, in this file included.
 | Live | https://prismet.xyz, Fly app `prismet-site-restless-horizon-217`, release **v22** (2026-10-03 18:17 UTC), image tag `site-11-0ca1c66`, built from `main` at `0ca1c66` by the GitHub Action: the first automatic deploy |
 | Source of truth | this repository, `showcase/`, on `main` (merged from `claude/funny-wozniak-4j636o` through [PR #2](https://github.com/sagedeutschle/Bayzyl/pull/2) on 2026-10-03) |
 | Deploys | the GitHub Action `site` (`.github/workflows/site.yml`): every push under `showcase/` builds, verifies and gates the site; from `main` it deploys to Fly. The `FLY_API_TOKEN` secret is set (Sage, 2026-10-03); every commit to `main` under `showcase/` now goes live by itself |
-| Editing | https://prismet.xyz/edit (live): a form that commits wording changes to `main`; the Action takes it from there. Guide: `showcase/EDITING.md` |
+| Editing | https://prismet.xyz/edit: enter the PIN, edit, Publish; the server commits to `main` with its stored token and the Action deploys. Guide: `showcase/EDITING.md`. Locked out until the `EDIT_GITHUB_TOKEN` and `EDIT_PIN` secrets exist |
 | Preview with Edit mode | https://claude.ai/artifact/C51vasTVQgxsp6JLJjccCv (private; the round-3 build). Its database (`edits`, `layout/main`) is empty as of 2026-10-03; the `/edit` page supersedes it for words |
 | Decisions only Sage can make | `showcase/prismet-site/ASK-SAGE.md` (wording claims, captures, authorship, `PROJECTS_URL`, the Mac copy, Volhaven) |
 | In flight elsewhere | Codex (at Sage's request) holds a local, unpushed candidate limited to `content/work` reconciliation, selected asset metadata, the `/privacy` and `/support` pages and route coverage. The server already maps those two routes (v22); the pages themselves are not in the repo yet |
@@ -92,7 +92,7 @@ Westeros for UEBS 2, Helix Research Desk.
 
 ## 6. Editing the live site yourself (the self-serve layer)
 
-**For Sage.** Open https://prismet.xyz/edit, paste a GitHub token, change any field, press Publish. The page
+**For Sage.** Open https://prismet.xyz/edit, enter the PIN, change any field, press Publish. The page
 commits the file to `main` and watches the build; "Live on prismet.xyz" means done, about three minutes. The same
 happens for any file edited on github.com. `showcase/EDITING.md` is the full guide, including which file holds what,
 how to hide or add a project, how to add a screenshot, and how to undo (revert the commit on GitHub).
@@ -114,17 +114,21 @@ current, jobs time out at 15–20 minutes, deploys are serialised):
   and replacing the secret; revoke the old with `fly tokens revoke`.
 - `PRISMET_PRIVATE_WORDS`, optional: comma-separated host names and other words the build must refuse.
 
-**The token for `/edit`**: a fine-grained personal access token (GitHub → Settings → Developer settings), one
-repository, permissions Contents: read and write, Actions: read. Pasted once per browser tab.
+- `EDIT_GITHUB_TOKEN` and `EDIT_PIN`: the edit page's token (a fine-grained personal access token, one repository,
+  Contents read and write, Actions read, up to a year's expiry) and the PIN (6+ characters). The deploy job stages
+  both on Fly (`fly secrets set --stage`) before each deploy; change either by editing the secret and deploying.
 
-**Security model.** The edit page is public but inert without a token; the token stays in the tab's
-`sessionStorage` and is sent only to `api.github.com` (the server's CSP allows no other connection), never in a URL,
-and the page refuses to accept one over plain http. `robots.txt` and a `noindex` meta keep the page out of search.
-The page can only do what the token allows: write content files on one repository. Whatever it writes still goes
-through `verify.mjs`, the server gate and the live gate before it is served, and the build escapes all text, so
-content cannot inject scripts. The workflow holds `contents: read` only; the deploy job sees the Fly token and
-nothing else. `main` is not branch-protected on purpose: required status checks would reject the editor's direct
-commits, and the gate after the commit is what protects the site.
+**Security model.** The GitHub token lives only on the server (`showcase/server/edit-api.js`); the browser never
+sees it. The page is public but inert without the PIN. A correct PIN sets an HttpOnly, Secure, SameSite=Strict
+session cookie for eight hours; sessions live in the server's memory and die with a restart. Wrong PINs are limited
+to five per address per fifteen minutes and twenty-five from anywhere per hour, with constant-time comparison. The
+server proxies only an allow-list: list, read and write files under `content/` on one branch of one repository,
+and read a workflow run; writes need the file's current sha and a custom request header (CSRF). The page's CSP
+allows connections to the site only. `robots.txt` and a `noindex` meta keep it out of search. Whatever is written
+still passes `verify.mjs`, the server gate and the live gate before it is served, and the build escapes all text.
+The workflow holds `contents: read`; the deploy job alone sees the Fly token and the two editor secrets. `main` is
+not branch-protected on purpose: required status checks would reject the editor's direct commits, and the gate
+after the commit protects the site.
 
 ## 7. The server
 
@@ -133,18 +137,19 @@ commits, and the gate after the commit is what protects the site.
 - Runs as `node server.js` in `/app` of the image (Node 22 Alpine). Static lookup: `site/` (the build) first, then
   `public/` (the old tools). Refuses to start without `site/index.html`.
 - Routes: `/healthz`; `/api/wordle` (proxies the daily word); `/api/steam` (needs `STEAM_WEB_API_KEY`);
-  `/api/projects` (the bundled catalog); `/rtc` (WebSocket); `/steam`, `/debt`, `/edit`, `/privacy`, `/support`
+  `/api/projects` (the bundled catalog); `/api/edit/*` (the editor: PIN session and GitHub proxy, `edit-api.js`,
+  env `EDIT_GITHUB_TOKEN`, `EDIT_PIN`, optional `EDIT_REPO`, `EDIT_BRANCH`); `/rtc` (WebSocket); `/steam`, `/debt`, `/edit`, `/privacy`, `/support`
   map to `<name>.html`; `/shots/*` answers 404 (v21); everything else static.
 - Headers on every response: CSP (`script-src 'self'`, `style-src 'self' 'unsafe-inline'`, `connect-src` self +
-  Steam + Treasury + `api.github.com`), HSTS, `X-Frame-Options: DENY`, nosniff, referrer and permissions policies,
+  Steam + Treasury), HSTS, `X-Frame-Options: DENY`, nosniff, referrer and permissions policies,
   `vary: accept-encoding`. Cache: `public, max-age=300`; `?v=<hash>` site files `max-age=31536000, immutable`.
 - Rate limits per IP per minute: static 600 (plain-text 429 with `retry-after`), wordle 30, steam 12, rtc 20.
 - Env on Fly: `PORT=8080`, `GITHUB_USER=sagedeutschle`; secret `STEAM_WEB_API_KEY`. `PROJECTS_URL` and
   `PROJECTS_CACHE_MS` were lost in the v19 incident; their values are only on Sage's side (ASK-SAGE).
 - Patches carried on top of the v13 base image: v21 (`/shots` retired and whited out of the image, the Steam page
-  scrubbed of the Steam id, rate limit, vary, immutable caching) and v22 (`/edit`, `/privacy`, `/support`,
-  `api.github.com`). `assemble-overlay.sh` builds the layer from the repo: `server.js`, `site/`, the two scrubbed
-  Steam files, `whiteouts.txt` with `public/shots`. Any other server file that changes must be added to it.
+  scrubbed of the Steam id, rate limit, vary, immutable caching), v22 (`/edit`, `/privacy`, `/support`) and v23 (the
+  edit API in `edit-api.js`). `assemble-overlay.sh` builds the layer from the repo: `server.js`, `edit-api.js`,
+  `site/`, the two scrubbed Steam files, `whiteouts.txt` with `public/shots`. Any other server file that changes must be added to it.
 
 ## 8. Deploying
 
@@ -166,7 +171,7 @@ commits, and the gate after the commit is what protects the site.
 
 ## 9. Waiting on Sage
 
-1. **The edit-page token** (section 6), if not yet made: a fine-grained GitHub token for this repository.
+1. **The two editor secrets** (section 6): `EDIT_GITHUB_TOKEN` and `EDIT_PIN` as repository secrets, then one deploy.
 2. **The Mac copy** of `~/Desktop/GtrktscrB/business/showcase` was never pushed: a different `projects.json` and
    `build.mjs`, seven project copy files, seven Mac-only projects, 29 assets, `ART-CANON.md`, more Long Now captures.
    Codex is reconciling `content/work` from it; the rest is still Sage's call.

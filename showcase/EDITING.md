@@ -5,10 +5,10 @@ site rebuilds and goes live by itself in about three minutes. No HTML, no server
 
 ## The quick way: prismet.xyz/edit
 
-1. Open https://prismet.xyz/edit.
-2. Paste a GitHub token (one-time setup below) and press Connect.
-3. Pick "Home page and shared words" or a project. Every block of text is a field. Change what you like.
-4. Press **Publish**. The page saves the file to GitHub and shows the build's progress; "Live on prismet.xyz" means done.
+1. Open https://prismet.xyz/edit and enter the PIN. That opens an eight-hour session in this browser.
+2. Pick "Home page and shared words" or a project. Every block of text is a field. Change what you like.
+3. Press **Publish**. The site's server saves the file to GitHub and the page shows the build's progress; "Live on
+   prismet.xyz" means done. **Lock** ends the session.
 
 Rules the fields follow (the hints under each field say the same):
 - `*single asterisks*` make words gold, `**double asterisks**` make them bold.
@@ -17,10 +17,19 @@ Rules the fields follow (the hints under each field say the same):
 - The build refuses anything that looks private (home-folder paths, IP addresses, Steam ids) and the word "TODO".
   If a save ends with "the build ended with failure", open the run on GitHub; the last lines say which text to fix.
 
-### One-time setup: the token
-On GitHub: Settings → Developer settings → Personal access tokens → **Fine-grained tokens** → Generate new token.
-Repository access: only this repository. Permissions: **Contents: Read and write**, **Actions: Read**. Expiry: your
-choice; the page asks again when it expires. The token lives only in the browser tab where you pasted it.
+### One-time setup: two secrets
+The GitHub token that writes the files lives on the server, never in a browser; the PIN unlocks it. Both are
+repository secrets (Settings → Secrets and variables → Actions) that the deploy job copies to Fly:
+- `EDIT_GITHUB_TOKEN`: on GitHub, Settings → Developer settings → Personal access tokens → **Fine-grained tokens** →
+  Generate new token. Repository access: only this repository. Permissions: **Contents: Read and write**,
+  **Actions: Read**. Expiry: up to a year; when it expires the edit page says "GitHub refused the stored token" and
+  you make a new one and update the secret.
+- `EDIT_PIN`: at least six characters; digits are fine. Change it any time by editing the secret.
+After adding or changing either, run the workflow once (Actions → site → Run workflow with "deploy" ticked, or make
+any edit on `main`); the next deploy carries the new values.
+
+Wrong PINs: five tries per address per fifteen minutes, and after twenty-five wrong tries from anywhere the editor
+locks for an hour. A lost PIN is replaced through the secret, never recovered.
 
 ## The other way: edit the files on GitHub
 
@@ -51,8 +60,9 @@ The GitHub Action `site` (file `.github/workflows/site.yml`) runs on every push 
 
 Undo: on GitHub, open the commit and press **Revert**; the previous content deploys the same way.
 
-Secrets the workflow needs, once, under Settings → Secrets and variables → Actions:
+Secrets the workflow uses, under Settings → Secrets and variables → Actions:
 - `FLY_API_TOKEN`: a Fly deploy token for the app (`fly tokens create deploy -a prismet-site-restless-horizon-217`).
+- `EDIT_GITHUB_TOKEN` and `EDIT_PIN`: the edit page (above).
 - `PRISMET_PRIVATE_WORDS` (optional): comma-separated words that must never appear on the site, such as host names.
 
 ## What the edit page cannot do
