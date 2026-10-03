@@ -33,7 +33,20 @@ must not either.
   from `23d3ca1`). Its database starts empty. The older preview (`Nig6eZ26fLTtBzgiTzQfQ2`) shows the v18 design.
 - **Server code:** not in any repo. See "The live server". The server needs no change for the
   redesign: the site is still static files in `site/`.
-- **Open:** the decisions in "Waiting on Sage". Nothing else is in flight.
+- **Round 2 (2026-10-03), built and pushed, NOT deployed:** the branch head carries the studio's second
+  round: the surveyed hall plan, doors as one family, the Bayzyl elevation, the seek line and thread ticks
+  in the register, responsive images (`srcset` variants next to every source), `?v=<hash>` cache-busting,
+  `verify.mjs` at the end of every build, `tools/tests/site-check.mjs`, corrected alt text, search
+  aliases, case notes under the three flagships (proposed copy, see ASK-SAGE.md), a share image that
+  opens on the name, `favicon.ico`, and privacy fixes in the tree (WoW captures gone, PrismCode plates
+  masked). `showcase/prismet-site/ROUND2-REVIEW.md` is the review for Sage; `ASK-SAGE.md` is the list of
+  decisions only Sage can make.
+- **v21 candidate (server-side privacy and rate-limit fix), waiting on Sage's yes:** the live image still
+  serves the old `public/shots/` captures (one Helm screen lists host names) and `/steam` opens with a
+  SteamID64 in its search box; the static rate limit (75/min/IP) is lower than one real visit (about 70
+  requests). `showcase/tools/deploy/server-v21.patch` + `scrub-public.sh` + a `whiteouts.txt` line
+  (`public/shots`) fix all three. See "Deploying from a cloud session".
+- **Open:** the decisions in "Waiting on Sage" and in `ASK-SAGE.md`. Nothing else is in flight.
 
 ## Rules
 
@@ -154,11 +167,25 @@ runs live. No textures, no glows except the plan's one lantern.
   daemon. So push the base image plus a new layer:
 
 ```sh
-# <dir> holds server.js and site/ (copy showcase/prismet-site/dist to <dir>/site; never dist-preview)
+# <dir> holds server.js and site/ (copy showcase/prismet-site/dist to <dir>/site; never dist-preview).
+# Optional: <dir>/public/ (files added to /app/public) and <dir>/whiteouts.txt (paths deleted from the
+# image, one per line, e.g. `public/shots`). DRY_RUN=1 builds and lists the layer without pushing.
 FLY_API_TOKEN=... showcase/tools/deploy/push-overlay.py <dir> redesign-YYYYMMDD-N
 fly deploy --image registry.fly.io/prismet-site-restless-horizon-217:redesign-YYYYMMDD-N \
-  -a prismet-site-restless-horizon-217     # run where a fly.toml for the app exists
+  -a prismet-site-restless-horizon-217     # run where showcase/tools/deploy/fly.toml is (see the incident)
 ```
+
+- **The v21 candidate, step by step** (needs Sage's explicit yes; it changes `/steam` slightly: the box
+  opens empty and Reset clears it instead of restoring the id):
+  1. Extract the live `server.js` and `public/steam.html` + `public/steam.js` from the image (below).
+  2. `patch server.js < showcase/tools/deploy/server-v21.patch` (retires `/shots/*` with 404, static
+     limit 600/min with a plain-text 429 and `retry-after`, `vary: accept-encoding`, and
+     `max-age=31536000, immutable` for site files requested with `?v=<hash>`).
+  3. Copy `steam.html` and `steam.js` to `<dir>/public/` and run `showcase/tools/deploy/scrub-public.sh <dir>/public`.
+  4. `echo public/shots > <dir>/whiteouts.txt`; `site/` = a fresh `dist/`.
+  5. Run the patched server locally (`npm ci`, `PORT=18081 node server.js`) and `check-routes.sh`:
+     `/shots/*` must be 404, `/steam` must contain no 17-digit number, `/favicon.ico` 200, `/rtc` 101.
+  6. Push the overlay, deploy with the real `fly.toml`, re-run `check-routes.sh` against prismet.xyz.
 
 - **Tags so far:** `redesign-20261001-1` to `-5` became releases v14 to v18; `redesign-20261002-1`
   became v19 (broken config, see above) and v20 (the live redesign).
@@ -166,9 +193,12 @@ fly deploy --image registry.fly.io/prismet-site-restless-horizon-217:redesign-YY
   hold `app/` (package.json, node_modules/ws, server.js, signaling.js, wordle-daily.js, project-*.js,
   data/, public/); `pip install zstandard` and extract them with Python's tarfile. The v18+ `server.js`
   is in the last gzip layer.
-- **Before deploying:** run the server locally (`npm ci`, `PORT=18081 node ./server.js`), run
-  `check-routes.sh http://127.0.0.1:18081` and compare against the last run; confirm `dist/`
-  has no `editor.js` and no `data-edit` attributes; load the pages in a browser at 1440 and 390.
+- **Before deploying:** build with `PRISMET_PRIVATE_FILE=<your list> node showcase/prismet-site/build.mjs`
+  (the build ends with `verify.mjs`: no editor, inline script, reserved name, broken link, TODO or private
+  string; the private word list holds host names, so it lives outside the repo, e.g.
+  `~/.config/prismet/private-words.txt`), run `node showcase/tools/tests/site-check.mjs` (44 browser
+  checks), run the server locally (`npm ci`, `PORT=18081 node ./server.js`), run
+  `check-routes.sh http://127.0.0.1:18081` and compare against the last run; load the pages at 1440 and 390.
 - **After deploying:** `check-routes.sh https://prismet.xyz`; `curl https://prismet.xyz/api/wordle`
   must return today's word; a WebSocket upgrade on `/rtc` must get `101`; load the pages.
 - **Rollback:** `fly deploy --image registry.fly.io/prismet-site-restless-horizon-217:<earlier tag>`
@@ -199,11 +229,15 @@ fly deploy --image registry.fly.io/prismet-site-restless-horizon-217:redesign-YY
 
 ## Known issues and backlog
 
-- **Budgets (QA, 2026-10-02):** home first view 22 requests / 646 KB at 1440 (the four door modules make 13
-  of them); full scroll 38 requests / 0.8 MB; Bayzyl page 14 requests / 1.0 MB; CLS under 0.001; axe 0
-  violations on every page in both modes. Fonts are 214 KB (Newsreader roman 125, italic 54, Martian Mono 35).
-  Project-page plates have no `srcset` yet (`img()` in build.mjs accepts one); pre-composing the door
-  modules into single images would bring the first view under 20 requests.
+- **Budgets (round 2, 2026-10-03, local dist):** home first view 19 requests at 1440 (14 at 390); full
+  scroll about 35; Bayzyl 505 KB, Prismet 443 KB, Helm 429 KB on a full scroll at 1440; no image drawn
+  above 2x its CSS width; CLS under 0.01; axe 0 violations. Fonts are still 213 KB on every first visit.
+  Live v20 (QA on Fly): all four pages within Google's "good" LCP/CLS; one realistic visit sends about 70
+  requests against the server's 75/min limit, which the v21 server patch raises to 600 for static files.
+- **Image variants:** `img()` emits `srcset` from files named `<name>-{128,192,360,720,1080,1440}.webp`
+  beside the source. After adding or replacing an image: build, `node showcase/tools/image-variants.mjs`,
+  build again, commit the new files. Replacing a source means deleting its old variants first (they are
+  not regenerated if present).
 
 - **The Long Now** is a featured room with three 1280×720 captures. The Mac holds more.
 - **Steam Rewind and Debt Clock** plates are crops of demo data; the Debt Clock captures show the
@@ -219,8 +253,12 @@ fly deploy --image registry.fly.io/prismet-site-restless-horizon-217:redesign-YY
   scratchpad and have it deliver files for you to merge.
 - **`pkill -f "node server.js"` kills your own shell** when that text appears in the same command.
 - **Chromium/Playwright** is at `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`; pass it as
-  `executablePath`. For https pages add the proxy CA first:
-  `certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n ccr-agent-proxy -i /root/.ccr/agent-proxy-ca.crt`.
+  `executablePath`. For https pages through the agent proxy, launch with `proxy: { server: process.env.HTTPS_PROXY }`
+  and the proxy CA's key pinned: `args: ['--ignore-certificate-errors-spki-list=<sha256 of the CA key>']`
+  (compute it from `/root/.ccr/agent-proxy-ca.crt` with openssl). `ignoreHTTPSErrors: true` is not enough:
+  about one request in six then fails at the proxy hop with `ERR_TOO_MANY_RETRIES`. `certutil` isn't installed.
+- **Subagents cannot write `report.md` files in the scratchpad** (the harness refuses); have them return the
+  report as their final message and save it yourself (the transcript JSONL holds it under `SubagentHandback`).
 - **ImageMagick 6 ignores `-quality` for WebP.** Use `-define webp:method=6` and, to cap a file,
   `-define webp:target-size=N`.
 - **Google Fonts is reachable through the proxy**; `pip install fonttools brotli` works. The fonts

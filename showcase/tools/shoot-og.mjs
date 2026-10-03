@@ -16,7 +16,9 @@ try {
   const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
   const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 2, colorScheme: 'dark' });
   await page.goto(`http://127.0.0.1:${port}/index.html`, { waitUntil: 'networkidle' });
-  await page.addStyleTag({ content: '.bar{display:none}.entrance .wrap{padding-block:24px;min-height:630px;align-items:center}.ctas,.directory{display:none}.entrance{border:0}' });
+  // The card: name high and inside the central square (chat apps crop to one), two lines of the lede, the plan as the
+  // picture, no directory, buttons or caption (nothing a static image can act on).
+  await page.addStyleTag({ content: '.bar{display:none}.entrance .wrap{padding-block:56px 24px;min-height:630px;align-items:start}.ctas,.directory,.plan figcaption{display:none}.entrance{border:0}.lede{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}' });
   await page.waitForTimeout(2600);
   await page.screenshot({ path: OUT.replace(/\.jpg$/, '.png'), clip: { x: 0, y: 0, width: 1200, height: 630 } });
   await browser.close();

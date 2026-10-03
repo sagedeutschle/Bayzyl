@@ -120,6 +120,8 @@ if (PREVIEW) for (const f of ['editor.js', 'editor.css']) if (existsSync(join(HE
 const FAVICON = asset(['assets/icons/prismet-app-128.webp', 'assets/icons/prismet-app.webp'].find((p) => existsSync(join(SHOWCASE, p))));
 // og:image: a capture of the entrance (showcase/tools/shoot-og.mjs writes assets/og/entrance.jpg).
 copyFileSync(join(SHOWCASE, 'assets/og/entrance.jpg'), join(DIST, 'assets/og.jpg'));
+// /favicon.ico: browsers and the old /steam page ask for it by name; the server looks in site/ first, so this answers it.
+copyFileSync(join(SHOWCASE, 'assets/icons/favicon.ico'), join(DIST, 'favicon.ico'));
 const OG_URL = `https://prismet.xyz/${versioned('assets/og.jpg', join(DIST, 'assets/og.jpg'))}`;
 
 // ── shared pieces ───────────────────────────────────────────────────────────────────────────
@@ -141,7 +143,12 @@ const head = ({ title, desc, root = '', noindex = false, url = '' }) => `<meta c
 <meta name="description" content="${esc(desc)}">${noindex ? '\n<meta name="robots" content="noindex">' : ''}
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
-<meta property="og:image" content="${OG_URL}">${url ? `\n<meta property="og:url" content="https://prismet.xyz/${esc(url)}">` : ''}
+<meta property="og:image" content="${OG_URL}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${esc(plain(site('og.image_alt')))}">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">${url ? `\n<meta property="og:url" content="https://prismet.xyz/${esc(url)}">` : ''}
 <meta name="theme-color" content="#0F161D" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#E4E8EA" media="(prefers-color-scheme: light)">
 <link rel="icon" href="${root}${FAVICON}">
@@ -594,7 +601,7 @@ const plates = (p) => {
   const t = T('project.plates');
   return `<section class="plates" aria-labelledby="plates-title"><div class="wrap">
   <h2 id="plates-title"${t.a}>${t.h}</h2>
-  <div class="plate-grid">${gal.map((g, n) => { const { w, h } = sizeOf(join(SHOWCASE, g)); const alt = (p.shotAlts && p.shotAlts[n]) || `${plain(work(p.slug, 'title'))}, plate ${n + 1}`; const kind = h > w ? 'tall' : w / h > 2.2 ? 'wide' : ''; return `<figure class="${kind}">${img(g, { root: '../', alt, lazy: n > 1, sizesAttr: PLATE_SIZES[kind] })}<figcaption>${esc(alt)}</figcaption></figure>`; }).join('')}</div>
+  <div class="plate-grid">${gal.map((g, n) => { const { w, h } = sizeOf(join(SHOWCASE, g)); const alt = (p.shotAlts && p.shotAlts[n]) || `${plain(work(p.slug, 'title'))}, plate ${n + 1}`; const kind = h > w ? 'tall' : w / h > 2.2 ? 'wide' : ''; return `<figure class="${kind}">${img(g, { root: '../', alt, lazy: n > 1, sizesAttr: PLATE_SIZES[kind] })}<figcaption aria-hidden="true">${esc(alt)}</figcaption></figure>`; }).join('')}</div>
 </div></section>`;
 };
 
