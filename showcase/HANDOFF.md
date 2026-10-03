@@ -46,6 +46,11 @@ must not either.
   SteamID64 in its search box; the static rate limit (75/min/IP) is lower than one real visit (about 70
   requests). `showcase/tools/deploy/server-v21.patch` + `scrub-public.sh` + a `whiteouts.txt` line
   (`public/shots`) fix all three. See "Deploying from a cloud session".
+- **Round 3 (2026-10-03):** Sage saw round 2 and asked for "less claudy font and something more Sage". The serif
+  (Newsreader) is gone; the type is Sage's own v18 trio (see "The redesign, in short"). Sage answered the deploy
+  question with "whatever you think is best"; the creative director chose to deploy both the site and the v21
+  server patch, but the cloud harness's production-deploy guard refused the registry push, so the deploy waits on
+  Sage running or allowing the two commands in "Deploying from a cloud session".
 - **Open:** the decisions in "Waiting on Sage" and in `ASK-SAGE.md`. Nothing else is in flight.
 
 ## Rules
@@ -94,9 +99,10 @@ must not either.
 
 The site is **a workshop and the register it keeps**. The home page's hero is a hall plan: six
 wings (the six beams, Sage's categories) around a rotunda with the prism in its floor; each wing
-is a link that filters the register. Type is Newsreader (display and body) and Martian Mono
-(data only). Night is slate and chalk, day is cloud and ink, brass for labels, amethyst for what
-runs live. No textures, no glows except the plan's one lantern.
+is a link that filters the register. Type (since round 3, at Sage's request: "less claudy, more Sage") is
+Unbounded for names and headings, Hanken Grotesk for reading and Martian Mono caps for labels and data,
+the three faces Sage chose for v18; there is no serif and no italic voice. Night is slate and chalk, day
+is cloud and ink, brass for labels, amethyst for what runs live. No textures, no glows except the plan's one lantern.
 
 - **Home:** entrance (plaque, "Hello!", the name, the lede, Source / Contact / Commissions) →
   Principal works (four doors: Bayzyl, Prismet, Helm, PrismCode, each with one signature module) →

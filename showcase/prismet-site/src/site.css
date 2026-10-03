@@ -4,11 +4,10 @@
    lantern, and the six wing hues as inlays. No textures, no glows, no ornament that encodes nothing. */
 
 /* ── fonts (self-hosted, SIL OFL; subset to Latin plus arrows and math symbols) ─────────── */
-@font-face { font-family: 'Newsreader'; font-style: normal; font-weight: 200 800; font-display: swap; src: url(assets/fonts/Newsreader.woff2) format('woff2'); }
-@font-face { font-family: 'Newsreader'; font-style: italic; font-weight: 300 600; font-display: swap; src: url(assets/fonts/Newsreader-Italic.woff2) format('woff2'); }
+@font-face { font-family: 'Unbounded'; font-style: normal; font-weight: 200 900; font-display: swap; src: url(assets/fonts/Unbounded.woff2) format('woff2'); }
+@font-face { font-family: 'Hanken Grotesk'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(assets/fonts/HankenGrotesk.woff2) format('woff2'); }
 @font-face { font-family: 'Martian Mono'; font-style: normal; font-weight: 100 800; font-stretch: 75% 112.5%; font-display: swap; src: url(assets/fonts/MartianMono.woff2) format('woff2'); }
 /* Fallback with matched metrics, so the swap moves nothing much. */
-@font-face { font-family: 'Newsreader Fallback'; src: local('Georgia'), local('Times New Roman'); size-adjust: 104%; ascent-override: 92%; descent-override: 26%; line-gap-override: 0%; }
 
 /* ── tokens ───────────────────────────────────────────────────────────────────────────────── */
 :root {
@@ -37,11 +36,13 @@
   --ai: #6A4F92;        --ai-ink: #B49AE0;
   --h: var(--brass); --hi: var(--brass-ink);
 
-  --serif: 'Newsreader', 'Newsreader Fallback', Georgia, 'Times New Roman', serif;
+  --display: 'Unbounded', 'Arial Black', system-ui, sans-serif;
+  --sans: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --serif: var(--sans);   /* round 3: the serif voice is retired; every old reference now resolves to the sans */
   --mono: 'Martian Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --t-xs: .8125rem; --t-sm: .9375rem; --t-base: 1.0625rem; --t-md: 1.2rem; --t-lg: 1.5rem;
   --t-xl: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
-  --t-2xl: clamp(2.75rem, 1.4rem + 4.8vw, 5.75rem);
+  --t-2xl: clamp(2.4rem, 1.2rem + 3.6vw, 4.4rem);
   --gutter: clamp(16px, 4vw, 56px);
   --maxw: 1240px;
   --bar: 60px;
@@ -85,8 +86,8 @@ img, svg { max-width: 100%; height: auto; display: block; }
 a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 a:hover { text-decoration-color: var(--brass); }
 :focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; border-radius: 2px; }
-h1, h2, h3, h4 { font-family: var(--serif); font-weight: 450; line-height: 1.08; letter-spacing: -.012em; text-wrap: balance; margin: 0; font-variation-settings: 'opsz' 72; }
-h1 { font-size: var(--t-2xl); font-weight: 420; line-height: .98; letter-spacing: -.02em; }
+h1, h2, h3, h4 { font-family: var(--display); font-weight: 600; line-height: 1.12; letter-spacing: -.01em; text-wrap: balance; margin: 0; font-variation-settings: 'opsz' 72; }
+h1 { font-size: var(--t-2xl); font-weight: 700; line-height: 1.02; letter-spacing: -.02em; }
 h2 { font-size: var(--t-xl); }
 h3 { font-size: var(--t-lg); font-variation-settings: 'opsz' 48; }
 h4 { font-size: var(--t-md); font-variation-settings: 'opsz' 32; }
@@ -104,11 +105,11 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 
 /* data: mono, only where it is data */
 .mono, .step-n, .chip small, .row-stack { font-family: var(--mono); font-stretch: 87.5%; font-weight: 500; }
-.caps { font-family: var(--serif); font-variant-caps: all-small-caps; letter-spacing: .06em; font-weight: 500; font-variation-settings: 'opsz' 20; }
+.caps { font-family: var(--mono); font-stretch: 87.5%; text-transform: uppercase; letter-spacing: .12em; font-weight: 600; font-size: .72rem; }
 .plaque, .facts dt, .directory dt, .ledger-head, .door-text .typeline, .crumbs, .sig-head h2, .p-body h2, .plates h2, .threads h2, .ledger-group h3, .skills-title, .hire h4, .next small, .rack-group h3, .plate figcaption::before { font-family: var(--serif); font-variant-caps: all-small-caps; letter-spacing: .06em; font-weight: 500; font-variation-settings: 'opsz' 20; text-transform: none; font-style: normal; }
 
 /* plaques: a label-holder with a brass hairline. The status of a record, the name of a wing. */
-.plaque { display: inline-flex; align-items: center; gap: .55em; font-size: .92rem; line-height: 1; color: var(--ink-2); padding: .45em .7em .5em; border: 1px solid var(--rule); border-radius: 2px; }
+.plaque { display: inline-flex; align-items: center; gap: .55em; font-size: .72rem; line-height: 1; color: var(--ink-2); padding: .65em .85em; border: 1px solid var(--rule); border-radius: 2px; }
 .plaque.brass { color: var(--brass-ink); border-color: color-mix(in srgb, var(--brass) 55%, transparent); }
 .plaque.status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--h); }
 .plaque.live { color: var(--live); border-color: color-mix(in srgb, var(--live) 60%, transparent); }
@@ -131,7 +132,7 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 .bar .wrap { display: flex; align-items: center; gap: 16px; min-height: var(--bar); }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: auto; min-height: 44px; }
 .brand .mark { color: var(--ink-2); }
-.brand strong { font: 600 1.05rem/1 var(--serif); letter-spacing: -.01em; }
+.brand strong { font: 700 1rem/1 var(--display); letter-spacing: -.01em; }
 .brand span { font: 400 .95rem/1 var(--serif); font-style: italic; color: var(--ink-2); }
 .nav { display: flex; gap: 2px; align-items: center; }
 .nav a:not(.btn) { text-decoration: none; font: 500 var(--t-sm)/1 var(--serif); color: var(--ink-2); padding: 12px 12px; border-radius: 2px; min-height: 44px; display: inline-flex; align-items: center; }
@@ -156,7 +157,7 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 /* ── entrance ─────────────────────────────────────────────────────────────────────────────── */
 .entrance { border-bottom: 1px solid var(--hair); }
 .entrance .wrap { display: grid; grid-template-columns: minmax(0, 10fr) minmax(0, 11fr); gap: clamp(24px, 4vw, 64px); align-items: center; padding-block: clamp(24px, 3vw, 40px) clamp(24px, 3vw, 40px); }
-.salute { font-style: italic; font-size: var(--t-lg); color: var(--brass-ink); margin-top: 18px; font-variation-settings: 'opsz' 48; }
+.salute { font-family: var(--display); font-weight: 500; font-size: var(--t-md); color: var(--brass-ink); margin-top: 18px; letter-spacing: .02em; }
 .entrance h1 { margin-top: 4px; }
 .lede { margin-top: 22px; font-size: var(--t-md); line-height: 1.5; color: var(--ink-2); max-width: 34rem; font-variation-settings: 'opsz' 20; }
 .directory { display: flex; flex-wrap: wrap; gap: 20px 28px; margin: 24px 0 0; padding-top: 18px; border-top: 1px solid var(--hair); }
@@ -185,8 +186,8 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 .plan .beacon { stroke: var(--beacon); stroke-width: 1; opacity: .7; vector-effect: non-scaling-stroke; }
 .plan .inlay { stroke-width: 2; vector-effect: non-scaling-stroke; }
 .plan .room-fill { fill: var(--surface); opacity: 0; transition: opacity .25s; }
-.plan .room-name { font-size: 20px; fill: var(--ink); font-weight: 500; }
-.plan .room-lead { font-size: 18px; fill: var(--ink-2); font-style: normal; }
+.plan .room-name { font-family: var(--display); font-size: 13.5px; fill: var(--ink); font-weight: 600; letter-spacing: .01em; }
+.plan .room-lead { font-size: 15px; fill: var(--ink-2); font-weight: 500; }
 .plan .wing { cursor: pointer; outline: none; }
 .plan .wing:hover .room-fill, .plan .wing:focus-visible .room-fill { opacity: 1; }
 .plan .wing:hover .room, .plan .wing:focus-visible .room { stroke: var(--ink); stroke-width: 1.5; }
@@ -242,7 +243,7 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 /* ── sections ─────────────────────────────────────────────────────────────────────────────── */
 section { padding-block: clamp(40px, 6vw, 80px); }
 #work { background: var(--surface); border-block: 1px solid var(--hair); }
-.count { font-family: var(--serif); font-variant-caps: all-small-caps; font-variant-numeric: tabular-nums; font-weight: 500; font-size: .92rem; letter-spacing: .06em; color: var(--ink-3); }
+.count { font-family: var(--mono); font-stretch: 87.5%; text-transform: uppercase; font-variant-numeric: tabular-nums; font-weight: 600; font-size: .72rem; letter-spacing: .1em; color: var(--ink-3); }
 
 /* principal works: four doors, one family. Each module sits on its room's material inside a 16:10 frame, inset by one
    margin (5% of the door's width) with one gutter (3%); below it, typeline, title, subtitle, facts and access share
@@ -259,7 +260,7 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 .door-text > * { align-self: start; }
 .door-text .typeline { margin-top: 18px; display: flex; align-items: center; gap: 10px; font-size: .95rem; color: var(--hi); }
 .door-text .typeline i { width: 18px; height: 3px; background: var(--h); border-radius: 2px; }
-.door-text h3 { margin-top: 6px; font-size: var(--t-xl); }
+.door-text h3 { margin-top: 6px; font-size: clamp(1.35rem, 1rem + 1vw, 1.75rem); }
 .door-text h3 a { text-decoration: none; }
 .door-text h3 a:hover { color: var(--brass-ink); }
 .door-text .sub { margin-top: 8px; color: var(--ink-2); font-size: var(--t-base); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -303,7 +304,7 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 .row-thumb.blank { display: block; background: repeating-linear-gradient(135deg, transparent 0 6px, var(--hair) 6px 7px); }
 .row-record { min-width: 0; }
 .row-record em { display: block; font-style: normal; color: var(--ink-2); font-size: var(--t-sm); line-height: 1.35; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-.row-link { font-weight: 500; font-size: var(--t-md); text-decoration: none; font-variation-settings: 'opsz' 32; }
+.row-link { font-family: var(--display); font-weight: 600; font-size: 1rem; text-decoration: none; }
 .row-link::after { content: ""; position: absolute; inset: 0; }                         /* the whole row opens the record */
 .row-link:hover { color: var(--brass-ink); }
 .row-wing { font-size: var(--t-sm); color: var(--hi); }
@@ -344,7 +345,7 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 /* discovery: the seek line, the match Enter opens, threads. All of it needs JS, so without JS none of it shows. */
 .seek { display: none; }
 .js .seek { display: grid; grid-template-columns: 122px minmax(0, 26rem) minmax(0, 1fr); gap: 8px 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--rule); scroll-margin-top: calc(var(--bar) + 16px); }
-.seek label { display: inline-flex; align-items: center; min-height: 44px; font-family: var(--serif); font-variant-caps: all-small-caps; letter-spacing: .06em; font-weight: 500; font-variation-settings: 'opsz' 20; font-size: .95rem; color: var(--ink-2); }
+.seek label { display: inline-flex; align-items: center; min-height: 44px; font-family: var(--mono); font-stretch: 87.5%; text-transform: uppercase; font-size: .72rem; font-weight: 600; letter-spacing: .06em; font-weight: 500; font-variation-settings: 'opsz' 20; font-size: .95rem; color: var(--ink-2); }
 .seek-field { position: relative; display: block; }
 .seek input { display: block; width: 100%; min-height: 44px; margin: 0; padding: 9px 44px 9px 12px; font: 400 var(--t-base)/1.3 var(--serif); color: var(--ink); background: var(--ground); border: 1px solid var(--rule); border-radius: 2px; -webkit-appearance: none; appearance: none; }
 .seek input::placeholder { color: var(--ink-3); font-style: italic; opacity: 1; }
@@ -515,7 +516,7 @@ footer a:hover { color: var(--ink); }
 @media (max-width: 999px) { .elevation text { font-size: 17px; } }   /* the drawing is smaller beside its caption */
 .elevation figcaption { display: grid; gap: 6px; justify-items: start; }
 @media (min-width: 1000px) { .elevation figcaption { margin-top: 14px; } }
-.elevation .elev-title { font-family: var(--serif); font-variant-caps: all-small-caps; letter-spacing: .06em; font-weight: 500; font-variation-settings: 'opsz' 20; font-size: .95rem; color: var(--ink-3); }
+.elevation .elev-title { font-family: var(--mono); font-stretch: 87.5%; text-transform: uppercase; font-size: .72rem; font-weight: 600; letter-spacing: .06em; font-weight: 500; font-variation-settings: 'opsz' 20; font-size: .95rem; color: var(--ink-3); }
 .elevation .cmd { font-size: .76rem; line-height: 1.45; color: #FFAA00; overflow-wrap: anywhere; }
 .elevation .cmd b { font-weight: 500; color: var(--ink); white-space: nowrap; }   /* the numbers the drawing is dimensioned from */
 .elevation small { margin-top: 2px; font-style: italic; font-size: var(--t-sm); line-height: 1.4; color: var(--ink-2); }
@@ -605,3 +606,13 @@ footer a:hover { color: var(--ink); }
 /* Case notes under a flagship's summary (proposed copy; see content/site.md). */
 .case h2 { margin-top: 28px; }
 .case .plan-note { color: var(--ink-3); font-size: var(--t-sm); }
+
+/* ── round 3: Sage's own type voice. Unbounded for names and headings, Hanken Grotesk for reading, Martian Mono for
+   labels and data. No italic voice: secondary lines use colour and weight instead. ── */
+.plan figcaption, .plan .room-lead, .wing-list small, .drafting, .seek-hint, .tiles .tile-note, .plate figcaption, .threads small,
+.plate-grid figcaption, .sig-head p, .elevation small, .notebook-plate figcaption, .row-record em, .skills small, .case .plan-note em,
+.lens h3, .era-caption, .step-title, .bench-door figcaption span, em { font-style: normal; }
+.brand span { font-family: var(--mono); font-stretch: 87.5%; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.lede, .p-head .sub, .p-body .prose, .about-text .prose { font-weight: 400; }
+.hire h3, .hire h4, .lens h3, .sec-head h2 { font-family: var(--display); }
+.btn, .chip, .nav a:not(.btn) { font-weight: 600; }

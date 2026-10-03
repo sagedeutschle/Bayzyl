@@ -31,16 +31,16 @@ ignores `-quality` for WebP; use `-define webp:method=6` (and `webp:target-size=
 
 ### Fonts
 
-`assets/fonts/` holds Newsreader (roman and italic, weight 200–800, optical size 6–72) and Martian Mono (weight
-100–800, width 75–112.5), subset to Latin plus arrows and math symbols. To regenerate from the variable TTFs in
-[google/fonts](https://github.com/google/fonts) (`ofl/newsreader`, `ofl/martianmono`):
+`assets/fonts/` holds Unbounded (display, weight 200–900), Hanken Grotesk (body, weight 100–900) and Martian Mono
+(data, weight 100–800, width 75–112.5), self-hosted Latin subsets. Unbounded and Hanken Grotesk are the files Sage
+chose for v18, restored in round 3; Martian Mono is subset to Latin plus arrows and math symbols. To regenerate from the
+variable TTFs in [google/fonts](https://github.com/google/fonts) (`ofl/unbounded`, `ofl/hankengrotesk`, `ofl/martianmono`):
 
 ```bash
 pip install fonttools brotli
 U='U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2190-2199,U+2212,U+2215,U+2248,U+2260,U+2264,U+2265,U+FEFF,U+FFFD'
-pyftsubset 'Newsreader[opsz,wght].ttf' --unicodes="$U" --layout-features='kern,liga,tnum,calt' --flavor=woff2 --output-file=Newsreader.woff2
-fonttools varLib.instancer 'Newsreader-Italic[opsz,wght].ttf' wght=300:600 opsz=18 -o italic.ttf   # the italic is pinned at optical size 18
-pyftsubset italic.ttf --unicodes="$U" --layout-features='kern,liga,tnum,calt' --flavor=woff2 --output-file=Newsreader-Italic.woff2
+pyftsubset 'Unbounded[wght].ttf' --unicodes="$U" --layout-features='kern,liga,tnum' --flavor=woff2 --output-file=Unbounded.woff2
+pyftsubset 'HankenGrotesk[wght].ttf' --unicodes="$U" --layout-features='kern,liga,tnum,calt' --flavor=woff2 --output-file=HankenGrotesk.woff2
 pyftsubset 'MartianMono[wdth,wght].ttf' --unicodes="$U" --layout-features='kern,tnum,calt' --flavor=woff2 --output-file=MartianMono.woff2
 ```
 
