@@ -43,6 +43,7 @@ await page.route('https://api.github.com/**', async (route) => {
   return route.fulfill({ status: 404, body: '{}' });
 });
 
+const until = async (fn, ms = 10000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await page.evaluate(fn)) return true; await new Promise((r) => setTimeout(r, 100)); } return false; };
 let ok = true; const check = (name, cond, detail = '') => { console.log(`${cond ? '✓' : '✗'} ${name}${cond ? '' : ` (${detail})`}`); if (!cond) ok = false; };
 await page.goto(`http://127.0.0.1:${port}/edit`, { waitUntil: 'networkidle' });
 check('the page loads under the live CSP without errors', errors.length === 0, errors.join('; '));
@@ -52,17 +53,17 @@ await page.waitForSelector('#files button', { timeout: 10000 });
 check('connects and lists the files', (await page.$$('#files button')).length === 2);
 check('the home file opens with one field per section', (await page.$$('#editor .field')).length === Object.keys(parseSections(siteText)).length);
 await page.click('#files button:nth-child(2)');
-await page.waitForFunction(() => document.querySelector('#editor h2')?.textContent === 'Bayzyl');
+await until(() => document.querySelector('#editor h2')?.textContent === 'Bayzyl');
 const sub = await page.$('#f-subtitle'); const before = await sub.inputValue();
 await sub.fill(before + ' Edited.');
 if (process.env.EDIT_SHOT) await page.screenshot({ path: process.env.EDIT_SHOT, fullPage: false });
 check('an edit marks the field and enables Publish', await page.$eval('.field[data-key="subtitle"]', (e) => e.classList.contains('dirty')) && !(await page.$eval('#save', (b) => b.disabled)));
 await page.click('#save');
-await page.waitForFunction(() => /Saved/.test(document.querySelector('#status').textContent), null, { timeout: 10000 });
+await until(() => /Saved/.test(document.querySelector('#status').textContent));
 const expected = writeSections(bayzylText, { subtitle: before + ' Edited.' });
 check('the PUT carries the file exactly as writeSections writes it', put && Buffer.from(put.content, 'base64').toString('utf8') === expected && put.sha === 'sha-bz' && put.branch === 'main', put ? `branch ${put.branch}, sha ${put.sha}` : 'no PUT');
 check('the commit message names the file and the key', /Bayzyl \(subtitle\)/.test(put?.message || ''), put?.message);
-await page.waitForFunction(() => /Live on prismet.xyz/.test(document.querySelector('#deploy').textContent), null, { timeout: 10000 }).catch(() => {});
+await until(() => /Live on prismet.xyz/.test(document.querySelector('#deploy').textContent));
 check('the page reports the deploy result', /Live on prismet.xyz/.test(await page.textContent('#deploy')));
 check('no console or page errors', errors.length === 0, errors.join('; '));
 await browser.close(); server.close();
