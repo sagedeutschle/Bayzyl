@@ -122,6 +122,9 @@ const FAVICON = asset(['assets/icons/prismet-app-128.webp', 'assets/icons/prisme
 copyFileSync(join(SHOWCASE, 'assets/og/entrance.jpg'), join(DIST, 'assets/og.jpg'));
 // /favicon.ico: browsers and the old /steam page ask for it by name; the server looks in site/ first, so this answers it.
 copyFileSync(join(SHOWCASE, 'assets/icons/favicon.ico'), join(DIST, 'favicon.ico'));
+// pages/: standalone pages shipped as they are (the /edit form; later /privacy and /support). The server maps the
+// extension-less routes to these files.
+if (existsSync(join(HERE, 'pages'))) cpSync(join(HERE, 'pages'), DIST, { recursive: true });
 const OG_URL = `https://prismet.xyz/${versioned('assets/og.jpg', join(DIST, 'assets/og.jpg'))}`;
 
 // ── shared pieces ───────────────────────────────────────────────────────────────────────────

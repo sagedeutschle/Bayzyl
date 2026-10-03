@@ -36,8 +36,9 @@ must not either.
   (wording and project list from the Mac; images, build and layout from this branch).
 - **Preview with Edit mode:** artifact https://claude.ai/artifact/C51vasTVQgxsp6JLJjccCv (version 1, built
   from `23d3ca1`). Its database starts empty. The older preview (`Nig6eZ26fLTtBzgiTzQfQ2`) shows the v18 design.
-- **Server code:** not in any repo. See "The live server". The server needs no change for the
-  redesign: the site is still static files in `site/`.
+- **Server code:** in this repo since 2026-10-03 at `showcase/server/` (extracted from the Fly image, patched;
+  `README.md` there says what is what). The overlay still starts from the v13 base image; `assemble-overlay.sh`
+  puts the repo's `server.js`, the built `site/`, the scrubbed Steam page and the `public/shots` whiteout in one folder.
 - **Round 2 (2026-10-03), live in v21:** the branch head carries the studio's second
   round: the surveyed hall plan, doors as one family, the Bayzyl elevation, the seek line and thread ticks
   in the register, responsive images (`srcset` variants next to every source), `?v=<hash>` cache-busting,
@@ -52,6 +53,14 @@ must not either.
 - **Round 3 (2026-10-03):** Sage saw round 2 and asked for "less claudy font and something more Sage". The serif
   (Newsreader) is gone; the type is Sage's own v18 trio (see "The redesign, in short"). Sage answered the deploy
   question with "whatever you think is best" and then "deploy it claude"; v21 went live the same day.
+- **Self-serve editing (2026-10-03, built, waits on main + one secret):** Sage asked to edit the live site without
+  outside help and without HTML. Now in the repo: the live server source (`showcase/server/`, extracted from the Fly
+  image and carrying the v21 patch plus v22: `/edit`, `/privacy`, `/support` route mapping and `api.github.com` in the
+  CSP), `.github/workflows/site.yml` (build + verify + server gate on every push under `showcase/`; deploy to Fly from
+  `main`; browser checks beside it), `showcase/tools/deploy/assemble-overlay.sh` and `gate.sh`, the form page
+  `showcase/prismet-site/pages/edit.html` (+ `edit.js`, `edit.css`) served at `/edit`, and `showcase/EDITING.md` for
+  Sage. To switch it on: add the `FLY_API_TOKEN` secret, merge the branch into `main`; the Action deploys v22 and
+  `/edit` is live. Until then `/edit` is 404 on v21 (the route mapping is in v22's server).
 - **Open:** the decisions in "Waiting on Sage" and in `ASK-SAGE.md`. Nothing else is in flight.
 
 ## Rules

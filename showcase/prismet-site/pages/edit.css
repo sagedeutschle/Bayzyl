@@ -1,0 +1,35 @@
+/* prismet.xyz/edit: the form that edits the site's words. Sits on top of site.css for tokens, bar and buttons. */
+.edit { padding-block: 40px 80px; max-width: 880px; }
+.edit h1 { font-size: var(--t-xl); }
+.edit .lede { max-width: 40rem; }
+#token-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; margin-top: 24px; }
+#token-form label { flex: 1 1 100%; font-family: var(--mono); font-stretch: 87.5%; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+#token-form input { flex: 1 1 320px; min-height: 44px; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); font: 400 var(--t-sm)/1.2 var(--mono); }
+.note { margin-top: 14px; color: var(--ink-3); font-size: var(--t-sm); max-width: 44rem; }
+.note code { font-family: var(--mono); font-stretch: 87.5%; color: var(--ink-2); }
+.status { margin-top: 18px; min-height: 1.4em; color: var(--ink-2); }
+.status.ok { color: var(--live); }
+.status.warn { color: #F2A65A; }
+.files { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--hair); }
+.files button { font: 600 var(--t-sm)/1 var(--sans); min-height: 40px; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink-2); cursor: pointer; }
+.files button.current { color: var(--ink); border-color: var(--ink-3); }
+.files button.dirty { border-color: var(--brass); color: var(--brass-ink); }
+.editor { margin-top: 28px; }
+.editor h2 { font-size: var(--t-lg); }
+.editor .path { margin-top: 4px; color: var(--ink-3); font-family: var(--mono); font-stretch: 87.5%; font-size: .72rem; }
+.field { margin-top: 22px; display: grid; gap: 6px; }
+.field label { font-family: var(--mono); font-stretch: 87.5%; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+.field textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); font: 400 var(--t-base)/1.5 var(--sans); resize: vertical; min-height: 44px; }
+.field textarea:focus { outline: 2px solid var(--brass); outline-offset: 1px; }
+.field.dirty label::after { content: " · changed"; color: var(--brass-ink); letter-spacing: 0; text-transform: none; }
+.field.dirty textarea { border-color: var(--brass); }
+.field.warn textarea { border-color: #F2A65A; }
+.field small { color: var(--ink-3); font-size: var(--t-xs); min-height: 1em; }
+.field.warn small { color: #F2A65A; }
+.actions { position: sticky; bottom: 0; margin-top: 28px; padding: 14px 0; background: var(--ground); border-top: 1px solid var(--hair); display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
+.actions .btn[disabled] { opacity: .5; cursor: default; }
+.deploy { flex: 1 1 260px; color: var(--ink-2); font-size: var(--t-sm); }
+.deploy .ok { color: var(--live); }
+.deploy .warn { color: #F2A65A; }
+.deploy a { color: var(--ink); margin-left: 6px; }
+@media (max-width: 520px) { .actions { padding-inline: 0; } }

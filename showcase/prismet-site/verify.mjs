@@ -23,7 +23,7 @@ import { fileURLToPath } from 'node:url';
 
 const RESERVED_FILES = ['style.css', 'steam.js', 'debt.js', 'icon.svg', 'manifest.webmanifest', 'og-image.png'];
 const RESERVED_ROOT = ['shots', 'api', 'steam', 'steam.html', 'debt', 'debt.html', 'rtc', 'healthz'];
-const ROUTES = new Set(['/steam', '/debt']);            // served by the live server, not by this build
+const ROUTES = new Set(['/steam', '/debt', '/edit', '/privacy', '/support']);            // served by the live server, not by this build
 const TEXT = new Set(['.html', '.css', '.js', '.json', '.svg', '.txt', '.xml', '.webmanifest']);
 const BUDGET = 20;                                      // requests on the home page's first view
 const PRIVATE = [

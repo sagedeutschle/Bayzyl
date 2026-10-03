@@ -84,6 +84,10 @@ state, and `prismet-site/build.mjs` for how pages are made. `node build.mjs --pr
 - Browser checks: `node showcase/tools/tests/site-check.mjs` after a production build. It serves `dist/` itself with
   the live CSP and checks the home, Bayzyl, Prismet and Helm pages at 1440 and 390 (console errors, overflow, the
   filter and its deep link, the stepper); exit 1 on any failure. The build already runs `prismet-site/verify.mjs`.
+- The edit page: `node showcase/tools/tests/edit-check.mjs` (its parser and writer against `content.mjs` on every
+  content file, plus the GitHub client against a fake fetch) and `node showcase/tools/tests/edit-smoke.mjs` (the page in
+  Chromium under the live CSP with api.github.com answered by fixtures). `showcase/EDITING.md` is Sage's guide to
+  editing the live site at prismet.xyz/edit; `.github/workflows/site.yml` builds, gates and deploys on push.
 - New or changed site images: `node showcase/tools/image-variants.mjs` after a build writes the `-360/-720/-1080/-1440`
   variants `img()` puts in `srcset`.
 - Fiverr's site shows automated clients a captcha; gig edits happen in Sage's browser.
