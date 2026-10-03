@@ -8,10 +8,10 @@ it, in this file included.
 
 | | |
 |---|---|
-| Live | https://prismet.xyz, Fly app `prismet-site-restless-horizon-217`, release **v21** (2026-10-03 16:59 UTC), image tag `redesign-20261003-1`, built from commit `74213d1` |
+| Live | https://prismet.xyz, Fly app `prismet-site-restless-horizon-217`, release **v22** (2026-10-03 18:17 UTC), image tag `site-11-0ca1c66`, built from `main` at `0ca1c66` by the GitHub Action: the first automatic deploy |
 | Source of truth | this repository, `showcase/`, on `main` (merged from `claude/funny-wozniak-4j636o` through [PR #2](https://github.com/sagedeutschle/Bayzyl/pull/2) on 2026-10-03) |
-| Deploys | the GitHub Action `site` (`.github/workflows/site.yml`): every push under `showcase/` builds, verifies and gates the site; from `main` it deploys to Fly. **It waits on one secret, `FLY_API_TOKEN`** (section 6). Until that secret exists the deploy job stops with a clear message and v21 stays live |
-| Editing | https://prismet.xyz/edit (live after the first automated deploy, v22): a form that commits wording changes to `main`; the Action takes it from there. Guide: `showcase/EDITING.md` |
+| Deploys | the GitHub Action `site` (`.github/workflows/site.yml`): every push under `showcase/` builds, verifies and gates the site; from `main` it deploys to Fly. The `FLY_API_TOKEN` secret is set (Sage, 2026-10-03); every commit to `main` under `showcase/` now goes live by itself |
+| Editing | https://prismet.xyz/edit (live): a form that commits wording changes to `main`; the Action takes it from there. Guide: `showcase/EDITING.md` |
 | Preview with Edit mode | https://claude.ai/artifact/C51vasTVQgxsp6JLJjccCv (private; the round-3 build). Its database (`edits`, `layout/main`) is empty as of 2026-10-03; the `/edit` page supersedes it for words |
 | Decisions only Sage can make | `showcase/prismet-site/ASK-SAGE.md` (wording claims, captures, authorship, `PROJECTS_URL`, the Mac copy, Volhaven) |
 | In flight elsewhere | Codex (at Sage's request) holds a local, unpushed candidate limited to `content/work` reconciliation, selected asset metadata, the `/privacy` and `/support` pages and route coverage. The server already maps those two routes (v22); the pages themselves are not in the repo yet |
@@ -166,8 +166,7 @@ commits, and the gate after the commit is what protects the site.
 
 ## 9. Waiting on Sage
 
-1. **The two tokens** in section 6. Nothing deploys automatically until `FLY_API_TOKEN` exists; re-run the failed
-   deploy job on the latest `main` run once it does.
+1. **The edit-page token** (section 6), if not yet made: a fine-grained GitHub token for this repository.
 2. **The Mac copy** of `~/Desktop/GtrktscrB/business/showcase` was never pushed: a different `projects.json` and
    `build.mjs`, seven project copy files, seven Mac-only projects, 29 assets, `ART-CANON.md`, more Long Now captures.
    Codex is reconciling `content/work` from it; the rest is still Sage's call.
@@ -221,8 +220,8 @@ commits, and the gate after the commit is what protects the site.
 - v21 (2026-10-03): round 2 (six-station studio: surveyed plan, doors, Bayzyl elevation, seek line, thread ticks,
   responsive images, cache-busting, verify, alt text, aliases, case notes, share card, favicon, privacy fixes in the
   tree), round 3 (Sage's type), and the v21 server patch. Approved by Sage ("deploy it claude").
-- 2026-10-03, later: the self-serve layer (this document's section 6), merged to `main` through PR #2; the first
-  automated deploy (v22) happens when `FLY_API_TOKEN` is set.
+- v22 (2026-10-03 18:17): the self-serve layer (section 6), merged to `main` through PRs #2, #7 and #8, deployed by
+  the GitHub Action once Sage set `FLY_API_TOKEN`. `/edit` live; `gate.sh https://prismet.xyz live` passed.
 
 ## 13. First steps for the next agent
 
