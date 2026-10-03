@@ -5,3 +5,5 @@ fiverr/kit/
 fiverr/templates/
 tools/prismcode-shots/dist/
 __pycache__/
+server/site/
+server/node_modules/

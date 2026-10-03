@@ -1,0 +1,5 @@
+{
+  "_readme": "Design tokens changed at prismet.xyz/edit. src/site.css holds the defaults; only overrides live here. root = night colours and everything shared (type, sizes, corners); day = what differs in daylight. Empty means the site looks exactly as site.css says.",
+  "root": {},
+  "day": {}
+}

@@ -1,44 +1,29 @@
-// edit-smoke.mjs: the /edit page in a real browser against the REAL server, with GitHub answered by a fake.
+// edit-smoke.mjs: the editor at /edit in a real browser against the REAL server, with GitHub answered by a fake.
 //   node showcase/prismet-site/build.mjs && node showcase/tools/tests/edit-smoke.mjs
 // Starts showcase/server/server.js (site/ = dist) with a fake token, PIN 123456 and EDIT_GITHUB_API pointing at a fake
-// GitHub in this process; unlocks with the PIN, edits one field, publishes, and checks the PUT GitHub receives is
-// exactly what writeSections produces and that the page reports the deploy. Exits 1 on any failure.
-import { createServer } from 'node:http';
+// GitHub that reads this checkout (fake-github.mjs; writes stay in memory). Unlocks with the PIN, types on the page,
+// changes a token, moves a section, undoes it, publishes, and checks that GitHub receives one commit holding exactly
+// what writeSections produces. Exits 1 on any failure.
 import { spawn } from 'node:child_process';
 import { readFileSync, existsSync, rmSync, cpSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { fakeGitHub } from './fake-github.mjs';
 const { chromium } = await import('playwright').catch(() => import(process.env.PLAYWRIGHT || '/opt/node22/lib/node_modules/playwright/index.mjs'));
 const CHROMIUM = process.env.CHROMIUM || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 const HERE = dirname(fileURLToPath(import.meta.url));
-const SITE = join(HERE, '..', '..', 'prismet-site'), DIST = join(SITE, 'dist'), SERVER = join(HERE, '..', '..', 'server');
-if (!existsSync(join(DIST, 'edit.html'))) { console.error('build first: node showcase/prismet-site/build.mjs'); process.exit(1); }
+const ROOT = join(HERE, '..', '..', '..'), SITE = join(HERE, '..', '..', 'prismet-site'), DIST = join(SITE, 'dist'), SERVER = join(HERE, '..', '..', 'server');
+if (!existsSync(join(DIST, 'edit/assets.json'))) { console.error('build first: node showcase/prismet-site/build.mjs'); process.exit(1); }
 
-// the fake GitHub
+const SITE_PATH = 'showcase/prismet-site/content/site.md';
 const siteText = readFileSync(join(SITE, 'content/site.md'), 'utf8');
-const bayzylText = readFileSync(join(SITE, 'content/work/bayzyl.md'), 'utf8');
 const { parseSections, writeSections } = await import(join(SITE, 'content.mjs'));
-const b64 = (s) => Buffer.from(s, 'utf8').toString('base64');
-let put = null, authSeen = new Set();
-const gh = createServer((req, res) => {
-  authSeen.add(req.headers.authorization);
-  const json = (b, status = 200) => { res.writeHead(status, { 'content-type': 'application/json' }); res.end(JSON.stringify(b)); };
-  let body = ''; req.on('data', (c) => body += c); req.on('end', () => {
-    if (req.url.includes('/contents/showcase/prismet-site/content/work?')) return json([{ type: 'file', name: 'bayzyl.md', path: 'showcase/prismet-site/content/work/bayzyl.md' }]);
-    if (req.method === 'PUT') { put = JSON.parse(body); return json({ content: { sha: 'b'.repeat(40) }, commit: { sha: 'c0ffee1' } }); }
-    if (req.url.includes('/contents/showcase/prismet-site/content/site.md')) return json({ sha: 'a'.repeat(40), content: b64(siteText) });
-    if (req.url.includes('/contents/showcase/prismet-site/content/work/bayzyl.md')) return json({ sha: 'c'.repeat(40), content: b64(bayzylText) });
-    if (req.url.includes('/actions/runs')) return json({ workflow_runs: [{ status: 'completed', conclusion: 'success', html_url: 'https://github.com/sagedeutschle/Bayzyl/actions/runs/1' }] });
-    json({ message: 'Not Found' }, 404);
-  });
-});
-await new Promise((r) => gh.listen(0, '127.0.0.1', r));
-const ghPort = gh.address().port;
+const gh = fakeGitHub({ root: ROOT }), ghServer = await gh.listen();
 
 // the real server, with the fresh build as site/
 rmSync(join(SERVER, 'site'), { recursive: true, force: true }); cpSync(DIST, join(SERVER, 'site'), { recursive: true });
 const port = 18200 + Math.floor(Math.random() * 90);
-const server = spawn(process.execPath, ['server.js'], { cwd: SERVER, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, PORT: String(port), EDIT_GITHUB_TOKEN: 'github_pat_FAKE', EDIT_PIN: '123456', EDIT_GITHUB_API: `http://127.0.0.1:${ghPort}`, EDIT_COOKIE_SECURE: '0' } });
+const server = spawn(process.execPath, ['server.js'], { cwd: SERVER, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, PORT: String(port), EDIT_GITHUB_TOKEN: 'github_pat_FAKE', EDIT_PIN: '123456', EDIT_GITHUB_API: ghServer.url, EDIT_COOKIE_SECURE: '0', EDIT_DRAFT_REPO: 'sagedeutschle/prismet-drafts' } });
 let serverLog = ''; server.stdout.on('data', (d) => serverLog += d); server.stderr.on('data', (d) => serverLog += d);
 const base = `http://127.0.0.1:${port}`;
 for (let i = 0; i < 100; i++) { try { if ((await fetch(`${base}/healthz`)).ok) break; } catch {} await new Promise((r) => setTimeout(r, 100)); }
@@ -46,44 +31,73 @@ for (let i = 0; i < 100; i++) { try { if ((await fetch(`${base}/healthz`)).ok) b
 let ok = true; const errors = [];
 const check = (name, cond, detail = '') => { console.log(`${cond ? '✓' : '✗'} ${name}${cond ? '' : ` (${detail})`}`); if (!cond) ok = false; };
 const browser = await chromium.launch({ executablePath: CHROMIUM });
-const page = await browser.newPage({ viewport: { width: 1200, height: 900 } });
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 page.on('pageerror', (e) => errors.push(`pageerror ${e.message}`));
 page.on('console', (m) => { if (m.type() === 'error' && !/status of 401/.test(m.text())) errors.push(`console ${m.text()}`); });   // the wrong-PIN step answers 401 on purpose
-const until = async (fn, ms = 10000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await page.evaluate(fn)) return true; await new Promise((r) => setTimeout(r, 100)); } return false; };
+const until = async (fn, arg, ms = 10000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await page.evaluate(fn, arg).catch(() => false)) return true; await new Promise((r) => setTimeout(r, 100)); } return false; };
+const inFrame = (fn, arg) => page.evaluate(`(${fn})(document.getElementById('frame').contentDocument, ${JSON.stringify(arg ?? null)})`);
+const sections = () => inFrame((d) => [...d.querySelectorAll('#main > [data-section]')].map((s) => s.dataset.section).join(','));
+const row = (name) => page.locator('#tree .row', { has: page.locator('.name', { hasText: new RegExp(`^${name}$`) }) });
 try {
   const st = await (await fetch(`${base}/api/edit/status`)).json();
   check('the server reports the editor configured and locked', st.configured === true && st.authed === false, JSON.stringify(st));
-  check('the edit API needs a session', (await fetch(`${base}/api/edit/files`)).status === 401);
-  check('the CSP no longer allows api.github.com', !(await fetch(`${base}/edit`)).headers.get('content-security-policy').includes('api.github.com'));
+  check('the edit API needs a session', (await fetch(`${base}/api/edit/files`)).status === 401 && (await fetch(`${base}/api/edit/commit`, { method: 'POST', headers: { 'x-prismet-edit': '1' }, body: '{}' })).status === 401);
+  check('the CSP allows connections to the site only', !(await fetch(`${base}/edit`)).headers.get('content-security-policy').includes('api.github.com'));
 
   await page.goto(`${base}/edit`, { waitUntil: 'networkidle' });
   check('the page loads under the live CSP without errors', errors.length === 0, errors.join('; '));
   await page.waitForSelector('#pin-form:visible', { timeout: 10000 });
   await page.fill('#pin', '000000'); await page.click('#pin-form button');
-  check('a wrong PIN is refused with the tries left', await until(() => /Wrong PIN\. 4 tries left/.test(document.querySelector('#status').textContent)), await page.textContent('#status'));
+  check('a wrong PIN is refused with the tries left', await until(() => /Wrong PIN\. 4 tries left/.test(document.querySelector('#pin-status').textContent)), await page.textContent('#pin-status'));
   await page.fill('#pin', '123456'); await page.click('#pin-form button');
-  await page.waitForSelector('#files button', { timeout: 10000 });
-  check('the right PIN unlocks and lists the files', (await page.$$('#files button')).length === 2);
-  check('the home file opens with one field per section', (await page.$$('#editor .field')).length === Object.keys(parseSections(siteText)).length);
-  await page.click('#files button:nth-child(2)');
-  await until(() => document.querySelector('#editor h2')?.textContent === 'Bayzyl');
-  const sub = await page.$('#f-subtitle'); const before = await sub.inputValue();
-  await sub.fill(before + ' Edited.');
+  await page.waitForSelector('#tree .row', { timeout: 15000 });
+  check('the right PIN unlocks and lists the site', (await page.$$('#tree .row')).length > 20 && await page.isHidden('#connect'));
+  check('the preview is the site, rendered in the page under the live CSP', await until(() => document.getElementById('frame').contentDocument?.querySelector('[data-edit="hero.lede"]') && document.getElementById('frame').contentDocument.fonts !== undefined));
+  check('the inspector lists the selection\'s words', (await page.$$('#inspector .field')).length > 5);
+
+  // type on the page
+  const before = parseSections(siteText)['hero.lede'];
+  await page.frameLocator('#frame').locator('[data-edit="hero.lede"]').click();
+  await page.keyboard.press('ControlOrMeta+A'); await page.keyboard.type('A lede typed on the page.');
+  check('typing on the page fills the inspector and makes a draft', await until(() => document.getElementById('f-hero.lede')?.value === 'A lede typed on the page.' && /Publish 1 file/.test(document.getElementById('save').textContent)), await page.textContent('#save'));
+  await row('Register').click();
+  check('the page keeps the new words', await inFrame((d) => d.querySelector('[data-edit="hero.lede"]').textContent) === 'A lede typed on the page.');
+
+  // a design token
+  await page.click('[data-tab="design"]');
+  await page.fill('[data-token="--brass"] input[type="text"]', '#D07A2C'); await page.keyboard.press('Tab');
+  check('a token changes the whole preview at once', await until(() => getComputedStyle(document.getElementById('frame').contentDocument.documentElement).getPropertyValue('--brass').trim() === '#D07A2C'));
+
+  // move a section, then undo
+  await page.click('[data-tab="site"]');
+  const order0 = await sections();
+  await row('Lenses').click(); await page.click('#inspector .btn:has-text("Move up")');
+  check('a section moves in the preview', await until((o) => { const d = document.getElementById('frame').contentDocument; return [...d.querySelectorAll('#main > [data-section]')].map((s) => s.dataset.section).join(',') !== o; }, order0), await sections());
+  await page.click('#undo');
+  check('undo puts it back', await until((o) => { const d = document.getElementById('frame').contentDocument; return [...d.querySelectorAll('#main > [data-section]')].map((s) => s.dataset.section).join(',') === o; }, order0), await sections());
   if (process.env.EDIT_SHOT) await page.screenshot({ path: process.env.EDIT_SHOT, fullPage: false });
-  check('an edit marks the field and enables Publish', await page.$eval('.field[data-key="subtitle"]', (e) => e.classList.contains('dirty')) && !(await page.$eval('#save', (b) => b.disabled)));
+
+  // the draft survives a reload
+  await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('#tree .row', { timeout: 15000 });
+  check('the draft survives a reload', await until(() => /Publish 2 files/.test(document.getElementById('save').textContent)), await page.textContent('#save'));
+
+  // publish
   await page.click('#save');
-  await until(() => /Saved/.test(document.querySelector('#status').textContent));
-  const expected = writeSections(bayzylText, { subtitle: before + ' Edited.' });
-  check('GitHub receives the file exactly as writeSections writes it, on main, with the sha', put && Buffer.from(put.content, 'base64').toString('utf8') === expected && put.sha === 'c'.repeat(40) && put.branch === 'main', put ? `branch ${put.branch}` : 'no PUT');
-  check('the commit message names the file and the key', /Bayzyl \(subtitle\)/.test(put?.message || ''), put?.message);
-  check('only the server ever showed GitHub the token', [...authSeen].every((a) => a === 'Bearer github_pat_FAKE'));
+  await until(() => /Published/.test(document.querySelector('#status').textContent));
+  const commits = gh.calls.filter((c) => c.method === 'POST' && c.path.endsWith('/git/commits'));
+  check('GitHub receives one commit', commits.length === 1, `${commits.length} commits`);
+  check('site.md arrives exactly as writeSections writes it', gh.written.get(SITE_PATH) === writeSections(siteText, { 'hero.lede': 'A lede typed on the page.' }));
+  check('theme.json arrives with the token', JSON.parse(gh.written.get('showcase/prismet-site/data/theme.json') || '{}').root?.['--brass'] === '#D07A2C');
+  check('the commit message names the files', /site\.md \(1\); theme\.json/.test(commits[0]?.body.message || ''), commits[0]?.body.message);
+  check('only the server ever showed GitHub the token', gh.calls.every((c) => c.auth === 'Bearer github_pat_FAKE'));
   await until(() => /Live on prismet.xyz/.test(document.querySelector('#deploy').textContent));
-  check('the page reports the deploy result', /Live on prismet.xyz/.test(await page.textContent('#deploy')));
+  check('the page reports the deploy result and an empty draft', /Live on prismet.xyz/.test(await page.textContent('#deploy')) && /Nothing to publish/.test(await page.textContent('#save')));
+  check('the first words were "' + before.slice(0, 12) + '…": nothing else in site.md changed', parseSections(gh.written.get(SITE_PATH))['hero.title'] === parseSections(siteText)['hero.title']);
   const pageSource = await page.content();
   check('the token never reaches the browser', !pageSource.includes('github_pat') && !(await page.evaluate(() => JSON.stringify(Object.entries(sessionStorage)) + JSON.stringify(Object.entries(localStorage)))).includes('github_pat'));
   await page.click('#lock'); await page.waitForSelector('#pin-form:visible', { timeout: 10000 });
   check('Lock ends the session', (await (await fetch(`${base}/api/edit/status`)).json()).authed === false);
   check('no console or page errors', errors.length === 0, errors.join('; '));
 } catch (e) { check('the flow completed', false, e.message); console.error(serverLog.slice(-600)); }
-await browser.close(); server.kill(); gh.close();
+await browser.close(); server.kill(); ghServer.close();
 console.log(ok ? '✓ edit-smoke: all checks passed' : '✗ edit-smoke: failures above'); process.exit(ok ? 0 : 1);

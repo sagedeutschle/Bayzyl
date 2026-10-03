@@ -6,57 +6,10 @@
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parseSections, writeSections, listItems, factPairs, toList, toFacts, inline, plain } from './pages/lib/format.js';
 
+export { parseSections, writeSections, listItems, factPairs, toList, toFacts, inline, plain };
 export const CONTENT = join(dirname(fileURLToPath(import.meta.url)), 'content');
-
-const stripComments = (s) => s.replace(/<!--[\s\S]*?-->/g, '');
-
-export function parseSections(text) {
-  const out = {};
-  let key = null, buf = [];
-  const flush = () => { if (key) out[key] = buf.join('\n').trim(); };
-  for (const line of stripComments(text).split('\n')) {
-    const m = line.match(/^## +(\S+)\s*$/);
-    if (m) { flush(); key = m[1]; buf = []; } else if (key) buf.push(line);
-  }
-  flush();
-  return out;
-}
-
-/** Replace the bodies of the given keys, keeping comments, order, and every other section as is. */
-export function writeSections(text, updates) {
-  const lines = text.split('\n'), out = [], seen = new Set();
-  let skipping = false, inComment = false;
-  for (const line of lines) {
-    if (line.includes('<!--')) inComment = true;
-    const m = !inComment && line.match(/^## +(\S+)\s*$/);
-    if (line.includes('-->')) inComment = false;
-    if (m) {
-      skipping = false;
-      out.push(line);
-      if (m[1] in updates) { out.push(String(updates[m[1]]).trim(), ''); seen.add(m[1]); skipping = true; }
-      continue;
-    }
-    if (!skipping) out.push(line);
-  }
-  for (const [k, v] of Object.entries(updates)) if (!seen.has(k)) out.push('', `## ${k}`, String(v).trim());
-  return out.join('\n').replace(/\n{3,}/g, '\n\n').trimEnd() + '\n';
-}
-
-export const listItems = (v = '') => v.split('\n').filter((l) => /^- /.test(l)).map((l) => l.slice(2).trim());
-export const factPairs = (v = '') => listItems(v).map((l) => { const i = l.indexOf(':'); return i < 0 ? [l, ''] : [l.slice(0, i).trim(), l.slice(i + 1).trim()]; });
-export const toList = (items) => items.map((i) => `- ${i}`).join('\n');
-export const toFacts = (pairs) => pairs.map(([k, v]) => `- ${k}: ${v}`).join('\n');
-
-const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-/** Text → safe inline HTML: **bold**, *gold highlight*, {vars}. */
-export function inline(s, vars = {}) {
-  return esc(s)
-    .replace(/\{(\w+)\}/g, (m, k) => (k in vars ? esc(vars[k]) : m))
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>');
-}
-export const plain = (s, vars = {}) => String(s ?? '').replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m)).replace(/\*\*?(.+?)\*\*?/g, '$1');
 
 export function loadSite() { return parseSections(readFileSync(join(CONTENT, 'site.md'), 'utf8')); }
 export function loadWork(slug) {

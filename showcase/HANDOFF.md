@@ -43,6 +43,7 @@ protected route intact, the two privacy leaks of the old server closed.
 
 | What | Where |
 |---|---|
+| The renderer | `showcase/prismet-site/pages/lib/render.js`: words + data → HTML, pure, shared by the build, the editor's preview and the tests (`edit-check.mjs` holds the two to the same bytes) |
 | The site generator | `showcase/prismet-site/build.mjs` (zero dependencies; `--preview` writes `dist-preview/` with the artifact editor, so `editor.js` never lands in `dist/`) |
 | Build check | `showcase/prismet-site/verify.mjs`, run by the build: no editor code, no inline scripts or handlers, every `<img>` with width/height/alt, every link resolving in `dist/` or https (extension-less internal links allowed: `/steam /debt /edit /privacy /support`), no reserved file name, no TODO, no private string; prints the home page's request budget |
 | Wording | `showcase/prismet-site/content/site.md` (home, labels, colophon) and `content/work/<slug>.md` (title, subtitle, tag, status, year, role, summary, facts, highlights). Format: `## key` headings, text under them, `*gold*`, `**bold**`, `- ` lists, `- Label: Value` facts, `{placeholders}` |
@@ -197,7 +198,7 @@ after the commit protects the site.
 - The torus formula ring for Bayzyl was tried and dropped (unreadable around a circle).
 - `/debt` wraps its headline figure at 390 and neither old tool links back to the home page beyond the brand mark
   (both in `showcase/server/public`, Sage's tool code).
-- The `/edit` page edits words only. Hiding, reordering, images and design stay in `projects.json` and the code.
+- The `/edit` page (the editor: site tree, live preview, inspector) edits words, section and record order, hiding, featuring, records and design tokens, as a draft published in one commit. Not yet: images, new pages, per-element and per-width styles, revision history in the page. Its parts: `pages/edit.html|js|css`, `pages/edit/{store,preview,panels}.js`, the renderer it shares with the build in `pages/lib/{render,format,theme}.js`, `data/theme.json`, `server/edit-api.js` (`/api/edit/commit`, `/api/edit/draft`), `tools/dev-editor.mjs` (the editor on a laptop against the checkout), `tools/tests/fake-github.mjs`.
 - The preview artifact's Edit mode still writes to the artifact database; `apply-edits.mjs` applies those if ever used.
 - The Fiverr `render.mjs` draws the Volumes face where the Fleet face was; re-render the gig board before using it.
 
