@@ -121,7 +121,7 @@ const scripts = (root = '') => (PREVIEW ? `<script src="${root}editor.js"></scri
 const HOME = (root = '') => (PREVIEW ? (root || './') : `${root}index.html`);
 
 const bar = (root = '') => {
-  const [w, l, a, h] = ['nav.work', 'nav.lenses', 'nav.about', 'nav.hire'].map((k) => T(k));
+  const [w, l, a, h, g, li] = ['nav.work', 'nav.lenses', 'nav.about', 'nav.hire', 'nav.github', 'nav.linkedin'].map((k) => T(k));
   return `<a class="skip" href="#main">Skip to content</a>
 <header class="bar"><div class="wrap">
   <a class="brand" href="${HOME(root)}">${mark(28)}<strong>Prismet</strong><span>${esc(owner.name)}</span></a>
@@ -129,6 +129,8 @@ const bar = (root = '') => {
     <a class="keep" href="${HOME(root)}#work"${w.a}>${w.h}</a>
     <a href="${HOME(root)}#lenses"${l.a}>${l.h}</a>
     <a href="${HOME(root)}#about"${a.a}>${a.h}</a>
+    <a class="wide" href="${esc(owner.github)}"${g.a}>${g.h}</a>
+    <a class="wide" href="${esc(owner.linkedin)}"${li.a}>${li.h}</a>
     <a class="btn primary keep" href="${esc(owner.fiverr)}"${h.a}>${h.h}</a>
     <button class="btn theme keep" type="button" id="theme-toggle" aria-label="${esc(T('footer.day_night').p)}" data-to-day="${esc(T('theme.to_day').p)}" data-to-night="${esc(T('theme.to_night').p)}"><span class="sun" aria-hidden="true"></span></button>
   </nav>
@@ -229,7 +231,7 @@ function plan() {
 <div class="lantern" aria-hidden="true"></div>
 <figcaption>
   <span${T('plan.caption').a}>${T('plan.caption').h}</span>
-  <ul class="wing-list" aria-label="Wings">${SPECTRUM.map((id) => { const b = beamLabel(id), n = count(id); return `<li><a href="#work" data-beam="${id}" style="${hue(id)}"><i></i><span${b.a}>${b.h}</span><small>${n}</small></a></li>`; }).join('')}</ul>
+  <ul class="wing-list" aria-label="Wings">${SPECTRUM.map((id) => { const b = beamLabel(id), n = count(id); return `<li><a href="#work" data-beam="${id}" style="${hue(id)}" aria-label="${esc(b.p)}: ${n} record${n === 1 ? '' : 's'}"><i></i><span${b.a}>${b.h}</span><small>${(() => { const lead = shown.find((p) => p.beam === id); return lead ? esc(plain(work(lead.slug, 'title'))) + (n > 1 ? ` + ${n - 1}` : '') : ''; })()}</small></a></li>`; }).join('')}</ul>
 </figcaption>
 </figure>`;
 }
@@ -283,7 +285,7 @@ function elevation(p) {
   const flutes = Array.from({ length: r }, (_, x) => x).filter((x) => depth(x) !== depth(x + 1))
     .flatMap((x) => [-1, 1].map((sg) => `M${f(ax + sg * (x + 0.5) * u)} ${top}V${gy}`)).join('');
   const cmd = (m) => `<code class="cmd">${esc(m[1]).replace(/,/g, ',<wbr>')} <b>${esc(m.slice(2).join(' '))}</b></code>`;
-  const t = T('art.elevation_title', { n: i }), note = T('art.elevation_note'), alt = T('art.elevation_alt', { w: 2 * r + 1, h, s });
+  const t = T('art.elevation_title', { n: i + 1 }), note = T('art.elevation_note'), alt = T('art.elevation_alt', { w: 2 * r + 1, h, s });
   return `<figure class="elevation">
       <svg viewBox="0 0 ${f(W)} ${f(H)}" role="img" aria-label="${esc(alt.p)}">
         <path class="axis" d="M${ax} ${roofTop - 12}V${dy + 8}"/>
@@ -309,12 +311,12 @@ function signature(p, root = '../') {
     <div class="sig-head"><h2 id="bench-title"${t.a}>${t.h}</h2><p${c.a}>${c.h}</p></div>
     <div class="bench-grid">
     <div class="stepper" data-stepper>
-      <ol class="steps">${p.steps.map((st, i) => `<li class="step"${i === 0 ? ' aria-current="step"' : ''} data-step="${i}">
-        ${img(`assets/bench/step-${i}.webp`, { root, alt: st.command ? `${st.title}: the test plaza after ${st.command}` : st.title, lazy: i !== 0 })}
+      <ol class="steps">${p.steps.map((st, i) => `<li class="step"${i === p.steps.length - 1 ? ' aria-current="step"' : ''} data-step="${i}">
+        ${img(`assets/bench/step-${i}.webp`, { root, alt: st.command ? `${st.title}: the test plaza after ${st.command}` : st.title, lazy: i !== p.steps.length - 1, priority: i === p.steps.length - 1 })}
         ${st.command ? `<p class="step-cmd"><code>${esc(st.command)}</code></p>` : ''}
-        <p class="step-title"><span class="step-n">${i}/${p.steps.length - 1}</span> ${esc(st.title)}</p>
+        <p class="step-title"><span class="step-n">${i + 1}/${p.steps.length}</span> ${esc(st.title)}</p>
       </li>`).join('')}</ol>
-      <div class="step-nav"><button type="button" class="btn" data-prev aria-label="${esc(T('bench.previous').p)}"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M8 1.5 3.5 6 8 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><output aria-live="polite">${esc(T('bench.step').p)} 0 / ${p.steps.length - 1}</output><button type="button" class="btn" data-next aria-label="${esc(T('bench.next').p)}"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4 1.5 8.5 6 4 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+      <div class="step-nav"><button type="button" class="btn" data-prev aria-label="${esc(T('bench.previous').p)}"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M8 1.5 3.5 6 8 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><output aria-live="polite">${esc(T('bench.step').p)} ${p.steps.length} / ${p.steps.length}</output><button type="button" class="btn" data-next aria-label="${esc(T('bench.next').p)}"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4 1.5 8.5 6 4 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
     </div>
     ${elevation(p)}
     </div>
@@ -474,7 +476,7 @@ const SECTIONS = {
 </div>`),
   plate: () => sec('plate', 'aria-label="Plate"', `<div class="wrap">
   <figure class="plate" style="${hue('minecraft')}">
-    ${img('assets/minecraft/server-dark-spire-1655.webp', { alt: 'A night view of a Minecraft server build: a giant hollow tree with lit windows on a stone plinth, a walled farm village, a cherry pagoda, a lit castle, a dark spire with beacon beams and a snowy ridge under a starry sky.', srcset: `${asset('assets/minecraft/server-dark-spire-860.webp')} 860w, ${asset('assets/minecraft/server-dark-spire-1655.webp')} 1655w`, sizesAttr: '(max-width: 900px) 100vw, 860px' })}
+    ${img('assets/minecraft/server-dark-spire-1655.webp', { alt: T('plate.alt').p, srcset: `${asset('assets/minecraft/server-dark-spire-860.webp')} 860w, ${asset('assets/minecraft/server-dark-spire-1655.webp')} 1655w`, sizesAttr: '(max-width: 900px) 100vw, 860px' })}
     <figcaption><i></i><span${k('plate.caption').a}>${k('plate.caption').h}</span> <a href="#minecraft" data-beam="minecraft">${beamLabel('minecraft').h}</a></figcaption>
   </figure>
 </div>`),
@@ -551,6 +553,19 @@ const plates = (p) => {
 </div></section>`;
 };
 
+// Case notes: proposed copy (content/site.md, keys bench.* / prismet.* / helm.*) rendered under the summary of the
+// three flagships that have it. Each part is optional; a record with only `.why` gets one heading and one paragraph.
+const CASE = { bayzyl: 'bench', 'prismet-app': 'prismet', 'the-helm': 'helm' };
+const caseNotes = (p) => {
+  const pre = CASE[p.slug];
+  if (!pre) return '';
+  const parts = [['why', 'case.why_title'], ['hard', 'case.hard_title'], ['next', 'case.next_title']]
+    .filter(([f]) => `${pre}.${f}` in S)
+    .map(([f, h]) => { const t = T(h), b = T(`${pre}.${f}`); return `<h2${t.a}>${t.h}</h2><p${b.a}>${b.h}</p>`; });
+  const n = `${pre}.plan_note` in S ? T(`${pre}.plan_note`) : null;
+  return parts.length ? `<div class="case">${parts.join('')}${n ? `<p class="plan-note"${n.a}><em>${n.h}</em></p>` : ''}</div>` : '';
+};
+
 const threads = (p) => {
   const rel = (p.related || []).map((s) => bySlug[s]).filter((q) => q && shown.includes(q));
   if (!rel.length) return '';
@@ -578,6 +593,7 @@ shown.forEach((p, i) => {
   <div class="wrap p-body">
     <div class="prose">
       <div class="summary${isTodo(p) ? ' todo' : ''}"${sum.a}>${sum.h.split(/\n\s*\n/).map((para) => `<p>${para}</p>`).join('')}</div>
+      ${caseNotes(p)}
       ${hl.length ? `<h2${hlT.a}>${hlT.h}</h2><ul class="hl">${hl.map((h, n) => `<li${ed(`work.${s}.highlights.${n}`, h)}>${inline(h)}</li>`).join('')}</ul>` : ''}
     </div>
     <aside>
@@ -585,7 +601,7 @@ shown.forEach((p, i) => {
         { k: roleK, v: { a: ed(`work.${s}.role`, work(s, 'role')), h: inline(work(s, 'role')) } },
         { k: yearK, v: { a: ed(`work.${s}.year`, work(s, 'year')), h: inline(work(s, 'year')) } },
       ]))}
-      <div class="stack" aria-label="Stack">${p.stack.map((x) => `<span>${esc(x)}</span>`).join('')}</div>
+      <div class="stack" role="list" aria-label="Stack">${p.stack.map((x) => `<span role="listitem">${esc(x)}</span>`).join('')}</div>
       ${threads(p)}
     </aside>
   </div>

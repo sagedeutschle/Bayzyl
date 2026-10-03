@@ -257,7 +257,7 @@ App Store
 —
 
 ## plate.caption
-A night build on the Minecraft network Sage runs.
+A night build on a Minecraft server I ran.
 
 ## lenses.live
 Live
@@ -439,3 +439,9 @@ Daily word
 
 ## arcade.note_wordgame
 Today's word comes from prismet.xyz/api/wordle, and the shipping apps call it every day.
+
+## nav.github
+GitHub
+
+## nav.linkedin
+LinkedIn

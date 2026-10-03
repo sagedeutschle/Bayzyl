@@ -164,7 +164,7 @@
       const show = (n) => {
         i = (n + steps.length) % steps.length;
         steps.forEach((s, j) => { if (j === i) s.setAttribute('aria-current', 'step'); else s.removeAttribute('aria-current'); });
-        const said = `${label} ${i} / ${steps.length - 1}`;
+        const said = `${label} ${i + 1} / ${steps.length}`;
         if (out && out.textContent !== said) out.textContent = said;   // don't re-announce the same step on load
       };
       prev?.addEventListener('click', () => show(i - 1));

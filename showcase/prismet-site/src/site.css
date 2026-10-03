@@ -103,7 +103,7 @@ code { font: 500 .86em/1.5 var(--mono); font-stretch: 87.5%; }
 section { scroll-margin-top: calc(var(--bar) + 12px); }
 
 /* data: mono, only where it is data */
-.mono, .count, footer, .step-n, .wing-list small, .chip small, .row-stack { font-family: var(--mono); font-stretch: 87.5%; font-weight: 500; }
+.mono, .step-n, .chip small, .row-stack { font-family: var(--mono); font-stretch: 87.5%; font-weight: 500; }
 .caps { font-family: var(--serif); font-variant-caps: all-small-caps; letter-spacing: .06em; font-weight: 500; font-variation-settings: 'opsz' 20; }
 .plaque, .facts dt, .directory dt, .ledger-head, .door-text .typeline, .crumbs, .sig-head h2, .p-body h2, .plates h2, .threads h2, .ledger-group h3, .skills-title, .hire h4, .next small, .rack-group h3, .plate figcaption::before { font-family: var(--serif); font-variant-caps: all-small-caps; letter-spacing: .06em; font-weight: 500; font-variation-settings: 'opsz' 20; text-transform: none; font-style: normal; }
 
@@ -186,7 +186,7 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 .plan .inlay { stroke-width: 2; vector-effect: non-scaling-stroke; }
 .plan .room-fill { fill: var(--surface); opacity: 0; transition: opacity .25s; }
 .plan .room-name { font-size: 20px; fill: var(--ink); font-weight: 500; }
-.plan .room-lead { font-size: 17px; fill: var(--ink-2); font-style: italic; }
+.plan .room-lead { font-size: 18px; fill: var(--ink-2); font-style: normal; }
 .plan .wing { cursor: pointer; outline: none; }
 .plan .wing:hover .room-fill, .plan .wing:focus-visible .room-fill { opacity: 1; }
 .plan .wing:hover .room, .plan .wing:focus-visible .room { stroke: var(--ink); stroke-width: 1.5; }
@@ -202,7 +202,7 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 .wing-list { display: none; list-style: none; padding: 0; margin: 12px 0 0; grid-template-columns: 1fr 1fr; gap: 6px 14px; font-style: normal; }
 .wing-list a { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--ink); min-height: 44px; padding: 4px 0; border-bottom: 1px solid var(--hair); }
 .wing-list i { width: 14px; height: 3px; background: var(--h); border-radius: 2px; flex: none; }
-.wing-list small { margin-left: auto; color: var(--ink-3); font-size: .72rem; }
+.wing-list small { margin-left: auto; color: var(--ink-3); font-size: .82rem; font-style: italic; text-align: right; }
 /* drawing: the plan assembles once per session. The finished state is the default; .draw animates from undrawn. */
 .plan.draw [pathLength] { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw .9s var(--ease) forwards; animation-delay: calc(var(--d, 0) * 1s); }
 .plan.draw .g-court [pathLength] { --d: 0; }
@@ -242,7 +242,7 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 /* ── sections ─────────────────────────────────────────────────────────────────────────────── */
 section { padding-block: clamp(40px, 6vw, 80px); }
 #work { background: var(--surface); border-block: 1px solid var(--hair); }
-.count { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.count { font-family: var(--serif); font-variant-caps: all-small-caps; font-variant-numeric: tabular-nums; font-weight: 500; font-size: .92rem; letter-spacing: .06em; color: var(--ink-3); }
 
 /* principal works: four doors, one family. Each module sits on its room's material inside a 16:10 frame, inset by one
    margin (5% of the door's width) with one gutter (3%); below it, typeline, title, subtitle, facts and access share
@@ -386,7 +386,7 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 .lenses { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 18px; }
 .lens { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 18px; align-items: start; padding: 18px 0; text-decoration: none; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
 .lens img { width: 64px; height: 64px; border-radius: 14px; }
-.lens h3 { font-style: italic; font-weight: 450; margin-top: 8px; }
+.lens h3 { font-style: normal; font-weight: 500; margin-top: 8px; }
 .lens:hover h3 { color: var(--brass-ink); }
 .lens p { margin-top: 6px; color: var(--ink-2); font-size: var(--t-sm); }
 
@@ -398,9 +398,9 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 .skills-title { margin-top: 36px; font-size: 1rem; color: var(--ink-3); }
 .skills { list-style: none; padding: 0; margin: 10px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0 16px; border-top: 1px solid var(--rule); }
 .skills li { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; padding: 0; border-bottom: 1px solid var(--hair); font-size: var(--t-sm); }
-.skills a { text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+.skills a { text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; flex: none; }
 .skills a:hover { color: var(--brass-ink); }
-.skills small { color: var(--ink-3); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.skills small { color: var(--ink-3); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .hire { border-top: 3px solid var(--rule); padding-top: 22px; position: relative; }
 .hire::after { content: ""; position: absolute; left: 0; right: 0; top: 5px; border-top: 1px solid var(--rule); }
 .hire h3 { font-size: var(--t-lg); }
@@ -417,7 +417,7 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 .doors-list .ext { margin-left: auto; }
 @media (max-width: 860px) { .about { grid-template-columns: 1fr; } }
 
-footer { border-top: 1px solid var(--hair); padding-block: 28px 44px; color: var(--ink-3); font-size: .72rem; letter-spacing: .04em; }
+footer { border-top: 1px solid var(--hair); padding-block: 28px 44px; color: var(--ink-3); font-family: var(--serif); font-size: .84rem; }
 footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; align-items: center; }
 footer nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
 footer a { text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; position: relative; }
@@ -598,3 +598,10 @@ footer a:hover { color: var(--ink); }
   .plan.draw text { opacity: 1; }
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
 }
+
+/* The bar's source and contact links show from 1100px; below that the entrance directory and the footer carry them. */
+.nav .wide { display: none; }
+@media (min-width: 1100px) { .nav .wide { display: inline-flex; } }
+/* Case notes under a flagship's summary (proposed copy; see content/site.md). */
+.case h2 { margin-top: 28px; }
+.case .plan-note { color: var(--ink-3); font-size: var(--t-sm); }
