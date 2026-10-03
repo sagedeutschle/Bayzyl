@@ -1,5 +1,7 @@
 package com.bayzyl.persistence;
 
+import com.bayzyl.safety.OperationLimits;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -472,9 +474,17 @@ public record RecoverySnapshot(Lifecycle lifecycle,
         int sizeX = positive(section.get("sizeX"), "sizeX");
         int sizeY = positive(section.get("sizeY"), "sizeY");
         int sizeZ = positive(section.get("sizeZ"), "sizeZ");
-        long volume = (long) sizeX * sizeY * sizeZ;
-        if (volume > Integer.MAX_VALUE) {
-            throw new InvalidPayload("clipboard volume " + volume + " is too large");
+        long volume;
+        try {
+            volume = Math.multiplyExact(Math.multiplyExact((long) sizeX, sizeY), sizeZ);
+        } catch (ArithmeticException exception) {
+            throw new InvalidPayload("clipboard dimensions " + sizeX + "x" + sizeY + "x" + sizeZ + " are too large");
+        }
+        // The same cap saveClipboard enforces: a larger clipboard (for example one written by 0.1, which had no cap)
+        // is rejected here instead of being materialized on the main thread.
+        if (OperationLimits.checkRecoveryClipboard(volume).hardRejected()) {
+            throw new InvalidPayload("clipboard volume " + volume + " exceeds the crash-recovery limit of "
+                    + OperationLimits.RECOVERY_CLIPBOARD_HARD_MAX + " blocks");
         }
         if (section.get("origin") == null) {
             throw new InvalidPayload("clipboard origin is missing");

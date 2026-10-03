@@ -9,6 +9,7 @@ import com.bayzyl.persistence.RecoverySnapshot.Lifecycle;
 import com.bayzyl.persistence.RecoverySnapshot.NudgeRecord;
 import com.bayzyl.persistence.RecoverySnapshot.SessionRecord;
 import com.bayzyl.persistence.RecoverySnapshot.SessionValue;
+import com.bayzyl.safety.OperationLimits;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -97,6 +98,43 @@ class CrashRecoverySnapshotCodecTest {
         assertEquals(Lifecycle.CLEAN, decoded.snapshot().lifecycle());
         assertTrue(decoded.snapshot().clipboards().containsKey(PLAYER));
         assertFalse(decoded.snapshot().clipboards().containsKey(OTHER));
+        assertEquals(1, decoded.rejections().size());
+    }
+
+    @Test
+    void clipboardAboveTheRecoveryCapIsRejectedOnReadNotMaterialized() throws IOException {
+        String legacy = "clipboards:\n  " + PLAYER + ":\n    hasData: true\n    sizeX: "
+                + (OperationLimits.RECOVERY_CLIPBOARD_HARD_MAX + 1) + "\n    sizeY: 1\n    sizeZ: 1\n"
+                + "    origin:\n      world: world\n      x: 1.0\n      y: 64.0\n      z: -2.0\n"
+                + "    minOffsetX: 0\n    minOffsetY: 0\n    minOffsetZ: 0\n"
+                + "    blockData:\n    - minecraft:stone\n";
+        RecoverySnapshot.Decoded decoded = RecoverySnapshot.fromDocument(codec.decodeStrict(bytes(legacy)));
+        assertTrue(decoded.snapshot().clipboards().isEmpty());
+        assertEquals(1, decoded.rejections().size());
+        assertTrue(decoded.rejections().get(0).contains("crash-recovery limit"), decoded.rejections().get(0));
+
+        String versioned = "formatVersion: 1\nclipboards:\n  " + PLAYER + ":\n"
+                + clipboardYaml((int) OperationLimits.RECOVERY_CLIPBOARD_HARD_MAX + 1, "AAA=");
+        RecoverySnapshot.Decoded decodedVersioned = RecoverySnapshot.fromDocument(codec.decodeStrict(bytes(versioned)));
+        assertTrue(decodedVersioned.snapshot().clipboards().isEmpty());
+        assertTrue(decodedVersioned.rejections().get(0).contains("crash-recovery limit"));
+
+        String nudge = "formatVersion: 1\nnudge:\n  " + PLAYER + ":\n    clipboard:\n"
+                + clipboardYaml((int) OperationLimits.RECOVERY_CLIPBOARD_HARD_MAX + 1, "AAA=").indent(2)
+                + "    selection:\n      type: CUBOID\n";
+        RecoverySnapshot.Decoded decodedNudge = RecoverySnapshot.fromDocument(codec.decodeStrict(bytes(nudge)));
+        assertTrue(decodedNudge.snapshot().nudges().isEmpty());
+        assertEquals(1, decodedNudge.rejections().size());
+    }
+
+    @Test
+    void clipboardDimensionsWhoseProductWrapsToZeroAreRejectedInsteadOfAccepted() throws IOException {
+        String legacy = "clipboards:\n  " + PLAYER + ":\n    hasData: true\n    sizeX: 2097152\n"
+                + "    sizeY: 2097152\n    sizeZ: 4194304\n"
+                + "    origin:\n      world: world\n      x: 1.0\n      y: 64.0\n      z: -2.0\n"
+                + "    minOffsetX: 0\n    minOffsetY: 0\n    minOffsetZ: 0\n    blockData: []\n";
+        RecoverySnapshot.Decoded decoded = RecoverySnapshot.fromDocument(codec.decodeStrict(bytes(legacy)));
+        assertTrue(decoded.snapshot().clipboards().isEmpty());
         assertEquals(1, decoded.rejections().size());
     }
 
