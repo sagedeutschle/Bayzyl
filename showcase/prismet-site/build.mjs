@@ -15,6 +15,7 @@ import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync, cpSync, e
 import { dirname, join, basename, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { loadSite, loadWork, inline, plain, listItems, factPairs } from './content.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -67,6 +68,12 @@ function sizeOf(absPath) {
   sizes.set(absPath, s);
   return s;
 }
+// Every URL the build writes for a file it copies ends in ?v=<8 hex of the file's hash>, so a returning visitor never
+// pairs new HTML with a stale stylesheet, script or image cached under the same name; the server ignores query
+// strings. Fonts keep their plain URLs (site.css loads them and the preload must match). The preview keeps plain URLs.
+const hashOf = (abs) => createHash('sha256').update(readFileSync(abs)).digest('hex').slice(0, 8);
+const versioned = (p, abs) => (PREVIEW ? p : `${p}?v=${hashOf(abs)}`);
+/** Copies a file from showcase/ into dist (once) and returns its versioned URL, relative to the site root. */
 function asset(p) {
   if (!p) return null;
   if (copied.has(p)) return copied.get(p);
@@ -74,21 +81,46 @@ function asset(p) {
   if (!existsSync(src)) throw new Error(`missing asset: ${p}`);
   mkdirSync(dirname(join(DIST, p)), { recursive: true });
   copyFileSync(src, join(DIST, p));
-  copied.set(p, p);
-  return p;
+  copied.set(p, versioned(p, src));
+  return copied.get(p);
 }
-/** <img> with width/height from the file, lazy by default. root = '' on the home page, '../' on project pages. */
+// Responsive variants are <name>-<w>.webp next to the source (showcase/tools/image-variants.mjs writes them; the build
+// encodes nothing). Each one narrower than the source joins srcset at its real width.
+const LADDER = [128, 192, 360, 720, 1080, 1440];
+const variantsOf = (p) => {
+  const { w } = sizeOf(join(SHOWCASE, p));
+  return LADDER.map((n) => p.replace(/\.webp$/, `-${n}.webp`)).filter((v) => v !== p && existsSync(join(SHOWCASE, v)))
+    .map((v) => ({ v, w: sizeOf(join(SHOWCASE, v)).w })).filter((x) => x.w < w);
+};
+// sizes = how wide the image is drawn, in CSS px. .wrap is at most 1240px with clamp(16px, 4vw, 56px) gutters, so its
+// content is 100vw − 32px, then 92vw, then 1128px. Lazy images get sizes="auto" first: Chromium replaces it with the
+// laid-out width; other browsers skip it and use the list after it (WRAP when the caller doesn't say: never too small).
+const WRAP = '(max-width: 400px) calc(100vw - 32px), (max-width: 1240px) 92vw, 1128px';
+const SIZES_BY_PATH = [[/-thumb\.webp$/, '(max-width: 900px) 72px, 96px'], [/\/tiles\//, '72px']];
+const sizesFor = (p) => (SIZES_BY_PATH.find(([re]) => re.test(p)) || [null, WRAP])[1];
+// The inside of a door frame (two doors across above 760px, 3vw apart) times k, for modules drawn at a share of it.
+const DOOR = (k) => `(max-width: 400px) calc(${k} * (100vw - 34px)), (max-width: 760px) calc(${k} * (92vw - 2px)), (max-width: 1240px) calc(${k} * (44.5vw - 2px)), ${Math.round(541 * k)}px`;
+/** <img> with width/height from the file, lazy by default. root = '' on the home page, '../' on project pages.
+ *  srcset comes from the variants on disk unless given; sizesAttr says how wide the image is drawn. */
 function img(p, { alt = '', root = '', cls = '', lazy = true, sizesAttr = '', srcset = '', priority = false } = {}) {
   const out = asset(p), { w, h } = sizeOf(join(SHOWCASE, p));
+  const vs = srcset ? [] : variantsOf(p);
+  if (vs.length) {
+    srcset = [...vs.map((x) => `${root}${asset(x.v)} ${x.w}w`), `${root}${out} ${w}w`].join(', ');
+    sizesAttr = `${lazy ? 'auto, ' : ''}${sizesAttr || sizesFor(p)}`;
+  }
   return `<img${cls ? ` class="${cls}"` : ''} src="${root}${out}"${srcset ? ` srcset="${srcset}" sizes="${sizesAttr}"` : ''} width="${w}" height="${h}" alt="${esc(alt)}"${lazy ? ' loading="lazy" decoding="async"' : priority ? ' fetchpriority="high"' : ''}>`;
 }
 cpSync(join(SHOWCASE, 'assets/fonts'), join(DIST, 'assets/fonts'), { recursive: true });
 copyFileSync(join(HERE, 'src/site.css'), join(DIST, 'site.css'));
 copyFileSync(join(HERE, 'src/site.js'), join(DIST, 'site.js'));
+const CSS_URL = versioned('site.css', join(HERE, 'src/site.css')), JS_URL = versioned('site.js', join(HERE, 'src/site.js'));
 if (PREVIEW) for (const f of ['editor.js', 'editor.css']) if (existsSync(join(HERE, 'src', f))) copyFileSync(join(HERE, 'src', f), join(DIST, f));
-asset('assets/icons/prismet-app.webp');            // favicon
+// favicon: the app icon, at 128px when that variant exists (the 512px original is 15 KB on every first view)
+const FAVICON = asset(['assets/icons/prismet-app-128.webp', 'assets/icons/prismet-app.webp'].find((p) => existsSync(join(SHOWCASE, p))));
 // og:image: a capture of the entrance (showcase/tools/shoot-og.mjs writes assets/og/entrance.jpg).
 copyFileSync(join(SHOWCASE, 'assets/og/entrance.jpg'), join(DIST, 'assets/og.jpg'));
+const OG_URL = `https://prismet.xyz/${versioned('assets/og.jpg', join(DIST, 'assets/og.jpg'))}`;
 
 // ── shared pieces ───────────────────────────────────────────────────────────────────────────
 const hue = (id) => `--h:var(--${id});--hi:var(--${id}-ink)`;
@@ -109,13 +141,13 @@ const head = ({ title, desc, root = '', noindex = false, url = '' }) => `<meta c
 <meta name="description" content="${esc(desc)}">${noindex ? '\n<meta name="robots" content="noindex">' : ''}
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
-<meta property="og:image" content="https://prismet.xyz/assets/og.jpg">${url ? `\n<meta property="og:url" content="https://prismet.xyz/${esc(url)}">` : ''}
+<meta property="og:image" content="${OG_URL}">${url ? `\n<meta property="og:url" content="https://prismet.xyz/${esc(url)}">` : ''}
 <meta name="theme-color" content="#0F161D" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#E4E8EA" media="(prefers-color-scheme: light)">
-<link rel="icon" href="${root}assets/icons/prismet-app.webp">
+<link rel="icon" href="${root}${FAVICON}">
 <link rel="preload" href="${root}assets/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
-${PREVIEW ? GOOGLE_FONTS + '\n' : ''}<link rel="stylesheet" href="${root}site.css">${PREVIEW ? `\n<link rel="stylesheet" href="${root}editor.css">` : ''}
-<script src="${root}site.js"></script>`;
+${PREVIEW ? GOOGLE_FONTS + '\n' : ''}<link rel="stylesheet" href="${root}${CSS_URL}">${PREVIEW ? `\n<link rel="stylesheet" href="${root}editor.css">` : ''}
+<script src="${root}${JS_URL}"></script>`;
 const scripts = (root = '') => (PREVIEW ? `<script src="${root}editor.js"></script>` : '');
 // In the artifact preview the home page is the artifact itself, so links to it point at the folder, not index.html.
 const HOME = (root = '') => (PREVIEW ? (root || './') : `${root}index.html`);
@@ -483,7 +515,7 @@ const SECTIONS = {
   lenses: () => sec('lenses', 'aria-labelledby="lenses-title"', `<div class="wrap">
   <div class="sec-head"><div><h2 id="lenses-title"${k('lenses.title').a}>${k('lenses.title').h}</h2><p${k('lenses.intro').a}>${k('lenses.intro').h}</p></div></div>
   <div class="lenses">${lenses.map((l) => { const t = k(`lens.${l.id}.title`), d = k(`lens.${l.id}.blurb`); return `<a class="lens" href="${esc(l.href)}">
-    ${img('assets/prismet/tiles/' + tileFor[l.id] + '.webp', { alt: '' })}
+    ${img('assets/prismet/tiles/' + tileFor[l.id] + '.webp', { alt: '', sizesAttr: '64px' })}
     <span class="lens-text"><span class="plaque live"${k('lenses.live').a}>${k('lenses.live').h}</span><h3${t.a}>${t.h}</h3><p${d.a}>${d.h}</p></span></a>`; }).join('')}</div>
 </div>`),
   about: () => sec('about', 'aria-labelledby="about-title"', `<div class="wrap about">
@@ -543,13 +575,26 @@ ${scripts()}`;
 writeFileSync(join(DIST, 'index.html'), `<!doctype html><html lang="en"><head>${head({ title: plain(site('page.title')), desc: plain(site('page.description')), url: '' })}</head><body>${indexBody}</body></html>`);
 
 // ── project pages ───────────────────────────────────────────────────────────────────────────
+// Plates sit in auto-fill columns of at least 280px with 20px gaps (one, two or three across the .wrap); under 600px
+// only tall plates pair up. Wide plates span the row; tall ones stop at 300px.
+const PLATE_SIZES = {
+  '': '(max-width: 400px) calc(100vw - 32px), (max-width: 630px) 92vw, (max-width: 956px) calc(46vw - 10px), (max-width: 1240px) calc(30.7vw - 13px), 367px',
+  wide: WRAP,
+  tall: '(max-width: 400px) calc(50vw - 22px), (max-width: 600px) calc(46vw - 6px), 300px',
+};
+// A frontispiece fills the .wrap but stops at 72vh tall (object-fit: contain), so a tall cover is drawn narrower.
+const frontSizes = (src) => {
+  if (src.includes('/icons/')) return '(max-width: 352px) calc(100vw - 32px), 320px';
+  const { w, h } = sizeOf(join(SHOWCASE, src)), tall = `calc(72vh * ${(w / h).toFixed(3)})`;
+  return `(max-width: 400px) min(calc(100vw - 32px), ${tall}), (max-width: 1240px) min(92vw, ${tall}), min(1128px, ${tall})`;
+};
 const plates = (p) => {
   const gal = (p.gallery || []);
   if (!gal.length) return '';
   const t = T('project.plates');
   return `<section class="plates" aria-labelledby="plates-title"><div class="wrap">
   <h2 id="plates-title"${t.a}>${t.h}</h2>
-  <div class="plate-grid">${gal.map((g, n) => { const { w, h } = sizeOf(join(SHOWCASE, g)); const alt = (p.shotAlts && p.shotAlts[n]) || `${plain(work(p.slug, 'title'))}, plate ${n + 1}`; return `<figure class="${h > w ? 'tall' : w / h > 2.2 ? 'wide' : ''}">${img(g, { root: '../', alt, lazy: n > 1 })}<figcaption>${esc(alt)}</figcaption></figure>`; }).join('')}</div>
+  <div class="plate-grid">${gal.map((g, n) => { const { w, h } = sizeOf(join(SHOWCASE, g)); const alt = (p.shotAlts && p.shotAlts[n]) || `${plain(work(p.slug, 'title'))}, plate ${n + 1}`; const kind = h > w ? 'tall' : w / h > 2.2 ? 'wide' : ''; return `<figure class="${kind}">${img(g, { root: '../', alt, lazy: n > 1, sizesAttr: PLATE_SIZES[kind] })}<figcaption>${esc(alt)}</figcaption></figure>`; }).join('')}</div>
 </div></section>`;
 };
 
@@ -580,7 +625,7 @@ shown.forEach((p, i) => {
   const hl = listItems(work(s, 'highlights')), hlT = T('project.highlights');
   const roleK = T('project.role_label'), yearK = T('project.year_label');
   const isFlag = p.tier === 'flagship' || p.tier === 'featured';
-  const front = !isFlag && p.cover ? `<figure class="frontispiece${p.cover.includes('/icons/') ? ' icon' : ''}"><div class="wrap">${img(p.cover, { root: '../', alt: (p.shotAlts || [])[0] || plain(work(s, 'title')), lazy: false, priority: true })}</div></figure>` : '';
+  const front = !isFlag && p.cover ? `<figure class="frontispiece${p.cover.includes('/icons/') ? ' icon' : ''}"><div class="wrap">${img(p.cover, { root: '../', alt: (p.shotAlts || [])[0] || plain(work(s, 'title')), lazy: false, priority: true, sizesAttr: frontSizes(p.cover) })}</div></figure>` : '';
   const body = `${bar('../')}
 <main id="main" data-room="${p.room || 'cabinet'}" data-beam="${p.beam}" style="${hue(p.beam)}">
   <div class="wrap p-head">
@@ -661,5 +706,7 @@ if (missing.size) {
   console.error('✗ missing wording (the key would show on the page):\n  ' + [...missing].join('\n  '));
   process.exit(1);
 }
-const total = [...copied.values()].reduce((n, p) => n + statSync(join(DIST, p)).size, 0);
-console.log(`built ${shown.length} project pages + ${projects.length - shown.length} withdrawn stubs + index + colophon → ${DIST}${PREVIEW ? ' (with editor)' : ''}; ${copied.size} images, ${(total / 1024).toFixed(0)} KB`);
+const total = [...copied.keys()].reduce((n, p) => n + statSync(join(DIST, p)).size, 0);
+console.log(`built ${shown.length} project pages + ${projects.length - shown.length} withdrawn stubs + index + colophon → ${DIST}${PREVIEW ? ' (with editor)' : ''}; ${copied.size} image files with variants, ${(total / 1024).toFixed(0)} KB`);
+// The production build checks itself before anyone can deploy it; verify.mjs lists what it refuses.
+if (!PREVIEW && !(await import('./verify.mjs')).verify(DIST)) process.exit(1);

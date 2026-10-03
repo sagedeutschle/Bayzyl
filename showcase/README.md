@@ -81,5 +81,9 @@ state, and `prismet-site/build.mjs` for how pages are made. `node build.mjs --pr
 **Notes for the next session**
 - Chromium (Playwright) needs the proxy CA in its trust store before loading any https page:
   `apt-get install -y libnss3-tools && certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n ccr-agent-proxy -i /root/.ccr/agent-proxy-ca.crt`
-- Browser checks for the editor: `node showcase/tools/tests/test-layout.mjs` (after a `--preview` build).
+- Browser checks: `node showcase/tools/tests/site-check.mjs` after a production build. It serves `dist/` itself with
+  the live CSP and checks the home, Bayzyl, Prismet and Helm pages at 1440 and 390 (console errors, overflow, the
+  filter and its deep link, the stepper); exit 1 on any failure. The build already runs `prismet-site/verify.mjs`.
+- New or changed site images: `node showcase/tools/image-variants.mjs` after a build writes the `-360/-720/-1080/-1440`
+  variants `img()` puts in `srcset`.
 - Fiverr's site shows automated clients a captcha; gig edits happen in Sage's browser.

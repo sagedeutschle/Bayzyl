@@ -161,16 +161,16 @@
       const prev = st.querySelector('[data-prev]'), next = st.querySelector('[data-next]');
       const label = out ? out.textContent.replace(/\d+\s*\/\s*\d+$/, '').trim() : 'Step';
       let i = Math.max(0, steps.findIndex((s) => s.hasAttribute('aria-current')));
-      const show = (n) => {
+      // The output is a live region: write it only when the visitor moves, so nothing is announced on load.
+      const show = (n, announce = true) => {
         i = (n + steps.length) % steps.length;
         steps.forEach((s, j) => { if (j === i) s.setAttribute('aria-current', 'step'); else s.removeAttribute('aria-current'); });
-        const said = `${label} ${i + 1} / ${steps.length}`;
-        if (out && out.textContent !== said) out.textContent = said;   // don't re-announce the same step on load
+        if (out && announce) out.textContent = `${label} ${i + 1} / ${steps.length}`;
       };
       prev?.addEventListener('click', () => show(i - 1));
       next?.addEventListener('click', () => show(i + 1));
       st.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') { show(i - 1); e.preventDefault(); } if (e.key === 'ArrowRight') { show(i + 1); e.preventDefault(); } });
-      show(i);
+      show(i, false);
     });
   });
 })();
