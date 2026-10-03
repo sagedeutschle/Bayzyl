@@ -208,6 +208,93 @@ class CrashRecoveryStateTest {
         assertTrue(Files.readString(adapterTarget).contains("lifecycleState: RUNNING"));
     }
 
+    private static final String LEGACY_WITH_REJECTED_PAYLOAD = "sessions:\n  00000000-0000-0000-0000-0000000000a1:\n"
+            + "    command: copy\n    stage: starting\n    lastUpdateTime: 5\n    active: true\n    data:\n"
+            + "      selection: !!com.bayzyl.Selection {}\n      owner: sage\n";
+
+    @Test
+    void legacyFileIsPreservedByteForByteBeforeItIsRewrittenAndNeverOverwritten() throws Exception {
+        Path target = recoveryFile("preserve-legacy");
+        Path backup = target.resolveSibling(target.getFileName() + ".bak");
+        String legacyBackup = "sessions: {}\nmeta:\n  lastCleanShutdown: 1\n";
+        write(target, LEGACY_WITH_REJECTED_PAYLOAD);
+        write(backup, legacyBackup);
+        long fixedNow = 1_700_000_000_000L;
+
+        CrashRecoveryService first = new CrashRecoveryService(plugin(), target, DIRECT, false, () -> fixedNow,
+                CrashRecoveryService.systemStoreFactory());
+
+        assertTrue(first.migratedLegacyFile());
+        assertEquals(2, first.preservedOriginals().size());
+        Path primaryCopy = target.resolveSibling("crash-recovery.yml.preload-20231114T221320Z");
+        Path backupCopy = target.resolveSibling("crash-recovery.yml.bak.preload-20231114T221320Z");
+        assertEquals(List.of(primaryCopy, backupCopy), first.preservedOriginals());
+        assertEquals(LEGACY_WITH_REJECTED_PAYLOAD, Files.readString(primaryCopy));
+        assertEquals(legacyBackup, Files.readString(backupCopy));
+        assertTrue(Files.readString(target).contains("formatVersion"), "the live file was migrated");
+
+        // A second load finds a clean versioned file: nothing more to preserve, nothing overwritten.
+        CrashRecoveryService second = new CrashRecoveryService(plugin(), target, DIRECT, false, () -> fixedNow,
+                CrashRecoveryService.systemStoreFactory());
+        assertTrue(second.preservedOriginals().isEmpty());
+        assertEquals(LEGACY_WITH_REJECTED_PAYLOAD, Files.readString(primaryCopy));
+        assertEquals(legacyBackup, Files.readString(backupCopy));
+        assertEquals(2, preloadCopies(target).size());
+
+        // A different legacy file at the same instant takes a new name instead of replacing the earlier copy.
+        String otherLegacy = "sessions: {}\nmeta:\n  lastCleanShutdown: 2\n";
+        write(target, otherLegacy);
+        CrashRecoveryService third = new CrashRecoveryService(plugin(), target, DIRECT, false, () -> fixedNow,
+                CrashRecoveryService.systemStoreFactory());
+        assertTrue(third.preservedOriginals().contains(target.resolveSibling("crash-recovery.yml.preload-20231114T221320Z-1")));
+        assertEquals(otherLegacy, Files.readString(target.resolveSibling("crash-recovery.yml.preload-20231114T221320Z-1")));
+        assertEquals(LEGACY_WITH_REJECTED_PAYLOAD, Files.readString(primaryCopy));
+        assertEquals(legacyBackup, Files.readString(backupCopy));
+    }
+
+    @Test
+    void versionedFileWithARejectedPayloadIsPreservedWhileTheValidPartLoads() throws Exception {
+        Path target = recoveryFile("preserve-rejected");
+        String document = "formatVersion: 1\nmeta:\n  lifecycleState: CLEAN\nsessions:\n"
+                + "  00000000-0000-0000-0000-0000000000a1:\n    command: copy\n    stage: starting\n"
+                + "    lastUpdateTime: 5\n    active: true\n    data: {}\n"
+                + "clipboards:\n  00000000-0000-0000-0000-0000000000a2:\n"
+                + "    sizeX: 2\n    sizeY: 1\n    sizeZ: 1\n"
+                + "    origin:\n      world: world\n      x: 0.0\n      y: 0.0\n      z: 0.0\n      yaw: 0.0\n      pitch: 0.0\n"
+                + "    minOffsetX: 0\n    minOffsetY: 0\n    minOffsetZ: 0\n"
+                + "    palette:\n    - minecraft:stone\n    blocks: AAAA\n    omittedTileStates: 0\n    entities: []\n";
+        write(target, document);
+
+        CrashRecoveryService service = service(target);
+
+        assertFalse(service.migratedLegacyFile());
+        assertEquals(1, service.preservedOriginals().size());
+        assertEquals(document, Files.readString(service.preservedOriginals().get(0)));
+        assertNotNull(service.getSession(UUID.fromString("00000000-0000-0000-0000-0000000000a1")));
+        assertFalse(Files.readString(target).contains("0000000000a2"), "the rejected payload is gone from the live file");
+    }
+
+    @Test
+    void cleanVersionedFileWithoutRejectionsIsNotCopied() throws Exception {
+        Path target = recoveryFile("preserve-none");
+        write(target, "formatVersion: 1\nmeta:\n  lifecycleState: CLEAN\n");
+
+        CrashRecoveryService service = service(target);
+
+        assertTrue(service.preservedOriginals().isEmpty());
+        assertTrue(preloadCopies(target).isEmpty());
+        assertTrue(preloadCopies(recoveryFile("preserve-missing")).isEmpty());
+    }
+
+    private static List<Path> preloadCopies(Path target) throws IOException {
+        if (!Files.isDirectory(target.getParent())) {
+            return List.of();
+        }
+        try (var entries = Files.list(target.getParent())) {
+            return entries.filter(path -> path.getFileName().toString().contains(".preload-")).sorted().toList();
+        }
+    }
+
     private CrashRecoveryService service(Path target) {
         return new CrashRecoveryService(plugin(), target, DIRECT, false,
                 System::currentTimeMillis, CrashRecoveryService.systemStoreFactory());

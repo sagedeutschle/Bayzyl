@@ -15,8 +15,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -69,6 +77,7 @@ public final class CrashRecoveryService {
     private final AtomicYamlStore<Map<String, Object>> store;
     private final boolean crashDetected;
     private final boolean migratedLegacyFile;
+    private final List<Path> preservedOriginals;
     private final Map<UUID, Long> dirtyRevisions = new ConcurrentHashMap<>();
     private final Map<String, ResumeHandler> resumeHandlers = new ConcurrentHashMap<>();
 
@@ -111,6 +120,7 @@ public final class CrashRecoveryService {
         }
         boolean abnormal = loaded.abnormal();
         boolean legacy = false;
+        List<Path> preserved = List.of();
         if (loaded.status() != AtomicYamlStore.LoadStatus.MISSING) {
             RecoverySnapshot.Decoded decoded = RecoverySnapshot.fromDocument(loaded.snapshot());
             RecoverySnapshot snapshot = decoded.snapshot();
@@ -121,12 +131,18 @@ public final class CrashRecoveryService {
                 logger.warning("Crash recovery rejected " + decoded.rejections().size() + " unreadable payload(s):");
                 decoded.rejections().forEach(rejection -> logger.warning("  - " + rejection));
             }
+            if (legacy || !decoded.rejections().isEmpty()) {
+                // The first commit below rewrites the file and rotates it into .bak, which the next write then
+                // replaces: keep the original bytes (rejected payloads, the 0.1 layout) before that happens.
+                preserved = preserveOriginals(file, store.backupPath(), legacy, decoded.rejections().size());
+            }
             if (loaded.status() == AtomicYamlStore.LoadStatus.BACKUP_RECOVERED) {
                 logger.warning("Crash recovery loaded its backup file; the primary was missing or unreadable.");
             }
         }
         this.crashDetected = abnormal;
         this.migratedLegacyFile = legacy;
+        this.preservedOriginals = List.copyOf(preserved);
 
         synchronized (this) {
             lifecycle = Lifecycle.RUNNING;
@@ -142,6 +158,56 @@ public final class CrashRecoveryService {
             maintenanceTask = Bukkit.getScheduler().runTaskTimer(plugin, this::runMaintenance,
                     MAINTENANCE_INTERVAL_TICKS, MAINTENANCE_INTERVAL_TICKS);
         }
+    }
+
+    /**
+     * Copies the on-disk file(s) byte-for-byte to {@code <name>.preload-<UTC timestamp>} siblings, never overwriting
+     * an existing copy. A failure is logged at SEVERE and startup continues: refusing to start would take the whole
+     * plugin down over a safety copy, and the rewrite is what gives the player their (valid) recovery state back.
+     */
+    private List<Path> preserveOriginals(Path primary, Path backup, boolean legacy, int rejected) {
+        String why = (legacy ? "legacy 0.1 layout" : "") + (legacy && rejected > 0 ? " and " : "")
+                + (rejected > 0 ? rejected + " rejected payload(s)" : "");
+        String stamp = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'").withZone(ZoneOffset.UTC)
+                .format(Instant.ofEpochMilli(clock.getAsLong()));
+        List<Path> preserved = new ArrayList<>();
+        for (Path source : List.of(primary, backup)) {
+            if (!Files.isRegularFile(source)) {
+                continue;
+            }
+            try {
+                Path copy = copyWithoutOverwrite(source, stamp);
+                preserved.add(copy);
+                logger.warning("Crash recovery preserved the original " + source.getFileName() + " (" + why
+                        + ") before rewriting it: " + copy);
+            } catch (IOException exception) {
+                logger.severe("Crash recovery could NOT preserve the original " + source + " (" + why
+                        + ") before rewriting it; unreadable parts will be lost once the next write replaces the"
+                        + " backup. Copy the file by hand now if it matters. Cause: " + exception);
+            }
+        }
+        return preserved;
+    }
+
+    private static Path copyWithoutOverwrite(Path source, String stamp) throws IOException {
+        String base = source.getFileName() + ".preload-" + stamp;
+        for (int attempt = 0; attempt < 1000; attempt++) {
+            Path copy = source.resolveSibling(attempt == 0 ? base : base + "-" + attempt);
+            try {
+                Files.copy(source, copy, StandardCopyOption.COPY_ATTRIBUTES);
+                return copy;
+            } catch (FileAlreadyExistsException exists) {
+                // Keep the earlier preserved copy; try the next name.
+            } catch (IOException failure) {
+                try {
+                    Files.deleteIfExists(copy); // never leave a truncated copy that looks like the original
+                } catch (IOException ignored) {
+                    // The original failure is the one worth reporting.
+                }
+                throw failure;
+            }
+        }
+        throw new IOException("no free preserved-copy name for " + source);
     }
 
     private static Executor bukkitExecutor(JavaPlugin plugin) {
@@ -461,6 +527,11 @@ public final class CrashRecoveryService {
     /** True when startup read the unversioned 0.1 layout and rewrote it in the current format. */
     public boolean migratedLegacyFile() {
         return migratedLegacyFile;
+    }
+
+    /** Copies of the pre-load files kept because they were legacy or held rejected payloads; empty otherwise. */
+    public List<Path> preservedOriginals() {
+        return preservedOriginals;
     }
 
     /** Persist the latest revision now. */
