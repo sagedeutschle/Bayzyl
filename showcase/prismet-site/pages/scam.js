@@ -1,7 +1,7 @@
 // scam.js: the Uncle Scam page (/scam). Everything is worked out here in the browser by scam-calc.js; the salary and
 // the ZIP code are never sent anywhere. The only requests are this site's own data file and the Treasury's public
 // statement (which carries nothing about the visitor), with a snapshot to fall back on.
-import { computeBill, placeForZip, statementRows, pickStatement, splitByFunction, borrowedFor, timeUnits } from './scam-calc.js';
+import { computeBill, placeForZip, statementRows, pickStatement, splitByFunction, borrowedFor, timeUnits, officialsFor, debtSince, lastFiscalYear, topRecipients } from './scam-calc.js';
 
 const YEAR = 2026;
 const MTS_URL = 'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_9'
@@ -21,6 +21,9 @@ const PLAIN = {
   'Community and Regional Development': 'Community development',
   'International Affairs': 'Foreign affairs',
 };
+const DEBT_URL = 'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny'
+  + '?fields=record_date,tot_pub_debt_out_amt&sort=-record_date&page%5Bsize%5D=1';
+const SPENDING = 'https://api.usaspending.gov/api/v2/search';
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 const $ = (id) => document.getElementById(id);
@@ -28,7 +31,23 @@ const usd = (n) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD
 const usd2 = (n) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const pct = (x, digits = 1) => `${(x * 100).toFixed(digits)}%`;
 
+// "$16.43 trillion", "$309.6 million": sums too large to read digit by digit
+export function big(n) {
+  const a = Math.abs(n);
+  if (a >= 1e12) return `$${(n / 1e12).toFixed(2)} trillion`;
+  if (a >= 1e9) return `$${(n / 1e9).toFixed(1)} billion`;
+  if (a >= 1e6) return `$${(n / 1e6).toFixed(1)} million`;
+  return usd(n);
+}
+const day = (iso) => { const [y, m, d] = iso.split('-').map(Number); return `${MONTHS[m - 1]} ${d}, ${y}`; };
+const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+const getJSON = async (url, init, ms = 12000) => {
+  const ctl = new AbortController(); const timer = setTimeout(() => ctl.abort(), ms);
+  try { const r = await fetch(url, { ...init, signal: ctl.signal }); if (!r.ok) throw new Error(`HTTP ${r.status}`); return await r.json(); } finally { clearTimeout(timer); }
+};
+
 let data = null, statement = null, live = false, last = null;
+let congress = null, debtNow = null, lastZip = '';
 
 // "65,000", "$65000", "65k" → 65000; anything else → NaN
 export function parseSalary(text) {
@@ -134,7 +153,7 @@ export function drawCanvas(rows) {
       ops.push({ y: y + 13, text: row.r, font, x: W - PAD, align: 'right', red: row.c === 'red' });
       y += ls.length * LINE + (row.k === 'total' ? 4 : 0); continue;
     }
-    const font = row.c === 'title' ? `800 20px "Unbounded", "Arial Black", sans-serif` : mono(row.k === 'note' || row.c === 'small' ? 10.5 : 12, row.k === 'head' ? 700 : 400);
+    const font = row.c === 'title' ? `400 24px "Marcellus", Georgia, serif` : mono(row.k === 'note' || row.c === 'small' ? 10.5 : 12, row.k === 'head' ? 700 : 400);
     const step = row.c === 'title' ? 28 : row.k === 'note' || row.c === 'small' ? 15 : LINE;
     if (row.k === 'note') y += 4;
     for (const text of wrap(row.t, font, W - PAD * 2)) {
@@ -145,9 +164,9 @@ export function drawCanvas(rows) {
   const H = y + 22;
   canvas.width = W * S; canvas.height = H * S;
   ctx.scale(S, S);
-  ctx.fillStyle = '#F4F0E4'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#EEF3F2'; ctx.fillRect(0, 0, W, H);
   for (const op of ops) {
-    ctx.fillStyle = ctx.strokeStyle = op.red ? '#B3261E' : op.dim ? '#5A5D63' : '#1B1D21';
+    ctx.fillStyle = ctx.strokeStyle = op.red ? '#B3261E' : op.dim ? '#55636B' : '#16202A';
     if (op.rule) { ctx.save(); ctx.globalAlpha = 0.55; ctx.setLineDash([4, 3]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(PAD, op.y); ctx.lineTo(W - PAD, op.y); ctx.stroke(); ctx.restore(); }
     else if (op.line) { ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(PAD, op.y); ctx.lineTo(W - PAD, op.y); ctx.stroke(); }
     else if (op.barcode) { let x = W * 0.12; const end = W * 0.88; const widths = [2, 1, 3, 1, 2, 3, 1, 1]; for (let i = 0; x < end; i++) { const w = widths[i % widths.length]; if (i % 2 === 0) ctx.fillRect(x, op.y, w, 38); x += w + (i % 3 === 0 ? 2 : 1); } }
@@ -192,8 +211,98 @@ function submit(event) {
   paper.classList.remove('printing'); void paper.offsetWidth; paper.classList.add('printing');
   $('status').textContent = `Receipt printed: ${usd(last.total)} in taxes on ${usd(last.wages)}, ${pct(last.rate)} of your pay.`
     + (live ? '' : ' Budget figures are a saved Treasury statement; the live one did not load.');
+  showOfficials(place ? zip : '', stateCode);
+  showLocal(place ? zip : '');
   $('result').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
   return true;
+}
+
+// ── who signs off ──
+function personCard(m, role) {
+  const li = el('li', 'person');
+  const head = el('p', 'person-name');
+  if (m.url) { const a = el('a', '', m.n); a.href = m.url; a.rel = 'noopener'; head.append(a); } else head.textContent = m.n;
+  li.append(head, el('p', 'person-role', `${role} · ${m.p}`));
+  li.append(el('p', 'person-term', `In Congress since ${day(m.since)}. Current term ends ${day(m.end)}.`));
+  const d = debtSince(m, debtNow);
+  if (d) {
+    const then = d.yearEnd ? `at the end of fiscal ${d.thenDate.slice(0, 4)}, before they arrived` : 'that day';
+    const p = el('p', 'person-debt');
+    p.append('National debt ', then, ': ', el('strong', '', big(d.then)), '. Today: ', el('strong', '', big(d.now)), '. ', el('span', 'added', `${big(d.added)} added.`));
+    li.append(p);
+  }
+  return li;
+}
+
+async function showOfficials(zip, stateCode) {
+  const box = $('officials'), list = $('officials-list'), intro = $('officials-intro');
+  try {
+    congress ||= await getJSON('scam-data/congress.json');
+    debtNow ||= congress.debtNow;
+    const entry = zip ? (await getJSON(`scam-data/zip/${zip.slice(0, 3)}.json`))[zip] || null : null;
+    const { senators, seats } = officialsFor(entry, stateCode, congress);
+    const stateName = (c) => (data.state.states[c] || {}).name || c;
+    list.textContent = '';
+    for (const seat of seats) {
+      const role = seat.state === 'DC' ? 'Delegate, District of Columbia' : `U.S. Representative, ${stateName(seat.state)}${seat.district ? ` district ${seat.district}` : ', at large'}`;
+      list.append(seat.member ? personCard(seat.member, role) : Object.assign(el('li', 'person'), { textContent: `${role}: this seat is vacant.` }));
+    }
+    for (const m of senators) list.append(personCard(m, `U.S. Senator, ${stateName(m.s)}`));
+    intro.textContent = '';
+    if (seats.length > 1) {
+      const a = el('a', '', 'house.gov can tell you which'); a.href = 'https://www.house.gov/representatives/find-your-representative'; a.rel = 'noopener';
+      intro.append(`ZIP code ${zip} crosses a district line, so one of these ${seats.length} representatives is yours; `, a, '.');
+    } else if (!seats.length && senators.length) intro.textContent = 'Without a ZIP code in the Census list only your senators can be named.';
+    else if (!senators.length && seats.length) intro.textContent = 'The District has a delegate in the House and no senators.';
+    box.hidden = !list.children.length;
+  } catch { box.hidden = true; }
+}
+
+// ── what landed near you: asked for, never automatic ──
+function showLocal(zip) {
+  lastZip = zip;
+  $('local').hidden = !zip;
+  $('local-out').hidden = true;
+  $('local-status').textContent = '';
+  $('lookup').hidden = false; $('lookup-note').hidden = false;
+  $('lookup').textContent = `Look up ${zip}`;
+}
+
+async function lookup() {
+  const zip = lastZip;
+  if (!zip || !last) return;
+  $('lookup').disabled = true;
+  $('local-status').textContent = 'Asking USAspending.gov…';
+  try {
+    const fy = lastFiscalYear(new Date().toISOString().slice(0, 10));
+    const period = [{ start_date: fy.start, end_date: fy.end }];
+    const post = (path, body) => getJSON(`${SPENDING}/${path}/`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }, 20000);
+    const entry = (await getJSON(`scam-data/zip/${zip.slice(0, 3)}.json`))[zip];
+    const [recipients, county] = await Promise.all([
+      post('spending_by_category/recipient', { filters: { time_period: period, place_of_performance_locations: [{ country: 'USA', zip }] }, limit: 30 }),
+      entry ? post('spending_by_geography', { scope: 'place_of_performance', geo_layer: 'county', geo_layer_filters: [entry.c], filters: { time_period: period } }).catch(() => null) : null,
+    ]);
+    if (zip !== lastZip) return;
+    const top = topRecipients(recipients.results, 8);
+    const c = county && county.results && county.results[0];
+    const head = $('local-county'); head.textContent = '';
+    if (c && c.aggregated_amount > 0) {
+      head.append(el('strong', '', big(c.aggregated_amount)), ` in federal awards went to ${c.display_name} in fiscal ${fy.fy}`);
+      if (c.per_capita > 0) head.append(', ', el('strong', '', usd(c.per_capita)), ' for each resident');
+      head.append(`. Your federal bill was ${usd(last.federalTotal)}.`);
+    }
+    $('local-zip-title').textContent = top.length ? `Largest recipients with work in ${zip}` : `No awards are recorded with work in ${zip} for fiscal ${fy.fy}.`;
+    const list = $('local-list'); list.textContent = '';
+    for (const r of top) { const li = el('li'); li.append(el('span', '', r.name), el('span', 'amount', big(r.amount))); list.append(li); }
+    const src = $('local-source'); src.textContent = '';
+    const a = el('a', '', 'USAspending.gov'); a.href = 'https://www.usaspending.gov/search'; a.rel = 'noopener';
+    src.append('Source: ', a, `, awards by place of performance, October ${fy.fy - 1} through September ${fy.fy}. Amounts are obligations: money committed, not always paid out yet.`);
+    $('local-out').hidden = false;
+    $('local-status').textContent = '';
+    $('lookup').hidden = true; $('lookup-note').hidden = true;
+  } catch {
+    $('local-status').textContent = 'USAspending.gov did not answer. Try again in a moment.';
+  } finally { $('lookup').disabled = false; }
 }
 
 async function save() {
@@ -235,6 +344,9 @@ async function start() {
     data = tax;
     for (const [code, s] of Object.entries(data.state.states).sort((a, b) => a[1].name.localeCompare(b[1].name))) $('state').add(new Option(s.name, code));
     statement = await loadStatement(snapshot);
+    getJSON(DEBT_URL, { headers: { Accept: 'application/json' } }, 6000)
+      .then((j) => { const r = j.data && j.data[0]; if (r && Number(r.tot_pub_debt_out_amt) > 0) debtNow = { date: r.record_date, amount: Math.round(Number(r.tot_pub_debt_out_amt)) }; })
+      .catch(() => { /* the figure saved with the member list stands in */ });
     if (!statement) throw new Error('no statement');
     sources();
     $('go').disabled = false;
@@ -248,6 +360,7 @@ if (typeof document !== 'undefined') {
   $('form').addEventListener('submit', submit);
   $('percent').addEventListener('change', render);
   $('save').addEventListener('click', save);
+  $('lookup').addEventListener('click', lookup);
   $('zip').addEventListener('input', () => { $('state-field').hidden = true; $('state').value = ''; });
   start();
 }

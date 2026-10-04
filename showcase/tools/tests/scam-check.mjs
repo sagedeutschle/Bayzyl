@@ -5,6 +5,7 @@
 // 3. The data file is complete and well-formed: 50 states and DC, every ZIP prefix naming a known place.
 // 4. The Treasury statement is picked, checked and split so the lines add up to the bill.
 // 5. No state or status ever taxes a higher wage less, or takes more than the wage.
+// 6. Members of Congress resolve for a ZIP, each with a debt figure for their first day; recipient lists fold and tidy.
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,6 +16,8 @@ const PAGES = join(HERE, '..', '..', 'prismet-site', 'pages');
 const calc = await import(join(PAGES, 'scam-calc.js'));
 const data = JSON.parse(readFileSync(join(PAGES, 'scam-data', 'tax-2026.json'), 'utf8'));
 const snapshot = JSON.parse(readFileSync(join(PAGES, 'scam-data', 'mts-snapshot.json'), 'utf8'));
+const congress = JSON.parse(readFileSync(join(PAGES, 'scam-data', 'congress.json'), 'utf8'));
+const shard = (zip) => JSON.parse(readFileSync(join(PAGES, 'scam-data', 'zip', `${zip.slice(0, 3)}.json`), 'utf8'))[zip] || null;
 
 let checks = 0;
 const near = (a, b, what) => { assert.ok(Math.abs(a - b) <= 0.011, `${what}: ${a} is not ${b}`); checks++; };
@@ -131,5 +134,41 @@ for (const code of Object.keys(states)) {
     checks++;
   }
 }
+
+// ── 6. who signs off, and what landed locally ──
+assert.ok(congress.members.length >= 530 && congress.members.length <= 541, 'about 535 members and 6 delegates'); checks++;
+assert.ok(congress.debtNow.amount > 3e13 && /^\d{4}-\d\d-\d\d$/.test(congress.debtNow.date)); checks++;
+for (const m of congress.members) {
+  assert.ok(m.n && /^[A-Z]{2}$/.test(m.s) && (m.t === 'sen' || (m.t === 'rep' && Number.isInteger(m.d))) && m.since <= m.end, `member ${m.n}`);
+  assert.ok(m.debt && m.debt.amount > 1e11 && m.debt.amount <= congress.debtNow.amount && m.debt.date <= congress.debtNow.date, `debt on ${m.n}'s first day`);
+  assert.ok(m.debt.yearEnd ? m.debt.date <= m.since : m.debt.date >= m.since, `${m.n}: the debt figure is on the right side of the first day`);
+}
+checks += 3;
+for (const code of Object.keys(states)) if (code !== 'DC') { assert.ok(calc.officialsFor(null, code, congress).senators.length <= 2, `${code} senators`); checks++; }
+assert.ok(Object.keys(states).filter((c) => c !== 'DC' && calc.officialsFor(null, c, congress).senators.length === 2).length >= 47, 'nearly every state has both senators seated'); checks++;
+{
+  const col = calc.officialsFor(shard('43201'), 'OH', congress);
+  assert.deepEqual(shard('43201'), { c: '39049', d: ['OH3'] }); checks++;
+  assert.equal(col.seats.length, 1); assert.equal(col.seats[0].district, 3); assert.equal(col.seats[0].member.s, 'OH'); checks += 3;
+  const split = calc.officialsFor(shard('43206'), 'OH', congress);
+  assert.deepEqual(split.seats.map((x) => x.district), [3, 15], 'a ZIP across a district line lists both, largest first'); checks++;
+  assert.equal(calc.officialsFor(shard('82001'), 'WY', congress).seats[0].district, 0, 'an at-large seat'); checks++;
+  assert.equal(calc.officialsFor(shard('20001'), 'DC', congress).seats[0].member.s, 'DC', 'the District has a delegate'); checks++;
+  assert.equal(calc.officialsFor(shard('20001'), 'DC', congress).senators.length, 0); checks++;
+  assert.deepEqual(calc.officialsFor(null, 'OH', congress).seats, []); checks++;
+  const d = calc.debtSince(col.seats[0].member, congress.debtNow);
+  assert.ok(d.added > 0 && d.times > 1 && d.then + d.added === d.now); checks++;
+  assert.equal(calc.debtSince({ n: 'x' }, congress.debtNow), null); checks++;
+}
+assert.deepEqual(calc.lastFiscalYear('2026-10-03'), { fy: 2026, start: '2025-10-01', end: '2026-09-30' });
+assert.deepEqual(calc.lastFiscalYear('2026-09-30'), { fy: 2025, start: '2024-10-01', end: '2025-09-30' });
+assert.deepEqual(calc.lastFiscalYear('2027-01-15'), { fy: 2026, start: '2025-10-01', end: '2026-09-30' }); checks += 3;
+assert.equal(calc.tidyName('OHIO STATE UNIVERSITY, THE'), 'The Ohio State University');
+assert.equal(calc.tidyName('BATTELLE MEMORIAL INSTITUTE'), 'Battelle Memorial Institute');
+assert.equal(calc.tidyName('REDACTED DUE TO PII'), 'Individuals (names withheld)'); checks++;
+assert.equal(calc.tidyName('ACME  WIDGETS OF OHIO LLC'), 'Acme Widgets of Ohio LLC');
+assert.equal(calc.tidyName("O'NEIL-SMITH & SONS"), "O'Neil-Smith & Sons"); checks += 4;
+assert.deepEqual(calc.topRecipients([{ name: 'OHIO STATE UNIVERSITY, THE', amount: 90 }, { name: 'BATTELLE', amount: 300 }, { name: 'OHIO STATE UNIVERSITY, THE', amount: 7 }, { name: 'REFUND CO', amount: -5 }, { name: '', amount: 9 }], 8),
+  [{ name: 'Battelle', amount: 300 }, { name: 'The Ohio State University', amount: 97 }]); checks++;
 
 console.log(`✓ scam-check: ${checks} checks`);

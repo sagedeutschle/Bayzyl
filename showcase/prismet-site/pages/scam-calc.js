@@ -139,3 +139,58 @@ export function timeUnits(bill, year) {
     perDay: cents(bill.total / days),
   };
 }
+
+// ── who signs off: the members of Congress for a ZIP ────────────────────────────────────────────────────────────
+// entry: a ZIP's record from scam-data/zip/<prefix>.json ({ c: county FIPS, d: ["OH3", …] }) or null when the ZIP is
+// not in the Census list; then only the state's senators are known. A ZIP that crosses a district line lists every
+// district it touches, largest share of land first.
+export function officialsFor(entry, stateCode, congress) {
+  const senators = congress.members.filter((m) => m.t === 'sen' && m.s === stateCode).sort((a, b) => (a.since < b.since ? -1 : 1));
+  const seats = ((entry && entry.d) || []).map((key) => {
+    const state = key.slice(0, 2), district = Number(key.slice(2));
+    return { state, district, member: congress.members.find((m) => m.t === 'rep' && m.s === state && m.d === district) || null };
+  });
+  return { senators, seats };
+}
+
+// The debt on a member's first day in Congress against the debt now.
+export function debtSince(member, now) {
+  if (!member.debt || !now) return null;
+  return { then: member.debt.amount, thenDate: member.debt.date, yearEnd: member.debt.yearEnd === true, now: now.amount, nowDate: now.date, added: now.amount - member.debt.amount, times: now.amount / member.debt.amount };
+}
+
+// ── federal awards landing in a place (USAspending) ─────────────────────────────────────────────────────────────
+// The last fiscal year that has ended (October 1 to September 30), as of `today` (YYYY-MM-DD).
+export function lastFiscalYear(today) {
+  const y = Number(today.slice(0, 4)), fy = today.slice(5) >= '10-01' ? y : y - 1;
+  return { fy, start: `${fy - 1}-10-01`, end: `${fy}-09-30` };
+}
+
+const KEEP_UPPER = new Set(['LLC', 'LLP', 'LP', 'PLLC', 'USA', 'US', 'II', 'III', 'IV', 'NA', 'PC']);
+const KEEP_LOWER = new Set(['of', 'and', 'the', 'for', 'in', 'at', 'on', 'to']);
+// "OHIO STATE UNIVERSITY, THE" → "The Ohio State University"
+const PLACEHOLDERS = { 'REDACTED DUE TO PII': 'Individuals (names withheld)', 'MULTIPLE RECIPIENTS': 'Many recipients (reported together)' };
+export function tidyName(raw) {
+  let s = String(raw || '').trim().replace(/\s+/g, ' ');
+  if (PLACEHOLDERS[s.toUpperCase()]) return PLACEHOLDERS[s.toUpperCase()];
+  const m = /^(.*),\s*THE$/i.exec(s);
+  if (m) s = `THE ${m[1]}`;
+  return s.split(' ').map((w, i) => {
+    const bare = w.replace(/[^A-Za-z]/g, '');
+    if (KEEP_UPPER.has(bare.toUpperCase())) return w.toUpperCase();
+    if (i && KEEP_LOWER.has(w.toLowerCase())) return w.toLowerCase();
+    return w.toLowerCase().replace(/(^|[-'.&/(])([a-z])/g, (x, a, b) => a + b.toUpperCase());
+  }).join(' ');
+}
+
+// USAspending lists one row per registration; fold rows that share a name, largest first.
+export function topRecipients(results, top = 8) {
+  const sum = new Map();
+  for (const r of results || []) {
+    const amount = Number(r.amount);
+    if (!r.name || !Number.isFinite(amount)) continue;
+    const name = tidyName(r.name);
+    sum.set(name, (sum.get(name) || 0) + amount);
+  }
+  return [...sum].map(([name, amount]) => ({ name, amount })).filter((r) => r.amount > 0).sort((a, b) => b.amount - a.amount).slice(0, top);
+}

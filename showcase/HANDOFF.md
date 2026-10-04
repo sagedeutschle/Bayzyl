@@ -76,6 +76,16 @@ protected route intact, the two privacy leaks of the old server closed.
 
 ## 5. The design, in short
 
+**2026-10-03 revision (Sage's brief: no yellow tint, blues and greens, Marcellus, fewer machine-made habits).** Night is
+deep water `#0D1820` with cool white ink; day is pale sky `#EEF3F5`. Green is the accent, blue marks what is live, and
+the six wing hues run green to indigo. Words are set in Marcellus (one weight, no italic: `font-synthesis: none`, so
+emphasis is colour and size), figures in Martian Mono; Unbounded and Hanken Grotesk are retired. Removed: capital
+letter-spaced micro-labels, boxed plaques and status dots, the arrow after outbound links, doubled section rules, the
+pointer-following glow, the plan's drawing animation and the hover corner ticks. The token names `--brass` and
+`--lantern` are unchanged (the editor and `data/theme.json` use them): read them as accent and second accent. Not yet
+restyled: `/steam`, `/debt` (`server/public/style.css`), the share image, the editor's own chrome. Where the text below
+says slate, chalk, brass or lantern, it describes the earlier palette.
+
 The site is **a workshop and the register it keeps**. The home page opens on a hall plan, six wings (Sage's six
 categories) around a rotunda with the prism in its floor; each wing filters the register. Then four doors (Bayzyl,
 Prismet, Helm, PrismCode, each with one signature module built from its own material), the register (a ledger grouped

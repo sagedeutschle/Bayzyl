@@ -7,6 +7,9 @@
 // Treasury statement, which it refreshes live and falls back to the snapshot written here):
 //   showcase/prismet-site/pages/scam-data/tax-<year>.json    federal tables, state tables, ZIP prefix → state
 //   showcase/prismet-site/pages/scam-data/mts-snapshot.json  Monthly Treasury Statement table 9, trimmed
+//   showcase/prismet-site/pages/scam-data/congress.json      sitting members of Congress, with the debt on their first day
+//   showcase/prismet-site/pages/scam-data/zip/<3 digits>.json  ZIP → county and congressional district(s)
+//   more flags: [--cd rel.txt] [--leg legislators-current.json] [--no-debt] (skip the Treasury lookups; for tests)
 //
 // Sources
 //   federal brackets + standard deduction  IRS Rev. Proc. 2025-32, sections 4.01 and 4.14 (typed in below, checked
@@ -16,7 +19,10 @@
 //   state brackets, deductions, exemptions Tax Foundation, State Individual Income Tax Rates and Brackets (parsed)
 //   ZIP → state                            Census 2020 ZCTA to county relationship file (parsed)
 //   budget by function                     Treasury Fiscal Data, Monthly Treasury Statement table 9
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+//   ZIP → congressional district           Census 2020 ZCTA to 119th Congressional District relationship file
+//   members of Congress                    unitedstates/congress-legislators (public domain)
+//   debt on a given day                    Treasury Fiscal Data, Debt to the Penny (1993 on) and Historical Debt Outstanding
+import { readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { statementRows, pickStatement } from '../../prismet-site/pages/scam-calc.js';
@@ -26,6 +32,9 @@ const OUT = join(HERE, '../../prismet-site/pages/scam-data');
 const YEAR = 2026;
 const TF_URL = `https://taxfoundation.org/data/all/state/state-income-tax-rates-${YEAR}/`;
 const ZCTA_URL = 'https://www2.census.gov/geo/docs/maps-data/data/rel2020/zcta520/tab20_zcta520_county20_natl.txt';
+const CD_URL = 'https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_cd11920_zcta520_natl.txt';
+const LEG_URL = 'https://unitedstates.github.io/congress-legislators/legislators-current.json';
+const FISCAL = 'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od';
 export const MTS_URL = 'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_9'
   + '?fields=record_date,classification_desc,current_fytd_rcpt_outly_amt,record_type_cd,sequence_level_nbr'
   + '&sort=-record_date&page%5Bsize%5D=300';
@@ -148,7 +157,68 @@ export function parseZips(text) {
   for (const [z, st] of byZip) { const p = z.slice(0, 3); (count[p] ||= {})[st] = (count[p][st] || 0) + 1; }
   const prefixes = Object.fromEntries(Object.keys(count).sort().map((p) => [p, top(count[p])]));
   const exceptions = Object.fromEntries([...byZip].filter(([z, st]) => prefixes[z.slice(0, 3)] !== st).sort());
-  return { prefixes, exceptions, zctas: byZip.size };
+  // the county holding most of each ZCTA's land, for the local lookups
+  const county = new Map();
+  for (const line of lines.slice(1)) {
+    const f = line.split('|');
+    if (!f[iz] || !f[ic]) continue;
+    const a = Number(f[ia] || 0), cur = county.get(f[iz]);
+    if (!cur || a > cur[1]) county.set(f[iz], [f[ic], a]);
+  }
+  return { prefixes, exceptions, zctas: byZip.size, county: new Map([...county].map(([z, c]) => [z, c[0]])) };
+}
+
+// ZCTA → its congressional districts, largest share of land first: "OH3", "WY0" (at large), "DC0" (the delegate).
+export function parseDistricts(text) {
+  const lines = text.replace(/^\uFEFF/, '').split('\n');
+  const head = lines[0].split('|');
+  const iz = head.indexOf('GEOID_ZCTA5_20'), id = head.indexOf('GEOID_CD119_20'), ia = head.indexOf('AREALAND_PART');
+  if (iz < 0 || id < 0 || ia < 0) throw new Error('unexpected Census district relationship file header');
+  const out = new Map();
+  for (const line of lines.slice(1)) {
+    const f = line.split('|');
+    if (!f[iz] || !f[id] || !/^\d{4}$/.test(f[id])) continue;                    // "ZZ": water, no district
+    const st = FIPS[f[id].slice(0, 2)] || FIPS[Number(f[id].slice(0, 2))];
+    if (!st) throw new Error(`unknown state FIPS in district ${f[id]}`);
+    const n = Number(f[id].slice(2));
+    const key = `${st}${n === 98 || n === 0 ? 0 : n}`;
+    (out.get(f[iz]) || out.set(f[iz], []).get(f[iz])).push([key, Number(f[ia] || 0)]);
+  }
+  return new Map([...out].map(([z, list]) => [z, list.sort((a, b) => b[1] - a[1]).map((x) => x[0])]));
+}
+
+// The sitting members, trimmed to what the page shows. `since` is the first day of their first term in Congress.
+export function parseLegislators(json) {
+  const members = json.map((m) => {
+    const t = m.terms.at(-1);
+    return {
+      n: m.name.official_full || `${m.name.first} ${m.name.last}`, p: t.party, s: t.state, t: t.type,
+      ...(t.type === 'rep' ? { d: t.district ?? 0 } : {}),
+      since: m.terms.map((x) => x.start).sort()[0], end: t.end, url: t.url || '',
+    };
+  }).sort((a, b) => (a.s + a.t + String(a.d ?? '').padStart(2, '0') + a.n < b.s + b.t + String(b.d ?? '').padStart(2, '0') + b.n ? -1 : 1));
+  if (members.length < 500 || members.some((m) => !/^\d{4}-\d\d-\d\d$/.test(m.since) || !/^[A-Z]{2}$/.test(m.s) || !m.n)) throw new Error('legislators: unexpected shape');
+  return members;
+}
+
+// Total public debt on each date: the first daily figure on or after it (1993 on), else the last fiscal-year-end figure before it.
+async function debtOn(dates) {
+  const get = async (url) => { const r = await fetch(url); if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`); return (await r.json()).data; };
+  const yearly = (await get(`${FISCAL}/debt_outstanding?fields=record_date,debt_outstanding_amt&sort=-record_date&page%5Bsize%5D=400`)).map((r) => [r.record_date, Math.round(Number(r.debt_outstanding_amt))]);
+  const out = {};
+  for (const d of dates) {
+    if (d >= '1993-04-01') {
+      const [row] = await get(`${FISCAL}/debt_to_penny?fields=record_date,tot_pub_debt_out_amt&filter=record_date:gte:${d}&sort=record_date&page%5Bsize%5D=1`);
+      if (!row) throw new Error(`no debt figure on or after ${d}`);
+      out[d] = { date: row.record_date, amount: Math.round(Number(row.tot_pub_debt_out_amt)) };
+    } else {
+      const row = yearly.find(([date]) => date <= d);
+      if (!row) throw new Error(`no debt figure before ${d}`);
+      out[d] = { date: row[0], amount: row[1], yearEnd: true };
+    }
+  }
+  const [now] = await get(`${FISCAL}/debt_to_penny?fields=record_date,tot_pub_debt_out_amt&sort=-record_date&page%5Bsize%5D=1`);
+  return { byDate: out, now: { date: now.record_date, amount: Math.round(Number(now.tot_pub_debt_out_amt)) } };
 }
 
 // Keep only the statement the page would pick (scam-calc.js decides), so the fallback is one month of rows.
@@ -163,6 +233,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const states = parseStates(await source('tf', TF_URL));
   const zips = parseZips(await source('zcta', ZCTA_URL));
   const mts = trimStatement(JSON.parse(await source('mts', MTS_URL)));
+  const districts = parseDistricts(await source('cd', CD_URL));
+  const members = parseLegislators(JSON.parse(await source('leg', LEG_URL)));
+  const debt = process.argv.includes('--no-debt') ? null : await debtOn([...new Set(members.map((m) => m.since))].sort());
   const built = new Date().toISOString().slice(0, 10);
   const tax = {
     _readme: 'Written by showcase/tools/uncle-scam/build-data.mjs. Do not edit by hand; fix the script and run it again.',
@@ -184,6 +257,20 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   mkdirSync(OUT, { recursive: true });
   writeFileSync(join(OUT, `tax-${YEAR}.json`), JSON.stringify(tax) + '\n');
   writeFileSync(join(OUT, 'mts-snapshot.json'), JSON.stringify({ built, source: 'U.S. Treasury, Monthly Treasury Statement, table 9', rows: mts }) + '\n');
+  writeFileSync(join(OUT, 'congress.json'), JSON.stringify({
+    built,
+    source: { name: 'unitedstates/congress-legislators', url: 'https://github.com/unitedstates/congress-legislators' },
+    debtSource: { name: 'U.S. Treasury, Debt to the Penny and Historical Debt Outstanding', url: 'https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/' },
+    debtNow: debt ? debt.now : null,
+    members: members.map((m) => (debt ? { ...m, debt: debt.byDate[m.since] } : m)),
+  }) + '\n');
+  // one small file per 3-digit prefix: { "43201": { c: county FIPS, d: [districts] } }
+  rmSync(join(OUT, 'zip'), { recursive: true, force: true });
+  mkdirSync(join(OUT, 'zip'), { recursive: true });
+  const shards = {};
+  for (const [z, c] of zips.county) (shards[z.slice(0, 3)] ||= {})[z] = { c, d: districts.get(z) || [] };
+  for (const [p, body] of Object.entries(shards)) writeFileSync(join(OUT, 'zip', `${p}.json`), JSON.stringify(Object.fromEntries(Object.entries(body).sort())) + '\n');
+  console.log(`uncle-scam data: ${members.length} members of Congress, ${Object.keys(shards).length} ZIP files, debt ${debt ? `as of ${debt.now.date}` : 'skipped'}`);
   const none = Object.entries(states).filter(([, s]) => s.wages === 'none').map(([c]) => c);
   console.log(`uncle-scam data: ${Object.keys(states).length} states (${none.length} without a wage tax: ${none.join(' ')}), `
     + `${Object.keys(zips.prefixes).length} ZIP prefixes, ${Object.keys(zips.exceptions).length} exceptions from ${zips.zctas} ZCTAs, `

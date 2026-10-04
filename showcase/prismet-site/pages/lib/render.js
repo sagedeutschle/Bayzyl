@@ -87,7 +87,7 @@ const FAVICON = asset(['assets/icons/prismet-app-128.webp', 'assets/icons/prisme
 const hue = (id) => `--h:var(--${id});--hi:var(--${id}-ink)`;
 const arrow = '<svg class="ext" viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="M3 9.5 9.5 3M4.5 3h5v5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 // The artifact preview can't load fonts from its own files, so it uses Google Fonts; production self-hosts.
-const GOOGLE_FONTS = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&family=Hanken+Grotesk:wght@100..900&family=Martian+Mono:wdth,wght@75..112.5,100..800&display=swap">';
+const GOOGLE_FONTS = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Martian+Mono:wdth,wght@75..112.5,100..800&display=swap">';
 // The mark: the rotunda seen from above, with the prism inlaid in its floor.
 const mark = (size = 28) => `<svg class="mark" width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true">
   <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" stroke-width="2"/>
@@ -108,11 +108,10 @@ const head = ({ title, desc, root = '', noindex = false, url = '' }) => `<meta c
 <meta property="og:image:alt" content="${esc(plain(site('og.image_alt')))}">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">${url ? `\n<meta property="og:url" content="https://prismet.xyz/${esc(url)}">` : ''}
-<meta name="theme-color" content="#0F161D" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#E4E8EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0D1820" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#EEF3F5" media="(prefers-color-scheme: light)">
 <link rel="icon" href="${root}${FAVICON}">
-<link rel="preload" href="${root}assets/fonts/HankenGrotesk.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="${root}assets/fonts/Unbounded.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="${root}assets/fonts/Marcellus.woff2" as="font" type="font/woff2" crossorigin>
 ${PREVIEW ? GOOGLE_FONTS + '\n' : ''}<link rel="stylesheet" href="${root}${CSS_URL}">${PREVIEW ? `\n<link rel="stylesheet" href="${root}editor.css">` : ''}
 <script src="${root}${JS_URL}"></script>`;
 const scripts = (root = '') => (PREVIEW ? `<script src="${root}editor.js"></script>` : '');
@@ -677,7 +676,7 @@ ${scripts()}`;
   <h1${t.a}>${t.h}</h1>
   <div class="prose">${paras.map((key) => `<p${k(key).a}>${k(key).h}</p>`).join('')}</div>
   <dl class="facts">
-    <div><dt>Type</dt><dd>Unbounded · Hanken Grotesk · Martian Mono</dd></div>
+    <div><dt>Type</dt><dd>Marcellus · Martian Mono</dd></div>
     <div><dt>Licence</dt><dd>SIL Open Font License 1.1</dd></div>
     <div><dt>Requests to other sites</dt><dd>0</dd></div>
     <div><dt>Records</dt><dd>${shown.length}</dd></div>
