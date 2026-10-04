@@ -10,18 +10,6 @@
   };
   const saved = store.get('prismet.theme');
   if (saved === 'light' || saved === 'dark') root.dataset.theme = saved;
-  // The sun cycle: with no saved choice the palette follows the visitor's clock (dawn and day are light, dusk and
-  // night are dark, each with its own ground). ?phase=dawn|day|dusk|night shows one phase, whatever the hour.
-  const PHASES = { dawn: 6.6, day: 12.5, dusk: 17.6, night: 23 };
-  const clock = () => { const d = new Date(); return d.getHours() + d.getMinutes() / 60; };
-  const phaseAt = (h) => (h >= 5 && h < 8 ? 'dawn' : h >= 8 && h < 17 ? 'day' : h >= 17 && h < 20 ? 'dusk' : 'night');
-  let asked = null;
-  try { asked = new URLSearchParams(location.search).get('phase'); } catch { /* no URL API */ }
-  if (!(asked in PHASES)) asked = null;
-  const sunHour = asked ? PHASES[asked] : clock();
-  const phase = asked || phaseAt(sunHour);
-  root.dataset.phase = phase;
-  if (asked || !root.dataset.theme) { root.dataset.theme = phase === 'dawn' || phase === 'day' ? 'light' : 'dark'; root.dataset.auto = '1'; }
   // A chosen theme overrides the system one, so the browser chrome (theme-color) follows the choice, not the system.
   const tint = () => { if (!root.dataset.theme) return; const c = getComputedStyle(root).getPropertyValue('--ground').trim(); if (c) document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute('content', c)); };
   tint();
@@ -34,17 +22,7 @@
     const isDark = () => (root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
     const labelToggle = () => { if (toggle && toggle.dataset.toDay) toggle.setAttribute('aria-label', isDark() ? toggle.dataset.toDay : toggle.dataset.toNight); };
     labelToggle();
-    // The orb on the toggle's arc: the sun from six to six, the moon after. A chosen theme stops the cycle, not the orb.
-    const sky = toggle && toggle.querySelector('.sky');
-    if (sky) {
-      const night = sunHour < 6 || sunHour >= 18, t = night ? ((sunHour - 18 + 24) % 24) / 12 : (sunHour - 6) / 12;
-      const orb = sky.querySelector('.orb');
-      orb.setAttribute('cx', (20 - 17 * Math.cos(Math.PI * t)).toFixed(1));
-      orb.setAttribute('cy', (19 - 17 * Math.sin(Math.PI * t)).toFixed(1));
-      sky.classList.toggle('moon', night);
-    }
     if (toggle) toggle.addEventListener('click', () => {
-      delete root.dataset.auto;
       root.dataset.theme = isDark() ? 'light' : 'dark';
       store.set('prismet.theme', root.dataset.theme);
       tint(); labelToggle();
