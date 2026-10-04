@@ -88,9 +88,18 @@ public final class DetailBrushCodeCodec {
             }
         }
         String[] values = payload.isEmpty() ? new String[0] : payload.split(",", -1);
-        // v1 codes may be shorter than current spec count if params were appended (e.g. cloud opacity, lightning color).
-        // Fill missing trailing values with spec defaults rather than rejecting.
-        if (values.length != specs.size()) {
+        // Codes made before a parameter was added are shorter than the current spec list. Cloud's opacity was
+        // inserted mid-list, so those codes are matched to the earlier layout by name; every other short code
+        // only lacks trailing values, which fall back to the spec defaults.
+        List<String> legacyLayout = legacyLayout(preset.id(), values.length, specs);
+        if (legacyLayout != null) {
+            String[] aligned = new String[specs.size()];
+            for (int i = 0; i < specs.size(); i++) {
+                int at = legacyLayout.indexOf(specs.get(i).name());
+                aligned[i] = at >= 0 ? values[at] : encodeValue(specs.get(i).defaultValue());
+            }
+            values = aligned;
+        } else if (values.length != specs.size()) {
             if (version < VERSION && values.length < specs.size()) {
                 String[] padded = new String[specs.size()];
                 for (int i = 0; i < specs.size(); i++) {
@@ -111,6 +120,23 @@ public final class DetailBrushCodeCodec {
         }
         return safety.requireValid(new DetailBrushSettings(
                 preset.id(), new DetailBrushParameters(params), mode));
+    }
+
+    /**
+     * Parameter order of share codes minted before newer parameters were added, keyed by preset id. Only the
+     * layouts that differ from "current specs minus trailing values" need listing; the lightning color
+     * parameter was appended, so its older six-value codes are accepted at any code version.
+     */
+    private List<String> legacyLayout(String presetId, int valueCount, List<DetailBrushParameterSpec> specs) {
+        if (valueCount >= specs.size()) {
+            return null;
+        }
+        List<String> layout = switch (presetId.toLowerCase(Locale.ROOT)) {
+            case "cloud" -> List.of("volume", "puffiness", "density", "flatness", "tint");
+            case "lightning" -> List.of("length", "jaggedness", "branches", "branch_length", "glow", "direction");
+            default -> null;
+        };
+        return layout != null && layout.size() == valueCount ? layout : null;
     }
 
     private String encodeValue(String value) {

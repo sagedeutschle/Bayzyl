@@ -55,4 +55,21 @@ final class DetailBrushCodeCodecSafetyTest {
         assertThrows(IllegalArgumentException.class,
                 () -> codec.decode("F2S(" + "x".repeat(DetailBrushSafety.PARAMETER_TEXT_MAX + 1) + ")"));
     }
+
+    @Test
+    void codesMadeBeforeCloudOpacityAndLightningColorStillDecodeWithTheRightValues() {
+        // Cloud shape before opacity existed: volume,puffiness,density,flatness,tint.
+        for (String version : new String[]{"1", "2"}) {
+            DetailBrushSettings cloud = codec.decode("C" + version + "S(10,0.5,0.6,0.2,storm)");
+            assertEquals("storm", cloud.parameters().get("tint", ""));
+            assertEquals("10", cloud.parameters().get("volume", ""));
+            assertEquals("0.2", cloud.parameters().get("flatness", ""));
+            assertEquals("0.72", cloud.parameters().get("opacity", "0.72"));
+
+            // Lightning shape before color existed: the six leading parameters.
+            DetailBrushSettings bolt = codec.decode("L" + version + "S(20,0.7,3,0.5,0.8,up)");
+            assertEquals("up", bolt.parameters().get("direction", ""));
+            assertEquals("blue", bolt.parameters().get("color", "blue"));
+        }
+    }
 }
