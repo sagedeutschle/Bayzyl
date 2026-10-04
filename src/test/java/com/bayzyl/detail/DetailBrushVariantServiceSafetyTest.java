@@ -96,6 +96,27 @@ final class DetailBrushVariantServiceSafetyTest {
         assertEquals("mangrove_root", stored.getString("variants.canonical.params.species"));
     }
 
+    @Test
+    void dottedOrBuiltInShadowingNamesCannotCorruptOrShadowOtherVariants() throws Exception {
+        DetailBrushVariantService variants = service();
+        DetailBrushSettings settings = new DetailBrushSettings(
+                "flame", new DetailBrushParameters(Map.of("heat", "0.5")), DetailBrushMode.STROKE);
+        assertEquals(true, variants.save("keep", settings));
+
+        // "keep.preset" used to wipe keep's preset string and turn it into a section.
+        assertFalse(variants.save("keep.preset", settings));
+        assertFalse(variants.save("keep.params", settings));
+        assertNotNull(variants.load("keep"));
+        assertEquals(java.util.List.of("keep"), variants.list());
+
+        // "campfire!" normalizes to the built-in "campfire" and would take over /db campfire.
+        assertFalse(variants.save("campfire!", settings));
+        assertFalse(variants.exists("campfire"));
+        org.junit.jupiter.api.Assertions.assertNotNull(variants.reservedNameOwner("campfire!"));
+        // The built-in itself stays a valid shortcut label (the shortcut registry relies on this).
+        assertFalse(variants.isReservedName("campfire"));
+    }
+
     private DetailBrushVariantService service() {
         JavaPlugin plugin = mock(JavaPlugin.class);
         when(plugin.getDataFolder()).thenReturn(tempDir.toFile());

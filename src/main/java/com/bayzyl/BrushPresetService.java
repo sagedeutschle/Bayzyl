@@ -102,6 +102,10 @@ public final class BrushPresetService {
         if (RESERVED_NAMES.contains(name)) {
             return "a reserved server/plugin command name '" + name + "'";
         }
+        if (name.indexOf('.') >= 0) {
+            // The name becomes part of a YAML path, so "a.item" would overwrite brush "a".
+            return "an empty or invalid name";
+        }
         return null;
     }
 

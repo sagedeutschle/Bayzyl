@@ -38,7 +38,7 @@ public final class DetailBrushVariantService {
 
     public boolean save(String rawName, DetailBrushSettings settings) {
         String name = normalize(rawName);
-        if (name == null || isReservedName(name)) {
+        if (name == null || isReservedName(name) || !isSavableName(name)) {
             return false;
         }
         try {
@@ -167,7 +167,21 @@ public final class DetailBrushVariantService {
         if (RESERVED_NAMES.contains(name)) {
             return "a reserved server/plugin command name '" + name + "'";
         }
+        if (safety.registry().builtInVariant(name) != null) {
+            return "the built-in detail brush variant '" + name + "'";
+        }
+        if (name.indexOf('.') >= 0) {
+            return "an empty or invalid name";
+        }
         return null;
+    }
+
+    /**
+     * New variants are stored under a YAML path, so a '.' in the name would nest it inside (or wipe fields of)
+     * another variant, and a name that only matches a built-in after normalization would shadow it.
+     */
+    private boolean isSavableName(String name) {
+        return name.indexOf('.') < 0 && safety.registry().builtInVariant(name) == null;
     }
 
     private boolean saveFile() {
