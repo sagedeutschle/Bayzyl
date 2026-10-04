@@ -76,27 +76,15 @@ protected route intact, the two privacy leaks of the old server closed.
 
 ## 5. The design, in short
 
-**2026-10-03 revision (Sage's brief: no yellow tint, blues and greens, Marcellus, fewer machine-made habits).** Night is
-deep water `#0D1820` with cool white ink; day is pale sky `#EEF3F5`. Green is the accent, blue marks what is live, and
-the six wing hues run green to indigo. Words are set in Marcellus (one weight, no italic: `font-synthesis: none`, so
-emphasis is colour and size), figures in Martian Mono; Unbounded and Hanken Grotesk are retired. Removed: capital
-letter-spaced micro-labels, boxed plaques and status dots, the arrow after outbound links, doubled section rules, the
-pointer-following glow, the plan's drawing animation and the hover corner ticks. The token names `--brass` and
-`--lantern` are unchanged (the editor and `data/theme.json` use them): read them as accent and second accent. Not yet
-restyled: `/steam`, `/debt` (`server/public/style.css`), the share image, the editor's own chrome. Where the text below
-says slate, chalk, brass or lantern, it describes the earlier palette.
-
-**2026-10-04, "prism and glass" (Sage picked this direction for a solarpunk feel).** The palette follows the visitor's
-clock while no theme has been chosen: `site.js` sets `data-phase` (dawn 5 to 8, day 8 to 17, dusk 17 to 20, night) and
-`data-auto`; dawn and day use the day tokens, dusk and night the night tokens, and dawn and dusk change the ground.
-`?phase=dawn|day|dusk|night` shows one phase at any hour. The toggle carries an arc with the sun or moon where the
-clock puts it; choosing a theme stops the cycle. In the plan a sunbeam (`--sun`, the only gold on the site) comes
-down into the prism and leaves as six rays in the wing colours; a ray thickens under the pointer. Section heads carry
-a strip of six panes; wing markers are small arched panes; the principal works sit in frames with arched top corners
-and their wing's colour along the top; the plate is an arched window. The footer states the footprint
-(`footer.footprint`). Wording, same day, at Sage's request ("tone it down"): the hero and the page description say
-developer tools instead of AI agent systems, the sixth wing is named Developer Tools, the hire line is Developer
-tooling setup, and the Prismet page no longer says how it was built. The three projects about AI keep their own words.
+**2026-10-04: the original look stands.** Over 2026-10-03 and 10-04 an agent tried a blue-green palette with
+Marcellus, then a "prism and glass" sun cycle, then (unmerged, PR #16) a leaf-wreath emblem. Sage withdrew all of it:
+"revert the site back to what it was before we got rid of yellowness, except keep all the uncle scam stuff".
+`src/site.css`, `src/site.js`, `pages/lib/render.js` and `assets/fonts/` are back to their state at `115097e` (slate,
+chalk and brass; Unbounded, Hanken Grotesk, Martian Mono; the hall plan), plus one line in `render.js` for the Uncle
+Scam tile. The withdrawn work is in the history (`fc8bc34`, `353ec7c`) and on the branch `claude/living-emblem`. Kept
+from those days: the Uncle Scam lens (`/scam`, its data, tests and the `https://api.usaspending.gov` CSP entry) and the
+wording Sage asked for (the hero and description say developer tools, the sixth wing is Developer Tools, the hire line
+is Developer tooling setup).
 
 The site is **a workshop and the register it keeps**. The home page opens on a hall plan, six wings (Sage's six
 categories) around a rotunda with the prism in its floor; each wing filters the register. Then four doors (Bayzyl,

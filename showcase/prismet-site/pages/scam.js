@@ -153,7 +153,7 @@ export function drawCanvas(rows) {
       ops.push({ y: y + 13, text: row.r, font, x: W - PAD, align: 'right', red: row.c === 'red' });
       y += ls.length * LINE + (row.k === 'total' ? 4 : 0); continue;
     }
-    const font = row.c === 'title' ? `400 24px "Marcellus", Georgia, serif` : mono(row.k === 'note' || row.c === 'small' ? 10.5 : 12, row.k === 'head' ? 700 : 400);
+    const font = row.c === 'title' ? `800 20px "Unbounded", "Arial Black", sans-serif` : mono(row.k === 'note' || row.c === 'small' ? 10.5 : 12, row.k === 'head' ? 700 : 400);
     const step = row.c === 'title' ? 28 : row.k === 'note' || row.c === 'small' ? 15 : LINE;
     if (row.k === 'note') y += 4;
     for (const text of wrap(row.t, font, W - PAD * 2)) {
@@ -164,9 +164,9 @@ export function drawCanvas(rows) {
   const H = y + 22;
   canvas.width = W * S; canvas.height = H * S;
   ctx.scale(S, S);
-  ctx.fillStyle = '#EEF3F2'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#F4F0E4'; ctx.fillRect(0, 0, W, H);
   for (const op of ops) {
-    ctx.fillStyle = ctx.strokeStyle = op.red ? '#B3261E' : op.dim ? '#55636B' : '#16202A';
+    ctx.fillStyle = ctx.strokeStyle = op.red ? '#B3261E' : op.dim ? '#5A5D63' : '#1B1D21';
     if (op.rule) { ctx.save(); ctx.globalAlpha = 0.55; ctx.setLineDash([4, 3]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(PAD, op.y); ctx.lineTo(W - PAD, op.y); ctx.stroke(); ctx.restore(); }
     else if (op.line) { ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(PAD, op.y); ctx.lineTo(W - PAD, op.y); ctx.stroke(); }
     else if (op.barcode) { let x = W * 0.12; const end = W * 0.88; const widths = [2, 1, 3, 1, 2, 3, 1, 1]; for (let i = 0; x < end; i++) { const w = widths[i % widths.length]; if (i % 2 === 0) ctx.fillRect(x, op.y, w, 38); x += w + (i % 3 === 0 ? 2 : 1); } }

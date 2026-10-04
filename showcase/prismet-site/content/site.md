@@ -451,6 +451,3 @@ Uncle Scam
 
 ## lens.uncle-scam.blurb
 Where is my money going? A salary and a ZIP code in, an itemized receipt for your taxes out.
-
-## footer.footprint
-No trackers, no ads, two fonts.

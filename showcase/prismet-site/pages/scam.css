@@ -1,20 +1,20 @@
-/* Uncle Scam (/scam): a counter at night and the receipt it prints. Colours and type follow the site (deep water,
-   cool white, green and blue; Marcellus for words, Martian Mono for figures); the receipt is the one piece of paper. */
+/* Uncle Scam (/scam): a counter at night and the receipt it prints. Colours follow the site's slate and brass;
+   the receipt is the one piece of paper on the page. */
 :root {
   color-scheme: dark;
-  --ground: #0D1820; --surface: #132430; --raised: #1A2F3D;
-  --ink: #E4EDF0; --ink-2: #AFC0C8; --ink-3: #8497A0; --rule: rgba(228, 237, 240, .22);
-  --brass: #5FB98C; --brass-ink: #7BD0A4; --on-brass: #06170F; --blue: #7DB4E6;
-  --paper: #EEF3F2; --paper-ink: #16202A; --paper-dim: #55636B; --stamp: #B3261E;
-  --display: 'Marcellus', Georgia, 'Times New Roman', serif;
-  --sans: 'Marcellus', Georgia, 'Times New Roman', serif;
+  --ground: #0F161D; --surface: #17212B; --raised: #1E2934;
+  --ink: #E6E1D4; --ink-2: #B5BCC0; --ink-3: #8C959B; --rule: rgba(230, 225, 212, .22);
+  --brass: #C9A260; --brass-ink: #D9B978; --on-brass: #17130A;
+  --paper: #F4F0E4; --paper-ink: #1B1D21; --paper-dim: #5A5D63; --stamp: #B3261E;
+  --display: 'Unbounded', 'Arial Black', system-ui, sans-serif;
+  --sans: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'Martian Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--sans); font-size: 1.0625rem; line-height: 1.55; font-synthesis: none;
+body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--sans); line-height: 1.5;
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
-a { color: var(--blue); text-underline-offset: 3px; }
+a { color: var(--brass-ink); }
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid var(--brass-ink); outline-offset: 2px; }
 .sr-only, .skip:not(:focus) { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .skip:focus { position: fixed; top: 8px; left: 8px; z-index: 2; padding: 8px 12px; background: var(--brass); color: var(--on-brass); }
@@ -25,8 +25,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 .hero { text-align: center; }
 .seal { width: 168px; height: 168px; display: block; margin: 0 auto 12px; }
-h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 10vw, 3.4rem); line-height: 1.05; margin: 0; }
-.ask { font-size: 1.2rem; color: var(--brass-ink); margin: 8px 0 0; }
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(2rem, 9vw, 3rem); line-height: 1.05; margin: 0; letter-spacing: -.01em; }
+.ask { font-family: var(--mono); font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--brass-ink); margin: 10px 0 0; }
 .lede { color: var(--ink-2); margin: 14px auto 0; max-width: 44ch; }
 
 .form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 28px; padding: 18px; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; }
@@ -38,7 +38,7 @@ input[type="text"], select { width: 100%; min-height: 46px; padding: 10px 12px; 
 .money span { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-family: var(--mono); color: var(--ink-3); }
 .money input { padding-left: 28px; }
 input::placeholder { color: var(--ink-3); opacity: .7; }
-.err { margin: 6px 0 0; font-size: .9rem; color: #F2A0A8; min-height: 0; }
+.err { margin: 6px 0 0; font-size: .82rem; color: #F0848F; min-height: 0; }
 .err:empty { display: none; }
 fieldset.status { display: flex; flex-wrap: wrap; gap: 8px; }
 fieldset.status legend { float: left; width: 100%; }
@@ -47,7 +47,7 @@ fieldset.status input { position: absolute; opacity: 0; }
 fieldset.status span { display: block; text-align: center; min-height: 44px; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 4px; color: var(--ink-2); cursor: pointer; font-size: .92rem; }
 fieldset.status input:checked + span { background: var(--raised); border-color: var(--brass); color: var(--ink); }
 fieldset.status input:focus-visible + span { outline: 3px solid var(--brass-ink); outline-offset: 2px; }
-button { font: 400 1.05rem var(--sans); min-height: 48px; padding: 12px 18px; border: 0; border-radius: 4px; background: var(--brass); color: var(--on-brass); cursor: pointer; }
+button { font: 600 1rem var(--sans); min-height: 48px; padding: 12px 18px; border: 0; border-radius: 4px; background: var(--brass); color: var(--on-brass); cursor: pointer; }
 button:disabled { opacity: .5; cursor: default; }
 .private { margin: 0; font-size: .82rem; color: var(--ink-3); text-align: center; }
 p.status { margin: 14px 0 0; font-size: .88rem; color: var(--ink-3); text-align: center; min-height: 1.4em; }
@@ -60,7 +60,7 @@ p.status { margin: 14px 0 0; font-size: .88rem; color: var(--ink-3); text-align:
 .receipt.printing { animation: print .9s cubic-bezier(.2, .7, .2, 1) both; transform-origin: top; }
 @keyframes print { from { opacity: 0; transform: translateY(-18px) scaleY(.96); } to { opacity: 1; transform: none; } }
 .r-center { text-align: center; }
-.r-title { font: 400 1.6rem/1.2 var(--display); letter-spacing: .04em; margin-bottom: 2px; }
+.r-title { font: 800 1.25rem/1.2 var(--display); letter-spacing: .02em; margin-bottom: 2px; }
 .r-small { font-size: .68rem; color: var(--paper-dim); }
 .r-rule { border: 0; border-top: 1px dashed var(--paper-ink); margin: 10px 0; opacity: .55; }
 .r-head { font-weight: 700; letter-spacing: .08em; margin: 2px 0 4px; }
@@ -80,7 +80,7 @@ p.status { margin: 14px 0 0; font-size: .88rem; color: var(--ink-3); text-align:
 
 /* the two panels under the receipt: who signs off, what landed near you */
 .panel { margin-top: 34px; border-top: 1px solid var(--rule); padding-top: 18px; }
-.panel h2 { font: 400 1.5rem/1.2 var(--display); margin: 0; }
+.panel h2 { font: 700 1.25rem/1.2 var(--display); margin: 0; }
 .panel h3 { font: 400 1.05rem/1.3 var(--sans); color: var(--ink-2); margin: 18px 0 6px; }
 .panel-intro { color: var(--ink-2); margin: 6px 0 14px; }
 .panel-intro:empty { display: none; }
@@ -90,7 +90,7 @@ p.status { margin: 14px 0 0; font-size: .88rem; color: var(--ink-3); text-align:
 .person { padding: 14px 0; border-top: 1px solid var(--rule); }
 .person:first-child { border-top: 0; padding-top: 4px; }
 .person p { margin: 0; }
-.person-name { font-size: 1.25rem; }
+.person-name { font-size: 1.15rem; font-weight: 600; }
 .person-role { color: var(--ink-2); }
 .person-term { color: var(--ink-3); font-size: .92rem; margin-top: 4px !important; }
 .person-debt { margin-top: 6px !important; }
@@ -104,7 +104,7 @@ p.status { margin: 14px 0 0; font-size: .88rem; color: var(--ink-3); text-align:
 .ranked .amount { float: right; color: var(--ink-2); margin-left: 12px; }
 
 .fine { margin-top: 34px; border-top: 1px solid var(--rule); padding-top: 14px; color: var(--ink-2); font-size: .88rem; }
-.fine summary { cursor: pointer; color: var(--ink); min-height: 32px; }
+.fine summary { cursor: pointer; color: var(--ink); font-weight: 600; min-height: 32px; }
 .fine ul { padding-left: 18px; margin: 10px 0; }
 .fine li { margin: 6px 0; }
 .sources { color: var(--ink-3); font-size: .82rem; margin: 8px 0 0; }
