@@ -165,10 +165,7 @@ public final class HistoryService {
         if (totalBlocks <= taskPolicy.chunkedThreshold()) {
             int undone = 0;
             for (EditAction action : actions) {
-                List<EntityChange> entityChanges = action.getEntityChanges();
-                for (int index = entityChanges.size() - 1; index >= 0; index--) {
-                    entityChanges.get(index).undo();
-                }
+                undoEntities(action.getEntityChanges(), false);
                 List<BiomeChange> biomeChanges = action.getBiomeChanges();
                 if (!biomeChanges.isEmpty()) {
                     BiomeCommandUtil.applyHistory(biomeChanges, true);
@@ -183,6 +180,7 @@ public final class HistoryService {
                     BlockChange change = blockChanges.get(index);
                     change.getLocation().getBlock().setBlockData(change.getBefore(), false);
                 }
+                undoEntities(action.getEntityChanges(), true);
                 refreshBiomeChunks(action);
                 applySelection(playerId, action.getBeforeSelection());
                 undone++;
@@ -216,10 +214,7 @@ public final class HistoryService {
                             && System.nanoTime() - start < taskPolicy.timeBudgetNanos()) {
                         if (currentAction == null) {
                             currentAction = actionIter.next();
-                            List<EntityChange> entityChanges = currentAction.getEntityChanges();
-                            for (int ei = entityChanges.size() - 1; ei >= 0; ei--) {
-                                entityChanges.get(ei).undo();
-                            }
+                            undoEntities(currentAction.getEntityChanges(), false);
                             changeIndex = currentAction.getChanges().size() - 1;
                         }
                         List<BlockChange> blockChanges = currentAction.getChanges();
@@ -230,6 +225,7 @@ public final class HistoryService {
                             processedTotal++;
                         }
                         if (changeIndex < 0) {
+                            undoEntities(currentAction.getEntityChanges(), true);
                             if (!currentAction.getBiomeChanges().isEmpty()) {
                                 BiomeCommandUtil.applyHistory(currentAction.getBiomeChanges(), true);
                             }
@@ -310,6 +306,7 @@ public final class HistoryService {
                     change.getWorld().setBiome(change.getX(), change.getZ(), change.getAfter());
                 }
                 for (EntityChange entityChange : action.getEntityChanges()) {
+                    loadEntityChunk(entityChange);
                     entityChange.redo();
                 }
                 refreshBiomeChunks(action);
@@ -353,7 +350,7 @@ public final class HistoryService {
                         if (changeIndex >= blockChanges.size()) {
                             if (!currentAction.getBiomeChanges().isEmpty()) BiomeCommandUtil.applyHistory(currentAction.getBiomeChanges(), false);
                             for (BiomeColumnChange change : currentAction.getBiomeColumnChanges()) change.getWorld().setBiome(change.getX(), change.getZ(), change.getAfter());
-                            for (EntityChange entityChange : currentAction.getEntityChanges()) entityChange.redo();
+                            for (EntityChange entityChange : currentAction.getEntityChanges()) { loadEntityChunk(entityChange); entityChange.redo(); }
                             refreshBiomeChunks(currentAction);
                             applySelection(playerId, currentAction.getAfterSelection());
                             currentAction = null;
@@ -485,6 +482,36 @@ public final class HistoryService {
                 editHistory.snapshotUndo(playerId, PERSISTED_HISTORY_LIMIT),
                 editHistory.snapshotRedo(playerId, PERSISTED_HISTORY_LIMIT)
         );
+    }
+
+    /**
+     * Reverts entity changes newest-first. Entities that must be removed (their creation is being undone) go
+     * before the block restore so hanging entities do not pop off a vanishing support; entities that must be
+     * respawned (their deletion is being undone) go after it so hanging entities have their support block back.
+     * Each target chunk is loaded first: {@code Bukkit.getEntity} cannot see entities in unloaded chunks, so
+     * a removal there would silently leave the entity behind.
+     */
+    private void undoEntities(List<EntityChange> entityChanges, boolean respawnPhase) {
+        for (int index = entityChanges.size() - 1; index >= 0; index--) {
+            EntityChange change = entityChanges.get(index);
+            if ((change.getKind() == EntityChange.Kind.DELETE) == respawnPhase) {
+                loadEntityChunk(change);
+                change.undo();
+            }
+        }
+    }
+
+    private void loadEntityChunk(EntityChange change) {
+        org.bukkit.Location location = change.getLocation();
+        World world = location == null ? null : location.getWorld();
+        if (world == null) {
+            return;
+        }
+        int chunkX = location.getBlockX() >> 4;
+        int chunkZ = location.getBlockZ() >> 4;
+        if (!world.isChunkLoaded(chunkX, chunkZ)) {
+            world.getChunkAt(chunkX, chunkZ);
+        }
     }
 
     private void refreshBiomeChunks(EditAction action) {
