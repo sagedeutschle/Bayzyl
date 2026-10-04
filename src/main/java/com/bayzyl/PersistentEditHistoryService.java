@@ -65,8 +65,9 @@ public final class PersistentEditHistoryService {
         // history is what was tanking the server after large pastes.
         try {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, this::saveFile);
-        } catch (IllegalStateException ex) {
-            // Plugin disabling — fall back to synchronous save so we don't lose data.
+        } catch (IllegalStateException | org.bukkit.plugin.IllegalPluginAccessException ex) {
+            // Plugin disabling (Bukkit throws IllegalPluginAccessException, a plain RuntimeException, for a
+            // task registered while disabled) — fall back to synchronous save so we don't lose data.
             saveFile();
         }
     }
@@ -116,6 +117,11 @@ public final class PersistentEditHistoryService {
         List<String> keys = sortedSectionKeys(section);
         List<EditAction> actions = new ArrayList<>();
         for (String key : keys) {
+            if (yaml.getBoolean(path + "." + key + ".tooLargeToPersist", false)) {
+                // The stub's undo data was never persisted. Entries after it (older for undo, deeper for redo)
+                // only make sense applied on top of it, so applying them would skip an edit; drop the rest.
+                break;
+            }
             EditAction action = readAction(path + "." + key);
             if (action != null) {
                 actions.add(action);
@@ -407,7 +413,17 @@ public final class PersistentEditHistoryService {
         // let it run while another save() is mutating it.
         synchronized (saveLock) {
             try {
-                yaml.save(file);
+                // Write-then-rename so a crash mid-write cannot truncate every player's history.
+                java.nio.file.Path target = file.toPath();
+                java.nio.file.Path temp = target.resolveSibling(file.getName() + ".tmp");
+                java.nio.file.Files.createDirectories(target.toAbsolutePath().getParent());
+                java.nio.file.Files.writeString(temp, yaml.saveToString(), java.nio.charset.StandardCharsets.UTF_8);
+                try {
+                    java.nio.file.Files.move(temp, target, java.nio.file.StandardCopyOption.ATOMIC_MOVE,
+                            java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                } catch (java.nio.file.AtomicMoveNotSupportedException ex) {
+                    java.nio.file.Files.move(temp, target, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                }
             } catch (IOException ex) {
                 plugin.getLogger().warning("Could not save edit-history.yml: " + ex.getMessage());
             }
