@@ -69,6 +69,11 @@ public final class VisualizationManager {
         VisualizationSettings config = getSettings(viewer.getUniqueId());
         World viewerWorld = viewer.getWorld();
         Selection ownSelection = selectionManager.get(viewer.getUniqueId());
+        // Particles are spawned in the viewer's current world, so a selection made in another world must not be
+        // drawn at its coordinates here.
+        if (ownSelection != null && ownSelection.isComplete() && !viewerWorld.equals(ownSelection.getPos1().getWorld())) {
+            ownSelection = null;
+        }
 
         // Viewer's own selection (full-strength)
         Color viewerColor = null;
