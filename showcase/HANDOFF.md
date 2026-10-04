@@ -1,5 +1,36 @@
 # prismet.xyz — handoff (2026-10-03)
 
+## Financial explorer extension — 2026-10-04
+
+The owner approved ten additional public statistics and three question presets. The current
+published baseline is `25f738a` (Fly v38); this section describes the extension being validated.
+
+- `/debt` adds real median weekly earnings, rent and home-price indexes, household debt service,
+  bank credit-card delinquency, personal saving, top 1% and bottom 50% wealth shares, fiscal-year
+  federal receipts, and net interest as a share of receipts. Official source definitions, dates,
+  units, population coverage and estimate labels travel with the data.
+- Three chart presets explore wealth distribution, household payment burden and federal interest
+  costs. Comparisons use compatible units and exact common observation dates; the table and CSV
+  reproduce those dates. URLs preserve the complete comparison, period, per-person and question
+  state. Manual changes clear a question label that no longer describes the view.
+- Default `/api/debt` preserves the original version-1 contract: 43 metrics and nine groups.
+  `?catalog=expanded` opts into 53 metrics. Both projections share the bounded refresh cache;
+  new-source failures do not alter the legacy catalog's source list or status. Updated UI assets
+  use a coordinated cache version to avoid mixing old and new modules.
+- Interest/receipts uses an exact fiscal-year-date join with a positive denominator. Real weekly
+  earnings cannot be treated as nominal totals or divided by population. Different price-index
+  bases and percentages with different denominators are excluded from automatic comparisons.
+  Wealth shares are official distributional estimates, not a quarterly census.
+- Uncle Scam native features remain a separate active lane. This extension does not change
+  `/scam`, the native app, cloud-account activation or the previous debt-growth definitions.
+
+Local verification: build and static verification passed; editor287, portfolio189 and story421
+checks passed; the complete pure/API/route suite passed 101 Node test entries. The local gate
+passed both catalog contracts and protected routes. The overlay includes `debt-discovery.js`.
+A fresh official-source response returned 49 current, four stale and zero missing measures;
+all ten additions were current. Independent source/math/compatibility review passed. Fresh
+manual visual acceptance and production deployment verification are recorded separately.
+
 ## Current release candidate — 2026-10-04
 
 Sage authorized publishing the accumulated website work on 2026-10-04. This section supersedes the

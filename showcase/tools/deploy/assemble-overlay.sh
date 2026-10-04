@@ -15,7 +15,7 @@ grep -q "editor.js\|data-edit" "$dist/index.html" && { echo "assemble-overlay: d
 rm -rf "$out"; mkdir -p "$out/public"
 cp "$root/showcase/server/"*.js "$out/"
 cp -r "$dist" "$out/site"
-for asset in steam.html steam.js debt.html debt.js debt.css debt-metrics.js debt-estimate.js; do
+for asset in steam.html steam.js debt.html debt.js debt.css debt-metrics.js debt-estimate.js debt-discovery.js; do
   cp "$root/showcase/server/public/$asset" "$out/public/"
 done
 if grep -qE '7656[0-9]{13}' "$out"/public/*; then echo "assemble-overlay: a SteamID64 is in public/; run scrub-public.sh" >&2; exit 1; fi

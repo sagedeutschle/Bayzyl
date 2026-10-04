@@ -1,4 +1,4 @@
-import { METRICS, GROUPS, atOrBefore } from './public/debt-metrics.js';
+import { METRICS as LEGACY_METRICS, EXPANDED_METRICS as METRICS, GROUPS, EXPANDED_GROUPS, atOrBefore } from './public/debt-metrics.js';
 
 const TREASURY='https://api.fiscaldata.treasury.gov/services/api/fiscal_service/';
 const BLS='https://api.bls.gov/publicAPI/v2/timeseries/data/';
@@ -109,6 +109,31 @@ export function deriveHistory(inputs, calculate) {
   });
 }
 
+// Fiscal flows require identical reporting periods: never borrow a prior year.
+function fiscalInterestShare(interest, receipts) {
+  const byDate=new Map(receipts.history.map(p=>[p.date,p]));
+  return interest.history.flatMap(p=>{
+    const denominator=byDate.get(p.date);
+    const value=denominator?.value>0?100*p.value/denominator.value:NaN;
+    return Number.isFinite(value)?[{date:p.date,value,inputDates:{[interest.id]:p.date,[receipts.id]:denominator.date}}]:[];
+  });
+}
+
+function snapshotStatus(metrics) {
+  return metrics.every(m=>m.status==='ok')?'ok':metrics.some(m=>m.value!==null)?'partial':'unavailable';
+}
+function projectSnapshot(snapshot, expanded) {
+  if(expanded)return structuredClone({...snapshot,catalog:'expanded'});
+  const ids=new Set(LEGACY_METRICS.map(m=>m.id)),sources=new Set(LEGACY_METRICS.map(m=>m.series).filter(Boolean));
+  const metrics=snapshot.metrics.filter(m=>ids.has(m.id)).map(m=>{
+    const metric={...m};
+    // Comparison metadata is opt-in alongside the expanded UI vocabulary.
+    delete metric.comparisonFamily;delete metric.basis;delete metric.seasonalAdjustment;
+    return metric;
+  });
+  return structuredClone({...snapshot,metrics,status:snapshotStatus(metrics),groups:GROUPS.map(g=>({...g,metricIds:metrics.filter(m=>m.group===g.id).map(m=>m.id)})),sources:snapshot.sources.filter(s=>sources.has(s.id))});
+}
+
 async function boundedText(response) {
   if(!response.ok)throw new Error(`HTTP ${response.status}`);
   if(Number(response.headers?.get?.('content-length'))>8_000_000)throw new Error('Response too large');
@@ -169,12 +194,12 @@ export function createDebtService({fetchImpl=globalThis.fetch,now=Date.now,cache
     const metrics=METRICS.map(def=>{
       const entry=histories[def.id],history=entry?.history||[],last=history.at(-1),source=SOURCE_DEFINITIONS.find(s=>s.id===def.series);
       const old=last && stamp-Date.parse(last.date)>def.maxAgeDays*DAY;
-      return {...def,source:source?.label||'Calculated from official observations',sourceUrl:source?.url||null,value:last?.value??null,observedAt:last?.date??null,derived:!def.series,estimated:!def.series,status:last?(entry.failed||old?'stale':'ok'):'missing',history,fetchedAt:entry?.fetchedAt??null,note:def.note};
+      return {...def,source:source?.label||'Calculated from official observations',sourceUrl:source?.url||null,value:last?.value??null,observedAt:last?.date??null,derived:!def.series,estimated:!def.series||def.sourceEstimated===true,status:last?(entry.failed||old?'stale':'ok'):'missing',history,fetchedAt:entry?.fetchedAt??null,note:def.note};
     });
     const map=Object.fromEntries(metrics.map(m=>[m.id,m]));
-    function derived(id,inputIds,calculate) {
+    function derived(id,inputIds,calculate,historyForInputs=null) {
       const m=map[id],inputs=inputIds.map(id=>map[id]);
-      m.history=deriveHistory(inputs,calculate);const last=m.history.at(-1);
+      m.history=historyForInputs?historyForInputs(...inputs):deriveHistory(inputs,calculate);const last=m.history.at(-1);
       m.value=last?.value??null;m.observedAt=last?.date??null;m.inputDates=last?.inputDates||{};
       m.sourceUrl=inputs.find(i=>i.sourceUrl)?.sourceUrl??null;
       m.sources=inputs.map(i=>({id:i.id,url:i.sourceUrl}));
@@ -186,6 +211,7 @@ export function createDebtService({fetchImpl=globalThis.fetch,now=Date.now,cache
     derived('receiptsPerCitizen',['federalReceipts','population'],([a,b])=>b>0?a/b:NaN);
     derived('spendingPerCitizen',['federalSpending','population'],([a,b])=>b>0?a/b:NaN);
     derived('deficitPerCitizen',['federalSpending','federalReceipts','population'],([a,b,c])=>c>0?(a-b)/c:NaN);
+    derived('interestShareOfReceipts',['netInterestOutlays','fiscalYearReceipts'],null,fiscalInterestShare);
     const debt=map.totalDebt,rate=map.debtGrowthPerSecond;
     rate.history=debt.history.flatMap((p,i)=>{
       const target=new Date(Date.parse(p.date)-365*DAY).toISOString().slice(0,10);
@@ -204,15 +230,14 @@ export function createDebtService({fetchImpl=globalThis.fetch,now=Date.now,cache
       rate.frequency=`${last.windowDays}-day fallback change`;
       rate.note=`365-day baseline unavailable. Estimated average change over ${last.windowDays} calendar days using at most 31 recent observations. The historical window varies with available dates; each point uses its actual elapsed interval and disclosed input dates. Not a live spending rate.`;
     } else if(!last) rate.note+=' No usable pair of dated debt observations is available; no rate or projection can be calculated.';
-    const available=metrics.filter(m=>m.status==='ok').length;
-    cached={version:1,fetchedAt,status:available===metrics.length?'ok':metrics.some(m=>m.value!==null)?'partial':'unavailable',metrics,groups:GROUPS.map(g=>({...g,metricIds:metrics.filter(m=>m.group===g.id).map(m=>m.id)})),sources:[...sourceStates.values()],note:'Observed data, not a live tally. Fiscal years, annual rates and observation dates differ by series. Histories cover up to six years; debt subject to limit covers up to one year.'};
+    cached={version:1,fetchedAt,status:snapshotStatus(metrics),metrics,groups:EXPANDED_GROUPS.map(g=>({...g,metricIds:metrics.filter(m=>m.group===g.id).map(m=>m.id)})),sources:[...sourceStates.values()],note:'Observed data, not a live tally. Fiscal years, annual rates and observation dates differ by series. Histories cover up to six years; debt subject to limit covers up to one year.'};
     return cached;
   }
-  return {async getSnapshot({force=false}={}) {
-    if(inflight)return inflight;
+  return {async getSnapshot({force=false,expanded=false}={}) {
+    if(inflight)return projectSnapshot(await inflight,expanded===true);
     const elapsed=time()-lastAttempt;
     // A force request cannot turn the public endpoint into an upstream flood.
-    if(cached && (elapsed<60000||(!force&&elapsed<cacheMs)))return cached;
-    lastAttempt=time();inflight=refresh();try{return await inflight;}finally{inflight=null;}
+    if(cached && (elapsed<60000||(!force&&elapsed<cacheMs)))return projectSnapshot(cached,expanded===true);
+    lastAttempt=time();inflight=refresh();try{return projectSnapshot(await inflight,expanded===true);}finally{inflight=null;}
   }};
 }

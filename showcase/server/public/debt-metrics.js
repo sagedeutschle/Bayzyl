@@ -55,13 +55,39 @@ const definitions = [
 ];
 
 export const METRICS = definitions.map(([id,label,group,unit,series,scale,frequency,maxAgeDays,note='']) => ({id,label,group,unit,series,scale,frequency,maxAgeDays,note}));
-export const UNIT_LABELS = { dollars:'U.S. dollars', dollarsPerPerson:'Dollars per person', dollarsPerSecond:'Dollars per second', percent:'Percent', people:'People', index:'Index', fineTroyOunces:'Fine troy ounces' };
+// The original vocabulary remains stable for old API clients and native contracts.
+// DFA and debt-service observations are dated at quarter start and released with
+// substantial lag. Their 300-day age ceiling allows normal quarterly publication;
+// a failed refresh still marks retained values stale immediately.
+const financialDefinitions = [
+  ['realMedianWeeklyEarnings','Real median weekly earnings','revenue','realDollars1982_84PerWeek','LES1252881600Q',1,'Quarterly',200,'Full-time wage and salary workers age 16+. Median usual weekly earnings in 1982–84 CPI-adjusted dollars; already inflation adjusted. Changes in who is employed can change the median. Not annual household income.','real-weekly-earnings','1982–84 CPI-adjusted dollars per week','Seasonally adjusted'],
+  ['rentPriceIndex','Rent of primary residence · CPI','economy','index','CUUR0000SEHA',1,'Monthly',100,'Urban consumers, rent of primary residence. Measures the stock of rental contracts, not new asking rents or a dollar rent level. Slower inflation does not necessarily mean falling rent.','cpi-1982-84','1982–84 = 100','Not seasonally adjusted'],
+  ['homePriceIndex','FHFA home-price index','economy','index','USSTHPI',1,'Quarterly',200,'All-transactions repeat-property index, including refinancing appraisals, with conforming conventional mortgage coverage. Not median price, local affordability or monthly mortgage payment.','fhfa-1980-q1','1980 Q1 = 100','Not seasonally adjusted'],
+  ['householdDebtServiceRatio','Household debt service / disposable income','household','percent','TDSP',1,'Quarterly',300,'Aggregate required debt payments relative to disposable personal income, including bundled mortgage escrow. Not a typical borrower’s debt-to-income ratio. Current credit-bureau method starts in 2005.','household-debt-service','Required household debt payments / disposable personal income','Seasonally adjusted'],
+  ['creditCardDelinquencyRate','Bank credit-card delinquency rate','household','percent','DRCCLACBS',1,'Quarterly · end of period',200,'Share of commercial-bank credit-card loan dollars 30+ days past due and still accruing, or nonaccrual. Not a share of borrowers, charge-offs or a flow of new delinquencies.','bank-card-delinquency','Delinquent credit-card loan balances / outstanding card loan balances','Seasonally adjusted'],
+  ['personalSavingRate','Personal saving / disposable income','household','percent','PSAVERT',1,'Monthly',100,'Aggregate income-flow saving after taxes and outlays, not median household bank savings. Personal income excludes capital gains. The published percentage is not multiplied by 12.','personal-saving','Personal saving / disposable personal income','Seasonally adjusted annual rate'],
+  ['bottom50WealthShare','Bottom 50% · share of net worth','household','percent','WFRBSB50215',1,'Quarterly',300,'Official distributional estimate combining household surveys and Financial Accounts. Households ranked by wealth, not income. Interpolated between surveys and forecast beyond the latest survey. A share can fall while dollar wealth rises.','household-net-worth-share','Share of aggregate household net worth','Not seasonally adjusted',true],
+  ['top1WealthShare','Top 1% · share of net worth','household','percent','WFRBST01134',1,'Quarterly',300,'Official distributional estimate combining household surveys and Financial Accounts. Wealth-ranked households; unequal population group sizes. Top 1% and bottom 50% do not sum to all households; group membership can change.','household-net-worth-share','Share of aggregate household net worth','Not seasonally adjusted',true],
+  ['fiscalYearReceipts','Federal receipts · fiscal year','revenue','dollars','FYFR',1e6,'Annual · fiscal year',800,'OMB federal budget receipts, normalized from millions of dollars. Dates are fiscal-year ends; historical fiscal years ended in June before the September convention. Not BEA quarterly annual-rate receipts.','federal-fiscal-year-flow','Federal budget fiscal-year dollars','Not seasonally adjusted'],
+  ['interestShareOfReceipts','Net interest / fiscal-year receipts','spending','percent',null,1,'Annual · fiscal year',800,'Net interest outlays divided by federal budget receipts for exactly matching fiscal-year end dates. Missing or nonpositive receipts produce no ratio. A scale comparison, not a claim that revenue is earmarked.','interest-receipts-share','Net interest outlays / receipts in the same fiscal year','Not seasonally adjusted'],
+];
+const expandedLegacyMetadata = {
+  cpi:{comparisonFamily:'cpi-1982-84',basis:'1982–84 = 100',seasonalAdjustment:'Not seasonally adjusted'},
+  netInterestOutlays:{comparisonFamily:'federal-fiscal-year-flow',basis:'Federal budget fiscal-year dollars',seasonalAdjustment:'Not seasonally adjusted'},
+  annualDeficit:{comparisonFamily:'federal-fiscal-year-flow',basis:'Federal budget fiscal-year dollars',seasonalAdjustment:'Not seasonally adjusted'},
+};
+export const EXPANDED_METRICS = [
+  ...METRICS.map(m=>({...m,...expandedLegacyMetadata[m.id]})),
+  ...financialDefinitions.map(([id,label,group,unit,series,scale,frequency,maxAgeDays,note,comparisonFamily,basis,seasonalAdjustment,sourceEstimated=false])=>({id,label,group,unit,series,scale,frequency,maxAgeDays,note,comparisonFamily,basis,seasonalAdjustment,sourceEstimated})),
+];
+export const EXPANDED_GROUPS = GROUPS.map(g=>g.id==='household'?{...g,label:'Household Finances'}:{...g});
+export const UNIT_LABELS = { dollars:'U.S. dollars', realDollars1982_84PerWeek:'1982–84 dollars per week', dollarsPerPerson:'Dollars per person', dollarsPerSecond:'Dollars per second', percent:'Percent', people:'People', index:'Index', fineTroyOunces:'Fine troy ounces' };
 export function formatValue(value, unit, { compact = false } = {}) {
   if (!Number.isFinite(value)) return 'Unavailable';
   const options = { maximumFractionDigits: unit === 'percent' || unit === 'index' ? 2 : 0 };
   if (compact) Object.assign(options, {notation:'compact', maximumFractionDigits:2});
   let text = new Intl.NumberFormat('en-US', options).format(value);
-  if (unit.startsWith('dollars')) text = '$' + text;
+  if (unit.startsWith('dollars') || unit==='realDollars1982_84PerWeek') text = '$' + text;
   if (unit === 'percent') text += '%';
   return text;
 }

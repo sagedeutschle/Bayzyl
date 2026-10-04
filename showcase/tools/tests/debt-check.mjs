@@ -78,7 +78,7 @@ test('one FRED failure retains only its last-good data; siblings refresh',async(
   const first=await service.getSnapshot();failing.add('GDP');stamp+=61000;
   const second=await service.getSnapshot({force:true});const m=Object.fromEntries(second.metrics.map(m=>[m.id,m]));
   assert.equal(m.gdp.status,'stale');assert.equal(m.gdp.value,30e12);assert.equal(m.population.status,'ok');assert.equal(m.debtToGDP.status,'stale');
-  assert.equal(m.gdp.fetchedAt,first.fetchedAt);assert.equal(second.sources.find(s=>s.id==='GDP').status,'stale');assert.equal(calls,58);
+  assert.equal(m.gdp.fetchedAt,first.fetchedAt);assert.equal(second.sources.find(s=>s.id==='GDP').status,'stale');assert.equal(calls,74);
 });
 test('empty initial service exposes null and empty histories, never fabricated values',async()=>{
   const s=await createDebtService({fetchImpl:async()=>{throw new Error('offline');},now:()=>Date.parse(DATE)}).getSnapshot();
@@ -104,9 +104,9 @@ test('partial Treasury field outage does not erase valid sibling metrics',async(
 });
 test('TTL, forced minimum interval and concurrent calls coalesce',async()=>{
   let stamp=Date.parse(DATE),calls=0;const service=createDebtService({fetchImpl:fixtureFetch(new Set(),()=>calls++),now:()=>stamp});
-  const [a,b]=await Promise.all([service.getSnapshot(),service.getSnapshot({force:true})]);assert.equal(a,b);assert.equal(calls,29);
-  stamp+=59000;await service.getSnapshot({force:true});assert.equal(calls,29);
-  stamp+=2000;await service.getSnapshot();assert.equal(calls,29);await service.getSnapshot({force:true});assert.equal(calls,58);
+  const [a,b]=await Promise.all([service.getSnapshot(),service.getSnapshot({force:true})]);assert.deepEqual(a,b);assert.notEqual(a,b);assert.equal(calls,37);
+  stamp+=59000;await service.getSnapshot({force:true});assert.equal(calls,37);
+  stamp+=2000;await service.getSnapshot();assert.equal(calls,37);await service.getSnapshot({force:true});assert.equal(calls,74);
 });
 test('hung source has a bounded timeout and does not block remaining metric statuses',async()=>{
   const service=createDebtService({fetchImpl:()=>new Promise(()=>{}),timeoutMs:4,now:()=>Date.parse(DATE)});

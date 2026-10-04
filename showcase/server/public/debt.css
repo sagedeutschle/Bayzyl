@@ -11,3 +11,18 @@
 .estimate-label{font:11px/1.6 var(--mono);color:var(--violet);margin-top:12px}
 .estimate-method{font-size:12px;line-height:1.65;color:var(--muted);max-width:62ch;margin-top:12px}
 .headline .debt-number{font-variant-numeric:tabular-nums;margin-top:8px}
+
+/* Question entry points stay local to the existing chart. */
+.discovery{margin:0 0 24px;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.discovery-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.discovery-heading button{min-height:44px;font-size:12px;padding:7px 12px}
+.question-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.question-buttons button{min-height:48px;padding:11px 14px;text-align:left;font:17px/1.35 var(--display);background:transparent}
+.question-buttons button[aria-pressed=true]{background:var(--soft);border-color:var(--violet);color:var(--violet)}
+.question-context{margin-top:14px;font-size:14px;line-height:1.65;max-width:100ch;color:var(--ink);border-left:2px solid var(--gold);padding-left:14px}
+.measurement-context{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:12px 24px;margin-top:18px;font-size:12px;line-height:1.65;color:var(--muted)}
+.measurement-context strong{font-weight:500;color:var(--ink)}
+.measurement-context p{margin-top:3px}.measurement-context a{color:var(--violet)}
+@media(max-width:700px){.question-buttons{grid-template-columns:1fr;gap:8px}.question-buttons button{font-size:17px;min-height:44px}.discovery{padding:14px 0;margin-bottom:18px}.question-context{font-size:13px}.measurement-context{font-size:12px;gap:12px}}
+
+.intro-note .text-link+.text-link{margin-left:18px}

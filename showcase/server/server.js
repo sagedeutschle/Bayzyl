@@ -701,7 +701,10 @@ async function routeRequest(req, res, projectFeed, debtService, arcadeApi) {
       return sendJSON(req, res, 429, { error: 'Please wait before refreshing the dashboard.' }, { 'retry-after': '60', 'cache-control': 'no-store' });
     }
     try {
-      const snapshot = await debtService.getSnapshot({ force: url.searchParams.get('refresh') === '1' || url.searchParams.get('force') === 'true' });
+      const snapshot = await debtService.getSnapshot({
+        force: url.searchParams.get('refresh') === '1' || url.searchParams.get('force') === 'true',
+        expanded: url.searchParams.get('catalog') === 'expanded',
+      });
       return sendJSON(req, res, 200, snapshot, { 'cache-control': 'no-store' });
     } catch {
       return sendJSON(req, res, 503, { error: 'Economic data is temporarily unavailable. Please try again.' }, { 'cache-control': 'no-store' });

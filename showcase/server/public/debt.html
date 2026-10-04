@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#161b25">
-  <meta name="description" content="Explore 43 measures of U.S. debt, public finances and the economy. Official observations, real histories and transparent sources.">
+  <meta name="description" content="Explore 53 measures of U.S. debt, public finances and the economy. Official observations, real histories and transparent sources.">
   <title>Debt Clock — Prismet</title>
   <link rel="icon" href="/prismet-mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assets/fonts/fonts.css">
-  <link rel="stylesheet" href="/debt.css">
+  <link rel="stylesheet" href="/debt.css?v=20261004b">
 </head>
 <body>
 <a class="skip" href="#main">Skip to debt analytics</a>
@@ -21,15 +21,20 @@
 <main id="main">
   <section class="intro" aria-labelledby="page-title">
     <div><p class="eyebrow">Prismet lenses <span aria-hidden="true">/</span> 01</p><h1 id="page-title">The nation's<br><em>balance sheet.</em></h1></div>
-    <div class="intro-note"><p>Debt is one number.<br>The economy is a bigger story.</p><p class="muted">Explore 43 measures across public finances, households and the economy. Every figure has a source. Every observation has a date.</p><a class="text-link" href="#register">Explore the full register <span aria-hidden="true">↘</span></a></div>
+    <div class="intro-note"><p>Debt is one number.<br>The economy is a bigger story.</p><p class="muted">Explore <span data-metric-count>53</span> measures across public finances, households and the economy. Every figure has a source. Every observation has a date.</p><a class="text-link" href="#explorer">Explore a question <span aria-hidden="true">↘</span></a> <a class="text-link" href="#register">Explore the full register <span aria-hidden="true">↘</span></a></div>
   </section>
   <div class="status-line"><p id="status" role="status">Gathering official observations. Independent sources may take a moment.</p><div class="actions"><button id="refresh" type="button">Refresh sources</button><button id="motion" class="quiet" type="button" aria-pressed="false">Pause ticking &amp; updates</button><button id="announce" class="quiet" type="button">Read current values</button></div></div>
   <section class="overview" aria-labelledby="overview-title">
     <div class="headline"><p class="eyebrow" id="overview-title">Gross U.S. national debt</p><p class="estimate-label" id="debt-estimate-label">Waiting for an official balance</p><p class="debt-number" id="debt" aria-live="off" aria-describedby="debt-estimate-label debt-date">—</p><p class="muted" id="debt-date">Waiting for Treasury. No balance substituted.</p><p class="estimate-method" id="debt-estimate-method">The headline illustrates growth between refreshes. Charts and register use published observations.</p></div>
     <dl class="key-figures"><div><dt>Per citizen <span>derived</span></dt><dd id="debt-person">—</dd></div><div><dt>Debt / GDP <span>derived</span></dt><dd id="debt-gdp">—</dd></div><div><dt>Average change / second <span>historical rate</span></dt><dd id="debt-rate">—</dd></div></dl>
   </section>
-  <section class="explorer" aria-labelledby="chart-title">
+  <section class="explorer" id="explorer" aria-labelledby="chart-title">
     <div class="section-heading"><div><p class="eyebrow">Follow the numbers</p><h2 id="chart-title">Debt over time</h2></div><div class="actions"><button id="pin-current" class="quiet" type="button" aria-pressed="false">Pin metric</button><button id="expand-chart" type="button">Expand chart</button><button id="export-csv" class="quiet" type="button">Export CSV</button></div></div>
+    <div class="discovery" role="group" aria-labelledby="discovery-title">
+      <div class="discovery-heading"><p class="eyebrow" id="discovery-title">Explore a question</p><button id="clear-question" class="quiet" type="button" hidden>Clear question</button></div>
+      <div id="question-buttons" class="question-buttons"></div>
+      <p id="question-context" class="question-context" hidden></p>
+    </div>
     <div class="chart-controls">
       <label>Measure<select id="metric-select"><option value="totalDebt">U.S. national debt</option></select></label>
       <label>Compare with<select id="compare-select"><option value="">No comparison</option></select></label>
@@ -40,18 +45,19 @@
     <div id="chart" class="chart-frame"><p class="empty">Real history will appear here as sources respond.</p></div>
     <p id="chart-readout" class="chart-readout">Select a measure to inspect its history.</p>
     <p id="chart-caption" class="muted">The chart uses published observations. No forecast points or animated estimates.</p>
+    <div id="measurement-context" class="measurement-context" aria-label="Measurement notes"></div>
     <details class="method"><summary>Sources, calculation &amp; data table</summary><div id="metric-detail"></div><div id="chart-table" class="table-scroll"></div></details>
   </section>
   <section class="register" id="register" aria-labelledby="register-title">
-    <div class="section-heading"><div><p class="eyebrow">Nine perspectives</p><h2 id="register-title">The full register.</h2></div><label class="search">Find a measure<input id="metric-search" type="search" placeholder="Try interest, income, gold…" autocomplete="off"></label></div>
+    <div class="section-heading"><div><p class="eyebrow" id="group-count">9 perspectives</p><h2 id="register-title">The full register.</h2></div><label class="search">Find a measure<input id="metric-search" type="search" placeholder="Try interest, income, gold…" autocomplete="off"></label></div>
     <div id="pins" class="pins" aria-label="Pinned measures"></div>
-    <p id="register-count" class="muted">43 measures. Select any row to explore its history.</p>
+    <p id="register-count" class="muted">53 measures. Select any row to explore its history.</p>
     <div id="metric-groups"></div>
     <p id="search-empty" class="empty" hidden>No measures match. Try a broader term.</p>
   </section>
   <section class="provenance" id="sources" aria-labelledby="sources-title">
     <div><p class="eyebrow">Read the fine print</p><h2 id="sources-title">A window into<br>public data.</h2><p>Official data arrives on different schedules. A daily debt balance, quarterly GDP and a fiscal-year deficit describe different periods.</p><p>“Derived” means calculated from dated inputs. “Stale” means a source failed to refresh or its observation is older than this dashboard's cadence threshold. “Unavailable” means we have no valid observation. Historical series remain historical.</p></div>
-    <div><details open><summary>Source availability</summary><div id="source-list"><p class="muted">Contacting U.S. Treasury, FRED and the Bureau of Labor Statistics.</p></div></details><details><summary>How to read this dashboard</summary><p>All money is normalized to U.S. dollars before calculation. Annual rates are labeled and are not monthly spending. Negative surplus/deficit figures follow the source's sign convention; derived deficit per citizen uses spending minus receipts.</p><p>Observation dates for monthly, quarterly and annual data identify a period, not the date of publication. Ratio histories pair each observation with the latest input dated at or before it; they are calculated using today's revised source history, not a real-time vintage archive.</p><p>Per-person views divide by dated population observations. A national balance divided by population is context, not an individual obligation. Charts show actual returned coverage, up to six years; debt subject to limit currently covers up to one year. Lines connect observations without inventing intermediate data.</p><p>Data is cached for six hours. Manual refresh is limited to one upstream round per minute. Only the clearly labeled headline estimate ticks, using running time since refresh; pausing excludes paused time. The dated official balance, charts and register stay unchanged between source updates. This is an informational data explorer, not financial advice.</p></details></div>
+    <div><details open><summary>Source availability</summary><div id="source-list"><p class="muted">Contacting U.S. Treasury, FRED and the Bureau of Labor Statistics.</p></div></details><details><summary>How to read this dashboard</summary><p>Money uses the stated dollar basis: nominal U.S. dollars unless explicitly labeled real. Real weekly earnings use 1982–84 purchasing power, and each price index retains its own base period. Indexes are not dollar prices and different bases cannot be compared directly. Annual rates are labeled and are not monthly spending. Negative surplus/deficit figures follow the source's sign convention; derived deficit per citizen uses spending minus receipts.</p><p>Observation dates for monthly, quarterly and annual data identify a period, not the date of publication. Most ratio histories pair each observation with the latest input dated at or before it. Interest as a share of fiscal receipts instead requires identical fiscal-year dates; they are calculated using today's revised source history, not a real-time vintage archive.</p><p>Per-person views divide by dated population observations. A national balance divided by population is context, not an individual obligation. Charts show actual returned coverage, up to six years; debt subject to limit currently covers up to one year. Lines connect observations without inventing intermediate data.</p><p>Data is cached for six hours. Manual refresh is limited to one upstream round per minute. Only the clearly labeled headline estimate ticks, using running time since refresh; pausing excludes paused time. The dated official balance, charts and register stay unchanged between source updates. This is an informational data explorer, not financial advice.</p></details></div>
   </section>
   <aside class="connected"><div><p class="eyebrow">Another way to see it</p><h2>What does your tax dollar do?</h2><p>Uncle Scam turns a salary and location into a personal tax receipt.</p></div><a class="button" href="/scam">Explore Uncle Scam <span aria-hidden="true">↗</span></a></aside>
 </main>
@@ -59,6 +65,6 @@
 <dialog id="chart-dialog" aria-labelledby="dialog-title"><div class="dialog-head"><h2 id="dialog-title">Metric history</h2><button id="close-chart" type="button">Close chart</button></div><div id="dialog-chart" class="chart-frame"></div><p id="dialog-readout" class="chart-readout"></p><p class="muted">Use the chart's arrow keys to inspect observations. Escape closes this view.</p></dialog>
 <p id="live" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
 <noscript><p class="no-script">This interactive dashboard needs JavaScript. Browse the official sources directly: <a href="https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/">U.S. Treasury</a>, <a href="https://fred.stlouisfed.org/">FRED</a>, <a href="https://www.bls.gov/data/">BLS</a>.</p></noscript>
-<script type="module" src="/debt.js"></script>
+<script type="module" src="/debt.js?v=20261004b"></script>
 </body>
 </html>

@@ -22,7 +22,7 @@ done
 for module in wordle rubiks-cube snake sudoku sliding-15 nonogram chess reversi connect-four checkers gomoku sea-battle catan solitaire spider crazy-8 brick-bench puzzle-common puzzle-data catan-board; do
   chk "/arcade/games/$module.js" 200
 done
-chk /product-shell.css 200; chk /api/arcade/config 200; chk /debt.css 200; chk /debt-metrics.js 200; chk /debt-estimate.js 200; chk /.well-known/apple-app-site-association 200
+chk /product-shell.css 200; chk /api/arcade/config 200; chk /debt.css 200; chk /debt-metrics.js 200; chk /debt-estimate.js 200; chk /debt-discovery.js 200; chk /.well-known/apple-app-site-association 200
 # Upstream outages are valid data states. Gate the contract, never fabricate freshness.
 if debt=$(curl -fsS --max-time 95 --max-filesize 8388608 "$B/api/debt"); then
   if printf '%s' "$debt" | python3 -c 'import datetime,json,math,re,sys
@@ -56,6 +56,34 @@ except (AssertionError,KeyError,TypeError,ValueError,OverflowError):
 else
   bad "/api/debt request failed or exceeded bounded response size/time"
 fi
+# The expanded explorer opts in; the preceding legacy contract stays intact.
+if expanded=$(curl -fsS --max-time 95 --max-filesize 8388608 "$B/api/debt?catalog=expanded"); then
+  if printf '%s' "$expanded" | python3 -c 'import datetime,json,math,sys
+try:
+  d=json.load(sys.stdin); metrics=d["metrics"]; byid={m["id"]:m for m in metrics}
+  added={"realMedianWeeklyEarnings","rentPriceIndex","homePriceIndex","householdDebtServiceRatio","creditCardDelinquencyRate","personalSavingRate","bottom50WealthShare","top1WealthShare","fiscalYearReceipts","interestShareOfReceipts"}
+  assert d["version"]==1 and d["status"] in ("ok","partial","unavailable")
+  assert len(metrics)==len(byid)==53 and added<=byid.keys()
+  assigned=[i for g in d["groups"] for i in g["metricIds"]]
+  assert len(assigned)==53 and set(assigned)==byid.keys()
+  for m in metrics:
+    assert m["status"] in ("ok","stale","missing")
+    h=m["history"]; assert isinstance(h,list) and len(h)<=10000
+    assert all(datetime.date.fromisoformat(p["date"]).isoformat()==p["date"] and p["date"]<=d["fetchedAt"][:10] and type(p["value"]) in (int,float) and math.isfinite(p["value"]) for p in h)
+    assert all(h[i-1]["date"]<h[i]["date"] for i in range(1,len(h)))
+    if m["status"]=="missing": assert m["value"] is None and m["observedAt"] is None and not h
+    else: assert h and m["observedAt"]==h[-1]["date"] and m["value"]==h[-1]["value"]
+  ratio=byid["interestShareOfReceipts"]
+  assert all(p["inputDates"]["netInterestOutlays"]==p["date"]==p["inputDates"]["fiscalYearReceipts"] for p in ratio["history"])
+  assert byid["realMedianWeeklyEarnings"]["unit"]!="dollars"
+  assert all(byid[i].get("sourceEstimated") is True for i in ["top1WealthShare","bottom50WealthShare"])
+  print("expanded debt schema: 53 metrics / explicit estimates / matched fiscal-year inputs")
+except (AssertionError,KeyError,TypeError,ValueError,OverflowError):
+  sys.exit(1)
+'; then ok "/api/debt?catalog=expanded 53-metric contract"; else bad "expanded debt catalog invalid"; fi
+else
+  bad "expanded debt catalog request failed"
+fi
 chk /scam 200; chk /scam.js 200; chk /scam-calc.js 200; chk /scam.css 200; chk /scam-seal.svg 200; chk /scam-data/tax-2026.json 200; chk /scam-data/mts-snapshot.json 200
 chk /edit 200; chk /edit.js 200; chk /edit/store.js 200; chk /lib/render.js 200; chk /edit/assets.json 200; chk /robots.txt 200
 st=$(curl -s --max-time 20 "$B/api/edit/status"); printf '%s' "$st" | grep -q '"ok":true' && ok "/api/edit/status answers ($(printf '%s' "$st" | grep -o '"configured":[a-z]*'))" || bad "/api/edit/status = $(printf '%s' "$st" | head -c 80)"
@@ -63,7 +91,8 @@ chk /shots/helm-1-full.webp 404; chk /shots/ 404; chk /nope 404; chk /api/nope 4
 [ "$(curl -s --max-time 20 "$B/steam" "$B/steam.js" | grep -cE '7656[0-9]{13}')" = 0 ] && ok "/steam carries no SteamID64" || bad "/steam carries a SteamID64"
 cc=$(curl -sI --max-time 20 "$B/site.css?v=0123abcd" | grep -i '^cache-control' | tr -d '\r' | cut -d' ' -f2-)
 [ "$cc" = "public, max-age=31536000, immutable" ] && ok "versioned site file is immutable" || bad "versioned cache-control = '$cc'"
-rtc=$(curl -s -o /dev/null -w '%{http_code}' --http1.1 -H 'Connection: Upgrade' -H 'Upgrade: websocket' -H 'Sec-WebSocket-Version: 13' -H 'Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==' --max-time 10 "$B/rtc")
+rtc_nonce=$(python3 -c 'import base64,secrets; print(base64.b64encode(secrets.token_bytes(16)).decode())')
+rtc=$(curl -s -o /dev/null -w '%{http_code}' --http1.1 -H 'Connection: Upgrade' -H 'Upgrade: websocket' -H 'Sec-WebSocket-Version: 13' -H "Sec-WebSocket-Key: $rtc_nonce" --max-time 10 "$B/rtc")
 [ "$rtc" = 101 ] && ok "/rtc upgrades (101)" || bad "/rtc = $rtc (want 101)"
 w=$(curl -s --max-time 20 "$B/api/wordle"); wc_=$(printf '%s' "$w" | python3 -c 'import json,sys
 try:
