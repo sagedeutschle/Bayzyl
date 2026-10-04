@@ -8,9 +8,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public final class DetailBrushService {
@@ -18,7 +18,15 @@ public final class DetailBrushService {
     private final DetailBrushSafety safety;
     private final HistoryService historyService;
     private final AtomicLong stampCounter;
-    private final Map<String, String> placedDetailSignatures = new ConcurrentHashMap<>();
+    /** Cap on remembered detail blocks; the oldest are forgotten first (they just stop matching "extend"). */
+    static final int MAX_TRACKED_DETAIL_BLOCKS = 100_000;
+    private final Map<String, String> placedDetailSignatures = Collections.synchronizedMap(
+            new LinkedHashMap<>(256, 0.75f, false) {
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<String, String> eldest) {
+                    return size() > MAX_TRACKED_DETAIL_BLOCKS;
+                }
+            });
 
     public DetailBrushService(DetailBrushPresetRegistry registry, DetailBrushSafety safety,
                               HistoryService historyService) {
@@ -94,6 +102,10 @@ public final class DetailBrushService {
                 placedDetailSignatures.put(blockKey(change.getLocation()), signature);
             }
         }
+    }
+
+    int trackedDetailBlockCount() {
+        return placedDetailSignatures.size();
     }
 
     private String brushSignature(DetailBrushPreset preset, DetailBrushSettings settings) {

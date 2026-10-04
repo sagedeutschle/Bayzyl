@@ -98,4 +98,32 @@ final class DetailBrushExecutionSafetyTest {
                 org.mockito.ArgumentMatchers.eq(false));
         verifyNoInteractions(history);
     }
+
+    @Test
+    void placedDetailSignatureMemoryIsBoundedAcrossManyStamps() throws Exception {
+        DetailBrushPresetRegistry registry = new DetailBrushPresetRegistry();
+        DetailBrushService service = new DetailBrushService(
+                registry, new DetailBrushSafety(registry), mock(HistoryService.class), new AtomicLong());
+        DetailBrushPreset preset = mock(DetailBrushPreset.class);
+        when(preset.id()).thenReturn("vine");
+        when(preset.parameterSpecs()).thenReturn(java.util.List.of());
+        when(preset.transparentTargetMaterials()).thenReturn(java.util.Set.of(Material.VINE));
+        BlockData vine = mock(BlockData.class);
+        when(vine.getMaterial()).thenReturn(Material.VINE);
+        World world = mock(World.class);
+        when(world.getUID()).thenReturn(UUID.randomUUID());
+        java.util.List<com.bayzyl.BlockChange> changes = new java.util.ArrayList<>();
+        for (int i = 0; i < DetailBrushService.MAX_TRACKED_DETAIL_BLOCKS + 500; i++) {
+            changes.add(new com.bayzyl.BlockChange(new Location(world, i, 64, 0), vine, vine));
+        }
+        DetailBrushSettings settings = new DetailBrushSettings(
+                "vine", DetailBrushParameters.empty(), DetailBrushMode.STAMP);
+
+        java.lang.reflect.Method mark = DetailBrushService.class.getDeclaredMethod(
+                "markPlacedDetails", DetailBrushPreset.class, DetailBrushSettings.class, java.util.List.class);
+        mark.setAccessible(true);
+        mark.invoke(service, preset, settings, changes);
+
+        assertEquals(DetailBrushService.MAX_TRACKED_DETAIL_BLOCKS, service.trackedDetailBlockCount());
+    }
 }
