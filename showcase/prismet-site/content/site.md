@@ -499,3 +499,22 @@ Minecraft · a world of details
 
 ## plate.gallery_title
 Built, block by block.
+
+<!-- Proposed portfolio story labels. Original work-page wording remains unchanged. -->
+## story.title
+Inside the work
+
+## story.contribution
+My contribution
+
+## story.decisions
+Engineering decisions
+
+## story.outcome
+What you can inspect
+
+## story.read
+Read the engineering story
+
+## story.gallery
+Explore the project images

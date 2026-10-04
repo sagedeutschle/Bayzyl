@@ -16,13 +16,22 @@ const entries = [
   ['checkers','Checkers','Board','checkers','Find the jump. Make your king.'],
   ['gomoku','Gomoku','Board','gomoku','Five stones, one unbroken line.'],
   ['sea-battle','Sea Battle','Board','seabattle','Search the grid. Find the fleet.'],
-  ['catan','Catan','Board',null,'Build a settlement. Make a trade.'],
+  ['catan','Settler Scramble','Board',null,'Build a settlement. Make a trade.'],
   ['solitaire','Solitaire','Cards','solitaire','A quiet table and a fresh deal.'],
   ['crazy-8','Crazy 8','Cards','crazyeight','Match a suit. Change the direction of play.'],
   ['spider','Spider','Cards','spider','Build a sequence. Clear the table.'],
   ['brick-bench','Brick Bench','Workshop','brickbench','Build with parts, colors and layers.'],
   ['debt-clock','Debt Clock','Lenses','debtclock','Look closer at the public numbers.','/debt'],
   ['steam-rewind','Steam Rewind','Lenses','steamrewind','See your library through another lens.','/steam'],
+  ['uncle-scam','Uncle Scam','Lenses',null,'See where your tax dollar goes.','/scam'],
 ];
-export const catalog = entries.map(([id,title,category,art,description,href]) => ({ id,title,category,art: art ? `/arcade/art/${art}.webp` : null,description,href:href || `/arcade/${id}`,portable:['2048','minesweeper','lights-out'].includes(id) }));
+const aliases = {'catan':['catan','settlers','settler scramble'],'wordle':['word game'],'sea-battle':['battleship'],'connect-four':['connect 4','connect4'],'crazy-8':['crazy eights','crazy eight'],'sliding-15':['15 puzzle','fifteen puzzle'],'reversi':['othello'],'nonogram':['picross'],'rubiks-cube':['rubik cube','rubiks cube'],'uncle-scam':['tax','taxes','tax receipt']};
+export const catalog = entries.map(([id,title,category,art,description,href]) => ({ id,title,category,aliases:aliases[id]||[],art: art ? `/arcade/art/${art}.webp` : null,description,href:href || `/arcade/${id}`,portable:['2048','minesweeper','lights-out'].includes(id) }));
 export const byID = Object.assign(Object.create(null), Object.fromEntries(catalog.map((entry)=>[entry.id,entry])));
+
+const normalized = value => String(value).toLowerCase().replace(/[’']/g,'').replace(/[-_]/g,' ').trim();
+export function matchesCatalog(entry, query) {
+  const haystack=normalized([entry.id,entry.title,entry.category,entry.description,...(entry.aliases||[])].join(' '));
+  return normalized(query).split(/\s+/).every(word=>haystack.includes(word));
+}
+export const collectionCount = (query, count) => normalized(query) ? `${count} of ${catalog.length} in the collection` : `${catalog.length} in the collection`;

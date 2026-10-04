@@ -230,7 +230,13 @@
           "caption": "Commands within reach",
           "evidence": "Historical interface"
         }
-      ]
+      ],
+      "story": {
+        "decisions": [
+          1,
+          2
+        ]
+      }
     },
     {
       "slug": "prismet-app",
@@ -416,7 +422,13 @@
           "caption": "Chess on a larger canvas",
           "evidence": "Co-developed"
         }
-      ]
+      ],
+      "story": {
+        "decisions": [
+          1,
+          2
+        ]
+      }
     },
     {
       "slug": "the-helm",
@@ -574,7 +586,13 @@
           "caption": "What is using the machine",
           "evidence": "Rendered widget"
         }
-      ]
+      ],
+      "story": {
+        "decisions": [
+          1,
+          2
+        ]
+      }
     },
     {
       "slug": "prismcode",
@@ -645,7 +663,13 @@
           "caption": "Inspect the diff",
           "evidence": "Scripted demo"
         }
-      ]
+      ],
+      "story": {
+        "decisions": [
+          1,
+          2
+        ]
+      }
     },
     {
       "slug": "the-long-now",

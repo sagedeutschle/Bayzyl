@@ -33,3 +33,30 @@ Selections, shapes, brushes, clipboards, persistent undo, shared kits, and build
 - Shared builder kits with themes, icons, aliases, and notes
 - Formula-driven /generate and /generatebiome
 - Quality-of-life tools: ghost hand, auto-unstick, ruler, surface/ascend/descend
+
+<!-- Proposed engineering-story wording, added by an agent on 2026-10-04 for Sage’s review.
+     Existing authored wording above is preserved. Edit these fields through /edit. -->
+
+## story.focus
+Powerful edits, understandable controls.
+
+## story.contribution
+Author of the Paper plugin: command design, building tools and the safeguards around large edits.
+
+## story.decision.1.title
+Make scale explicit
+
+## story.decision.1.text
+Volume and chunk-span checks put confirmation at the point where a paste becomes a costly operation.
+
+## story.decision.2.title
+Bound recovery work
+
+## story.decision.2.text
+Undo history persists between sessions, with a cap on per-action block data. Oversized actions keep metadata rather than making restart recovery unbounded.
+
+## story.outcome
+The in-game sequence shows the commands producing a dome, tower, sandstone pyramid and formula-driven copper ring in one demonstration world.
+
+## story.evidence
+In-game captures

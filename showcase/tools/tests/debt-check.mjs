@@ -129,3 +129,105 @@ test('dashboard exposes essential controls and same-origin service without inlin
   for(const id of ['refresh','motion','announce','metric-search','metric-select','compare-select','period','per-capita','expand-chart','export-csv','register','sources'])assert.ok(html.includes(`id="${id}"`),id);
   assert.ok(!/on(click|change)=/.test(html));assert.ok(html.includes('type="module"'));
 });
+
+const nativeGolden=JSON.parse(await readFile(new URL('./fixtures/debt/native-golden.json',import.meta.url),'utf8'));
+test('native golden numeric fallback and strict grouped decimals',()=>{
+  for(const row of nativeGolden.payloads.firstNumber)assert.equal(row.inputs.map(number).find(v=>v!==null)??null,row.result,JSON.stringify(row.inputs));
+  for(const raw of ['1,,2','1,23','1,234,56','1e','1e999','--2','0x10',true,[],{}])assert.equal(number(raw),null,String(raw));
+  for(const [raw,value] of [['+2.5e2',250],['-.5',-.5],['1,234.5e-2',12.345],[' 1E3 ',1000]])assert.equal(number(raw),value,raw);
+});
+test('native golden FRED and BLS payloads retain the last numeric date',()=>{
+  for(const row of nativeGolden.payloads.fredCSV){
+    const series=row.csv.split('\n')[0].trim().split(',')[1];
+    const latest=parseFredCSV(row.csv,series).at(-1);
+    assert.equal(latest?.value??null,row.value,row.name);assert.equal(latest?.date??null,row.asOf,row.name);
+  }
+  for(const row of nativeGolden.payloads.blsPoints){
+    const latest=parseBLS({status:'REQUEST_SUCCEEDED',Results:{series:[{seriesID:'LNS14000000',data:row.points}]}}).LNS14000000.at(-1);
+    assert.equal(latest?.value??null,row.value,row.name);
+    assert.equal(latest?.date??null,row.asOf ? row.asOf.replace('-M','-')+'-01' : null,row.name);
+  }
+});
+test('native golden derived math passes through real source unit normalization',async()=>{
+  const expectedKeys={debtPerCitizen:'debtPerCitizen',debtToGDP:'debtToGDPPercent',receiptsPerCitizen:'receiptsPerCitizen',spendingPerCitizen:'spendingPerCitizen',deficitPerCitizen:'deficitPerCitizen'};
+  for(const row of nativeGolden.derived){
+    const base=fixtureFetch(),input=row.input;
+    const values={GDP:input.gdpBillions,POPTHM:input.populationThousands,FGRECPT:input.receiptsBillions,FGEXPND:input.spendingBillions};
+    const fetchImpl=async(raw,options)=>{
+      const url=new URL(raw),id=url.searchParams.get('id');
+      if(url.hostname==='fred.stlouisfed.org'&&Object.hasOwn(values,id))return new Response(`observation_date,${id}\n2026-10-01,${values[id]??'.'}\n`);
+      if(url.pathname.endsWith('/debt_to_penny'))return Response.json({data:[{...debtRows[0],tot_pub_debt_out_amt:String(input.totalDebt)}]});
+      return base(raw,options);
+    };
+    const snapshot=await createDebtService({fetchImpl,now:()=>Date.parse(DATE)}).getSnapshot();
+    for(const [id,key] of Object.entries(expectedKeys)){
+      const metric=snapshot.metrics.find(m=>m.id===id),expected=row[key];
+      if(expected===null){assert.equal(metric.value,null,`${row.name}: ${id}`);assert.equal(metric.status,'missing');}
+      else {assert.ok(Math.abs(metric.value-expected)<=Math.max(1,Math.abs(expected))*1e-12,`${row.name}: ${id}`);assert.equal(metric.observedAt,'2026-10-01');assert.ok(Object.values(metric.inputDates).every(date=>date==='2026-10-01'));}
+    }
+  }
+});
+
+function fetchDebtRecords(records) {
+  const base=fixtureFetch();return async(raw,options)=>String(raw).includes('/debt_to_penny')?Response.json({data:records.map(r=>({record_date:r.date,tot_pub_debt_out_amt:String(r.total),debt_held_public_amt:String(r.total),intragov_hold_amt:'0'}))}):base(raw,options);
+}
+test('updated native debt-limit goldens match normalized dollars and missing categories',()=>{
+  for(const row of nativeGolden.payloads.debtSubjectToLimit){
+    const data=row.rows.map(r=>({record_date:r.date,debt_catg:r.category,close_today_bal:r.close===null?'null':String(r.close),open_today_bal:r.open===null?'null':String(r.open)}));
+    const latest=parseTreasury('treasury-limit',{data}).debtSubjectToLimit.at(-1);
+    assert.equal(latest?.value??null,row.result.ok?row.result.ok.value*1e6:null,row.name);
+    assert.equal(latest?.date??null,row.result.ok?.asOf??null,row.name);
+  }
+});
+test('updated native annual growth and disclosed fallback goldens pass through service',async()=>{
+  for(const row of nativeGolden.growthRate.cases){
+    // Recent records take precedence if the optional annual response repeats a date.
+    const records=[...(row.yearAgo?[row.yearAgo]:[]),...row.records];
+    const snapshot=await createDebtService({fetchImpl:fetchDebtRecords(records),now:()=>Date.parse('2028-03-04T12:00:00Z')}).getSnapshot();
+    const metric=snapshot.metrics.find(m=>m.id==='debtGrowthPerSecond');
+    if(row.perSecond===null){assert.equal(metric.value,null,row.name);assert.equal(metric.status,'missing',row.name);}
+    else {assert.ok(Math.abs(metric.value-row.perSecond)<=Math.max(1,Math.abs(row.perSecond))*1e-12,row.name);assert.equal(metric.method,row.method,row.name);assert.equal(metric.windowDays,row.elapsedDays,row.name);assert.equal(metric.estimated,true);}
+  }
+});
+test('annual growth uses 365 UTC days across leap years and the prior business date',async()=>{
+  for(const row of nativeGolden.growthRate.trailingYearDate.filter(r=>r.yearAgoTarget)){
+    const record={date:row.latestDate,total:100000000},baseline={date:row.yearAgoTarget,total:68464000};
+    const snapshot=await createDebtService({fetchImpl:fetchDebtRecords([record,baseline]),now:()=>Date.parse('2028-03-04T12:00:00Z')}).getSnapshot();
+    const metric=snapshot.metrics.find(m=>m.id==='debtGrowthPerSecond');
+    assert.equal(metric.value,1,row.latestDate);assert.equal(metric.method,'trailingYear');assert.equal(metric.windowDays,365);assert.deepEqual(metric.inputDates,{start:baseline.date,end:record.date});
+  }
+});
+test('fallback is bounded to 31 recent records and never described as annual',async()=>{
+  const records=Array.from({length:50},(_,i)=>({date:new Date(Date.parse('2026-10-01')-i*86400000).toISOString().slice(0,10),total:100000000-i*86400}));
+  const snapshot=await createDebtService({fetchImpl:fetchDebtRecords(records),now:()=>Date.parse(DATE)}).getSnapshot();
+  const metric=snapshot.metrics.find(m=>m.id==='debtGrowthPerSecond');
+  assert.equal(metric.value,1);assert.equal(metric.method,'fallback');assert.equal(metric.windowDays,30);assert.match(metric.frequency,/fallback/i);assert.match(metric.note,/365-day baseline unavailable/);assert.equal(metric.inputDates.start,records[30].date);assert.equal(metric.history.length,49);assert.ok(metric.history.every(p=>p.method==='fallback'));assert.match(metric.note,/window varies/);
+});
+
+test('a lone debt observation exposes an explicitly missing estimate, not zero',async()=>{
+  const snapshot=await createDebtService({fetchImpl:fetchDebtRecords([{date:'2026-10-01',total:40e12}]),now:()=>Date.parse(DATE)}).getSnapshot();
+  const rate=snapshot.metrics.find(m=>m.id==='debtGrowthPerSecond'),debt=snapshot.metrics.find(m=>m.id==='totalDebt');
+  assert.equal(rate.value,null);assert.equal(rate.method,null);assert.equal(rate.windowDays,null);assert.equal(rate.status,'missing');assert.deepEqual(rate.history,[]);assert.match(rate.note,/No usable pair/);assert.equal(debt.value,40e12);assert.equal(debt.estimated,false);
+});
+test('Treasury outage retains annual estimate and its actual successful-fetch timestamp as stale',async()=>{
+  let stamp=Date.parse(DATE),offline=false;const base=fetchDebtRecords([{date:'2026-10-01',total:100000000},{date:'2025-10-01',total:68464000}]);
+  const service=createDebtService({now:()=>stamp,fetchImpl:async(...args)=>{if(offline&&String(args[0]).includes('/debt_to_penny'))throw new Error('Fixture outage');return base(...args);}});
+  const first=await service.getSnapshot();offline=true;stamp+=61000;const next=await service.getSnapshot({force:true});
+  const rate=next.metrics.find(m=>m.id==='debtGrowthPerSecond');
+  assert.equal(rate.value,1);assert.equal(rate.method,'trailingYear');assert.equal(rate.windowDays,365);assert.equal(rate.status,'stale');assert.equal(rate.fetchedAt,first.fetchedAt);
+});
+test('full Treasury limit page drops its potentially partial oldest date',()=>{
+  const data=Array.from({length:4998},()=>({record_date:'2026-10-01',debt_catg:'Unrelated',close_today_bal:'1'}));
+  data.push({record_date:'2026-09-30',debt_catg:'Debt Held by the Public',close_today_bal:'100'},{record_date:'2026-09-30',debt_catg:'Intragovernmental Holdings',close_today_bal:'50'});
+  assert.deepEqual(parseTreasury('treasury-limit',{data}).debtSubjectToLimit,[]);
+});
+
+test('annual growth history excludes short-window fallback points without filling gaps',async()=>{
+  const records=[{date:'2025-01-01',total:100},{date:'2025-02-01',total:150},{date:'2026-02-01',total:200},{date:'2026-02-03',total:250}];
+  const snapshot=await createDebtService({fetchImpl:fetchDebtRecords(records),now:()=>Date.parse('2026-02-04')}).getSnapshot();
+  const rate=snapshot.metrics.find(m=>m.id==='debtGrowthPerSecond');
+  assert.equal(rate.method,'trailingYear');assert.deepEqual(rate.history.map(p=>p.date),['2026-02-01','2026-02-03']);
+  assert.ok(rate.history.every(p=>p.method==='trailingYear'&&p.value>0));assert.equal(rate.history[0].value,50/(365*86400));assert.equal(rate.history[1].windowDays,367);
+  assert.deepEqual(rate.history[1].inputDates,{start:'2025-02-01',end:'2026-02-03'});assert.match(rate.note,/excludes shorter fallback/);assert.match(rate.note,/actual elapsed/);
+  assert.equal(snapshot.metrics.find(m=>m.id==='totalDebt').history.length,4,'official source history retained');
+});

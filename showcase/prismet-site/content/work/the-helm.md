@@ -32,3 +32,30 @@ In your pocket it is a native iPhone master remote for home services, lifecycle 
 - Faces render standalone with sample data, so every widget can be previewed and screenshotted headless
 - Shared chrome and palette tokens synced into every widget
 - Arcade faces (Breakout, Minesweeper, Snake, Orbital Defense) next to CPU, GPU, and fleet telemetry
+
+<!-- Proposed engineering-story wording, added by an agent on 2026-10-04 for Sage’s review.
+     Existing authored wording above is preserved. Edit these fields through /edit. -->
+
+## story.focus
+A design system for useful instruments.
+
+## story.contribution
+Design and engineering of the desktop control environment, including QML widget faces and their shared visual language.
+
+## story.decision.1.title
+Share the instrument frame
+
+## story.decision.1.text
+A common panel component and palette tokens give clocks, resource meters and controls a consistent structure without making every face identical.
+
+## story.decision.2.title
+Make each face inspectable
+
+## story.decision.2.text
+Standalone sample-data rendering lets individual QML faces be previewed outside a full desktop session, including offscreen capture.
+
+## story.outcome
+The gallery shows rendered clock, CPU, GPU, storage and process views. These specimens demonstrate the interface and sample-data presentation, rather than a live machine reading.
+
+## story.evidence
+Rendered widgets · sample data

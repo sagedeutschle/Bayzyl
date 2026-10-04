@@ -25,7 +25,7 @@ function renderCards(view,board){board.classList.add('engine-piles');let index=0
 function renderCube(view,board){board.classList.add('cube-net');for(const face of view.faces){const panel=element('section',`cube-face face-${face.label.toLowerCase()}`);panel.append(element('h3','',face.label));const grid=element('div','cube-stickers');face.cells.forEach((cell,i)=>grid.append(cellNode(cell,i,'sticker')));panel.append(grid);board.append(panel);}}
 function renderHex(view,board){
   board.classList.add('hex-board');
-  const ns='http://www.w3.org/2000/svg', svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 1000 900');svg.setAttribute('aria-label','Catan island, roads and settlements');
+  const ns='http://www.w3.org/2000/svg', svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 1000 900');svg.setAttribute('aria-label','Settler Scramble island, roads and settlements');
   const make=(tag,attrs={})=>{const node=document.createElementNS(ns,tag);for(const [name,value]of Object.entries(attrs))node.setAttribute(name,String(value));return node;};
   const point=(x,y)=>[500+x*100,450+y*100];
   const colors={lumber:'#3E6D4C',wool:'#83A361',grain:'#C5A449',brick:'#AB6652',ore:'#7A8794',desert:'#CBB58A'};

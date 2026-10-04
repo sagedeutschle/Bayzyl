@@ -1,7 +1,12 @@
+import {estimateClock} from './debt-estimate.js';
 import {METRICS,GROUPS,UNIT_LABELS,formatValue,perPersonHistory,rangeHistory,csvForSeries} from './debt-metrics.js';
 const $=id=>document.getElementById(id), esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const known=new Set(METRICS.map(m=>m.id));
-const state={snapshot:null,selected:'totalDebt',compare:'',period:'1y',perPerson:false,pins:new Set(),query:'',paused:false,loading:false};
+const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+const state={snapshot:null,selected:'totalDebt',compare:'',period:'1y',perPerson:false,pins:new Set(),query:'',paused:reducedMotion.matches,loading:false};
+const headlineClock=estimateClock({now:()=>performance.now(),paused:state.paused});
+let refreshedAt=null;
+const officialDollars=new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2});
 try{const p=JSON.parse(localStorage.getItem('prismet.debt.pins')||'[]');if(Array.isArray(p))state.pins=new Set(p.filter(id=>known.has(id)));}catch{}
 const initial=new URLSearchParams(location.search).get('metric');if(known.has(initial))state.selected=initial;
 const metrics=()=>state.snapshot?.metrics||METRICS.map(m=>({...m,status:'missing',value:null,history:[],observedAt:null,derived:!m.series}));
@@ -20,7 +25,18 @@ function selectOptions(){
  $('compare-select').innerHTML='<option value="">No comparison</option>'+alternatives.map(m=>`<option value="${m.id}">${esc(m.label)}</option>`).join('');$('compare-select').value=state.compare;
  const canDivide=s.unit==='dollars'&&metric('population').history.length>0;$('per-capita').disabled=!canDivide;$('per-capita').title=canDivide?'Divide by dated population observations':'Requires a dollar measure and population history';if(!canDivide)state.perPerson=false;$('per-capita').checked=state.perPerson;
 }
-function overview(){const m=metric('totalDebt');$('debt').textContent=formatValue(m.value,m.unit);$('debt-date').textContent=m.value===null?'Treasury unavailable. No estimate substituted.':`${statusText(m)} · ${dateText(m.observedAt)} · official daily balance`;for(const [id,k] of [['debt-person','debtPerCitizen'],['debt-gdp','debtToGDP'],['debt-rate','debtGrowthPerSecond']]){const v=metric(k);$(id).textContent=formatValue(v.value,v.unit);$(id).title=`${statusText(v)} · ${dateText(v.observedAt)}`;}}
+function renderHeadline(){
+ const projected=headlineClock.read(),debt=metric('totalDebt'),rate=metric('debtGrowthPerSecond');
+ $('debt').textContent=formatValue(projected.value,'dollars');
+ $('debt-estimate-label').textContent=projected.estimated?`Illustrative estimate since restart · ${state.paused?'paused':'ticking'}`:'Official balance · estimate unavailable';
+ $('debt-date').textContent=debt.value===null?'Treasury unavailable. No balance substituted.':`Official Treasury balance: ${officialDollars.format(debt.value)} · ${dateText(debt.observedAt)}${debt.status==='stale'?' · stale observation':''}`;
+ const window=rate.method==='fallback'?`${rate.windowDays}-day fallback rate; annual baseline unavailable`:rate.method==='trailingYear'?`trailing-year rate (${rate.windowDays} days)`:'historical rate';
+ $('debt-estimate-method').textContent=projected.estimated?`Latest official balance + ${formatValue(rate.value,'dollarsPerSecond')} ${window} × running time since the illustration restarted. Illustration restarted ${refreshedAt}.${rate.status==='stale'?' Rate uses stale observations.':''} This is not a measured current balance. Charts and register remain observed values.`:'A valid published balance and growth rate are required to illustrate change. Charts and register remain observed values.';
+}
+function motionControl(){ $('motion').setAttribute('aria-pressed',String(state.paused));$('motion').textContent=state.paused?'Resume ticking & updates':'Pause ticking & updates'; }
+function setPaused(value){state.paused=!!value;headlineClock.pause(state.paused);motionControl();renderHeadline();}
+function overview(){const m=metric('totalDebt'),rate=metric('debtGrowthPerSecond');headlineClock.reset(m.value,rate.status==='missing'?null:rate.value);refreshedAt=new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',second:'2-digit'});renderHeadline();for(const [id,k] of [['debt-person','debtPerCitizen'],['debt-gdp','debtToGDP'],['debt-rate','debtGrowthPerSecond']]){const v=metric(k);$(id).textContent=formatValue(v.value,v.unit);$(id).title=`${statusText(v)} · ${dateText(v.observedAt)}`;}}
+
 function updatePin(){const p=state.pins.has(state.selected);$('pin-current').setAttribute('aria-pressed',String(p));$('pin-current').textContent=p?'Unpin metric':'Pin metric';}
 function togglePin(id){const restore=document.activeElement?.dataset?.pin;if(state.pins.has(id))state.pins.delete(id);else state.pins.add(id);try{localStorage.setItem('prismet.debt.pins',JSON.stringify([...state.pins]));}catch{announce('Pins last for this visit. Browser storage is unavailable.');}renderRegister();updatePin();if(restore)$('register').querySelector(`[data-pin="${restore}"]`)?.focus();}
 function renderRegister(){const all=metrics(),q=state.query.toLowerCase().trim();let count=0;
@@ -57,16 +73,19 @@ function choose(id,scroll=false){if(!known.has(id))return;state.selected=id;stat
 async function load(force=false){if(state.loading)return;state.loading=true;$('refresh').disabled=true;$('refresh').textContent='Refreshing…';$('status').textContent='Gathering official observations. Sources refresh independently.';
  try{const r=await fetch(`/api/debt${force?'?refresh=1':''}`,{signal:AbortSignal.timeout(100000),headers:{Accept:'application/json'}});if(!r.ok)throw new Error(r.status===429?'Refresh limit reached. Try again in a minute.':`Data service returned HTTP ${r.status}.`);const data=await r.json();
  if(data.version!==1||!Array.isArray(data.metrics)||data.metrics.length!==43||!Array.isArray(data.sources)||data.metrics.some(m=>!known.has(m.id)||!Array.isArray(m.history)))throw new Error('Unexpected data-service response.');
+ if(state.paused&&!force&&state.snapshot){$('status').textContent='Ticking and automatic updates are paused. Manual refresh remains available.';return;}
  state.snapshot=data;overview();selectOptions();renderChart();renderRegister();renderSources();const ok=data.metrics.filter(m=>m.status==='ok').length,stale=data.metrics.filter(m=>m.status==='stale').length,missing=data.metrics.filter(m=>m.status==='missing').length;
  $('status').textContent=`${ok} current · ${stale} stale · ${missing} unavailable. Checked ${new Date(data.fetchedAt).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}.${state.paused?' Automatic updates paused.':''}`;if(force)announce(`Sources refreshed. ${ok} current, ${stale} stale and ${missing} unavailable measures.`);
  }catch(e){$('status').textContent=`${e.message} ${state.snapshot?'Previously loaded observations remain visible with their original dates.':'No fallback figures substituted.'}`;announce($('status').textContent);}finally{state.loading=false;$('refresh').disabled=false;$('refresh').textContent='Refresh sources';}}
 $('refresh').addEventListener('click',()=>load(true));
-$('motion').addEventListener('click',()=>{state.paused=!state.paused;$('motion').setAttribute('aria-pressed',String(state.paused));$('motion').textContent=state.paused?'Resume automatic updates':'Pause automatic updates';announce(state.paused?'Automatic updates paused. Manual refresh remains available.':'Automatic updates resumed. Values remain still between observations.');});
-$('announce').addEventListener('click',()=>{const m=metric(state.selected);announce(`${m.label}: ${formatValue(m.value,m.unit)}. ${statusText(m)}. Observation ${dateText(m.observedAt)}. ${m.note}`);});
+$('motion').addEventListener('click',()=>{setPaused(!state.paused);announce(state.paused?'Estimate ticking and automatic updates paused. Manual refresh remains available.':'Estimate ticking and automatic updates resumed. Paused time is excluded.');});
+reducedMotion.addEventListener('change',event=>{if(event.matches){setPaused(true);announce('Reduced motion enabled. Estimate ticking and automatic updates paused.');}});
+$('announce').addEventListener('click',()=>{const m=metric(state.selected),estimate=headlineClock.read();announce(`${m.id==='totalDebt'&&estimate.estimated?`Illustrative estimate: ${formatValue(estimate.value,'dollars')}. `:''}${m.label}: ${formatValue(m.value,m.unit)}. ${statusText(m)}. Observation ${dateText(m.observedAt)}. ${m.note}`);});
 $('metric-select').addEventListener('change',e=>choose(e.target.value));$('compare-select').addEventListener('change',e=>{state.compare=e.target.value;renderChart();});$('period').addEventListener('change',e=>{state.period=e.target.value;renderChart();});$('per-capita').addEventListener('change',e=>{state.perPerson=e.target.checked;renderChart();});$('metric-search').addEventListener('input',e=>{state.query=e.target.value;renderRegister();});$('pin-current').addEventListener('click',()=>togglePin(state.selected));
 $('register').addEventListener('click',e=>{const p=e.target.closest('[data-pin]'),s=e.target.closest('[data-select]');if(p)togglePin(p.dataset.pin);else if(s)choose(s.dataset.select,true);});
 $('expand-chart').addEventListener('click',()=>{$('dialog-title').textContent=metric(state.selected).label;$('chart-dialog').showModal();drawChart($('dialog-chart'),'dialog-readout',displaySeries());$('close-chart').focus();});$('close-chart').addEventListener('click',()=>$('chart-dialog').close());$('chart-dialog').addEventListener('close',()=>$('expand-chart').focus());
 $('export-csv').addEventListener('click',()=>{const b=new Blob([csvForSeries(displaySeries())],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=`prismet-${state.selected}-${state.period}${state.perPerson?'-per-person':''}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);});
 let resizeTimer;new ResizeObserver(()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(renderChart,100);}).observe($('chart'));
 setInterval(()=>{if(!state.paused&&!document.hidden)load();},6*60*60*1000);
-selectOptions();renderRegister();renderChart();load();
+setInterval(()=>{if(!state.paused&&!document.hidden&&state.snapshot)renderHeadline();},1000);
+motionControl();selectOptions();renderRegister();renderChart();load();

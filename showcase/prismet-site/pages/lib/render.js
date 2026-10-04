@@ -438,11 +438,33 @@ const imageViewer = () => ANNOTATE ? '' : `<dialog class="image-viewer" id="imag
   <p class="viewer-status" data-viewer-status role="status" hidden></p>
   <div class="viewer-foot"><p id="viewer-caption"></p><div class="viewer-controls"><button class="btn gallery-arrow" type="button" data-viewer-prev aria-label="${esc(T('gallery.previous').p)}">←</button><output data-viewer-count aria-live="polite" aria-atomic="true"></output><button class="btn gallery-arrow" type="button" data-viewer-next aria-label="${esc(T('gallery.next').p)}">→</button><a class="link" href="#main" data-viewer-full>${T('gallery.full').h}</a></div></div>
 </dialog>`;
+// Evidence-backed additions live separately from the owner's authored work-page copy.
+const storyOf = (p) => {
+  const fields = ['focus', 'contribution', 'outcome', 'evidence'];
+  const hasWord = (key) => typeof W[p.slug]?.[`story.${key}`] === 'string' && W[p.slug][`story.${key}`].trim();
+  const word = (key) => P(p.slug, `story.${key}`);
+  if (!Array.isArray(p.story?.decisions) || !fields.every(hasWord)) return null;
+  const decisions = [...new Set(p.story.decisions)].filter((id) => Number.isInteger(id) && id >= 1 && id <= 3 && hasWord(`decision.${id}.title`) && hasWord(`decision.${id}.text`))
+    .map((id) => ({ title: word(`decision.${id}.title`), text: word(`decision.${id}.text`) }));
+  return decisions.length ? { ...Object.fromEntries(fields.map((key) => [key, word(key)])), decisions } : null;
+};
+const projectStory = (p) => {
+  const story = storyOf(p);
+  if (!story) return '';
+  return `<section class="project-story wrap" id="engineering-story" aria-labelledby="story-heading">
+    <div class="story-heading"><p class="eyebrow"${T('story.title').a}>${T('story.title').h}</p><h2 id="story-heading"${story.focus.a}>${story.focus.h}</h2><span class="story-evidence"${story.evidence.a}>${story.evidence.h}</span></div>
+    <div class="story-body"><div class="story-contribution"><h3${T('story.contribution').a}>${T('story.contribution').h}</h3><p${story.contribution.a}>${story.contribution.h}</p></div>
+    <div class="story-decisions"><h3${T('story.decisions').a}>${T('story.decisions').h}</h3><ol>${story.decisions.map((item) => `<li><h4${item.title.a}>${item.title.h}</h4><p${item.text.a}>${item.text.h}</p></li>`).join('')}</ol></div>
+    <div class="story-outcome"><h3${T('story.outcome').a}>${T('story.outcome').h}</h3><p${story.outcome.a}>${story.outcome.h}</p>${portfolioOf(p).length ? `<a class="link" href="#portfolio-${p.slug}"${T('story.gallery').a}>${T('story.gallery').h} ↑</a>` : ''}</div></div>
+  </section>`;
+};
 const portfolioChapter = (p, index, isOff = false) => {
   const title = P(p.slug, 'title'), sub = P(p.slug, 'subtitle'), st = status(p), tl = typeLine(p);
+  const story = storyOf(p);
   return `<article class="project-chapter feature${off(isOff)}" data-slug="${p.slug}" data-room="${p.room || 'cabinet'}" style="${hue(p.beam)}">
   <div class="chapter-heading"><span class="chapter-number" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span><div class="chapter-name"><p class="typeline"${tl.a}>${tl.h}</p><h3><a href="${href(p)}"${title.a}>${title.h}</a></h3><p class="chapter-stack">${(p.stack || []).slice(0, 4).map(esc).join(' · ')}</p></div><div class="chapter-description"><p${sub.a}>${sub.h}</p><p class="access"><span class="plaque status"${st.a}>${st.h}</span><a class="link" href="${href(p)}"${T('selected.read_more').a}>${T('selected.read_more').h}</a>${accessLinks(p)}</p></div></div>
   ${portfolioGallery(p) || `<a class="chapter-fallback" href="${href(p)}">${doorModule(p)}</a>`}
+  ${story ? `<div class="chapter-story"><p${story.focus.a}>${story.focus.h}</p><a class="link" href="${href(p)}#engineering-story"${T('story.read').a}>${T('story.read').h} →</a></div>` : ''}
 </article>`;
 };
 
@@ -698,6 +720,7 @@ shown.forEach((p, i) => {
     <div class="row"><span class="plaque status"${st.a}>${st.h}</span>${accessLinks(p, '../', true).replace(/class="link"/g, 'class="btn"')}</div>
   </div>
   ${hasPortfolio ? `<section class="project-portfolio" aria-label="${esc(T('gallery.title').p)}"><div class="wrap">${portfolioGallery(p, '../', true)}</div></section>` : isFlag ? signature(p) : front}
+  ${projectStory(p)}
   <div class="wrap p-body">
     <div class="prose">
       <div class="summary${isTodo(p) ? ' todo' : ''}"${sum.a}>${sum.h.split(/\n\s*\n/).map((para) => `<p>${para}</p>`).join('')}</div>

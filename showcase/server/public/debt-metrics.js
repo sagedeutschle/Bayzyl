@@ -12,7 +12,7 @@ const definitions = [
   ['totalDebt','U.S. national debt','national','dollars','treasury-debt',1,'Daily',10,'Gross federal debt: public holdings plus intragovernmental holdings.'],
   ['debtHeldByPublic','Debt held by the public','national','dollars','treasury-debt',1,'Daily',10],
   ['intragovernmentalHoldings','Intragovernmental holdings','national','dollars','treasury-debt',1,'Daily',10],
-  ['debtGrowthPerSecond','Average debt change / second','national','dollarsPerSecond',null,1,'30-day change',10,'Derived from actual observations over approximately 30 calendar days; exact endpoints are disclosed. A historical average, not a live spending rate.'],
+  ['debtGrowthPerSecond','Average debt change / second','national','dollarsPerSecond',null,1,'Trailing 365-day change',10,'Estimated average change between the latest debt observation and the newest observation on or before 365 calendar days earlier, divided by the actual elapsed seconds. A shorter fallback is explicitly labeled when annual history is unavailable. Not a live spending rate.'],
   ['debtSubjectToLimit','Debt subject to limit','national','dollars','treasury-limit',1,'Daily',10,'Public and intragovernmental debt, less debt not subject to limit, plus other debt subject to limit. This is not the statutory ceiling.'],
   ['federalDebtFRED','Federal debt · quarterly','national','dollars','GFDEBTN',1e6,'Quarterly',200],
   ['foreignHeldFederalDebt','Foreign-held federal debt','national','dollars','FDHBFIN',1e9,'Quarterly',200],

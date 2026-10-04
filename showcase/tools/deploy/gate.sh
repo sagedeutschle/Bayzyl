@@ -22,7 +22,7 @@ done
 for module in wordle rubiks-cube snake sudoku sliding-15 nonogram chess reversi connect-four checkers gomoku sea-battle catan solitaire spider crazy-8 brick-bench puzzle-common puzzle-data catan-board; do
   chk "/arcade/games/$module.js" 200
 done
-chk /product-shell.css 200; chk /api/arcade/config 200; chk /debt.css 200; chk /debt-metrics.js 200; chk /.well-known/apple-app-site-association 200
+chk /product-shell.css 200; chk /api/arcade/config 200; chk /debt.css 200; chk /debt-metrics.js 200; chk /debt-estimate.js 200; chk /.well-known/apple-app-site-association 200
 # Upstream outages are valid data states. Gate the contract, never fabricate freshness.
 if debt=$(curl -fsS --max-time 95 --max-filesize 8388608 "$B/api/debt"); then
   if printf '%s' "$debt" | python3 -c 'import datetime,json,math,re,sys

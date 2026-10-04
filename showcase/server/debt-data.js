@@ -19,8 +19,11 @@ export const SOURCE_DEFINITIONS=[
 ];
 
 export function number(value) {
-  if(value===null || value===undefined || String(value).trim()==='' || !/^-?\d[\d,]*(\.\d+)?$/.test(String(value).trim())) return null;
-  const result=Number(String(value).replaceAll(',',''));
+  if(typeof value!=='string' && typeof value!=='number') return null;
+  const raw=String(value).trim();
+  // Accept finite decimal/scientific source values, with strict thousands grouping.
+  if(!/^[+-]?(?:(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(raw)) return null;
+  const result=Number(raw.replaceAll(',',''));
   return Number.isFinite(result)?result:null;
 }
 export function validDate(value) {
@@ -75,7 +78,9 @@ export function parseTreasury(id, json) {
     const points=[];
     for(const [date,rs] of days) {
       const categories=new Set(rs.map(r=>r.debt_catg));
-      if(!['Debt Held by the Public','Intragovernmental Holdings','Debt Not Subject to Limit','Other Debt Subject to Limit','Statutory Debt Limit'].every(c=>categories.has(c)))continue;
+      // A full page can end partway through its oldest date; never sum that boundary.
+      if(rows.length>=5000 && date===rows.at(-1)?.record_date)continue;
+      if(!['Debt Held by the Public','Intragovernmental Holdings'].every(c=>categories.has(c)))continue;
       let total=0,valid=true;
       for(const r of rs) {
         if(r.debt_catg==='Statutory Debt Limit')continue;
@@ -84,7 +89,7 @@ export function parseTreasury(id, json) {
         if(v===null){valid=false;break;}
         total+=v*(r.debt_catg==='Debt Not Subject to Limit'?-1:1)*1e6;
       }
-      if(valid)points.push({date,value:total});
+      if(valid&&total>0)points.push({date,value:total});
     }
     return {debtSubjectToLimit:cleanHistory(points)};
   }
@@ -183,12 +188,22 @@ export function createDebtService({fetchImpl=globalThis.fetch,now=Date.now,cache
     derived('deficitPerCitizen',['federalSpending','federalReceipts','population'],([a,b,c])=>c>0?(a-b)/c:NaN);
     const debt=map.totalDebt,rate=map.debtGrowthPerSecond;
     rate.history=debt.history.flatMap((p,i)=>{
-      const target=new Date(Date.parse(p.date)-30*DAY).toISOString().slice(0,10);
-      const older=atOrBefore(debt.history,target)||debt.history[0];
-      const seconds=(Date.parse(p.date)-Date.parse(older.date))/1000;
-      return i&&seconds>0?[{date:p.date,value:(p.value-older.value)/seconds,inputDates:{start:older.date,end:p.date}}]:[];
+      const target=new Date(Date.parse(p.date)-365*DAY).toISOString().slice(0,10);
+      const yearAgo=atOrBefore(debt.history,target);
+      // Match the native fallback on at most 31 recent observations, never call it annual.
+      const older=yearAgo||debt.history[Math.max(0,i-30)];
+      const windowDays=(Date.parse(p.date)-Date.parse(older.date))/DAY;
+      const value=(p.value-older.value)/(windowDays*86400);
+      return windowDays>0&&Number.isFinite(value)?[{date:p.date,value,method:yearAgo?'trailingYear':'fallback',windowDays,inputDates:{start:older.date,end:p.date}}]:[];
     });
-    const last=rate.history.at(-1);Object.assign(rate,{value:last?.value??null,observedAt:last?.date??null,inputDates:last?.inputDates||{},sourceUrl:debt.sourceUrl,status:last?debt.status:'missing',fetchedAt:debt.fetchedAt});
+    const last=rate.history.at(-1);Object.assign(rate,{value:last?.value??null,observedAt:last?.date??null,inputDates:last?.inputDates||{},method:last?.method??null,windowDays:last?.windowDays??null,sourceUrl:debt.sourceUrl,status:last?debt.status:'missing',fetchedAt:debt.fetchedAt});
+    // Publish one calculation method per series; omitted dates are never filled with zero.
+    if(last)rate.history=rate.history.filter(point=>point.method===last.method);
+    if(last?.method==='trailingYear')rate.note+=' History excludes shorter fallback windows; each point uses its actual elapsed interval and disclosed input dates.';
+    if(last?.method==='fallback'){
+      rate.frequency=`${last.windowDays}-day fallback change`;
+      rate.note=`365-day baseline unavailable. Estimated average change over ${last.windowDays} calendar days using at most 31 recent observations. The historical window varies with available dates; each point uses its actual elapsed interval and disclosed input dates. Not a live spending rate.`;
+    } else if(!last) rate.note+=' No usable pair of dated debt observations is available; no rate or projection can be calculated.';
     const available=metrics.filter(m=>m.status==='ok').length;
     cached={version:1,fetchedAt,status:available===metrics.length?'ok':metrics.some(m=>m.value!==null)?'partial':'unavailable',metrics,groups:GROUPS.map(g=>({...g,metricIds:metrics.filter(m=>m.group===g.id).map(m=>m.id)})),sources:[...sourceStates.values()],note:'Observed data, not a live tally. Fiscal years, annual rates and observation dates differ by series. Histories cover up to six years; debt subject to limit covers up to one year.'};
     return cached;

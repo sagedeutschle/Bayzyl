@@ -57,8 +57,10 @@ jobs:
       - name: Product hub rules, saves, APIs, data and route regressions (blocking)
         run: |
           node showcase/tools/tests/portfolio-check.mjs
+          node showcase/tools/tests/portfolio-stories-check.mjs
           node showcase/tools/tests/arcade-check.mjs
           node showcase/tools/tests/arcade-library-check.mjs
+          node showcase/tools/tests/arcade-shell-check.mjs
           node showcase/tools/tests/arcade-room-lifecycle-check.mjs
           node showcase/tools/tests/arcade-api-check.mjs
           node showcase/tools/tests/board-games-check.mjs
@@ -66,6 +68,7 @@ jobs:
           node showcase/tools/tests/puzzle-games-check.mjs
           node showcase/tools/tests/catan-check.mjs
           node showcase/tools/tests/debt-check.mjs
+          node showcase/tools/tests/debt-headline-check.mjs
           node showcase/tools/tests/signaling-check.mjs
           node showcase/tools/tests/product-routes-check.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -78,7 +81,7 @@ jobs:
           if-no-files-found: error
 
   browser-check:
-    name: Browser checks (does not block the deploy)
+    name: Browser checks
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -102,7 +105,7 @@ jobs:
 
   deploy:
     name: Deploy to Fly
-    needs: build
+    needs: [build, browser-check]
     if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && inputs.deploy)
     runs-on: ubuntu-latest
     environment: production

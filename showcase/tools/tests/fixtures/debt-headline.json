@@ -1,0 +1,23 @@
+{
+  "sourceRevision": "5701136",
+  "rate": 75995.13158499166,
+  "balance": 40260641972390,
+  "cases": [
+    {
+      "elapsedSeconds": 0,
+      "value": 40260641972390
+    },
+    {
+      "elapsedSeconds": 1,
+      "value": 40260642048385.13
+    },
+    {
+      "elapsedSeconds": 3600,
+      "value": 40260915554863.7
+    },
+    {
+      "elapsedSeconds": 0,
+      "value": 40260641972390
+    }
+  ]
+}

@@ -4,7 +4,7 @@ import { catalog, byID } from '../../prismet-site/pages/arcade/catalog.js';
 import { browserDailySeed, browserSettings, browserRoute, validateBrowserSave } from '../../prismet-site/pages/arcade/browser-saves.js';
 import { needsBot, pauseRestored, scheduler } from '../../prismet-site/pages/arcade/controller-policy.js';
 let checks=0;const check=(value,label)=>{assert.ok(value,label);checks++;};
-check(catalog.length===22,'22 real facets');check(catalog.filter(x=>x.category!=='Lenses').length===20,'20 playable destinations');
+check(catalog.length===23,'23 real facets');check(catalog.filter(x=>x.category!=='Lenses').length===20,'20 playable destinations');
 check(!byID.constructor&&!byID.__proto__,'catalog rejects inherited properties');
 for(const id of ['constructor','__proto__','missing'])assert.throws(()=>browserDailySeed(id,'2026-10-04'));checks+=3;
 for(const q of ['mode=challenge','mode=daily&mode=free','seed=1&seed=2','mode=daily&date=2026-10-04&date=2026-10-05','date=2026-10-04','mode=daily&date=2026-02-30']){assert.throws(()=>browserSettings('snake',new URLSearchParams(q)));checks++;}

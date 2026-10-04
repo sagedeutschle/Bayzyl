@@ -31,3 +31,30 @@ Nineteen classic games and three live-data lenses in one app, each game with its
 - Daily Wordgame fed by a self-hosted endpoint on prismet.xyz
 - Light, parchment, and dark reading themes; sound and haptics on every move
 - Began as Chess Hotswap, built to hot-swap between 2D and 3D chess
+
+<!-- Proposed engineering-story wording, added by an agent on 2026-10-04 for Sage’s review.
+     Existing authored wording above is preserved. Edit these fields through /edit. -->
+
+## story.focus
+A collection with individual character.
+
+## story.contribution
+Co-developed across product, design, iOS and macOS engineering, and release work.
+
+## story.decision.1.title
+Give each game its own interface
+
+## story.decision.1.text
+Chess exposes opponent and board controls; Sudoku uses a number sheet; Solitaire keeps the card table. A shared library brings those distinct experiences together.
+
+## story.decision.2.title
+Separate rules from presentation
+
+## story.decision.2.text
+The browser ports expose game state and actions separately from rendering. Seeded replay fixtures compare 2048, Minesweeper and Lights Out with native results.
+
+## story.outcome
+Explore the iPhone and iPad captures, then play the browser collection. Three portable browser save formats are checked against native fixtures; other facets keep browser-only saves.
+
+## story.evidence
+Co-developed · native captures + browser play

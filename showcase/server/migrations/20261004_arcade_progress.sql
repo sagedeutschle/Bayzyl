@@ -33,7 +33,7 @@ revoke all on function public.prismet_arcade_account_confirmed() from public, an
 grant execute on function public.prismet_arcade_account_confirmed() to authenticated;
 
 alter table public.prismet_arcade_saves enable row level security;
-revoke all on public.prismet_arcade_saves from anon, authenticated;
+revoke all on public.prismet_arcade_saves from public, anon, authenticated;
 grant select on public.prismet_arcade_saves to authenticated;
 drop policy if exists arcade_read_own on public.prismet_arcade_saves;
 create policy arcade_read_own on public.prismet_arcade_saves for select to authenticated

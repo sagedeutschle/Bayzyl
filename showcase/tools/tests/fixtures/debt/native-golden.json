@@ -1,0 +1,1197 @@
+{
+  "provenance": {
+    "source": "PrismetShared/Tests/PrismetSharedTests/Golden/debt-clock-golden.json",
+    "sha256": "331451d51b65dd6b5e59c8f203c62d0c8d5d41c9d17c0547d4a5d9efd3209a7b",
+    "nativeVersion": 1,
+    "note": "Unmodified fixed reference cases from the co-developed native Prismet debt lens. Test fixtures are never served as economic observations. Web histories normalize units and retain observed dates.",
+    "nativeCommit": "5701136",
+    "integrationCommit": "8fb9f75"
+  },
+  "derived": [
+    {
+      "debtPerCitizen": 117343.7539271058,
+      "debtToGDPPercent": 125.40610941159713,
+      "deficitPerCitizen": 4915.476537452638,
+      "deficitToneIsDebt": true,
+      "input": {
+        "gdpBillions": 32104.211,
+        "populationThousands": 343100,
+        "receiptsBillions": 5431.9,
+        "spendingBillions": 7118.4,
+        "totalDebt": 40260641972390
+      },
+      "name": "realistic",
+      "receiptsPerCitizen": 15831.827455552317,
+      "spendingPerCitizen": 20747.303993004956
+    },
+    {
+      "debtPerCitizen": 117343.7539271058,
+      "debtToGDPPercent": 125.40610941159713,
+      "deficitPerCitizen": -4915.476537452638,
+      "deficitToneIsDebt": false,
+      "input": {
+        "gdpBillions": 32104.211,
+        "populationThousands": 343100,
+        "receiptsBillions": 7118.4,
+        "spendingBillions": 5431.9,
+        "totalDebt": 40260641972390
+      },
+      "name": "surplus: receipts above spending",
+      "receiptsPerCitizen": 20747.303993004956,
+      "spendingPerCitizen": 15831.827455552317
+    },
+    {
+      "debtPerCitizen": 117343.7539271058,
+      "debtToGDPPercent": 125.40610941159713,
+      "deficitPerCitizen": null,
+      "deficitToneIsDebt": null,
+      "input": {
+        "gdpBillions": 32104.211,
+        "populationThousands": 343100,
+        "receiptsBillions": 5431.9,
+        "spendingBillions": null,
+        "totalDebt": 40260641972390
+      },
+      "name": "receipts only",
+      "receiptsPerCitizen": 15831.827455552317,
+      "spendingPerCitizen": null
+    },
+    {
+      "debtPerCitizen": 117343.7539271058,
+      "debtToGDPPercent": 125.40610941159713,
+      "deficitPerCitizen": null,
+      "deficitToneIsDebt": null,
+      "input": {
+        "gdpBillions": 32104.211,
+        "populationThousands": 343100,
+        "receiptsBillions": null,
+        "spendingBillions": 7118.4,
+        "totalDebt": 40260641972390
+      },
+      "name": "spending only",
+      "receiptsPerCitizen": null,
+      "spendingPerCitizen": 20747.303993004956
+    },
+    {
+      "debtPerCitizen": null,
+      "debtToGDPPercent": 125.40610941159713,
+      "deficitPerCitizen": null,
+      "deficitToneIsDebt": null,
+      "input": {
+        "gdpBillions": 32104.211,
+        "populationThousands": 0,
+        "receiptsBillions": 5431.9,
+        "spendingBillions": 7118.4,
+        "totalDebt": 40260641972390
+      },
+      "name": "population zero",
+      "receiptsPerCitizen": null,
+      "spendingPerCitizen": null
+    },
+    {
+      "debtPerCitizen": null,
+      "debtToGDPPercent": 125.40610941159713,
+      "deficitPerCitizen": null,
+      "deficitToneIsDebt": null,
+      "input": {
+        "gdpBillions": 32104.211,
+        "populationThousands": -5,
+        "receiptsBillions": 5431.9,
+        "spendingBillions": 7118.4,
+        "totalDebt": 40260641972390
+      },
+      "name": "population negative",
+      "receiptsPerCitizen": null,
+      "spendingPerCitizen": null
+    },
+    {
+      "debtPerCitizen": 117343.7539271058,
+      "debtToGDPPercent": null,
+      "deficitPerCitizen": 4915.476537452638,
+      "deficitToneIsDebt": true,
+      "input": {
+        "gdpBillions": 0,
+        "populationThousands": 343100,
+        "receiptsBillions": 5431.9,
+        "spendingBillions": 7118.4,
+        "totalDebt": 40260641972390
+      },
+      "name": "gdp zero",
+      "receiptsPerCitizen": 15831.827455552317,
+      "spendingPerCitizen": 20747.303993004956
+    }
+  ],
+  "payloads": {
+    "firstNumber": [
+      {
+        "inputs": [
+          "",
+          "1500.5"
+        ],
+        "result": 1500.5
+      },
+      {
+        "inputs": [
+          "null",
+          "12"
+        ],
+        "result": 12
+      },
+      {
+        "inputs": [
+          "null",
+          "also null"
+        ],
+        "result": null
+      },
+      {
+        "inputs": [
+          "1e3",
+          "2"
+        ],
+        "result": 1000
+      },
+      {
+        "inputs": [
+          "-7",
+          "2"
+        ],
+        "result": -7
+      },
+      {
+        "inputs": [],
+        "result": null
+      }
+    ],
+    "fredCSV": [
+      {
+        "asOf": "2026-04-01",
+        "csv": "observation_date,GDP\n2025-10-01,31422.526\n2026-01-01,.\n2026-04-01,31865.721\n2026-07-01,.\n",
+        "name": "latest numeric row wins, missing rows skipped",
+        "value": 31865.721
+      },
+      {
+        "asOf": null,
+        "csv": "observation_date,GDP\n",
+        "name": "only a header",
+        "value": null
+      },
+      {
+        "asOf": null,
+        "csv": "observation_date,GDP\n2026-01-01,.\n",
+        "name": "all rows missing",
+        "value": null
+      },
+      {
+        "asOf": "2026-04-01",
+        "csv": "observation_date,POPTHM\r\n2026-04-01, 342746 \r\n",
+        "name": "whitespace and CRLF",
+        "value": 342746
+      },
+      {
+        "asOf": "2026-04-01",
+        "csv": "observation_date,PI\n2026-04-01,26000.5\n2026-05-01\n",
+        "name": "short row skipped",
+        "value": 26000.5
+      }
+    ],
+    "blsPoints": [
+      {
+        "asOf": "2026-M05",
+        "name": "newest missing, previous used",
+        "points": [
+          {
+            "period": "M06",
+            "value": "-",
+            "year": "2026"
+          },
+          {
+            "period": "M05",
+            "value": "4.3",
+            "year": "2026"
+          }
+        ],
+        "value": 4.3
+      },
+      {
+        "asOf": "2026-M08",
+        "name": "newest numeric",
+        "points": [
+          {
+            "period": "M08",
+            "value": "4.2",
+            "year": "2026"
+          },
+          {
+            "period": "M07",
+            "value": "4.1",
+            "year": "2026"
+          }
+        ],
+        "value": 4.2
+      },
+      {
+        "asOf": null,
+        "name": "none numeric",
+        "points": [
+          {
+            "period": "M06",
+            "value": "-",
+            "year": "2026"
+          }
+        ],
+        "value": null
+      },
+      {
+        "asOf": null,
+        "name": "empty",
+        "points": [],
+        "value": null
+      }
+    ],
+    "debtSubjectToLimit": [
+      {
+        "add": [
+          "Debt Held by the Public",
+          "Intragovernmental Holdings",
+          "Other Debt Subject to Limit"
+        ],
+        "name": "2026-10-01 as served: 32,433,790 + 7,826,852 - (474 + 196,010 + 3,591) + 0 = 40,060,567",
+        "result": {
+          "ok": {
+            "asOf": "2026-10-01",
+            "value": 40060567
+          }
+        },
+        "rows": [
+          {
+            "category": "Debt Held by the Public",
+            "close": 32433790,
+            "date": "2026-10-01",
+            "open": 32425013
+          },
+          {
+            "category": "Intragovernmental Holdings",
+            "close": 7826852,
+            "date": "2026-10-01",
+            "open": 7746813
+          },
+          {
+            "category": "Debt Not Subject to Limit",
+            "close": 474,
+            "date": "2026-10-01",
+            "open": 474
+          },
+          {
+            "category": "Debt Not Subject to Limit",
+            "close": 196010,
+            "date": "2026-10-01",
+            "open": 188632
+          },
+          {
+            "category": "Debt Not Subject to Limit",
+            "close": 3591,
+            "date": "2026-10-01",
+            "open": 3591
+          },
+          {
+            "category": "Other Debt Subject to Limit",
+            "close": 0,
+            "date": "2026-10-01",
+            "open": 0
+          },
+          {
+            "category": "Statutory Debt Limit",
+            "close": 41103996,
+            "date": "2026-10-01",
+            "open": 41103996
+          }
+        ],
+        "subtract": "Debt Not Subject to Limit"
+      },
+      {
+        "add": [
+          "Debt Held by the Public",
+          "Intragovernmental Holdings",
+          "Other Debt Subject to Limit"
+        ],
+        "name": "older date rows are ignored",
+        "result": {
+          "ok": {
+            "asOf": "2026-10-01",
+            "value": 40060567
+          }
+        },
+        "rows": [
+          {
+            "category": "Debt Held by the Public",
+            "close": 32433790,
+            "date": "2026-10-01",
+            "open": 32425013
+          },
+          {
+            "category": "Intragovernmental Holdings",
+            "close": 7826852,
+            "date": "2026-10-01",
+            "open": 7746813
+          },
+          {
+            "category": "Debt Not Subject to Limit",
+            "close": 474,
+            "date": "2026-10-01",
+            "open": 474
+          },
+          {
+            "category": "Debt Not Subject to Limit",
+            "close": 196010,
+            "date": "2026-10-01",
+            "open": 188632
+          },
+          {
+            "category": "Debt Not Subject to Limit",
+            "close": 3591,
+            "date": "2026-10-01",
+            "open": 3591
+          },
+          {
+            "category": "Other Debt Subject to Limit",
+            "close": 0,
+            "date": "2026-10-01",
+            "open": 0
+          },
+          {
+            "category": "Statutory Debt Limit",
+            "close": 41103996,
+            "date": "2026-10-01",
+            "open": 41103996
+          },
+          {
+            "category": "Debt Held by the Public",
+            "close": 1,
+            "date": "2026-09-30",
+            "open": 1
+          },
+          {
+            "category": "Debt Not Subject to Limit",
+            "close": 99999999,
+            "date": "2026-09-30",
+            "open": 99999999
+          }
+        ],
+        "subtract": "Debt Not Subject to Limit"
+      },
+      {
+        "add": [
+          "Debt Held by the Public",
+          "Intragovernmental Holdings",
+          "Other Debt Subject to Limit"
+        ],
+        "name": "other debt subject to limit is added",
+        "result": {
+          "ok": {
+            "asOf": "2026-10-01",
+            "value": 137
+          }
+        },
+        "rows": [
+          {
+            "category": "Debt Held by the Public",
+            "close": 100,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Intragovernmental Holdings",
+            "close": 50,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Debt Not Subject to Limit",
+            "close": 20,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Other Debt Subject to Limit",
+            "close": 7,
+            "date": "2026-10-01",
+            "open": null
+          }
+        ],
+        "subtract": "Debt Not Subject to Limit"
+      },
+      {
+        "add": [
+          "Debt Held by the Public",
+          "Intragovernmental Holdings",
+          "Other Debt Subject to Limit"
+        ],
+        "name": "no Debt Not Subject rows: counts as zero",
+        "result": {
+          "ok": {
+            "asOf": "2026-10-01",
+            "value": 157
+          }
+        },
+        "rows": [
+          {
+            "category": "Debt Held by the Public",
+            "close": 100,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Intragovernmental Holdings",
+            "close": 50,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Other Debt Subject to Limit",
+            "close": 7,
+            "date": "2026-10-01",
+            "open": null
+          }
+        ],
+        "subtract": "Debt Not Subject to Limit"
+      },
+      {
+        "add": [
+          "Debt Held by the Public",
+          "Intragovernmental Holdings",
+          "Other Debt Subject to Limit"
+        ],
+        "name": "no Other Debt Subject row: counts as zero",
+        "result": {
+          "ok": {
+            "asOf": "2026-10-01",
+            "value": 130
+          }
+        },
+        "rows": [
+          {
+            "category": "Debt Held by the Public",
+            "close": 100,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Intragovernmental Holdings",
+            "close": 50,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Debt Not Subject to Limit",
+            "close": 20,
+            "date": "2026-10-01",
+            "open": null
+          }
+        ],
+        "subtract": "Debt Not Subject to Limit"
+      },
+      {
+        "add": [
+          "Debt Held by the Public",
+          "Intragovernmental Holdings",
+          "Other Debt Subject to Limit"
+        ],
+        "name": "neither optional category: held + intragovernmental",
+        "result": {
+          "ok": {
+            "asOf": "2026-10-01",
+            "value": 150
+          }
+        },
+        "rows": [
+          {
+            "category": "Debt Held by the Public",
+            "close": 100,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Intragovernmental Holdings",
+            "close": 50,
+            "date": "2026-10-01",
+            "open": null
+          }
+        ],
+        "subtract": "Debt Not Subject to Limit"
+      },
+      {
+        "add": [
+          "Debt Held by the Public",
+          "Intragovernmental Holdings",
+          "Other Debt Subject to Limit"
+        ],
+        "name": "closing balance missing, opening used",
+        "result": {
+          "ok": {
+            "asOf": "2026-10-01",
+            "value": 140
+          }
+        },
+        "rows": [
+          {
+            "category": "Debt Held by the Public",
+            "close": null,
+            "date": "2026-10-01",
+            "open": 100
+          },
+          {
+            "category": "Intragovernmental Holdings",
+            "close": 50,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Debt Not Subject to Limit",
+            "close": null,
+            "date": "2026-10-01",
+            "open": 10
+          }
+        ],
+        "subtract": "Debt Not Subject to Limit"
+      },
+      {
+        "add": [
+          "Debt Held by the Public",
+          "Intragovernmental Holdings",
+          "Other Debt Subject to Limit"
+        ],
+        "name": "required Debt Held by the Public row missing",
+        "result": {
+          "category": "Debt Held by the Public",
+          "failure": "missingCategory"
+        },
+        "rows": [
+          {
+            "category": "Intragovernmental Holdings",
+            "close": 50,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Debt Not Subject to Limit",
+            "close": 20,
+            "date": "2026-10-01",
+            "open": null
+          }
+        ],
+        "subtract": "Debt Not Subject to Limit"
+      },
+      {
+        "add": [
+          "Debt Held by the Public",
+          "Intragovernmental Holdings",
+          "Other Debt Subject to Limit"
+        ],
+        "name": "required Intragovernmental Holdings row missing",
+        "result": {
+          "category": "Intragovernmental Holdings",
+          "failure": "missingCategory"
+        },
+        "rows": [
+          {
+            "category": "Debt Held by the Public",
+            "close": 100,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Debt Not Subject to Limit",
+            "close": 20,
+            "date": "2026-10-01",
+            "open": null
+          }
+        ],
+        "subtract": "Debt Not Subject to Limit"
+      },
+      {
+        "add": [
+          "Debt Held by the Public",
+          "Intragovernmental Holdings",
+          "Other Debt Subject to Limit"
+        ],
+        "name": "required row has no number",
+        "result": {
+          "failure": "invalidNumber",
+          "field": "close",
+          "row": 0
+        },
+        "rows": [
+          {
+            "category": "Debt Held by the Public",
+            "close": null,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Intragovernmental Holdings",
+            "close": 50,
+            "date": "2026-10-01",
+            "open": null
+          }
+        ],
+        "subtract": "Debt Not Subject to Limit"
+      },
+      {
+        "add": [
+          "Debt Held by the Public",
+          "Intragovernmental Holdings",
+          "Other Debt Subject to Limit"
+        ],
+        "name": "optional row has no number",
+        "result": {
+          "failure": "invalidNumber",
+          "field": "close",
+          "row": 2
+        },
+        "rows": [
+          {
+            "category": "Debt Held by the Public",
+            "close": 100,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Intragovernmental Holdings",
+            "close": 50,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Debt Not Subject to Limit",
+            "close": null,
+            "date": "2026-10-01",
+            "open": null
+          }
+        ],
+        "subtract": "Debt Not Subject to Limit"
+      },
+      {
+        "add": [
+          "Debt Held by the Public",
+          "Intragovernmental Holdings",
+          "Other Debt Subject to Limit"
+        ],
+        "name": "total not positive",
+        "result": {
+          "failure": "nonPositiveTotal"
+        },
+        "rows": [
+          {
+            "category": "Debt Held by the Public",
+            "close": 10,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Intragovernmental Holdings",
+            "close": 5,
+            "date": "2026-10-01",
+            "open": null
+          },
+          {
+            "category": "Debt Not Subject to Limit",
+            "close": 100,
+            "date": "2026-10-01",
+            "open": null
+          }
+        ],
+        "subtract": "Debt Not Subject to Limit"
+      },
+      {
+        "add": [
+          "Debt Held by the Public",
+          "Intragovernmental Holdings",
+          "Other Debt Subject to Limit"
+        ],
+        "name": "only other categories",
+        "result": {
+          "category": "Debt Held by the Public",
+          "failure": "missingCategory"
+        },
+        "rows": [
+          {
+            "category": "Statutory Debt Limit",
+            "close": 5,
+            "date": "2026-10-01",
+            "open": 5
+          }
+        ],
+        "subtract": "Debt Not Subject to Limit"
+      },
+      {
+        "add": [
+          "Debt Held by the Public",
+          "Intragovernmental Holdings",
+          "Other Debt Subject to Limit"
+        ],
+        "name": "empty",
+        "result": {
+          "failure": "noRows"
+        },
+        "rows": [],
+        "subtract": "Debt Not Subject to Limit"
+      }
+    ]
+  },
+  "growthRate": {
+    "cases": [
+      {
+        "baselineRowIndex": null,
+        "elapsedDays": 365,
+        "fallbackPerSecond": 146417.91787354808,
+        "method": "trailingYear",
+        "name": "trailing year",
+        "note": "The shown rate: (latest - year-ago total) / (365 x 86400), year-ago record dated exactly 365 days back.",
+        "perSecond": 75995.13158499166,
+        "records": [
+          {
+            "date": "2026-10-01",
+            "total": 40260641972390
+          },
+          {
+            "date": "2026-09-30",
+            "total": 40254913086221.55
+          },
+          {
+            "date": "2026-09-29",
+            "total": 40238776540118.2
+          },
+          {
+            "date": "2026-09-28",
+            "total": 40221309877654.91
+          },
+          {
+            "date": "2026-09-25",
+            "total": 40196127338902.37
+          },
+          {
+            "date": "2026-09-24",
+            "total": 40172088415660.08
+          }
+        ],
+        "yearAgo": {
+          "date": "2025-10-01",
+          "total": 37864059502725.7
+        }
+      },
+      {
+        "baselineRowIndex": null,
+        "elapsedDays": 366,
+        "fallbackPerSecond": 146417.91787354808,
+        "method": "trailingYear",
+        "name": "trailing year, year-ago record is older than 365 days",
+        "note": "The newest record on or before the target date may be earlier (holiday weekend): the divisor is the real days between the two record dates, 366 here.",
+        "perSecond": 76232.1004221691,
+        "records": [
+          {
+            "date": "2026-10-01",
+            "total": 40260641972390
+          },
+          {
+            "date": "2026-09-30",
+            "total": 40254913086221.55
+          },
+          {
+            "date": "2026-09-29",
+            "total": 40238776540118.2
+          },
+          {
+            "date": "2026-09-28",
+            "total": 40221309877654.91
+          },
+          {
+            "date": "2026-09-25",
+            "total": 40196127338902.37
+          },
+          {
+            "date": "2026-09-24",
+            "total": 40172088415660.08
+          }
+        ],
+        "yearAgo": {
+          "date": "2025-09-30",
+          "total": 37850000000000
+        }
+      },
+      {
+        "baselineRowIndex": null,
+        "elapsedDays": 365,
+        "fallbackPerSecond": null,
+        "method": "trailingYear",
+        "name": "trailing year, falling total",
+        "note": "A year-ago total above the latest gives a negative rate.",
+        "perSecond": -1,
+        "records": [
+          {
+            "date": "2026-10-01",
+            "total": 40000000000000
+          }
+        ],
+        "yearAgo": {
+          "date": "2025-10-01",
+          "total": 40000031536000
+        }
+      },
+      {
+        "baselineRowIndex": 5,
+        "elapsedDays": 7,
+        "fallbackPerSecond": 146417.91787354808,
+        "method": "fallback",
+        "name": "year-ago record missing: fallback, week of business days",
+        "note": "Fallback rule: oldest row is 7 days back: (latest - oldest) / (7 x 86400).",
+        "perSecond": 146417.91787354808,
+        "records": [
+          {
+            "date": "2026-10-01",
+            "total": 40260641972390
+          },
+          {
+            "date": "2026-09-30",
+            "total": 40254913086221.55
+          },
+          {
+            "date": "2026-09-29",
+            "total": 40238776540118.2
+          },
+          {
+            "date": "2026-09-28",
+            "total": 40221309877654.91
+          },
+          {
+            "date": "2026-09-25",
+            "total": 40196127338902.37
+          },
+          {
+            "date": "2026-09-24",
+            "total": 40172088415660.08
+          }
+        ],
+        "yearAgo": null
+      },
+      {
+        "baselineRowIndex": 7,
+        "elapsedDays": 30,
+        "fallbackPerSecond": 179437.4040457568,
+        "method": "fallback",
+        "name": "year-ago record missing: fallback, month window",
+        "note": "Fallback: the oldest row in the response is the baseline, 30 days back, not the week-old row.",
+        "perSecond": 179437.4040457568,
+        "records": [
+          {
+            "date": "2026-10-01",
+            "total": 40260641972390
+          },
+          {
+            "date": "2026-09-30",
+            "total": 40254913086221.55
+          },
+          {
+            "date": "2026-09-29",
+            "total": 40238776540118.2
+          },
+          {
+            "date": "2026-09-28",
+            "total": 40221309877654.91
+          },
+          {
+            "date": "2026-09-25",
+            "total": 40196127338902.37
+          },
+          {
+            "date": "2026-09-24",
+            "total": 40172088415660.08
+          },
+          {
+            "date": "2026-09-23",
+            "total": 40158302117845.62
+          },
+          {
+            "date": "2026-09-01",
+            "total": 39795540221103.4
+          }
+        ],
+        "yearAgo": null
+      },
+      {
+        "baselineRowIndex": 5,
+        "elapsedDays": 7,
+        "fallbackPerSecond": 146417.91787354808,
+        "method": "fallback",
+        "name": "year-ago record not older than latest: fallback",
+        "note": "A year-ago record dated the same day or later is unusable; the fallback rule runs.",
+        "perSecond": 146417.91787354808,
+        "records": [
+          {
+            "date": "2026-10-01",
+            "total": 40260641972390
+          },
+          {
+            "date": "2026-09-30",
+            "total": 40254913086221.55
+          },
+          {
+            "date": "2026-09-29",
+            "total": 40238776540118.2
+          },
+          {
+            "date": "2026-09-28",
+            "total": 40221309877654.91
+          },
+          {
+            "date": "2026-09-25",
+            "total": 40196127338902.37
+          },
+          {
+            "date": "2026-09-24",
+            "total": 40172088415660.08
+          }
+        ],
+        "yearAgo": {
+          "date": "2026-10-01",
+          "total": 1
+        }
+      },
+      {
+        "baselineRowIndex": 5,
+        "elapsedDays": 7,
+        "fallbackPerSecond": 146417.91787354808,
+        "method": "fallback",
+        "name": "year-ago date unparsable: fallback",
+        "note": "Same.",
+        "perSecond": 146417.91787354808,
+        "records": [
+          {
+            "date": "2026-10-01",
+            "total": 40260641972390
+          },
+          {
+            "date": "2026-09-30",
+            "total": 40254913086221.55
+          },
+          {
+            "date": "2026-09-29",
+            "total": 40238776540118.2
+          },
+          {
+            "date": "2026-09-28",
+            "total": 40221309877654.91
+          },
+          {
+            "date": "2026-09-25",
+            "total": 40196127338902.37
+          },
+          {
+            "date": "2026-09-24",
+            "total": 40172088415660.08
+          }
+        ],
+        "yearAgo": {
+          "date": "not-a-date",
+          "total": 1
+        }
+      },
+      {
+        "baselineRowIndex": null,
+        "elapsedDays": null,
+        "fallbackPerSecond": null,
+        "method": null,
+        "name": "year-ago record present, no recent records",
+        "note": "Nothing to take a latest figure from: no rate.",
+        "perSecond": null,
+        "records": [],
+        "yearAgo": {
+          "date": "2025-10-01",
+          "total": 37864059502725.7
+        }
+      },
+      {
+        "baselineRowIndex": null,
+        "elapsedDays": null,
+        "fallbackPerSecond": null,
+        "method": null,
+        "name": "fallback: one record only",
+        "note": "Nothing to measure against: no rate.",
+        "perSecond": null,
+        "records": [
+          {
+            "date": "2026-10-01",
+            "total": 40260641972390
+          }
+        ],
+        "yearAgo": null
+      },
+      {
+        "baselineRowIndex": null,
+        "elapsedDays": null,
+        "fallbackPerSecond": null,
+        "method": null,
+        "name": "fallback: no records",
+        "note": "No rate.",
+        "perSecond": null,
+        "records": [],
+        "yearAgo": null
+      },
+      {
+        "baselineRowIndex": 1,
+        "elapsedDays": 1,
+        "fallbackPerSecond": 0,
+        "method": "fallback",
+        "name": "fallback: identical totals, different dates",
+        "note": "Zero rate. The app treats exactly 0 as 'no reading' for the trend banner.",
+        "perSecond": 0,
+        "records": [
+          {
+            "date": "2026-10-01",
+            "total": 40000000000000
+          },
+          {
+            "date": "2026-09-30",
+            "total": 40000000000000
+          }
+        ],
+        "yearAgo": null
+      },
+      {
+        "baselineRowIndex": 1,
+        "elapsedDays": 1,
+        "fallbackPerSecond": -1,
+        "method": "fallback",
+        "name": "fallback: negative day-over-day change",
+        "note": "A falling total gives a negative rate.",
+        "perSecond": -1,
+        "records": [
+          {
+            "date": "2026-10-01",
+            "total": 40000000000000
+          },
+          {
+            "date": "2026-09-30",
+            "total": 40000000086400
+          }
+        ],
+        "yearAgo": null
+      },
+      {
+        "baselineRowIndex": null,
+        "elapsedDays": null,
+        "fallbackPerSecond": null,
+        "method": null,
+        "name": "fallback: same date twice",
+        "note": "A row with the same date is zero days older and is skipped; no usable baseline.",
+        "perSecond": null,
+        "records": [
+          {
+            "date": "2026-10-01",
+            "total": 40000000000000
+          },
+          {
+            "date": "2026-10-01",
+            "total": 39999999000000
+          }
+        ],
+        "yearAgo": null
+      },
+      {
+        "baselineRowIndex": 1,
+        "elapsedDays": 1,
+        "fallbackPerSecond": 0.0011574074074074073,
+        "method": "fallback",
+        "name": "fallback: skips an older row that is not a date",
+        "note": "The scan goes from the oldest row forward; unparsable dates are passed over.",
+        "perSecond": 0.0011574074074074073,
+        "records": [
+          {
+            "date": "2026-10-01",
+            "total": 1000
+          },
+          {
+            "date": "2026-09-30",
+            "total": 900
+          },
+          {
+            "date": "not-a-date",
+            "total": 5
+          }
+        ],
+        "yearAgo": null
+      },
+      {
+        "baselineRowIndex": null,
+        "elapsedDays": null,
+        "fallbackPerSecond": null,
+        "method": null,
+        "name": "fallback: latest date is not a date",
+        "note": "No rate.",
+        "perSecond": null,
+        "records": [
+          {
+            "date": "10/01/2026",
+            "total": 1000
+          },
+          {
+            "date": "2026-09-30",
+            "total": 900
+          }
+        ],
+        "yearAgo": null
+      },
+      {
+        "baselineRowIndex": 1,
+        "elapsedDays": 2,
+        "fallbackPerSecond": 0.005787037037037037,
+        "method": "fallback",
+        "name": "fallback: leap day",
+        "note": "Days are calendar days: 2028-02-28 to 2028-03-01 is 2.",
+        "perSecond": 0.005787037037037037,
+        "records": [
+          {
+            "date": "2028-03-01",
+            "total": 2000
+          },
+          {
+            "date": "2028-02-28",
+            "total": 1000
+          }
+        ],
+        "yearAgo": null
+      }
+    ],
+    "note": "Rate shown = trailing-year rate when `yearAgo` is present and at least a day older than the latest record, else the fallback rule on `records`. `method` says which ran. `fallbackPerSecond` is the fallback rule alone.",
+    "trailingYearDate": [
+      {
+        "latestDate": "2026-10-01",
+        "yearAgoTarget": "2025-10-01"
+      },
+      {
+        "latestDate": "2027-01-01",
+        "yearAgoTarget": "2026-01-01"
+      },
+      {
+        "latestDate": "2028-03-01",
+        "yearAgoTarget": "2027-03-02"
+      },
+      {
+        "latestDate": "2028-02-29",
+        "yearAgoTarget": "2027-03-01"
+      },
+      {
+        "latestDate": "2026-02-28",
+        "yearAgoTarget": "2025-02-28"
+      },
+      {
+        "latestDate": "10/01/2026",
+        "yearAgoTarget": null
+      },
+      {
+        "latestDate": "",
+        "yearAgoTarget": null
+      }
+    ]
+  }
+}

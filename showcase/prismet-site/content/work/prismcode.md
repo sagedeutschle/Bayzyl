@@ -29,3 +29,30 @@ A desktop IDE where three coding agents work side by side over one workspace, ea
 - One adapter per agent, one AgentEvent contract: adding an agent needed no UI work
 - Git worktree racing with compare, apply-winner, and keep-both
 - Zero-token dev loop with a mock agent
+
+<!-- Proposed engineering-story wording, added by an agent on 2026-10-04 for Sage’s review.
+     Existing authored wording above is preserved. Edit these fields through /edit. -->
+
+## story.focus
+Make agent work comparable.
+
+## story.contribution
+Design and engineering of a desktop workbench for Claude Code, Codex and DeepSeek, with shared session and review surfaces.
+
+## story.decision.1.title
+Normalize at the adapter boundary
+
+## story.decision.1.text
+Agent-specific adapters emit one event contract for streamed text, tool activity, file changes and permission requests, keeping provider details out of the shared interface.
+
+## story.decision.2.title
+Put review before adoption
+
+## story.decision.2.text
+The comparison workflow presents proposed changes side by side with explicit choices to apply one result or keep both. A mock-agent loop supports interface development.
+
+## story.outcome
+The scripted demonstrations show the comparison and diff views. They illustrate the review workflow; they do not establish real agent performance or production usage.
+
+## story.evidence
+Scripted demo
