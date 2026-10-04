@@ -107,6 +107,16 @@ colours in every phase. The wreath sways and the fireflies glint unless reduced 
 emblem stays as a picture with icons only and the wing list below names the wings. The anchors are still
 `#plan a.wing[data-beam]` with a `.room` inside, which `site.js` and `site-check.mjs` rely on.
 
+**2026-10-04, tech and nature woven together** (Sage: "a marriage between tech and nature", and carry it into the
+page's background). Motifs taken from solarpunk writing: Art Nouveau curves, greenhouse and geodesic glass, solar
+cells, climbing vines. In the emblem: a flower of photovoltaic petals turns slowly around the rotunda, the modules are
+chips with pins, each trace puts out leaves where it bends, two vines climb inside the wreath carrying small lamps in
+the wing colours, the leaves have veins, the dome's triangle lattice shows through the disc, and a sun sits where the
+beam enters. Behind every page: canopy light from the top right, the same lattice fading toward the middle so text
+sits on clear ground, and from 1200px a vine that is also a circuit (stem, leaves, traces ending in joints) up each
+margin. The background art is two `data:` SVGs inside `site.css` (`body::before`, `body::after`), so nothing is
+fetched; `#work` is slightly see-through so the weave carries behind it.
+
 The site is **a workshop and the register it keeps**. The home page opens on a hall plan, six wings (Sage's six
 categories) around a rotunda with the prism in its floor; each wing filters the register. Then four doors (Bayzyl,
 Prismet, Helm, PrismCode, each with one signature module built from its own material), the register (a ledger grouped

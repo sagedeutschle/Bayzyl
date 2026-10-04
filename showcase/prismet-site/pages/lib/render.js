@@ -228,6 +228,23 @@ function plan() {
   }).join('');
 
   const ph = 62, pw = 36, apex = C - ph * 2 / 3, base = C + ph / 3;
+  // a flower of solar cells around the rotunda: photovoltaic petals, blue into violet
+  const petals = Array.from({ length: 20 }, (_, i) => `<use href="#cell" transform="translate(${C} ${C}) rotate(${i * 18 + 9})"/>`).join('');
+  // two whiplash vines climb the inside of the wreath from the foot, leaves on one side, lights on the other
+  const vine = (side) => {
+    const rr = 298, pt = (deg) => [C + side * Math.cos(deg * Math.PI / 180) * rr, C + Math.sin(deg * Math.PI / 180) * rr];
+    const [x0, y0] = pt(88), [x1, y1] = pt(-27);
+    const curl = `c${side * 6} -26 ${side * -22} -40 ${side * -34} -22c${side * -7} 12 ${side * 6} 22 ${side * 15} 14`;
+    const stem = `<path class="vine" d="M${f(x0)} ${f(y0)}A${rr} ${rr} 0 0 ${side > 0 ? 0 : 1} ${f(x1)} ${f(y1)}${curl}"/>`;
+    const growth = [76, 62, 48, 34, 20, 6, -8, -20].map((deg, i) => {
+      const [x, y] = pt(deg), out = side > 0 ? deg - 90 : 270 - deg;
+      return i % 2
+        ? `<circle class="lamp" style="--c:var(--${SPECTRUM[(i + (side > 0 ? 0 : 3)) % 6]}-ink)" cx="${f(x - side * Math.cos(deg * Math.PI / 180) * 13)}" cy="${f(y - Math.sin(deg * Math.PI / 180) * 13)}" r="4"/>`
+        : `<use href="#leaf" fill="${GREENS[(i + 3) % GREENS.length]}" transform="translate(${f(x)} ${f(y)}) rotate(${f(out + side * 150)}) scale(.8)"/>`;
+    }).join('');
+    return stem + growth;
+  };
+  const sun = `<g class="sun-mark">${Array.from({ length: 8 }, (_, i) => `<path d="M${C} 22v-9" transform="rotate(${i * 45} ${C} 40)"/>`).join('')}<circle cx="${C}" cy="40" r="9"/></g>`;
   const wings = SPECTRUM.map((id, i) => {
     const [dx, dy] = at[id], px = C + dx, py = C + dy, left = dx < 0;
     const x = px - PW / 2, y = py - PH / 2, ex = left ? x + PW : x;            // the module's inner edge
@@ -235,8 +252,15 @@ function plan() {
     const ang = Math.atan2(dy, dx), kx = C + Math.cos(ang) * (R + 18), ky = C + Math.sin(ang) * (R + 18);
     const trace = dy === 0 ? `M${C} ${C}H${ex}` : `M${C} ${C}L${f(kx)} ${f(ky)}L${f(kx)} ${py}H${ex}`;
     const n = count(id), label = beamLabel(id), lead = shown.find((p) => p.beam === id);
+    // where the trace turns (or its middle, when it runs straight) it puts out a pair of leaves
+    const bx = dy === 0 ? (C + ex) / 2 + (left ? -14 : 14) : kx, by = dy === 0 ? C : (ky + py) / 2;
+    const bud = `<use href="#leaf" class="bud" transform="translate(${f(bx)} ${f(by)}) rotate(${dy === 0 ? -58 : (left ? 200 : -20)}) scale(.62)"/><use href="#leaf" class="bud" transform="translate(${f(bx)} ${f(by)}) rotate(${dy === 0 ? 58 : (left ? 160 : 20)}) scale(.5)"/>`;
+    // the module is a chip: pins along its top and bottom edges, clear of the badge
+    const pins = [-78, -52, 52, 78].map((o) => `M${px + o} ${y}v-7M${px + o} ${y + PH}v7`).join('') + `M${px - 26} ${y + PH}v7M${px} ${y + PH}v7M${px + 26} ${y + PH}v7`;
     return `<a class="wing" href="#work" data-beam="${id}" style="--i:${i};--c:var(--${id});--ci:var(--${id}-ink)" aria-label="${esc(label.p)}: ${n} record${n === 1 ? '' : 's'}">
       <path class="inlay" d="${trace}"/>
+      ${bud}
+      <path class="pins" d="${pins}"/>
       ${dy === 0 ? '' : `<circle class="node" cx="${f(kx)}" cy="${f(ky)}" r="3.4"/><circle class="node" cx="${f(kx)}" cy="${py}" r="3.4"/>`}<circle class="node" cx="${ex}" cy="${py}" r="4.2"/>
       <rect class="room-fill" x="${x}" y="${y}" width="${PW}" height="${PH}" rx="16"/>
       <rect class="room" x="${x}" y="${y}" width="${PW}" height="${PH}" rx="16"/>
@@ -250,16 +274,24 @@ function plan() {
   <defs>
     <radialGradient id="plan-disc"><stop offset="0" stop-color="#16404A"/><stop offset=".55" stop-color="#0E222B"/><stop offset="1" stop-color="#081218"/></radialGradient>
     <filter id="plan-glow" filterUnits="userSpaceOnUse" x="0" y="0" width="${S}" height="${S}"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-    <g id="leaf"><path d="M0 0C9 -12 27 -12 36 0C27 12 9 12 0 0Z"/><path class="rib" d="M3 0H31"/></g>
+    <g id="leaf"><path d="M0 0C9 -12 27 -12 36 0C27 12 9 12 0 0Z"/><path class="rib" d="M3 0H31M12 0l6 -5M12 0l6 5M21 0l5 -4M21 0l5 4"/></g>
+    <linearGradient id="plan-pv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3FB6C8"/><stop offset=".5" stop-color="#3382BF"/><stop offset="1" stop-color="#6A5BD0"/></linearGradient>
+    <g id="cell"><rect x="-9" y="-121" width="18" height="24" rx="3"/><path class="grid" d="M0 -121v24M-9 -109h18"/></g>
+    <pattern id="plan-geo" width="64" height="110.85" patternUnits="userSpaceOnUse"><path d="M0 0H64M0 55.4H64M0 0L32 55.4L64 0M0 110.85L32 55.4L64 110.85"/></pattern>
+    <clipPath id="plan-clip"><circle cx="${C}" cy="${C}" r="371"/></clipPath>
   </defs>
   <circle class="disc" cx="${C}" cy="${C}" r="372"/>
+  <rect class="geo" x="0" y="0" width="${S}" height="${S}" fill="url(#plan-geo)" clip-path="url(#plan-clip)"/>
   <g class="wreath">${leaves.join('')}</g>
   <circle class="ring" cx="${C}" cy="${C}" r="318"/>
   <g class="flies">${flies.join('')}</g>
+  <g class="vines">${vine(-1)}${vine(1)}</g>
   <path class="stem" d="M${C} ${C + R}C${C - 10} ${C + R + 60} ${C + 12} ${C + R + 130} ${C} ${C + R + 222}"/>
   <g class="sprout">${sprout}</g>
   <g class="g-rotunda">
     <path class="beacon" d="M${C} 44V${f(apex)}"/>
+    ${sun}
+    <g class="petals">${petals}</g>
     <circle class="rotunda" cx="${C}" cy="${C}" r="${R}"/>
     <circle class="rotunda inner" cx="${C}" cy="${C}" r="${R - 20}"/>
   </g>

@@ -88,9 +88,22 @@
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
-  margin: 0; background: var(--ground); color: var(--ink);
+  margin: 0; color: var(--ink);
+  background:
+    radial-gradient(1100px 640px at 82% -6%, color-mix(in srgb, var(--brass) 14%, transparent), transparent 70%),
+    radial-gradient(900px 620px at -4% 104%, color-mix(in srgb, var(--live) 11%, transparent), transparent 70%),
+    var(--ground);
+  background-attachment: fixed;
   font: 400 var(--t-base)/1.6 var(--serif); font-synthesis: none;   /* Marcellus has one weight and no italic: never fake them */
   -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+/* Behind the page: the greenhouse's lattice, fading toward the middle so text sits on clear ground; from 1200px a
+   vine that is also a circuit climbs each margin. Both are drawn in this file (data: URLs), nothing is fetched. */
+body::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2296%22%20height=%22166%22%20viewBox=%220%200%2096%20166%22%3E%3Cg%20fill=%22none%22%20stroke=%22%233E9B6E%22%20stroke-opacity=%22.13%22%3E%3Cpath%20d=%22M0%200H96M0%2083H96M0%20166H96M0%200L48%2083L96%200M0%20166L48%2083L96%20166%22/%3E%3C/g%3E%3Cg%20fill=%22%235FB98C%22%20fill-opacity=%22.3%22%3E%3Ccircle%20cx=%2248%22%20cy=%2283%22%20r=%222%22/%3E%3Ccircle%20cx=%220%22%20cy=%220%22%20r=%222%22/%3E%3Ccircle%20cx=%2296%22%20cy=%220%22%20r=%222%22/%3E%3Ccircle%20cx=%220%22%20cy=%22166%22%20r=%222%22/%3E%3Ccircle%20cx=%2296%22%20cy=%22166%22%20r=%222%22/%3E%3C/g%3E%3C/svg%3E") center top / 96px 166px;
+  -webkit-mask-image: radial-gradient(ellipse 62% 70% at 50% 42%, transparent 38%, #000 100%); mask-image: radial-gradient(ellipse 62% 70% at 50% 42%, transparent 38%, #000 100%); }
+@media (min-width: 1200px) {
+  body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .55;
+    background: url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22120%22%20height=%22560%22%20viewBox=%220%200%20120%20560%22%3E%3Cg%3E%3Cg%20fill=%22none%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22%3E%20%3Cpath%20d=%22M60%200C96%2070%2024%20130%2060%20200S96%20330%2060%20400S24%20500%2060%20560%22%20stroke=%22%232A7A50%22%20stroke-width=%223%22/%3E%20%3Cpath%20d=%22M72%2096H104V60M48%20300H16V258M70%20462H100V500M52%20170H24%22%20stroke=%22%233382BF%22%20stroke-width=%222%22/%3E%3C/g%3E%20%3Cg%20fill=%22%23081218%22%20stroke=%22%237DB8EA%22%20stroke-width=%222%22%3E%3Ccircle%20cx=%22104%22%20cy=%2260%22%20r=%224%22/%3E%3Ccircle%20cx=%2216%22%20cy=%22258%22%20r=%224%22/%3E%3Ccircle%20cx=%22100%22%20cy=%22500%22%20r=%224%22/%3E%3Ccircle%20cx=%2224%22%20cy=%22170%22%20r=%224%22/%3E%3C/g%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%233E9B6E%22%20transform=%22translate%2874%2058%29%20rotate%28-35%29%20scale%280.9%29%22/%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%2357B585%22%20transform=%22translate%2850%20128%29%20rotate%28205%29%20scale%280.85%29%22/%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%232A7A50%22%20transform=%22translate%2846%20214%29%20rotate%28160%29%20scale%280.8%29%22/%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%237BD0A4%22%20transform=%22translate%2880%20262%29%20rotate%28-20%29%20scale%280.95%29%22/%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%233E9B6E%22%20transform=%22translate%2884%20338%29%20rotate%2825%29%20scale%280.8%29%22/%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%232F8F7E%22%20transform=%22translate%2844%20392%29%20rotate%28200%29%20scale%280.9%29%22/%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%2357B585%22%20transform=%22translate%2840%20470%29%20rotate%28165%29%20scale%280.75%29%22/%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%232A7A50%22%20transform=%22translate%2872%20528%29%20rotate%28-30%29%20scale%280.85%29%22/%3E%3C/g%3E%3C/svg%3E") left -14px top / 104px auto repeat-y, url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22120%22%20height=%22560%22%20viewBox=%220%200%20120%20560%22%3E%3Cg%20transform=%22translate%28120%200%29%20scale%28-1%201%29%22%3E%3Cg%20fill=%22none%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22%3E%20%3Cpath%20d=%22M60%200C96%2070%2024%20130%2060%20200S96%20330%2060%20400S24%20500%2060%20560%22%20stroke=%22%232A7A50%22%20stroke-width=%223%22/%3E%20%3Cpath%20d=%22M72%2096H104V60M48%20300H16V258M70%20462H100V500M52%20170H24%22%20stroke=%22%233382BF%22%20stroke-width=%222%22/%3E%3C/g%3E%20%3Cg%20fill=%22%23081218%22%20stroke=%22%237DB8EA%22%20stroke-width=%222%22%3E%3Ccircle%20cx=%22104%22%20cy=%2260%22%20r=%224%22/%3E%3Ccircle%20cx=%2216%22%20cy=%22258%22%20r=%224%22/%3E%3Ccircle%20cx=%22100%22%20cy=%22500%22%20r=%224%22/%3E%3Ccircle%20cx=%2224%22%20cy=%22170%22%20r=%224%22/%3E%3C/g%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%233E9B6E%22%20transform=%22translate%2874%2058%29%20rotate%28-35%29%20scale%280.9%29%22/%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%2357B585%22%20transform=%22translate%2850%20128%29%20rotate%28205%29%20scale%280.85%29%22/%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%232A7A50%22%20transform=%22translate%2846%20214%29%20rotate%28160%29%20scale%280.8%29%22/%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%237BD0A4%22%20transform=%22translate%2880%20262%29%20rotate%28-20%29%20scale%280.95%29%22/%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%233E9B6E%22%20transform=%22translate%2884%20338%29%20rotate%2825%29%20scale%280.8%29%22/%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%232F8F7E%22%20transform=%22translate%2844%20392%29%20rotate%28200%29%20scale%280.9%29%22/%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%2357B585%22%20transform=%22translate%2840%20470%29%20rotate%28165%29%20scale%280.75%29%22/%3E%3Cpath%20d=%22M0%200C9%20-12%2027%20-12%2036%200C27%2012%209%2012%200%200Z%22%20fill=%22%232A7A50%22%20transform=%22translate%2872%20528%29%20rotate%28-30%29%20scale%280.85%29%22/%3E%3C/g%3E%3C/svg%3E") right -14px top 180px / 104px auto repeat-y; }
 }
 img, svg { max-width: 100%; height: auto; display: block; }
 a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
@@ -189,6 +202,18 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
   --ink: #E4EDF0; --ink-2: #AFC0C8; --desktop-ink: #72CDE0; --apps-ink: #6FD1C1; --worlds-ink: #98D48E; --minecraft-ink: #7BD0A4; --web-ink: #7DB8EA; --ai-ink: #A3A9EE; --sun: #F2C14E; }
 .plan .disc { fill: url(#plan-disc); stroke: #2A7A50; stroke-width: 2; }
 .plan .wreath .rib, .plan .sprout .rib { fill: none; stroke: rgba(4, 20, 14, .45); stroke-width: 1; }
+.plan .geo path, .plan #plan-geo path { fill: none; stroke: #4E86A6; stroke-width: 1; }
+.plan .geo { opacity: .16; }
+.plan .petals use { fill: url(#plan-pv); opacity: .92; }
+.plan #cell .grid { fill: none; stroke: rgba(8, 18, 24, .55); stroke-width: 1; }
+.plan .vine { fill: none; stroke: #2A7A50; stroke-width: 3; stroke-linecap: round; }
+.plan .vines .rib { fill: none; stroke: rgba(4, 20, 14, .45); stroke-width: 1; }
+.plan .lamp { fill: var(--c); filter: url(#plan-glow); }
+.plan .bud { fill: var(--ci); opacity: .9; }
+.plan .bud .rib, .plan .wing .rib { fill: none; stroke: rgba(4, 20, 14, .5); stroke-width: 1; }
+.plan .pins { fill: none; stroke: var(--c); stroke-width: 2; stroke-linecap: round; opacity: .7; }
+.plan .sun-mark circle { fill: var(--sun); filter: url(#plan-glow); }
+.plan .sun-mark path { fill: none; stroke: var(--sun); stroke-width: 2; stroke-linecap: round; }
 .plan .ring { fill: none; stroke: #3F6E8C; stroke-width: 1; stroke-dasharray: 2 7; opacity: .7; }
 .plan .flies circle { fill: #C9F7DE; filter: url(#plan-glow); }
 .plan .stem { fill: none; stroke: #2A7A50; stroke-width: 2.5; stroke-linecap: round; }
@@ -215,12 +240,15 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 /* the wreath breathes: a slow turn, a few seconds of arc each way; still for anyone who asks for less motion */
 @media (prefers-reduced-motion: no-preference) {
   .plan .wreath { transform-origin: 400px 400px; animation: sway 14s ease-in-out infinite alternate; }
-  .plan .flies circle { animation: glint 5s ease-in-out infinite alternate; }
+  .plan .flies circle, .plan .lamp { animation: glint 5s ease-in-out infinite alternate; }
+  .plan .lamp:nth-of-type(2n) { animation-duration: 6.5s; animation-delay: -3s; }
+  .plan .petals { transform-origin: 400px 400px; animation: turn 120s linear infinite; }
   .plan .flies circle:nth-child(3n) { animation-duration: 7s; animation-delay: -2s; }
   .plan .flies circle:nth-child(3n + 1) { animation-duration: 9s; animation-delay: -4s; }
 }
 @keyframes sway { from { transform: rotate(-1.6deg); } to { transform: rotate(1.6deg); } }
 @keyframes glint { from { opacity: .15; } }
+@keyframes turn { to { transform: rotate(360deg); } }
 .lantern { display: none; }
 .plan figcaption { margin-top: 10px; font-size: var(--t-sm); color: var(--ink-3); font-style: italic; }
 /* The caption hangs below the drawing, so the figure is the drawing and the lantern's 50% is the rotunda. */
@@ -258,7 +286,7 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 
 /* ── sections ─────────────────────────────────────────────────────────────────────────────── */
 section { padding-block: clamp(40px, 6vw, 80px); }
-#work { background: var(--surface); border-block: 1px solid var(--hair); }
+#work { background: color-mix(in srgb, var(--surface) 86%, transparent); border-block: 1px solid var(--hair); }
 .count { font-variant-numeric: tabular-nums; font-size: var(--t-sm); color: var(--ink-3); }
 
 /* principal works: four doors, one family. Each module sits on its room's material inside a 16:10 frame, inset by one
