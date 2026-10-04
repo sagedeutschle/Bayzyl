@@ -31,4 +31,3 @@ Nineteen classic games and three live-data lenses in one app, each game with its
 - Daily Wordgame fed by a self-hosted endpoint on prismet.xyz
 - Light, parchment, and dark reading themes; sound and haptics on every move
 - Began as Chess Hotswap, built to hot-swap between 2D and 3D chess
-- Built with a team of AI agents under a written coordination protocol (see Agent Ops)

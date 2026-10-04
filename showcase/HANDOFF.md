@@ -86,6 +86,18 @@ pointer-following glow, the plan's drawing animation and the hover corner ticks.
 restyled: `/steam`, `/debt` (`server/public/style.css`), the share image, the editor's own chrome. Where the text below
 says slate, chalk, brass or lantern, it describes the earlier palette.
 
+**2026-10-04, "prism and glass" (Sage picked this direction for a solarpunk feel).** The palette follows the visitor's
+clock while no theme has been chosen: `site.js` sets `data-phase` (dawn 5 to 8, day 8 to 17, dusk 17 to 20, night) and
+`data-auto`; dawn and day use the day tokens, dusk and night the night tokens, and dawn and dusk change the ground.
+`?phase=dawn|day|dusk|night` shows one phase at any hour. The toggle carries an arc with the sun or moon where the
+clock puts it; choosing a theme stops the cycle. In the plan a sunbeam (`--sun`, the only gold on the site) comes
+down into the prism and leaves as six rays in the wing colours; a ray thickens under the pointer. Section heads carry
+a strip of six panes; wing markers are small arched panes; the principal works sit in frames with arched top corners
+and their wing's colour along the top; the plate is an arched window. The footer states the footprint
+(`footer.footprint`). Wording, same day, at Sage's request ("tone it down"): the hero and the page description say
+developer tools instead of AI agent systems, the sixth wing is named Developer Tools, the hire line is Developer
+tooling setup, and the Prismet page no longer says how it was built. The three projects about AI keep their own words.
+
 The site is **a workshop and the register it keeps**. The home page opens on a hall plan, six wings (Sage's six
 categories) around a rotunda with the prism in its floor; each wing filters the register. Then four doors (Bayzyl,
 Prismet, Helm, PrismCode, each with one signature module built from its own material), the register (a ledger grouped

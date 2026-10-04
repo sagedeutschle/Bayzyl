@@ -47,7 +47,8 @@
   --gutter: clamp(16px, 4vw, 56px);
   --maxw: 1240px;
   --bar: 60px;
-  --radius: 2px;         /* corners of cards, plaques, buttons and plates */
+  --radius: 8px;         /* corners of cards, buttons and plates */
+  --sun: #F2C14E;        /* sunlight: the beam into the prism and the orb on the toggle, nothing else */
   --ease: cubic-bezier(.2, .7, .2, 1);
 }
 :root[data-theme="light"], :root:not([data-theme="dark"]):not([data-theme="light"]).day {
@@ -74,6 +75,13 @@
   --shadow: 0 1px 0 rgba(16, 33, 43, .06), 0 16px 36px rgba(16, 33, 43, .14);
   --desktop-ink: #1B6F82; --apps-ink: #1A7366; --worlds-ink: #3B7A3C; --minecraft-ink: #1F7A54; --web-ink: #22609A; --ai-ink: #434AA5;
 }
+
+/* the sun cycle (site.js sets data-phase from the visitor's clock, and data-auto while no theme has been chosen):
+   dawn is mint, day is the pale sky above, dusk is teal twilight, night is the deep water at the top of this file */
+:root[data-auto][data-phase="dawn"] { --ground: #E9F4EE; --surface: #F3FAF6; --sun: #E0A62C; }
+:root[data-auto][data-phase="dusk"] { --ground: #0F272D; --surface: #16343B; --raised: #1E424A; }
+:root[data-theme="light"] { --sun: #D99A1E; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --sun: #D99A1E; } }
 
 /* ── base ─────────────────────────────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
@@ -117,6 +125,8 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 
 /* rules: a lintel opens a room */
 .sec-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 32px; margin-bottom: 28px; }
+.sec-head::before { content: ""; flex: 0 0 100%; height: 14px; background:
+  linear-gradient(90deg, var(--desktop) 0 21px, transparent 21px 23.4px, var(--apps) 23.4px 44.4px, transparent 44.4px 46.8px, var(--worlds) 46.8px 67.8px, transparent 67.8px 70.2px, var(--minecraft) 70.2px 91.2px, transparent 91.2px 93.6px, var(--web) 93.6px 114.6px, transparent 114.6px 117px, var(--ai) 117px 138px, transparent 138px) no-repeat; }
 .sec-head p { color: var(--ink-2); max-width: 40rem; }
 
 /* buttons and links */
@@ -137,7 +147,10 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 .nav a:not(.btn) { text-decoration: none; font: 500 var(--t-sm)/1 var(--serif); color: var(--ink-2); padding: 12px 12px; border-radius: var(--radius); min-height: 44px; display: inline-flex; align-items: center; }
 .nav a:not(.btn):hover { color: var(--ink); background: var(--surface); }
 .nav .btn { margin-left: 8px; }
-.theme { width: 44px; padding: 0; justify-content: center; }
+.theme { width: 60px; padding: 0; justify-content: center; }
+.sky path { fill: none; stroke: currentColor; stroke-width: 1; opacity: .5; }
+.sky .orb { fill: var(--sun); }
+.sky.moon .orb { fill: var(--ink); }
 .theme .sun { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid currentColor; background: linear-gradient(90deg, currentColor 50%, transparent 50%); }
 .nav > * { flex: none; }                    /* the kept targets never squeeze below 44px; the brand gives way first */
 .nav .btn.primary { white-space: nowrap; }
@@ -182,8 +195,9 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 .plan .pier { fill: color-mix(in srgb, var(--survey) 40%, transparent); }
 .plan .prism { fill: var(--prism-fill); stroke: var(--brass); stroke-width: 1.5; stroke-linejoin: miter; vector-effect: non-scaling-stroke; }
 .plan .beam-in { stroke: var(--ink); stroke-width: 1.5; opacity: .85; vector-effect: non-scaling-stroke; }
-.plan .beacon { stroke: var(--beacon); stroke-width: 1; opacity: .7; vector-effect: non-scaling-stroke; }
-.plan .inlay { stroke-width: 2; vector-effect: non-scaling-stroke; }
+.plan .beacon { stroke: var(--sun); stroke-width: 1.75; vector-effect: non-scaling-stroke; }
+.plan .inlay { stroke-width: 2; stroke-linecap: round; opacity: .9; vector-effect: non-scaling-stroke; transition: stroke-width .2s var(--ease); }
+.plan .wing:hover .inlay, .plan .wing:focus-visible .inlay { stroke-width: 6; opacity: 1; }
 .plan .room-fill { fill: var(--surface); opacity: 0; transition: opacity .25s; }
 .plan .room-name { font-family: var(--display); font-size: 15px; fill: var(--ink); }
 .plan .room-lead { font-size: 15px; fill: var(--ink-2); font-weight: 500; }
@@ -198,7 +212,7 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 @media (min-width: 901px) { .plan { margin-bottom: 40px; } .plan figcaption { position: absolute; top: 100%; left: 0; right: 0; } }
 .wing-list { display: none; list-style: none; padding: 0; margin: 12px 0 0; grid-template-columns: 1fr 1fr; gap: 6px 14px; font-style: normal; }
 .wing-list a { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--ink); min-height: 44px; padding: 4px 0; border-bottom: 1px solid var(--hair); }
-.wing-list i { width: 14px; height: 3px; background: var(--h); border-radius: var(--radius); flex: none; }
+.wing-list i { width: 9px; height: 14px; background: var(--h); border-radius: 5px 5px 1px 1px; flex: none; }
 .wing-list small { margin-left: auto; color: var(--ink-3); font-size: .82rem; font-style: italic; text-align: right; }
 
 @media (max-width: 900px) {
@@ -210,7 +224,7 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 
 /* ── chips (filters) and the wand brackets ───────────────────────────────────────────────── */
 .chip { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; cursor: pointer; font: 500 var(--t-sm)/1 var(--serif); color: var(--ink); padding: 10px 12px; border-radius: var(--radius); border: 1px solid var(--rule); background: transparent; min-height: 44px; }
-.chip i { width: 14px; height: 3px; border-radius: var(--radius); background: var(--h); flex: none; }
+.chip i { width: 9px; height: 14px; border-radius: 5px 5px 1px 1px; background: var(--h); flex: none; }
 .chip small { font-size: .7rem; color: var(--ink-3); letter-spacing: .04em; }
 .chip:hover { background: var(--surface); }
 .chip[aria-pressed="true"] { border-color: var(--ink); background: var(--surface); }
@@ -239,12 +253,12 @@ section { padding-block: clamp(40px, 6vw, 80px); }
   .door { grid-row: span 6; grid-template-rows: subgrid; row-gap: 0; }
   .door-text { grid-row: span 5; display: grid; grid-template-rows: subgrid; row-gap: 0; }
 }
-.door-media { display: block; text-decoration: none; border: 1px solid var(--hair); background: var(--surface); overflow: hidden; position: relative; aspect-ratio: 16 / 10; container-type: inline-size; }
+.door-media { display: block; text-decoration: none; border: 1px solid var(--hair); border-top: 3px solid var(--h); border-radius: 22px 22px var(--radius) var(--radius); background: var(--surface); overflow: hidden; position: relative; aspect-ratio: 16 / 10; container-type: inline-size; }
 .door-media:hover { border-color: var(--rule); }
 .door-media .mod { position: absolute; inset: 0; margin: 0; padding: 5%; padding: 5cqw; }
 .door-text > * { align-self: start; }
 .door-text .typeline { margin-top: 18px; display: flex; align-items: center; gap: 10px; font-size: .95rem; color: var(--hi); }
-.door-text .typeline i { width: 18px; height: 3px; background: var(--h); border-radius: var(--radius); }
+.door-text .typeline i { width: 9px; height: 14px; background: var(--h); border-radius: 5px 5px 1px 1px; }
 .door-text h3 { margin-top: 6px; font-size: clamp(1.35rem, 1rem + 1vw, 1.75rem); }
 .door-text h3 a { text-decoration: none; }
 .door-text h3 a:hover { color: var(--brass-ink); }
@@ -256,7 +270,7 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 /* door modules */
 .bench-door { background: #2A2C2E; display: flex; flex-direction: column; gap: 2.5cqw; }
 .bench-door img { flex: 1 1 0; min-height: 0; width: 100%; object-fit: cover; object-position: center 58%; }
-.bench-door figcaption { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; color: var(--brass-ink); font-family: var(--mono); font-stretch: 87.5%; font-size: .78rem; line-height: 1.25; }
+.bench-door figcaption { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; color: #7BD0A4; font-family: var(--mono); font-stretch: 87.5%; font-size: .78rem; line-height: 1.25; }
 .bench-door figcaption span { color: #E4EDF0; font-family: var(--serif); font-style: italic; font-size: .92rem; font-stretch: normal; }
 .tile-mosaic { background: #0B0C14; display: grid; grid-template-columns: repeat(3, 24.75cqw); grid-auto-rows: 24.75cqw; gap: 3cqw; justify-content: center; align-content: center; }
 .tile-mosaic img { width: 100%; height: 100%; border-radius: 18%; box-shadow: 0 8px 20px rgba(0, 0, 0, .45); }
@@ -284,7 +298,7 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 .ledger-group h3 { font-size: 1rem; color: var(--ink-3); padding: 18px 0 6px; }
 .row { position: relative; padding: 10px 0; border-bottom: 1px solid var(--hair); min-height: 64px; }
 .row:hover, .row:focus-within { background: color-mix(in srgb, var(--raised) 70%, transparent); }
-.row-tick { width: 4px; height: 36px; background: var(--h); border-radius: var(--radius); justify-self: start; }
+.row-tick { width: 6px; height: 36px; background: var(--h); border-radius: 3px 3px 1px 1px; justify-self: start; }
 .row-thumb { width: 96px; height: 60px; object-fit: cover; object-position: top; border: 1px solid var(--hair); background: var(--raised); }
 .row-thumb.blank { display: block; background: repeating-linear-gradient(135deg, transparent 0 6px, var(--hair) 6px 7px); }
 .row-record { min-width: 0; }
@@ -362,7 +376,7 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 /* ── the plate ────────────────────────────────────────────────────────────────────────────── */
 #plate { padding-block: clamp(20px, 3vw, 40px); }
 .plate { margin: 0 auto; max-width: 860px; }
-.plate img { width: 100%; height: auto; border: 1px solid var(--hair); }
+.plate img { width: 100%; height: auto; border: 1px solid var(--hair); border-radius: 50% 50% var(--radius) var(--radius) / 34% 34% var(--radius) var(--radius); }
 .plate figcaption { margin-top: 10px; font-style: italic; color: var(--ink-2); font-size: var(--t-sm); display: flex; gap: 12px; }
 .plate figcaption::before { content: "Plate"; font-size: .9rem; color: var(--ink-3); align-self: center; }
 .plate figcaption i { width: 14px; height: 3px; background: var(--h); border-radius: var(--radius); align-self: center; flex: none; }
@@ -405,6 +419,7 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 footer { border-top: 1px solid var(--hair); padding-block: 28px 44px; color: var(--ink-3); font-family: var(--serif); font-size: .84rem; }
 footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; align-items: center; }
 footer nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+footer .footprint { color: var(--brass-ink); }
 footer a { text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; position: relative; }
 footer a::before { content: ""; position: absolute; inset: 0 min(0px, calc((100% - 46px) / 2)); }   /* ≥44px wide hit area for short words */
 footer a:hover { color: var(--ink); }
