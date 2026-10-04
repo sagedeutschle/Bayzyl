@@ -98,6 +98,15 @@ and their wing's colour along the top; the plate is an arched window. The footer
 developer tools instead of AI agent systems, the sixth wing is named Developer Tools, the hire line is Developer
 tooling setup, and the Prismet page no longer says how it was built. The three projects about AI keep their own words.
 
+**2026-10-04, the emblem.** Sage found the hall plan too plain and pointed at a profile picture (a circuit letter
+inside a wreath of leaves). The plan is now an emblem drawn by `plan()` in `pages/lib/render.js`: a dark disc inside
+three rings of leaves, the prism lit at the centre, a sunbeam from the top, a sprout at the foot, fireflies, and six
+modules (icon badge, name, lead record) joined to the prism by glowing traces in the wing colours. It is all SVG from
+numbers (`rnd` is a fixed sequence, so every build draws the same wreath); no image files. It keeps its own night
+colours in every phase. The wreath sways and the fireflies glint unless reduced motion is asked for. Under 900px the
+emblem stays as a picture with icons only and the wing list below names the wings. The anchors are still
+`#plan a.wing[data-beam]` with a `.room` inside, which `site.js` and `site-check.mjs` rely on.
+
 The site is **a workshop and the register it keeps**. The home page opens on a hall plan, six wings (Sage's six
 categories) around a rotunda with the prism in its floor; each wing filters the register. Then four doors (Bayzyl,
 Prismet, Helm, PrismCode, each with one signature module built from its own material), the register (a ledger grouped

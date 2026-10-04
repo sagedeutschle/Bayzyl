@@ -183,29 +183,44 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 
 /* the hall plan: surveyed linework. Weights are screen pixels (non-scaling): court 1.5, rotunda 1.25, rooms, walls and
    piers 1, the inner court and inner ring 1 at half strength, inlays 2. Axis-aligned lines snap to the pixel grid. */
-.plan { margin: 0; position: relative; --survey: var(--line); --beacon: var(--lantern); --glow: color-mix(in srgb, var(--lantern) 26%, transparent); --glow-blend: screen; --prism-fill: color-mix(in srgb, var(--brass) 14%, transparent); }
-:root[data-theme="light"] .plan, :root.day .plan { --survey: #5E7B93; --beacon: var(--brass); --glow: color-mix(in srgb, #A9D3F2 34%, transparent); --glow-blend: multiply; --glow-stop: 58%; --prism-fill: color-mix(in srgb, var(--brass) 8%, transparent); }
-@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .plan { --survey: #5E7B93; --beacon: var(--brass); --glow: color-mix(in srgb, #A9D3F2 34%, transparent); --glow-blend: multiply; --glow-stop: 58%; --prism-fill: color-mix(in srgb, var(--brass) 8%, transparent); } }
-.plan svg { width: 100%; height: auto; overflow: visible; font-family: var(--serif); }
-.plan .court, .plan .rotunda, .plan .room, .plan .wall, .plan .pier { fill: none; stroke: var(--survey); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.plan .court { stroke-width: 1.5; }
-.plan .rotunda { stroke-width: 1.25; }
-.plan .court.inner, .plan .rotunda.inner { stroke-width: 1; stroke-opacity: .5; }
-.plan .court, .plan .room, .plan .pier { shape-rendering: crispEdges; }
-.plan .pier { fill: color-mix(in srgb, var(--survey) 40%, transparent); }
-.plan .prism { fill: var(--prism-fill); stroke: var(--brass); stroke-width: 1.5; stroke-linejoin: miter; vector-effect: non-scaling-stroke; }
-.plan .beam-in { stroke: var(--ink); stroke-width: 1.5; opacity: .85; vector-effect: non-scaling-stroke; }
-.plan .beacon { stroke: var(--sun); stroke-width: 1.75; vector-effect: non-scaling-stroke; }
-.plan .inlay { stroke-width: 2; stroke-linecap: round; opacity: .9; vector-effect: non-scaling-stroke; transition: stroke-width .2s var(--ease); }
-.plan .wing:hover .inlay, .plan .wing:focus-visible .inlay { stroke-width: 6; opacity: 1; }
-.plan .room-fill { fill: var(--surface); opacity: 0; transition: opacity .25s; }
-.plan .room-name { font-family: var(--display); font-size: 15px; fill: var(--ink); }
-.plan .room-lead { font-size: 15px; fill: var(--ink-2); font-weight: 500; }
+.plan { margin: 0; position: relative; }
+/* The emblem keeps its own night inside the wreath, whatever the page's phase: a lit window, day or dark. */
+.plan svg { width: 100%; height: auto; overflow: visible; font-family: var(--serif);
+  --ink: #E4EDF0; --ink-2: #AFC0C8; --desktop-ink: #72CDE0; --apps-ink: #6FD1C1; --worlds-ink: #98D48E; --minecraft-ink: #7BD0A4; --web-ink: #7DB8EA; --ai-ink: #A3A9EE; --sun: #F2C14E; }
+.plan .disc { fill: url(#plan-disc); stroke: #2A7A50; stroke-width: 2; }
+.plan .wreath .rib, .plan .sprout .rib { fill: none; stroke: rgba(4, 20, 14, .45); stroke-width: 1; }
+.plan .ring { fill: none; stroke: #3F6E8C; stroke-width: 1; stroke-dasharray: 2 7; opacity: .7; }
+.plan .flies circle { fill: #C9F7DE; filter: url(#plan-glow); }
+.plan .stem { fill: none; stroke: #2A7A50; stroke-width: 2.5; stroke-linecap: round; }
+.plan .rotunda { fill: rgba(8, 18, 24, .55); stroke: #4E86A6; stroke-width: 1.5; }
+.plan .rotunda.inner { fill: none; stroke-dasharray: 3 5; opacity: .7; }
+.plan .beacon { stroke: var(--sun); stroke-width: 2.5; stroke-linecap: round; filter: url(#plan-glow); }
+.plan .prism { fill: rgba(123, 208, 164, .22); stroke: #9BE8C0; stroke-width: 2.5; stroke-linejoin: round; filter: url(#plan-glow); }
+.plan .inlay { fill: none; stroke: var(--c); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; filter: url(#plan-glow); transition: stroke-width .2s var(--ease); }
+.plan .node { fill: #081218; stroke: var(--ci); stroke-width: 2; }
+.plan .room-fill { fill: #0C1C24; opacity: .92; transition: fill .2s; }
+.plan .room { fill: none; stroke: var(--c); stroke-width: 1.75; }
+.plan .badge circle { fill: #081218; stroke: var(--c); stroke-width: 1.75; transition: fill .2s; }
+.plan .badge path { fill: none; stroke: var(--ci); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.plan .room-name { font-family: var(--display); font-size: 18px; fill: var(--ink); }
+.plan .room-lead { font-size: 15.5px; fill: var(--ink-2); }
 .plan .wing { cursor: pointer; outline: none; }
-.plan .wing:hover .room-fill, .plan .wing:focus-visible .room-fill { opacity: 1; }
-.plan .wing:hover .room, .plan .wing:focus-visible .room { stroke: var(--ink); stroke-width: 1.5; }
-.plan .wing:focus-visible .room { stroke: var(--brass); stroke-width: 3; }
-.plan .wing:hover .room-name { fill: var(--brass-ink); }
+.plan .wing:hover .inlay, .plan .wing:focus-visible .inlay { stroke-width: 5; }
+.plan .wing:hover .room-fill, .plan .wing:focus-visible .room-fill { fill: #14303B; }
+.plan .wing:hover .room, .plan .wing:focus-visible .room { stroke: var(--ci); stroke-width: 2.5; }
+.plan .wing:focus-visible .room { stroke-width: 4; }
+.plan .wing:hover .badge circle, .plan .wing:focus-visible .badge circle { fill: var(--c); }
+.plan .wing:hover .badge path, .plan .wing:focus-visible .badge path { stroke: #06141A; }
+.plan .wing:hover .room-name { fill: var(--ci); }
+/* the wreath breathes: a slow turn, a few seconds of arc each way; still for anyone who asks for less motion */
+@media (prefers-reduced-motion: no-preference) {
+  .plan .wreath { transform-origin: 400px 400px; animation: sway 14s ease-in-out infinite alternate; }
+  .plan .flies circle { animation: glint 5s ease-in-out infinite alternate; }
+  .plan .flies circle:nth-child(3n) { animation-duration: 7s; animation-delay: -2s; }
+  .plan .flies circle:nth-child(3n + 1) { animation-duration: 9s; animation-delay: -4s; }
+}
+@keyframes sway { from { transform: rotate(-1.6deg); } to { transform: rotate(1.6deg); } }
+@keyframes glint { from { opacity: .15; } }
 .lantern { display: none; }
 .plan figcaption { margin-top: 10px; font-size: var(--t-sm); color: var(--ink-3); font-style: italic; }
 /* The caption hangs below the drawing, so the figure is the drawing and the lantern's 50% is the rotunda. */
@@ -217,7 +232,9 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 
 @media (max-width: 900px) {
   .entrance .wrap { grid-template-columns: 1fr; }
-  .plan svg { display: none; }
+  .plan svg { max-width: 460px; margin-inline: auto; }
+  .plan .room-name, .plan .room-lead { display: none; }
+  .plan .badge { transform-box: fill-box; transform-origin: center; transform: translateY(42px) scale(1.9); }
   .wing-list { display: grid; }
   .lantern { display: none; }
 }

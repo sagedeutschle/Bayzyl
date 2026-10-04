@@ -181,57 +181,90 @@ const off = (isOff) => (isOff ? ' is-off' : '');
 const tierOf = (p) => (featuredSlugs.includes(p.slug) ? 'principal' : p.tier === 'cabinet' ? 'cabinet' : 'records');
 const href = (p, root = '') => `${root}work/${p.slug}.html`;
 
-// ── the hall plan (hero + navigation): six wings around a rotunda, the prism in its floor ────
+// ── the emblem (hero + navigation): the prism at the heart of a living wreath, six wings as modules around it ────
+// Sunlight comes down into the prism and leaves as six traces in the wing colours, one to each module. Everything
+// is drawn here from numbers (no image files), and the same numbers every time: `rnd` is a fixed sequence.
+const WING_ICONS = {
+  desktop: 'M-7 -6H7V3H-7ZM-3 7H3M0 3V7',
+  apps: 'M-7 -7H-1V-1H-7ZM1 -7H7V-1H1ZM-7 1H-1V7H-7ZM1 1H7V7H1Z',
+  worlds: 'M-8 6L-2 -5L2 2L4 -1L8 6Z',
+  minecraft: 'M0 -8L7 -4V4L0 8L-7 4V-4ZM-7 -4L0 0L7 -4M0 0V8',
+  web: 'M7 0A7 7 0 1 1 -7 0A7 7 0 1 1 7 0M-7 0H7M0 -7C-4 -3 -4 3 0 7C4 3 4 -3 0 -7',
+  ai: 'M-7 -6H7V6H-7ZM-4 -2L-1 0L-4 2M1 3H4',
+};
 function plan() {
-  // Surveyed, not sketched: every line ends on the surface it meets. Corridor walls start on the rotunda's circle and
-  // stop at the room's inner wall, which opens a doorway between them; the white beam runs on the cross axis from the
-  // inner ring to the prism's face; the beacon runs north from the rotunda to the court wall.
-  const W_ = 720, H_ = 540, cx = 360, cy = 270, R = 78, Ri = 60, half = 7;
+  const S = 800, C = 400, R = 84, PW = 206, PH = 84;
   const count = (id) => shown.filter((p) => p.beam === id).length;
-  const rooms = { desktop: [48, 60], apps: [48, 216], worlds: [48, 372], minecraft: [472, 60], web: [472, 216], ai: [472, 372] };
-  const rw = 200, rh = 108;
   const f = (v) => String(Math.round(v * 10) / 10);
+  const rnd = (i, k = 0) => { const x = Math.sin(i * 127.1 + k * 311.7 + 3.3) * 43758.5453; return x - Math.floor(x); };
+  // module centres: three down each side, the top left free for the sunbeam and the foot for the sprout
+  const at = { desktop: [-176, -150], apps: [-228, 0], worlds: [-176, 150], minecraft: [176, -150], web: [228, 0], ai: [176, 150] };
+
+  // the wreath: two rings of leaves leaning out and in, darker ones underneath
+  const GREENS = ['#174A33', '#1D5A3C', '#2A7A50', '#3E9B6E', '#57B585', '#7BD0A4', '#2F8F7E', '#23685A'];
+  const leaves = [];
+  for (let ring = 0; ring < 3; ring++) {
+    const n = [74, 60, 44][ring];
+    for (let i = 0; i < n; i++) {
+      const a = (i + (ring ? 0.5 : 0) + (rnd(i, ring) - 0.5) * 0.5) * (360 / n);
+      const r = [364, 342, 322][ring] + (rnd(i, ring + 5) - 0.5) * 16;
+      const lean = (ring === 1 ? -1 : 1) * (34 + rnd(i, ring + 9) * 40) * (i % 2 ? 1 : -1);
+      const sc = [1.1, 0.9, 0.62][ring] + rnd(i, ring + 13) * 0.6;
+      const x = C + Math.cos(a * Math.PI / 180) * r, y = C + Math.sin(a * Math.PI / 180) * r;
+      leaves.push(`<use href="#leaf" fill="${GREENS[Math.floor(rnd(i, ring + 17) * GREENS.length) % GREENS.length]}" transform="translate(${f(x)} ${f(y)}) rotate(${f(a + 90 + lean)}) scale(${f(sc)})"/>`);
+    }
+  }
+  // fireflies: small lights inside the wreath, kept clear of the modules and the rotunda
+  const inPod = (x, y) => Object.values(at).some(([dx, dy]) => Math.abs(x - C - dx) < PW / 2 + 8 && Math.abs(y - C - dy) < PH / 2 + 22);
+  const flies = [];
+  for (let i = 0; flies.length < 18 && i < 80; i++) {
+    const a = rnd(i, 31) * Math.PI * 2, r = 110 + rnd(i, 37) * 205, x = C + Math.cos(a) * r, y = C + Math.sin(a) * r;
+    if (!inPod(x, y)) flies.push(`<circle cx="${f(x)}" cy="${f(y)}" r="${f(1.2 + rnd(i, 41) * 1.6)}" opacity="${f(0.35 + rnd(i, 43) * 0.55)}"/>`);
+  }
+  // the sprout at the foot: a stem from the rotunda down to the wreath, leaves either side
+  const sprout = [0, 1, 2, 3, 4, 5, 6].map((i) => {
+    const y = C + R + 34 + i * 30, side = i % 2 ? 1 : -1, x = C + Math.sin(i * 0.9) * 7;
+    return `<use href="#leaf" fill="${GREENS[(i + 2) % GREENS.length]}" transform="translate(${f(x)} ${f(y)}) rotate(${side > 0 ? -28 : 208}) scale(${f(0.95 - i * 0.04)})"/>`;
+  }).join('');
+
+  const ph = 62, pw = 36, apex = C - ph * 2 / 3, base = C + ph / 3;
   const wings = SPECTRUM.map((id, i) => {
-    const [rx, ry] = rooms[id], left = rx < cx;
-    const ex = left ? rx + rw : rx, ey = ry + rh / 2;          // the room's inner wall, at its middle
-    const dx = ex - cx, dy = ey - cy, len = Math.hypot(dx, dy), ux = dx / len, uy = dy / len, nx = -uy, ny = ux;
-    // A wall `half` either side of the corridor's axis: from the rotunda's circle to the room's inner wall (x = ex).
-    const wall = (s) => {
-      const fx = cx + nx * s * half, fy = cy + ny * s * half, t0 = Math.sqrt(R * R - half * half), t1 = (ex - fx) / ux;
-      return [fx + ux * t0, fy + uy * t0, ex, fy + uy * t1];
-    };
-    const [a, b] = [wall(1), wall(-1)], top = Math.min(a[3], b[3]), bot = Math.max(a[3], b[3]);
-    // The room's walls, open where the corridor comes in.
-    const room = left
-      ? `M${ex} ${f(bot)}V${ry + rh}H${rx}V${ry}H${ex}V${f(top)}`
-      : `M${ex} ${f(top)}V${ry}H${rx + rw}V${ry + rh}H${ex}V${f(bot)}`;
+    const [dx, dy] = at[id], px = C + dx, py = C + dy, left = dx < 0;
+    const x = px - PW / 2, y = py - PH / 2, ex = left ? x + PW : x;            // the module's inner edge
+    // a trace: out of the prism along its own angle to the rotunda's ring, then square into the module
+    const ang = Math.atan2(dy, dx), kx = C + Math.cos(ang) * (R + 18), ky = C + Math.sin(ang) * (R + 18);
+    const trace = dy === 0 ? `M${C} ${C}H${ex}` : `M${C} ${C}L${f(kx)} ${f(ky)}L${f(kx)} ${py}H${ex}`;
     const n = count(id), label = beamLabel(id), lead = shown.find((p) => p.beam === id);
-    return `<a class="wing" href="#work" data-beam="${id}" style="--i:${i}" aria-label="${esc(label.p)}: ${n} record${n === 1 ? '' : 's'}">
-      <path class="wall" d="M${f(a[0])} ${f(a[1])}L${f(a[2])} ${f(a[3])}" pathLength="1"/>
-      <path class="wall" d="M${f(b[0])} ${f(b[1])}L${f(b[2])} ${f(b[3])}" pathLength="1"/>
-      <path class="inlay" d="M${cx} ${cy}L${ex} ${ey}" stroke="var(--${id})" pathLength="1"/>
-      <rect class="room-fill" x="${rx}" y="${ry}" width="${rw}" height="${rh}"/>
-      <path class="room" d="${room}" pathLength="1"/>
-      <text class="room-name" x="${rx + rw / 2}" y="${ry + 46}" text-anchor="middle"${ed(`beam.${id}`, site(`beam.${id}`))}>${esc(label.p)}</text>
-      <text class="room-lead" x="${rx + rw / 2}" y="${ry + 74}" text-anchor="middle">${lead ? esc(plain(work(lead.slug, 'title'))) + (n > 1 ? ` + ${n - 1}` : '') : ''}</text>
+    return `<a class="wing" href="#work" data-beam="${id}" style="--i:${i};--c:var(--${id});--ci:var(--${id}-ink)" aria-label="${esc(label.p)}: ${n} record${n === 1 ? '' : 's'}">
+      <path class="inlay" d="${trace}"/>
+      ${dy === 0 ? '' : `<circle class="node" cx="${f(kx)}" cy="${f(ky)}" r="3.4"/><circle class="node" cx="${f(kx)}" cy="${py}" r="3.4"/>`}<circle class="node" cx="${ex}" cy="${py}" r="4.2"/>
+      <rect class="room-fill" x="${x}" y="${y}" width="${PW}" height="${PH}" rx="16"/>
+      <rect class="room" x="${x}" y="${y}" width="${PW}" height="${PH}" rx="16"/>
+      <g transform="translate(${px} ${y})"><g class="badge"><circle r="16"/><path d="${WING_ICONS[id]}"/></g></g>
+      <text class="room-name" x="${px}" y="${py + 8}" text-anchor="middle"${ed(`beam.${id}`, site(`beam.${id}`))}>${esc(label.p)}</text>
+      <text class="room-lead" x="${px}" y="${py + 29}" text-anchor="middle">${lead ? esc(plain(work(lead.slug, 'title'))) + (n > 1 ? ` + ${n - 1}` : '') : ''}</text>
     </a>`;
   }).join('');
-  // Four piers carry the dome, standing in the ambulatory between the two rings on the diagonals, clear of every corridor.
-  const pd = (R + Ri) / 2 / Math.SQRT2;
-  const piers = [[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([sx, sy]) => `<rect class="pier" x="${f(cx + sx * pd - 4.5)}" y="${f(cy + sy * pd - 4.5)}" width="9" height="9" pathLength="1"/>`).join('');
-  // The prism: an equilateral triangle centred on the rotunda; the beam meets its left face on the cross axis.
-  const ph = 54, pw = 31, apex = cy - ph * 2 / 3, base = cy + ph / 3, face = cx - pw * (cy - apex) / ph;
   return `<figure class="plan" id="plan">
-<svg viewBox="0 0 ${W_} ${H_}" role="group" aria-label="${esc(T('plan.caption').p)}">
-  <g class="g-court"><rect class="court" x="24" y="24" width="${W_ - 48}" height="${H_ - 48}" pathLength="1"/><rect class="court inner" x="34" y="34" width="${W_ - 68}" height="${H_ - 68}" pathLength="1"/></g>
+<svg viewBox="0 0 ${S} ${S}" role="group" aria-label="${esc(T('plan.caption').p)}">
+  <defs>
+    <radialGradient id="plan-disc"><stop offset="0" stop-color="#16404A"/><stop offset=".55" stop-color="#0E222B"/><stop offset="1" stop-color="#081218"/></radialGradient>
+    <filter id="plan-glow" filterUnits="userSpaceOnUse" x="0" y="0" width="${S}" height="${S}"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <g id="leaf"><path d="M0 0C9 -12 27 -12 36 0C27 12 9 12 0 0Z"/><path class="rib" d="M3 0H31"/></g>
+  </defs>
+  <circle class="disc" cx="${C}" cy="${C}" r="372"/>
+  <g class="wreath">${leaves.join('')}</g>
+  <circle class="ring" cx="${C}" cy="${C}" r="318"/>
+  <g class="flies">${flies.join('')}</g>
+  <path class="stem" d="M${C} ${C + R}C${C - 10} ${C + R + 60} ${C + 12} ${C + R + 130} ${C} ${C + R + 222}"/>
+  <g class="sprout">${sprout}</g>
   <g class="g-rotunda">
-    <path class="beacon" d="M${cx} 34V${f(apex)}" pathLength="1"/>
-    <circle class="rotunda" cx="${cx}" cy="${cy}" r="${R}" pathLength="1"/>
-    <circle class="rotunda inner" cx="${cx}" cy="${cy}" r="${Ri}" pathLength="1"/>
-    ${piers}
-    <path class="prism" d="M${cx} ${f(apex)}L${cx + pw} ${f(base)}L${cx - pw} ${f(base)}Z" pathLength="1"/>
+    <path class="beacon" d="M${C} 44V${f(apex)}"/>
+    <circle class="rotunda" cx="${C}" cy="${C}" r="${R}"/>
+    <circle class="rotunda inner" cx="${C}" cy="${C}" r="${R - 20}"/>
   </g>
   <g class="g-wings">${wings}</g>
+  <path class="prism" d="M${C} ${f(apex)}L${C + pw} ${f(base)}L${C - pw} ${f(base)}Z"/>
 </svg>
 <div class="lantern" aria-hidden="true"></div>
 <figcaption>
