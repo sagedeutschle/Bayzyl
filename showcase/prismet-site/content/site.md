@@ -14,7 +14,7 @@
 Prismet · Sage Deutschle
 
 ## page.description
-Sage Deutschle builds iPhone and Mac games, Minecraft plugins and servers, custom Linux desktops, AI agent systems, and private web tools.
+Sage Deutschle builds iPhone and Mac games, Minecraft plugins and servers, custom Linux desktops, developer tools, and private web tools.
 
 ## brand.tagline
 by Sage Deutschle
@@ -38,7 +38,7 @@ Prismet · the workshop of Sage Deutschle
 Hello There! My name is:
 
 ## hero.lede
-I have shipped iPhone and Mac games. Coded Minecraft plugins and ran Minecraft servers. I also like to make custom Linux desktops, AI agent systems, and small web tools that keep your data on your device and in your control.
+I have shipped iPhone and Mac games. Coded Minecraft plugins and ran Minecraft servers. I also like to make custom Linux desktops, developer tools, and small web tools that keep your data on your device and in your control.
 
 ## hero.cta_primary
 See the work
@@ -62,7 +62,7 @@ Minecraft
 Web Tools & Data
 
 ## beam.ai
-AI & Agents
+Developer Tools
 
 ## lenses.eyebrow
 Live on prismet.xyz
@@ -158,10 +158,10 @@ Web tools & landing pages
 Fast, focused websites and utilities without unnecessary complexity.
 
 ## hire.ai-agents.title
-AI coding-agent setup
+Developer tooling setup
 
 ## hire.ai-agents.sub
-Claude Code, Codex, and developer tooling configured to work together.
+Editors, terminals, and coding assistants configured to work together.
 
 ## hire.linux-desktop.title
 Linux desktop customization
@@ -419,7 +419,7 @@ Helm runs the machines at home, and a written design-language spec keeps every f
 A night view of a Minecraft server build: a giant tree hung with lanterns on a stone plinth, a walled farm village with a white beacon beam, cherry trees, a lit castle with a red beam, a dark tower lit purple and a snowy ridge under a starry sky.
 
 ## og.image_alt
-The prismet.xyz entrance: Sage Deutschle's name and introduction beside a hall plan of six wings, from Desktop & Systems to AI & Agents, around a prism.
+The prismet.xyz entrance: Sage Deutschle's name and introduction beside a hall plan of six wings, from Desktop & Systems to Developer Tools, around a prism.
 <!-- 2026-10 round 2 (discovery): the seek line over the register and the Wordgame note. Proposed wording, flagged for Sage. -->
 
 ## seek.label
@@ -451,3 +451,6 @@ Uncle Scam
 
 ## lens.uncle-scam.blurb
 Where is my money going? A salary and a ZIP code in, an itemized receipt for your taxes out.
+
+## footer.footprint
+No trackers, no ads, two fonts.

@@ -130,13 +130,14 @@ const bar = (root = '') => {
     <a class="wide" href="${esc(owner.github)}"${g.a}>${g.h}</a>
     <a class="wide" href="${esc(owner.linkedin)}"${li.a}>${li.h}</a>
     <a class="btn primary keep" href="${esc(owner.fiverr)}"${h.a}>${h.h}</a>
-    <button class="btn theme keep" type="button" id="theme-toggle" aria-label="${esc(T('footer.day_night').p)}" data-to-day="${esc(T('theme.to_day').p)}" data-to-night="${esc(T('theme.to_night').p)}"><span class="sun" aria-hidden="true"></span></button>
+    <button class="btn theme keep" type="button" id="theme-toggle" aria-label="${esc(T('footer.day_night').p)}" data-to-day="${esc(T('theme.to_day').p)}" data-to-night="${esc(T('theme.to_night').p)}"><svg class="sky" viewBox="0 0 40 24" width="40" height="24" aria-hidden="true"><path d="M3 19A17 17 0 0 1 37 19"/><path d="M1 21.5H39"/><circle class="orb" cx="20" cy="2" r="3.6"/></svg></button>
   </nav>
 </div></header>`;
 };
 
 const footer = (root = '') => `<footer><div class="wrap">
   <span${T('footer.copyright').a}>${T('footer.copyright').h}</span>
+  <span class="footprint"${T('footer.footprint').a}>${T('footer.footprint').h}</span>
   <nav aria-label="Footer"><a href="${HOME(root)}#work">${T('nav.work').h}</a><a href="${HOME(root)}#lenses">${T('nav.lenses').h}</a><a href="${HOME(root)}#about">${T('nav.about').h}</a>${navPages(root)}<a href="${root}colophon.html"${T('footer.colophon').a}>${T('footer.colophon').h}</a><a href="${esc(owner.github)}">GitHub</a><a href="${esc(owner.linkedin)}">LinkedIn</a><a href="${esc(owner.fiverr)}">Fiverr</a></nav>
 </div></footer>`;
 
@@ -208,7 +209,7 @@ function plan() {
     return `<a class="wing" href="#work" data-beam="${id}" style="--i:${i}" aria-label="${esc(label.p)}: ${n} record${n === 1 ? '' : 's'}">
       <path class="wall" d="M${f(a[0])} ${f(a[1])}L${f(a[2])} ${f(a[3])}" pathLength="1"/>
       <path class="wall" d="M${f(b[0])} ${f(b[1])}L${f(b[2])} ${f(b[3])}" pathLength="1"/>
-      <path class="inlay" d="M${f(cx + ux * R)} ${f(cy + uy * R)}L${ex} ${ey}" stroke="var(--${id})" pathLength="1"/>
+      <path class="inlay" d="M${cx} ${cy}L${ex} ${ey}" stroke="var(--${id})" pathLength="1"/>
       <rect class="room-fill" x="${rx}" y="${ry}" width="${rw}" height="${rh}"/>
       <path class="room" d="${room}" pathLength="1"/>
       <text class="room-name" x="${rx + rw / 2}" y="${ry + 46}" text-anchor="middle"${ed(`beam.${id}`, site(`beam.${id}`))}>${esc(label.p)}</text>
@@ -224,12 +225,11 @@ function plan() {
 <svg viewBox="0 0 ${W_} ${H_}" role="group" aria-label="${esc(T('plan.caption').p)}">
   <g class="g-court"><rect class="court" x="24" y="24" width="${W_ - 48}" height="${H_ - 48}" pathLength="1"/><rect class="court inner" x="34" y="34" width="${W_ - 68}" height="${H_ - 68}" pathLength="1"/></g>
   <g class="g-rotunda">
-    <path class="beacon" d="M${cx} ${cy - R}V34" pathLength="1"/>
+    <path class="beacon" d="M${cx} 34V${f(apex)}" pathLength="1"/>
     <circle class="rotunda" cx="${cx}" cy="${cy}" r="${R}" pathLength="1"/>
     <circle class="rotunda inner" cx="${cx}" cy="${cy}" r="${Ri}" pathLength="1"/>
     ${piers}
     <path class="prism" d="M${cx} ${f(apex)}L${cx + pw} ${f(base)}L${cx - pw} ${f(base)}Z" pathLength="1"/>
-    <path class="beam-in" d="M${cx - Ri} ${cy}H${f(face)}" pathLength="1"/>
   </g>
   <g class="g-wings">${wings}</g>
 </svg>
