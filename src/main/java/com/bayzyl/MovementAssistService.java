@@ -3,6 +3,7 @@ package com.bayzyl;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -14,10 +15,18 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 public final class MovementAssistService {
     private static final int TARGET_RANGE = 120;
+    // Passable-but-harmful blocks the safe-stand search must never put a player inside of.
+    private static final Set<Material> HAZARDOUS_BODY = EnumSet.of(
+            Material.LAVA, Material.FIRE, Material.SOUL_FIRE, Material.SWEET_BERRY_BUSH, Material.WITHER_ROSE,
+            Material.POWDER_SNOW, Material.COBWEB);
+    private static final Set<Material> HAZARDOUS_FLOOR = EnumSet.of(
+            Material.MAGMA_BLOCK, Material.CACTUS, Material.CAMPFIRE, Material.SOUL_CAMPFIRE);
 
     public boolean unstick(Player player) {
         if (!canUseUnstick(player)) {
@@ -205,7 +214,14 @@ public final class MovementAssistService {
         target.setPitch(current.getPitch());
 
         Location safe = findNearestSafeLocation(target, 1, 2, 1, false);
-        return player.teleport(safe != null ? safe : target);
+        if (safe != null) {
+            return player.teleport(safe);
+        }
+        // Nothing to stand on (a flying builder stepping through open air) is fine, but never step into a wall or hazard.
+        if (!isOpenAir(target)) {
+            return false;
+        }
+        return player.teleport(target);
     }
 
     private Location findNearestSafeLocation(Location origin, int horizontalRadius, int upRange, int downRange, boolean excludeOriginBlock) {
@@ -253,7 +269,23 @@ public final class MovementAssistService {
         Block feet = world.getBlockAt(location.getBlockX(), location.getBlockY(), location.getBlockZ());
         Block head = feet.getRelative(BlockFace.UP);
         Block below = feet.getRelative(BlockFace.DOWN);
-        return isPassable(feet) && isPassable(head) && below.getType().isSolid();
+        return isPassable(feet) && isPassable(head) && below.getType().isSolid()
+                && !isHazardousStand(feet.getType(), head.getType(), below.getType());
+    }
+
+    static boolean isHazardousStand(Material feet, Material head, Material floor) {
+        return HAZARDOUS_BODY.contains(feet) || HAZARDOUS_BODY.contains(head) || HAZARDOUS_FLOOR.contains(floor);
+    }
+
+    private boolean isOpenAir(Location location) {
+        World world = location.getWorld();
+        if (world == null) {
+            return false;
+        }
+        Block feet = world.getBlockAt(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        Block head = feet.getRelative(BlockFace.UP);
+        return isPassable(feet) && isPassable(head)
+                && !isHazardousStand(feet.getType(), head.getType(), Material.AIR);
     }
 
     private boolean intersectsSolid(Player player) {
