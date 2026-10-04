@@ -1,0 +1,6042 @@
+{
+  "built" : "2026-10-04",
+  "cases" : [
+    {
+      "answer" : {
+        "federal" : 15483,
+        "income" : 2050,
+        "incomeIfInside" : 0,
+        "incomeName" : "Columbus",
+        "incomeRate" : 0.025,
+        "incomeStatus" : "taxed",
+        "incomplete" : false,
+        "local" : 2369,
+        "lowerBound" : false,
+        "owns" : false,
+        "property" : 0,
+        "propertyCapped" : false,
+        "propertyTypical" : 5349,
+        "rate" : 0.24559304878048782,
+        "salesHousehold" : 1,
+        "salesLocal" : 319,
+        "salesLocalRate" : 0.0225,
+        "salesState" : 814,
+        "state" : 2286.63,
+        "takeHome" : 61861.37,
+        "total" : 20138.63
+      },
+      "input" : {
+        "county" : "39049",
+        "state" : "OH",
+        "status" : "single",
+        "wages" : 82000,
+        "zip" : "43201"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 43201 · Columbus, Ohio",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Columbus income tax (2.5%)",
+          "2.5%",
+          ""
+        ],
+        [
+          "note",
+          "City tax on wages. Ohio cities tax where you work; this assumes you live and work in the same city. School district income tax is not included.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Ohio sales tax (5.75%)",
+          "1.0%",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax (2.25% on top)",
+          "0.4%",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Paid directly by a renter",
+          "0.0%",
+          ""
+        ],
+        [
+          "note",
+          "The typical homeowner in 43201 pays 6.5% a year. A landlord passes it on in the rent.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "18.9%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "2.8%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "2.9%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "24.6%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "75.4%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 43201 · Columbus, Ohio",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Columbus income tax (2.5%)",
+          "$2,050",
+          ""
+        ],
+        [
+          "note",
+          "City tax on wages. Ohio cities tax where you work; this assumes you live and work in the same city. School district income tax is not included.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Ohio sales tax (5.75%)",
+          "$814",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax (2.25% on top)",
+          "$319",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Paid directly by a renter",
+          "$0",
+          ""
+        ],
+        [
+          "note",
+          "The typical homeowner in 43201 pays $5,349 a year. A landlord passes it on in the rent.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$15,483",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$2,287",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "$2,369",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "$20,139",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "$61,861",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "24.6%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "5349.0",
+        "440000.0",
+        "17",
+        "3918000",
+        "100",
+        "0.08"
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 15483,
+        "income" : 2050,
+        "incomeIfInside" : 0,
+        "incomeName" : "Columbus",
+        "incomeRate" : 0.025,
+        "incomeStatus" : "taxed",
+        "incomplete" : false,
+        "local" : 7718,
+        "lowerBound" : false,
+        "owns" : true,
+        "property" : 5349,
+        "propertyCapped" : false,
+        "propertyTypical" : 5349,
+        "rate" : 0.310824756097561,
+        "salesHousehold" : 1,
+        "salesLocal" : 319,
+        "salesLocalRate" : 0.0225,
+        "salesState" : 814,
+        "state" : 2286.63,
+        "takeHome" : 56512.37,
+        "total" : 25487.63
+      },
+      "input" : {
+        "county" : "39049",
+        "owns" : true,
+        "state" : "OH",
+        "status" : "single",
+        "wages" : 82000,
+        "zip" : "43201"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 43201 · Columbus, Ohio",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Columbus income tax (2.5%)",
+          "2.5%",
+          ""
+        ],
+        [
+          "note",
+          "City tax on wages. Ohio cities tax where you work; this assumes you live and work in the same city. School district income tax is not included.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Ohio sales tax (5.75%)",
+          "1.0%",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax (2.25% on top)",
+          "0.4%",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 43201",
+          "6.5%",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "18.9%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "2.8%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "9.4%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "31.1%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "68.9%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 43201 · Columbus, Ohio",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Columbus income tax (2.5%)",
+          "$2,050",
+          ""
+        ],
+        [
+          "note",
+          "City tax on wages. Ohio cities tax where you work; this assumes you live and work in the same city. School district income tax is not included.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Ohio sales tax (5.75%)",
+          "$814",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax (2.25% on top)",
+          "$319",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 43201",
+          "$5,349",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$15,483",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$2,287",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "$7,718",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "$25,488",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "$56,512",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "31.1%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "5349.0",
+        "440000.0",
+        "17",
+        "3918000",
+        "100",
+        "0.08"
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 23850,
+        "income" : 3500,
+        "incomeIfInside" : 0,
+        "incomeName" : "Columbus",
+        "incomeRate" : 0.025,
+        "incomeStatus" : "taxed",
+        "incomplete" : false,
+        "local" : 9465,
+        "lowerBound" : false,
+        "owns" : true,
+        "property" : 5520,
+        "propertyCapped" : false,
+        "propertyTypical" : 5520,
+        "rate" : 0.2675187857142857,
+        "salesHousehold" : 2,
+        "salesLocal" : 445,
+        "salesLocalRate" : 0.0225,
+        "salesState" : 1136,
+        "state" : 4137.63,
+        "takeHome" : 102547.37,
+        "total" : 37452.63
+      },
+      "input" : {
+        "county" : "39049",
+        "state" : "OH",
+        "status" : "joint",
+        "wages" : 140000,
+        "zip" : "43209"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 43209 · Columbus, Ohio",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Columbus income tax (2.5%)",
+          "2.5%",
+          ""
+        ],
+        [
+          "note",
+          "City tax on wages. Ohio cities tax where you work; this assumes you live and work in the same city. School district income tax is not included.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Ohio sales tax (5.75%)",
+          "0.8%",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax (2.25% on top)",
+          "0.3%",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as two people (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 43209",
+          "3.9%",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "17.0%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "3.0%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "6.8%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "26.8%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "73.2%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 43209 · Columbus, Ohio",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Columbus income tax (2.5%)",
+          "$3,500",
+          ""
+        ],
+        [
+          "note",
+          "City tax on wages. Ohio cities tax where you work; this assumes you live and work in the same city. School district income tax is not included.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Ohio sales tax (5.75%)",
+          "$1,136",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax (2.25% on top)",
+          "$445",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as two people (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 43209",
+          "$5,520",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$23,850",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$4,138",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "$9,465",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "$37,453",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "$102,547",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "26.8%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "5520.0",
+        "392500.0",
+        "58",
+        "3918000",
+        "60",
+        "0.08"
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 7555.5,
+        "income" : 0,
+        "incomeIfInside" : 550,
+        "incomeName" : "Alexandria",
+        "incomeRate" : 0.01,
+        "incomeStatus" : "partOfZip",
+        "incomplete" : false,
+        "local" : 4793,
+        "lowerBound" : false,
+        "owns" : true,
+        "property" : 4589,
+        "propertyCapped" : false,
+        "propertyTypical" : 4589,
+        "rate" : 0.25201145454545454,
+        "salesHousehold" : 2,
+        "salesLocal" : 204,
+        "salesLocalRate" : 0.014999999999999993,
+        "salesState" : 782,
+        "state" : 1512.13,
+        "takeHome" : 41139.37,
+        "total" : 13860.63
+      },
+      "input" : {
+        "county" : "39089",
+        "state" : "OH",
+        "status" : "head",
+        "wages" : 55000,
+        "zip" : "43001"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 43001 · Ohio",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "City income tax",
+          "0.0%",
+          ""
+        ],
+        [
+          "note",
+          "Part of this ZIP lies in Alexandria, which taxes wages at 1%: 1.0% if you live and work there. Not counted.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Ohio sales tax (5.75%)",
+          "1.4%",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax (1.5% on top)",
+          "0.4%",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as two people (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 43001",
+          "8.3%",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "13.7%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "2.7%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "8.7%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "25.2%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "74.8%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 43001 · Ohio",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "City income tax",
+          "$0",
+          ""
+        ],
+        [
+          "note",
+          "Part of this ZIP lies in Alexandria, which taxes wages at 1%: $550 if you live and work there. Not counted.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Ohio sales tax (5.75%)",
+          "$782",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax (1.5% on top)",
+          "$204",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as two people (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 43001",
+          "$4,589",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$7,556",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$1,512",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "$4,793",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "$13,861",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "$41,139",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "25.2%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "4589.0",
+        "387400.0",
+        "87",
+        "3901154",
+        "1",
+        "0.0725"
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 10592.5,
+        "income" : 1870.4,
+        "incomeIfInside" : 0,
+        "incomeName" : "Baltimore city",
+        "incomeRate" : 0.032,
+        "incomeStatus" : "taxed",
+        "incomplete" : false,
+        "local" : 1870.4,
+        "lowerBound" : false,
+        "owns" : false,
+        "property" : 0,
+        "propertyCapped" : false,
+        "propertyTypical" : 4255,
+        "rate" : 0.24271969230769233,
+        "salesHousehold" : 1,
+        "salesLocal" : 0,
+        "salesLocalRate" : 0,
+        "salesState" : 590,
+        "state" : 3313.88,
+        "takeHome" : 49223.22,
+        "total" : 15776.78
+      },
+      "input" : {
+        "county" : "24510",
+        "owns" : false,
+        "state" : "MD",
+        "status" : "single",
+        "wages" : 65000,
+        "zip" : "21201"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 21201 · Baltimore city, Maryland",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Baltimore city income tax (3.2%)",
+          "2.9%",
+          ""
+        ],
+        [
+          "note",
+          "County tax on Maryland taxable income, at the county you live in.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Maryland sales tax (6%)",
+          "0.9%",
+          ""
+        ],
+        [
+          "note",
+          "Maryland has no local sales tax.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Paid directly by a renter",
+          "0.0%",
+          ""
+        ],
+        [
+          "note",
+          "The typical homeowner in 21201 pays 6.5% a year. A landlord passes it on in the rent.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "16.3%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "5.1%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "2.9%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "24.3%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "75.7%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 21201 · Baltimore city, Maryland",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Baltimore city income tax (3.2%)",
+          "$1,870",
+          ""
+        ],
+        [
+          "note",
+          "County tax on Maryland taxable income, at the county you live in.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Maryland sales tax (6%)",
+          "$590",
+          ""
+        ],
+        [
+          "note",
+          "Maryland has no local sales tax.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Paid directly by a renter",
+          "$0",
+          ""
+        ],
+        [
+          "note",
+          "The typical homeowner in 21201 pays $4,255 a year. A landlord passes it on in the rent.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$10,593",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$3,314",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "$1,870",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "$15,777",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "$49,223",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "24.3%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "4255.0",
+        "275300.0",
+        "11",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 19337.5,
+        "income" : 2480.43,
+        "incomeIfInside" : 0,
+        "incomeName" : "Anne Arundel County",
+        "incomeRate" : 0.028043301300169587,
+        "incomeStatus" : "taxed",
+        "incomplete" : false,
+        "local" : 8013.43,
+        "lowerBound" : false,
+        "owns" : true,
+        "property" : 5533,
+        "propertyCapped" : false,
+        "propertyTypical" : 5533,
+        "rate" : 0.3387243157894737,
+        "salesHousehold" : 1,
+        "salesLocal" : 0,
+        "salesLocalRate" : 0,
+        "salesState" : 679,
+        "state" : 4827.88,
+        "takeHome" : 62821.19,
+        "total" : 32178.81
+      },
+      "input" : {
+        "county" : "24003",
+        "owns" : true,
+        "state" : "MD",
+        "status" : "single",
+        "wages" : 95000,
+        "zip" : "21401"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 21401 · Anne Arundel County, Maryland",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Anne Arundel County income tax (2.804%)",
+          "2.6%",
+          ""
+        ],
+        [
+          "note",
+          "County tax on Maryland taxable income, at the county you live in.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Maryland sales tax (6%)",
+          "0.7%",
+          ""
+        ],
+        [
+          "note",
+          "Maryland has no local sales tax.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 21401",
+          "5.8%",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "20.4%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "5.1%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "8.4%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "33.9%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "66.1%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 21401 · Anne Arundel County, Maryland",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Anne Arundel County income tax (2.804%)",
+          "$2,480",
+          ""
+        ],
+        [
+          "note",
+          "County tax on Maryland taxable income, at the county you live in.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Maryland sales tax (6%)",
+          "$679",
+          ""
+        ],
+        [
+          "note",
+          "Maryland has no local sales tax.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 21401",
+          "$5,533",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$19,338",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$4,828",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "$8,013",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "$32,179",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "$62,821",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "33.9%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "5533.0",
+        "601400.0",
+        "65",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 14307.5,
+        "income" : 2252.25,
+        "incomeIfInside" : 0,
+        "incomeName" : "Frederick County",
+        "incomeRate" : 0.0275,
+        "incomeStatus" : "taxed",
+        "incomplete" : false,
+        "local" : 7186.25,
+        "lowerBound" : false,
+        "owns" : true,
+        "property" : 4934,
+        "propertyCapped" : false,
+        "propertyTypical" : 4934,
+        "rate" : 0.27496315789473685,
+        "salesHousehold" : 2,
+        "salesLocal" : 0,
+        "salesLocalRate" : 0,
+        "salesState" : 790,
+        "state" : 4627.75,
+        "takeHome" : 68878.5,
+        "total" : 26121.5
+      },
+      "input" : {
+        "county" : "24021",
+        "owns" : true,
+        "state" : "MD",
+        "status" : "joint",
+        "wages" : 95000,
+        "zip" : "21701"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 21701 · Frederick County, Maryland",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Frederick County income tax (2.75%)",
+          "2.4%",
+          ""
+        ],
+        [
+          "note",
+          "County tax on Maryland taxable income, at the county you live in.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Maryland sales tax (6%)",
+          "0.8%",
+          ""
+        ],
+        [
+          "note",
+          "Maryland has no local sales tax.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as two people (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 21701",
+          "5.2%",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "15.1%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "4.9%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "7.6%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "27.5%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "72.5%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 21701 · Frederick County, Maryland",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Frederick County income tax (2.75%)",
+          "$2,252",
+          ""
+        ],
+        [
+          "note",
+          "County tax on Maryland taxable income, at the county you live in.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Maryland sales tax (6%)",
+          "$790",
+          ""
+        ],
+        [
+          "note",
+          "Maryland has no local sales tax.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as two people (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 21701",
+          "$4,934",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$14,308",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$4,628",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "$7,186",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "$26,122",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "$68,879",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "27.5%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "4934.0",
+        "435000.0",
+        "66",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 7252,
+        "income" : 949.4,
+        "incomeIfInside" : 0,
+        "incomeName" : "Marion County",
+        "incomeRate" : 0.0202,
+        "incomeStatus" : "taxed",
+        "incomplete" : false,
+        "local" : 949.4,
+        "lowerBound" : false,
+        "owns" : false,
+        "property" : 0,
+        "propertyCapped" : false,
+        "propertyTypical" : 3669,
+        "rate" : 0.21441458333333333,
+        "salesHousehold" : 1,
+        "salesLocal" : 0,
+        "salesLocalRate" : 0,
+        "salesState" : 704,
+        "state" : 2090.5,
+        "takeHome" : 37708.1,
+        "total" : 10291.9
+      },
+      "input" : {
+        "county" : "18097",
+        "state" : "IN",
+        "status" : "single",
+        "wages" : 48000,
+        "zip" : "46204"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 46204 · Marion County, Indiana",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Marion County income tax (2.02%)",
+          "2.0%",
+          ""
+        ],
+        [
+          "note",
+          "County tax on Indiana taxable income, at the county you lived in on January 1.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Indiana sales tax (7%)",
+          "1.5%",
+          ""
+        ],
+        [
+          "note",
+          "Indiana has no local sales tax.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Paid directly by a renter",
+          "0.0%",
+          ""
+        ],
+        [
+          "note",
+          "The typical homeowner in 46204 pays 7.6% a year. A landlord passes it on in the rent.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "15.1%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "4.4%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "2.0%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "21.4%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "78.6%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 46204 · Marion County, Indiana",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Marion County income tax (2.02%)",
+          "$949",
+          ""
+        ],
+        [
+          "note",
+          "County tax on Indiana taxable income, at the county you lived in on January 1.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Indiana sales tax (7%)",
+          "$704",
+          ""
+        ],
+        [
+          "note",
+          "Indiana has no local sales tax.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Paid directly by a renter",
+          "$0",
+          ""
+        ],
+        [
+          "note",
+          "The typical homeowner in 46204 pays $3,669 a year. A landlord passes it on in the rent.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$7,252",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$2,091",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "$949",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "$10,292",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "$37,708",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "21.4%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "3669.0",
+        "381400.0",
+        "14",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 7252,
+        "income" : 0,
+        "incomeIfInside" : 0,
+        "incomeName" : "",
+        "incomeRate" : 0,
+        "incomeStatus" : "countyUnknown",
+        "incomplete" : true,
+        "local" : 0,
+        "lowerBound" : false,
+        "owns" : false,
+        "property" : 0,
+        "propertyCapped" : false,
+        "propertyTypical" : 3669,
+        "rate" : 0.19463541666666667,
+        "salesHousehold" : 1,
+        "salesLocal" : 0,
+        "salesLocalRate" : 0,
+        "salesState" : 704,
+        "state" : 2090.5,
+        "takeHome" : 38657.5,
+        "total" : 9342.5
+      },
+      "input" : {
+        "state" : "IN",
+        "status" : "single",
+        "wages" : 48000,
+        "zip" : "46204"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 46204 · Indiana",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "County income tax",
+          "not counted",
+          ""
+        ],
+        [
+          "note",
+          "Indiana counties tax income. Uncle Scam needs a connection to find this ZIP's county.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Indiana sales tax (7%)",
+          "1.5%",
+          ""
+        ],
+        [
+          "note",
+          "Indiana has no local sales tax.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Paid directly by a renter",
+          "0.0%",
+          ""
+        ],
+        [
+          "note",
+          "The typical homeowner in 46204 pays 7.6% a year. A landlord passes it on in the rent.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "15.1%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "4.4%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "0.0%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "19.5%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "80.5%",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 46204 · Indiana",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "County income tax",
+          "not counted",
+          ""
+        ],
+        [
+          "note",
+          "Indiana counties tax income. Uncle Scam needs a connection to find this ZIP's county.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Indiana sales tax (7%)",
+          "$704",
+          ""
+        ],
+        [
+          "note",
+          "Indiana has no local sales tax.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Paid directly by a renter",
+          "$0",
+          ""
+        ],
+        [
+          "note",
+          "The typical homeowner in 46204 pays $3,669 a year. A landlord passes it on in the rent.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$7,252",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$2,091",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "$0",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "$9,343",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "$38,658",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "19.5%",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "3669.0",
+        "381400.0",
+        "14",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 19220,
+        "income" : 0,
+        "incomeIfInside" : 0,
+        "incomeName" : "",
+        "incomeRate" : 0,
+        "incomeStatus" : "notOnFile",
+        "incomplete" : true,
+        "local" : 10000,
+        "lowerBound" : true,
+        "owns" : true,
+        "property" : 10000,
+        "propertyCapped" : true,
+        "propertyTypical" : 10000,
+        "rate" : 0.253125,
+        "salesHousehold" : 2,
+        "salesLocalRate" : 0,
+        "salesState" : 1155,
+        "state" : 1155,
+        "takeHome" : 89625,
+        "total" : 30375
+      },
+      "input" : {
+        "county" : "48453",
+        "owns" : true,
+        "state" : "TX",
+        "status" : "joint",
+        "wages" : 120000,
+        "zip" : "78701"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 78701 · Texas",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local income tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Uncle Scam has city and county income tax tables for Indiana, Maryland, Ohio so far. If your city or county charges one, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Texas sales tax (6.25%)",
+          "1.0%",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Places in Texas add their own sales tax. This ZIP's rate is not on file yet, so it is not counted.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as two people (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 78701",
+          "over 8.3%",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "16.0%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "1.0%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "over 8.3%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "over 25.3%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "under 74.7%",
+          ""
+        ],
+        [
+          "note",
+          "The property tax figure is the survey's ceiling, so the local line and the total are floors.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 78701 · Texas",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local income tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Uncle Scam has city and county income tax tables for Indiana, Maryland, Ohio so far. If your city or county charges one, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Texas sales tax (6.25%)",
+          "$1,155",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Places in Texas add their own sales tax. This ZIP's rate is not on file yet, so it is not counted.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as two people (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 78701",
+          "over $10,000",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$19,220",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$1,155",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "over $10,000",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "over $30,375",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "under $89,625",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "over 25.3%",
+          ""
+        ],
+        [
+          "note",
+          "The property tax figure is the survey's ceiling, so the local line and the total are floors.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "10001.0",
+        "722400.0",
+        "45",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 11925,
+        "income" : 0,
+        "incomeIfInside" : 0,
+        "incomeName" : "",
+        "incomeRate" : 0,
+        "incomeStatus" : "notOnFile",
+        "incomplete" : true,
+        "local" : 0,
+        "lowerBound" : false,
+        "owns" : false,
+        "property" : 0,
+        "propertyCapped" : false,
+        "propertyTypical" : 1722,
+        "rate" : 0.2172,
+        "salesHousehold" : 1,
+        "salesLocalRate" : 0,
+        "state" : 3279,
+        "takeHome" : 54796,
+        "total" : 15204
+      },
+      "input" : {
+        "county" : "10003",
+        "state" : "DE",
+        "status" : "single",
+        "wages" : 70000,
+        "zip" : "19801"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 19801 · Delaware",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local income tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Uncle Scam has city and county income tax tables for Indiana, Maryland, Ohio so far. If your city or county charges one, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Delaware sales tax",
+          "0.0%",
+          ""
+        ],
+        [
+          "note",
+          "The IRS tables list no state sales tax for Delaware.",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "If a place in Delaware charges its own sales tax, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Paid directly by a renter",
+          "0.0%",
+          ""
+        ],
+        [
+          "note",
+          "The typical homeowner in 19801 pays 2.5% a year. A landlord passes it on in the rent.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "17.0%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "4.7%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "0.0%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "21.7%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "78.3%",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 19801 · Delaware",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local income tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Uncle Scam has city and county income tax tables for Indiana, Maryland, Ohio so far. If your city or county charges one, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Delaware sales tax",
+          "$0",
+          ""
+        ],
+        [
+          "note",
+          "The IRS tables list no state sales tax for Delaware.",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "If a place in Delaware charges its own sales tax, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Paid directly by a renter",
+          "$0",
+          ""
+        ],
+        [
+          "note",
+          "The typical homeowner in 19801 pays $1,722 a year. A landlord passes it on in the rent.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$11,925",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$3,279",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "$0",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "$15,204",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "$54,796",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "21.7%",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "1722.0",
+        "199900.0",
+        "31",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 11925,
+        "income" : 0,
+        "incomeIfInside" : 0,
+        "incomeName" : "",
+        "incomeRate" : 0,
+        "incomeStatus" : "notOnFile",
+        "incomplete" : true,
+        "local" : 0,
+        "lowerBound" : false,
+        "owns" : false,
+        "property" : 0,
+        "propertyCapped" : false,
+        "propertyTypical" : 5769,
+        "rate" : 0.21402857142857143,
+        "salesHousehold" : 1,
+        "salesLocal" : 0,
+        "salesLocalRate" : 0,
+        "salesState" : 782,
+        "state" : 3057,
+        "takeHome" : 55018,
+        "total" : 14982
+      },
+      "input" : {
+        "county" : "09110",
+        "state" : "CT",
+        "status" : "single",
+        "wages" : 70000,
+        "zip" : "06103"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 06103 · Connecticut",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local income tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Uncle Scam has city and county income tax tables for Indiana, Maryland, Ohio so far. If your city or county charges one, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Connecticut sales tax (6.35%)",
+          "1.1%",
+          ""
+        ],
+        [
+          "note",
+          "Connecticut has no local sales tax.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Paid directly by a renter",
+          "0.0%",
+          ""
+        ],
+        [
+          "note",
+          "The typical homeowner in 06103 pays 8.2% a year. A landlord passes it on in the rent.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "17.0%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "4.4%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "0.0%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "21.4%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "78.6%",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 06103 · Connecticut",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local income tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Uncle Scam has city and county income tax tables for Indiana, Maryland, Ohio so far. If your city or county charges one, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Connecticut sales tax (6.35%)",
+          "$782",
+          ""
+        ],
+        [
+          "note",
+          "Connecticut has no local sales tax.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Paid directly by a renter",
+          "$0",
+          ""
+        ],
+        [
+          "note",
+          "The typical homeowner in 06103 pays $5,769 a year. A landlord passes it on in the rent.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$11,925",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$3,057",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "$0",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "$14,982",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "$55,018",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "21.4%",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "5769.0",
+        "275000.0",
+        "3",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 92057,
+        "income" : 0,
+        "incomeIfInside" : 0,
+        "incomeName" : "",
+        "incomeRate" : 0,
+        "incomeStatus" : "notOnFile",
+        "incomplete" : true,
+        "local" : 10000,
+        "lowerBound" : true,
+        "owns" : true,
+        "property" : 10000,
+        "propertyCapped" : true,
+        "propertyTypical" : 10000,
+        "rate" : 0.3316621,
+        "salesHousehold" : 2,
+        "salesLocalRate" : 0,
+        "salesState" : 1867,
+        "state" : 30607.84,
+        "takeHome" : 267335.16,
+        "total" : 132664.84
+      },
+      "input" : {
+        "county" : "06081",
+        "owns" : true,
+        "state" : "CA",
+        "status" : "joint",
+        "wages" : 400000,
+        "zip" : "94027"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 94027 · California",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local income tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Uncle Scam has city and county income tax tables for Indiana, Maryland, Ohio so far. If your city or county charges one, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "California sales tax (7.25%)",
+          "0.5%",
+          ""
+        ],
+        [
+          "note",
+          "That figure includes the local rate every place in California charges.",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Places in California add their own sales tax. This ZIP's rate is not on file yet, so it is not counted.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as two people (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 94027",
+          "over 2.5%",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "23.0%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "7.7%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "over 2.5%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "over 33.2%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "under 66.8%",
+          ""
+        ],
+        [
+          "note",
+          "The property tax figure is the survey's ceiling, so the local line and the total are floors.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 94027 · California",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local income tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Uncle Scam has city and county income tax tables for Indiana, Maryland, Ohio so far. If your city or county charges one, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "California sales tax (7.25%)",
+          "$1,867",
+          ""
+        ],
+        [
+          "note",
+          "That figure includes the local rate every place in California charges.",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Places in California add their own sales tax. This ZIP's rate is not on file yet, so it is not counted.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as two people (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 94027",
+          "over $10,000",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$92,057",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$30,608",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "over $10,000",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "over $132,665",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "under $267,335",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "over 33.2%",
+          ""
+        ],
+        [
+          "note",
+          "The property tax figure is the survey's ceiling, so the local line and the total are floors.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "10001.0",
+        "2000001.0",
+        "88",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 3715,
+        "income" : 750,
+        "incomeIfInside" : 0,
+        "incomeName" : "Columbus",
+        "incomeRate" : 0.025,
+        "incomeStatus" : "taxed",
+        "incomplete" : false,
+        "local" : 978,
+        "lowerBound" : false,
+        "owns" : false,
+        "property" : 0,
+        "propertyCapped" : false,
+        "rate" : 0.17728766666666668,
+        "salesHousehold" : 1,
+        "salesLocal" : 228,
+        "salesLocalRate" : 0.0225,
+        "salesState" : 583,
+        "state" : 625.63,
+        "takeHome" : 24681.37,
+        "total" : 5318.63
+      },
+      "input" : {
+        "county" : "39049",
+        "state" : "OH",
+        "status" : "single",
+        "wages" : 30000,
+        "zip" : "43210"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 43210 · Columbus, Ohio",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Columbus income tax (2.5%)",
+          "2.5%",
+          ""
+        ],
+        [
+          "note",
+          "City tax on wages. Ohio cities tax where you work; this assumes you live and work in the same city. School district income tax is not included.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Ohio sales tax (5.75%)",
+          "1.9%",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax (2.25% on top)",
+          "0.8%",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Property tax",
+          "no figure",
+          ""
+        ],
+        [
+          "note",
+          "The Census survey has no property tax figure for this ZIP.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "12.4%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "2.1%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "3.3%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "17.7%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "82.3%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 43210 · Columbus, Ohio",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Columbus income tax (2.5%)",
+          "$750",
+          ""
+        ],
+        [
+          "note",
+          "City tax on wages. Ohio cities tax where you work; this assumes you live and work in the same city. School district income tax is not included.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Ohio sales tax (5.75%)",
+          "$583",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax (2.25% on top)",
+          "$228",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Property tax",
+          "no figure",
+          ""
+        ],
+        [
+          "note",
+          "The Census survey has no property tax figure for this ZIP.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$3,715",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$626",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "$978",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "$5,319",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "$24,681",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "17.7%",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "",
+        "",
+        "0",
+        "3918000",
+        "100",
+        "0.08"
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 9610,
+        "income" : 0,
+        "incomeIfInside" : 0,
+        "incomeName" : "",
+        "incomeRate" : 0,
+        "incomeStatus" : "zipUnknown",
+        "incomplete" : true,
+        "local" : 0,
+        "lowerBound" : false,
+        "owns" : false,
+        "property" : 0,
+        "propertyCapped" : false,
+        "rate" : 0.18689383333333331,
+        "salesHousehold" : 1,
+        "salesLocalRate" : 0,
+        "salesState" : 736,
+        "state" : 1603.63,
+        "takeHome" : 48786.37,
+        "total" : 11213.63
+      },
+      "input" : {
+        "state" : "OH",
+        "status" : "single",
+        "wages" : 60000,
+        "zip" : "43299"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 43299 · Ohio",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "City income tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Uncle Scam has no local figures for ZIP 43299. If your city charges an income tax, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Ohio sales tax (5.75%)",
+          "1.2%",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Places in Ohio add their own sales tax. This ZIP's rate is not on file yet, so it is not counted.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Property tax",
+          "no figure",
+          ""
+        ],
+        [
+          "note",
+          "The Census survey has no property tax figure for this ZIP.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "16.0%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "2.7%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "0.0%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "18.7%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "81.3%",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 43299 · Ohio",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "City income tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Uncle Scam has no local figures for ZIP 43299. If your city charges an income tax, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Ohio sales tax (5.75%)",
+          "$736",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Places in Ohio add their own sales tax. This ZIP's rate is not on file yet, so it is not counted.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as one person (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Property tax",
+          "no figure",
+          ""
+        ],
+        [
+          "note",
+          "The Census survey has no property tax figure for this ZIP.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$9,610",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$1,604",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "$0",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "$11,214",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "$48,786",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "18.7%",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 13325,
+        "income" : 0,
+        "incomeIfInside" : 0,
+        "incomeName" : "",
+        "incomeRate" : 0,
+        "incomeStatus" : "notOnFile",
+        "incomplete" : true,
+        "local" : 5094,
+        "lowerBound" : false,
+        "owns" : true,
+        "property" : 5094,
+        "propertyCapped" : false,
+        "propertyTypical" : 5094,
+        "rate" : 0.20465555555555556,
+        "salesHousehold" : 2,
+        "salesLocalRate" : 0,
+        "state" : 0,
+        "takeHome" : 71581,
+        "total" : 18419
+      },
+      "input" : {
+        "county" : "02020",
+        "owns" : true,
+        "state" : "AK",
+        "status" : "joint",
+        "wages" : 90000,
+        "zip" : "99501"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 99501 · Alaska",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local income tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Uncle Scam has city and county income tax tables for Indiana, Maryland, Ohio so far. If your city or county charges one, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Alaska sales tax",
+          "0.0%",
+          ""
+        ],
+        [
+          "note",
+          "The IRS tables list no state sales tax for Alaska.",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "If a place in Alaska charges its own sales tax, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 99501",
+          "5.7%",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "14.8%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "0.0%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "5.7%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "20.5%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "79.5%",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 99501 · Alaska",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local income tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Uncle Scam has city and county income tax tables for Indiana, Maryland, Ohio so far. If your city or county charges one, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Alaska sales tax",
+          "$0",
+          ""
+        ],
+        [
+          "note",
+          "The IRS tables list no state sales tax for Alaska.",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "If a place in Alaska charges its own sales tax, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Typical homeowner in 99501",
+          "$5,094",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$13,325",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$0",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "$5,094",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "$18,419",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "$71,581",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "20.5%",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "5094.0",
+        "379100.0",
+        "37",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "answer" : {
+        "federal" : 92057,
+        "income" : 0,
+        "incomeIfInside" : 0,
+        "incomeName" : "",
+        "incomeRate" : 0,
+        "incomeStatus" : "notOnFile",
+        "incomplete" : true,
+        "local" : 0,
+        "lowerBound" : false,
+        "owns" : false,
+        "property" : 0,
+        "propertyCapped" : true,
+        "propertyTypical" : 10000,
+        "rate" : 0.3066621,
+        "salesHousehold" : 2,
+        "salesLocalRate" : 0,
+        "salesState" : 1867,
+        "state" : 30607.84,
+        "takeHome" : 277335.16,
+        "total" : 122664.84
+      },
+      "input" : {
+        "county" : "06081",
+        "owns" : false,
+        "state" : "CA",
+        "status" : "joint",
+        "wages" : 400000,
+        "zip" : "94027"
+      },
+      "percentRows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 94027 · California",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local income tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Uncle Scam has city and county income tax tables for Indiana, Maryland, Ohio so far. If your city or county charges one, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "California sales tax (7.25%)",
+          "0.5%",
+          ""
+        ],
+        [
+          "note",
+          "That figure includes the local rate every place in California charges.",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Places in California add their own sales tax. This ZIP's rate is not on file yet, so it is not counted.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as two people (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Paid directly by a renter",
+          "0.0%",
+          ""
+        ],
+        [
+          "note",
+          "The typical homeowner in 94027 pays over 2.5% a year. A landlord passes it on in the rent.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "23.0%",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "7.7%",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "0.0%",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "30.7%",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "69.3%",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "rows" : [
+        [
+          "center",
+          "THE REST OF THE BILL",
+          "",
+          "title"
+        ],
+        [
+          "center",
+          "ZIP 94027 · California",
+          "",
+          "small"
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "CITY AND COUNTY INCOME TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local income tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Uncle Scam has city and county income tax tables for Indiana, Maryland, Ohio so far. If your city or county charges one, it is not counted here.",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "SALES TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "California sales tax (7.25%)",
+          "$1,867",
+          ""
+        ],
+        [
+          "note",
+          "That figure includes the local rate every place in California charges.",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Local sales tax",
+          "not on file",
+          ""
+        ],
+        [
+          "note",
+          "Places in California add their own sales tax. This ZIP's rate is not on file yet, so it is not counted.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "What the IRS reckons a household of your income pays in a year, counted as two people (2025 tables).",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "PROPERTY TAX",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Paid directly by a renter",
+          "$0",
+          ""
+        ],
+        [
+          "note",
+          "The typical homeowner in 94027 pays over $10,000 a year. A landlord passes it on in the rent.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "The middle real estate tax bill among homeowners here, Census survey 2020 to 2024.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "head",
+          "EVERY LEVEL",
+          "",
+          ""
+        ],
+        [
+          "row",
+          "Federal",
+          "$92,057",
+          ""
+        ],
+        [
+          "row",
+          "State",
+          "$30,608",
+          ""
+        ],
+        [
+          "row",
+          "Local",
+          "$0",
+          ""
+        ],
+        [
+          "total",
+          "ALL IN",
+          "$122,665",
+          ""
+        ],
+        [
+          "row",
+          "You keep",
+          "$277,335",
+          ""
+        ],
+        [
+          "row",
+          "Share of your pay",
+          "30.7%",
+          ""
+        ],
+        [
+          "note",
+          "Lines marked not on file, not counted or no figure are left out of these totals.",
+          "",
+          ""
+        ],
+        [
+          "note",
+          "Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.",
+          "",
+          ""
+        ],
+        [
+          "rule",
+          "",
+          "",
+          ""
+        ],
+        [
+          "center",
+          "estimates: income taxes modeled from rates in law,",
+          "",
+          "small"
+        ],
+        [
+          "center",
+          "sales and property from typical figures",
+          "",
+          "small"
+        ]
+      ],
+      "zipRow" : [
+        "10001.0",
+        "2000001.0",
+        "88",
+        "",
+        "",
+        ""
+      ]
+    }
+  ]
+}

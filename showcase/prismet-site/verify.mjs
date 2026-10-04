@@ -55,6 +55,40 @@ const ATTR = /([^\s"'>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
 const attrsOf = (s) => Object.fromEntries([...(s || '').matchAll(ATTR)].map((m) => [m[1].toLowerCase(), (m[2] ?? m[3] ?? m[4] ?? '').replace(/&amp;/g, '&')]));
 const tagsOf = (html) => [...html.matchAll(TAG)].filter((m) => !m[1].startsWith('!--')).map((m) => ({ name: m[1].toLowerCase(), a: attrsOf(m[2]), end: m.index + m[0].length }));
 
+// These fetch paths are assembled in JavaScript, so the ordinary HTML URL walk
+// cannot discover them. The ACS bundle has seven fewer prefixes than the broader
+// ZIP/district file; those uncovered prefixes intentionally remain unavailable.
+export function verifyScamData(dist) {
+  const problems = [];
+  const record = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+  const readJSON = (path) => {
+    try { return JSON.parse(readFileSync(join(dist, path), 'utf8')); }
+    catch { problems.push(`${path}: missing or invalid JSON`); return null; }
+  };
+  for (const name of ['tax-2026', 'mts-snapshot', 'congress']) readJSON(`scam-data/${name}.json`);
+  const local = readJSON('scam-data/local-2026.json');
+  if (!record(local) || !record(local.localIncome) || !record(local.sales?.states) || !record(local.property) || !record(local.counties)) {
+    problems.push('scam-data/local-2026.json: incomplete local tax tables');
+  }
+  let prefixes = [];
+  try { prefixes = readdirSync(join(dist, 'scam-data/zip')).filter(name => /^\d{3}\.json$/.test(name)); }
+  catch { problems.push('scam-data/zip: missing geographic shards'); }
+  if (!prefixes.length) problems.push('scam-data/zip: no geographic prefixes');
+  const uncovered = new Set(['008.json', '202.json', '204.json', '205.json', '753.json', '772.json', '969.json']);
+  let bundled = [];
+  try { bundled = readdirSync(join(dist, 'scam-data/zip-local')).filter(name => /^\d{3}\.json$/.test(name)); }
+  catch { problems.push('scam-data/zip-local: missing local shards'); }
+  for (const name of new Set([...prefixes.filter(name => !uncovered.has(name)), ...bundled])) {
+    const path = `scam-data/zip-local/${name}`;
+    const shard = readJSON(path);
+    if (!record(shard) || !Object.keys(shard).length ||
+        Object.entries(shard).some(([zip, row]) => !/^\d{5}$/.test(zip) || !zip.startsWith(name.slice(0, 3)) || !Array.isArray(row))) {
+      problems.push(`${path}: invalid ZIP row or prefix`);
+    }
+  }
+  return problems;
+}
+
 export function verify(dist = join(dirname(fileURLToPath(import.meta.url)), 'dist')) {
   dist = resolve(dist);
   const problems = [];
@@ -64,6 +98,8 @@ export function verify(dist = join(dirname(fileURLToPath(import.meta.url)), 'dis
   const pages = files.filter((f) => f.endsWith('.html'));
   const html = Object.fromEntries(pages.map((f) => [f, readFileSync(join(dist, f), 'utf8')]));
   const anchors = (page) => { const t = html[page] || ''; return new Set([...t.matchAll(/\sid="([^"]+)"/g), ...t.matchAll(/\sdata-filter="([^"]+)"/g)].map((m) => m[1])); };
+
+  if (fileSet.has('scam.html')) problems.push(...verifyScamData(dist));
 
   // the editor, reserved names
   for (const f of files) {

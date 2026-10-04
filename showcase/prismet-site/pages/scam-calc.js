@@ -72,6 +72,150 @@ export function computeBill({ wages, status, stateCode }, data) {
   };
 }
 
+// ── the rest of the bill: faithful shared-native port, revision 3275077 ──
+// Government tables and ZIP rows are loaded by the caller; salary never leaves the browser.
+// This preserves the app's definitions, including incomplete coverage. A missing ZIP
+// shard must be disclosed by the UI, not presented as evidence that no local tax applies.
+function localRateTax(entry, base, status) {
+  if (entry.rate != null) return cents(base * entry.rate);
+  const steps = entry.brackets?.[status === 'single' ? 'single' : 'joint'];
+  if (!steps?.length) return 0;
+  if (entry.whole === true) {
+    let rate = steps[0][1];
+    for (const [over, r] of steps) if (base > over) rate = r;
+    return cents(base * rate);
+  }
+  return bracketTax(base, steps);
+}
+
+// zipRow: [property tax, home value, owned %, city code, city land %, combined sales rate].
+// Optional numeric outputs are omitted when the native result is nil; absence is not zero.
+export function localBill({ bill, zipCode, county = null, zipRow = null, owns = null }, tax, local) {
+  let incomeStatus = 'notOnFile', incomeName = '', income = 0, incomeIfInside = 0, incomeBase = 0;
+  const table = local.localIncome[bill.stateCode];
+  if (table) {
+    incomeBase = table.base === 'wages' ? bill.wages : stateIncomeTax(bill.wages, bill.status, tax.state.states[bill.stateCode]).taxable;
+    if (table.by === 'county') {
+      const entry = county != null ? table.rates[county] : null;
+      if (entry) {
+        incomeStatus = 'taxed'; incomeName = local.counties[county] ?? entry.name ?? '';
+        income = localRateTax(entry, incomeBase, bill.status);
+      } else incomeStatus = county == null ? 'countyUnknown' : 'untaxed';
+    } else if (zipRow == null) {
+      incomeStatus = 'zipUnknown';
+    } else {
+      const entry = zipRow?.[3] != null ? table.rates[zipRow[3]] : null;
+      if (entry) {
+        incomeName = entry.name ?? '';
+        const amount = localRateTax(entry, incomeBase, bill.status);
+        if ((zipRow?.[4] ?? 0) >= 50) { incomeStatus = 'taxed'; income = amount; }
+        else { incomeStatus = 'partOfZip'; incomeIfInside = amount; }
+      } else incomeStatus = 'untaxed';
+    }
+  }
+  const incomeRate = incomeBase > 0 ? (incomeStatus === 'taxed' ? income : incomeIfInside) / incomeBase : 0;
+  let salesState, salesLocal, salesStateRate = 0, salesLocalRate = 0, salesLocalKind = 'none';
+  const sales = local.sales.states[bill.stateCode];
+  if (sales) {
+    let band = 0;
+    for (let i = 0; i < local.sales.bands.length; i++) if (bill.wages >= local.sales.bands[i]) band = i;
+    const amount = sales.amounts[band][bill.status === 'single' ? 0 : 1];
+    salesState = amount; salesStateRate = sales.rate; salesLocalKind = sales['local'];
+    if (salesLocalKind === 'none') salesLocal = 0;
+    else if (zipRow?.[5] != null && sales.rate > 0) {
+      salesLocalRate = Math.max(0, zipRow[5] - sales.rate);
+      salesLocal = Math.round(amount * salesLocalRate / sales.rate);
+    }
+  } // No state table is not evidence of no local sales tax (notably Alaska).
+  const typical = zipRow?.[0], propertyCapped = (typical ?? 0) > 10000;
+  const own = owns ?? ((zipRow?.[2] ?? 0) >= 50);
+  const property = own ? Math.min(typical ?? 0, 10000) : 0;
+  const state = cents(bill.state + (salesState ?? 0));
+  const localTotal = cents(income + (salesLocal ?? 0) + property);
+  const total = cents(bill.federalTotal + state + localTotal);
+  return {
+    zip: zipCode, incomeStatus, incomeName, incomeRate, income, incomeIfInside, incomeBase,
+    ...(salesState != null ? { salesState } : {}), salesStateRate,
+    ...(salesLocal != null ? { salesLocal } : {}), salesHousehold: bill.status === 'single' ? 1 : 2, salesLocalRate, salesLocalKind,
+    ...(typical != null ? { propertyTypical: Math.min(typical, 10000) } : {}), propertyCapped, owns: own, property,
+    lowerBound: own && propertyCapped,
+    incomplete: ['notOnFile','zipUnknown','countyUnknown'].includes(incomeStatus) || salesLocal == null || (own && typical == null),
+    federal: bill.federalTotal, state, local: localTotal, total,
+    takeHome: cents(bill.wages - total), rate: bill.wages > 0 ? total / bill.wages : 0,
+  };
+}
+
+const localRateText = rate => (rate * 100).toFixed(3).replace(/\.?0+$/, '') + '%';
+const localPercent = n => {
+  const fixed = (n * 100).toFixed(1);
+  return (Number(fixed) === 0 ? '0.0' : fixed) + '%';
+};
+function localDollars(n) {
+  // Match the native toFixed-compatible formatter, including whole-dollar half cases.
+  const fixed = n.toFixed(0), negative = Number(fixed) < 0;
+  return (negative ? '-$' : '$') + fixed.replace(/^-/, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+// Same row object vocabulary as the first receipt, usable for DOM and image rendering.
+export function localRows(b, bill, tax, local, percent = false) {
+  const stateName = tax.state.states[bill.stateCode]?.name ?? bill.stateCode;
+  const money = n => percent ? localPercent(bill.wages !== 0 ? n / bill.wages : 0) : localDollars(n);
+  const place = b.incomeStatus === 'taxed' && b.incomeName ? `${b.incomeName}, ${stateName}` : stateName;
+  const rows = [{k:'center',t:'THE REST OF THE BILL',c:'title'}, {k:'center',t:`ZIP ${b.zip} · ${place}`,c:'small'}, {k:'rule'}, {k:'head',t:'CITY AND COUNTY INCOME TAX'}];
+  const row = (l,r) => rows.push({k:'row',l,r});
+  const note = t => rows.push({k:'note',t});
+  const table = local.localIncome[bill.stateCode];
+  if (b.incomeStatus === 'taxed') {
+    row(`${b.incomeName} income tax (${localRateText(b.incomeRate)})`,money(b.income));
+    if (table?.note != null) note(table.note);
+  } else if (b.incomeStatus === 'partOfZip') {
+    row('City income tax',money(0));
+    note(`Part of this ZIP lies in ${b.incomeName}, which taxes wages at ${localRateText(b.incomeRate)}: ${money(b.incomeIfInside)} if you live and work there. Not counted.`);
+  } else if (b.incomeStatus === 'untaxed') {
+    row('Local income tax',money(0));
+    note(table?.by === 'place' ? `No ${stateName} city with an income tax on file covers this ZIP.` : 'No rate on file for this county.');
+  } else if (b.incomeStatus === 'countyUnknown') {
+    row('County income tax','not counted');
+    note(`${stateName} counties tax income. Uncle Scam needs a connection to find this ZIP's county.`);
+  } else if (b.incomeStatus === 'zipUnknown') {
+    row('City income tax','not on file');
+    note(`Uncle Scam has no local figures for ZIP ${b.zip}. If your city charges an income tax, it is not counted here.`);
+  } else {
+    row('Local income tax','not on file');
+    const names = Object.keys(local.localIncome).sort().map(code=>tax.state.states[code]?.name).filter(name=>name != null).join(', ');
+    note(`Uncle Scam has city and county income tax tables for ${names} so far. If your city or county charges one, it is not counted here.`);
+  }
+  rows.push({k:'head',t:'SALES TAX'});
+  if (b.salesState != null) {
+    row(`${stateName} sales tax (${localRateText(b.salesStateRate)})`,money(b.salesState));
+    if (b.salesLocalKind === 'partly-included') note(`That figure includes the local rate every place in ${stateName} charges.`);
+    if (b.salesLocalKind === 'none') note(`${stateName} has no local sales tax.`);
+    else if (b.salesLocal != null) row(`Local sales tax (${localRateText(b.salesLocalRate)} on top)`,money(b.salesLocal));
+    else { row('Local sales tax','not on file'); note(`Places in ${stateName} add their own sales tax. This ZIP's rate is not on file yet, so it is not counted.`); }
+    note(`What the IRS reckons a household of your income pays in a year, counted as ${b.salesHousehold === 1 ? 'one person' : 'two people'} (${local.sales.year} tables).`);
+  } else {
+    row(`${stateName} sales tax`,money(0)); note(`The IRS tables list no state sales tax for ${stateName}.`);
+    row('Local sales tax','not on file');note(`If a place in ${stateName} charges its own sales tax, it is not counted here.`);
+  }
+  rows.push({k:'head',t:'PROPERTY TAX'});
+  if (b.propertyTypical != null) {
+    const figure = (b.propertyCapped ? 'over ' : '') + money(b.propertyTypical);
+    if (b.owns) row(`Typical homeowner in ${b.zip}`,figure);
+    else { row('Paid directly by a renter',money(0)); note(`The typical homeowner in ${b.zip} pays ${figure} a year. A landlord passes it on in the rent.`); }
+    note(`The middle real estate tax bill among homeowners here, Census survey ${local.property.year - 4} to ${local.property.year}.`);
+  } else { row('Property tax','no figure'); note('The Census survey has no property tax figure for this ZIP.'); }
+  rows.push({k:'rule'},{k:'head',t:'EVERY LEVEL'});
+  const over = b.lowerBound ? 'over ' : '';
+  row('Federal',money(b.federal));row('State',money(b.state));row('Local',over + money(b['local']));
+  rows.push({k:'total',l:'ALL IN',r:over + money(b.total)});row('You keep',(b.lowerBound ? 'under ' : '') + money(b.takeHome));
+  if (!percent) row('Share of your pay',over + localPercent(b.rate));
+  if (b.lowerBound) note("The property tax figure is the survey's ceiling, so the local line and the total are floors.");
+  if (b.incomplete) note('Lines marked not on file, not counted or no figure are left out of these totals.');
+  note('Not counted: taxes on gas, alcohol and tobacco, vehicle fees, tariffs, and the taxes businesses pass on in prices.');
+  rows.push({k:'rule'},{k:'center',t:'estimates: income taxes modeled from rates in law,',c:'small'},{k:'center',t:'sales and property from typical figures',c:'small'});
+  return rows;
+}
+
 // ── the Monthly Treasury Statement, table 9 ─────────────────────────────────────────────────────────────────────
 // rows: [{ d: record date, n: line name, a: fiscal-year-to-date dollars, t: record type, l: level }], any order.
 // Type F rows are outlays by budget function; type RSG rows are receipts by source (level 2, and the level-3

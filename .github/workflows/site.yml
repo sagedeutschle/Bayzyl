@@ -43,7 +43,10 @@ jobs:
       - name: The edit page reads and writes the content files exactly as the build does
         run: node showcase/tools/tests/edit-check.mjs
       - name: Uncle Scam's arithmetic and data (/scam)
-        run: node showcase/tools/tests/scam-check.mjs
+        run: |
+          node showcase/tools/tests/scam-check.mjs
+          node showcase/tools/tests/scam-bundle-check.mjs
+          node showcase/tools/tests/scam-local-ui-check.mjs
       - name: Start the live server locally with this build and gate every route
         env:
           GATE_WORDLE: require
@@ -72,6 +75,7 @@ jobs:
           node showcase/tools/tests/financial-data-check.mjs
           node showcase/tools/tests/debt-discovery-check.mjs
           node showcase/tools/tests/financial-routes-check.mjs
+          node showcase/tools/tests/scam-routes-check.mjs
           node showcase/tools/tests/signaling-check.mjs
           node showcase/tools/tests/product-routes-check.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

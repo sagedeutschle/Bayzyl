@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {EXPANDED_METRICS,rangeHistory} from '../../server/public/debt-metrics.js';
-import {PRESETS,canCompare,canUsePerPerson,parseView,viewQuery,changeView,comparisonCoverage,validSnapshot,measurementBasis} from '../../server/public/debt-discovery.js';
+import {PRESETS,canCompare,canUsePerPerson,parseView,viewQuery,changeView,comparisonCoverage,validSnapshot,measurementBasis,chartAxis,axisLabel,readoutValues,emptyChartState} from '../../server/public/debt-discovery.js';
 const catalog=[
  {id:'totalDebt',unit:'dollars',frequency:'Daily'},
  {id:'population',unit:'people',frequency:'Monthly'},
@@ -79,4 +79,30 @@ test('measurement basis makes nominal money explicit without mislabeling real do
  assert.equal(measurementBasis({unit:'realDollars1982_84PerWeek'}),'Real · 1982–84 purchasing power');
  assert.equal(measurementBasis({unit:'index',basis:'1980 Q1 = 100'}),'Index · 1980 Q1 = 100');
  assert.equal(measurementBasis({unit:'percent'}),'');
+});
+
+test('chart axes use round ticks, consistent labels and never clip real negative percentages',()=>{
+ const wealth=chartAxis([{unit:'percent',history:[{value:2.3},{value:32.5}]}]);
+ assert.equal(wealth.min,0);assert.ok(wealth.max>=32.5);assert.deepEqual(wealth.ticks,[0,10,20,30,40]);
+ assert.deepEqual(wealth.ticks.map(n=>axisLabel(n,wealth,'percent')),['0%','10%','20%','30%','40%']);
+ const interest=chartAxis([{unit:'percent',history:[{value:12},{value:19}]}]);
+ assert.deepEqual(interest.ticks.map(n=>axisLabel(n,interest,'percent')),['10.0%','12.5%','15.0%','17.5%','20.0%']);
+ const negative=chartAxis([{unit:'percent',history:[{value:-3},{value:5}]}]);assert.ok(negative.min<=-3);assert.ok(negative.max>=5);
+ const constant=chartAxis([{unit:'percent',history:[{value:0}]}]);assert.equal(constant.min,0);assert.ok(constant.max>0);assert.ok(constant.ticks.every(Number.isFinite));
+ const dollars=chartAxis([{unit:'dollars',history:[{value:1e12},{value:4e12}]}]);assert.ok(dollars.ticks.map(n=>axisLabel(n,dollars,'dollars')).every(label=>/^\$[\d,.]+T$/.test(label)));
+ assert.equal(chartAxis([{unit:'percent',history:[]}]),null);
+});
+test('comparison readout preserves legend order and reports exact-date values for both measures',()=>{
+ const series=[{label:'Top 1%',unit:'percent',status:'ok',history:[{date:'2026-04-01',value:32.5}]},{label:'Bottom 50%',unit:'percent',status:'stale',history:[{date:'2026-04-01',value:2.5}]}];
+ assert.deepEqual(readoutValues(series,'2026-04-01').map(p=>[p.label,p.value,p.status]),[['Top 1%',32.5,'ok'],['Bottom 50%',2.5,'stale']]);
+ assert.deepEqual(readoutValues(series,'2026-07-01').map(p=>p.value),[null,null]);
+ assert.equal(readoutValues([series[0]],'2026-04-01').length,1);
+});
+test('empty charts distinguish fetch failure, unavailable sources, short periods and incompatible dates',()=>{
+ const full=[{history:[{date:'2026-04-01',value:2}]}],empty=[{history:[]}];
+ assert.equal(emptyChartState({loaded:false,loading:true,sourceSeries:empty,rangedSeries:empty,compared:false}).kind,'loading');
+ const failure=emptyChartState({loaded:false,loading:false,sourceSeries:empty,rangedSeries:empty,compared:false});assert.equal(failure.kind,'unavailable');assert.ok(!failure.message.includes('comparison'));
+ assert.equal(emptyChartState({loaded:true,sourceSeries:empty,rangedSeries:empty,compared:true}).kind,'unavailable');
+ assert.equal(emptyChartState({loaded:true,sourceSeries:full,rangedSeries:empty,compared:false}).kind,'period');
+ assert.equal(emptyChartState({loaded:true,sourceSeries:full,rangedSeries:full,compared:true}).kind,'overlap');
 });

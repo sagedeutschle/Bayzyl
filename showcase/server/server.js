@@ -127,7 +127,8 @@ const editApi = createEditApi({ clientAddress, sendJSON });   // prismet.xyz/edi
 const RATE_LIMITS = {
   steam: { max: 12, windowMs: 60_000 },
   wordle: { max: 30, windowMs: 60_000 },
-  debt: { max: 6, windowMs: 60_000 },
+  debtRead: { max: 30, windowMs: 60_000 },
+  debtRefresh: { max: 6, windowMs: 60_000 },
   arcade: { max: 90, windowMs: 60_000 },
   arcadeAuth: { max: 8, windowMs: 60_000 },
   static: { max: 600, windowMs: 60_000 },   // one visit is ~70 requests (fonts, plates, tiles); 75 cut real visitors off
@@ -697,12 +698,15 @@ async function routeRequest(req, res, projectFeed, debtService, arcadeApi) {
   }
   if (url.pathname === '/api/debt') {
     if (method === 'HEAD') return sendJSON(req, res, 200, {}, { 'cache-control': 'no-store' });
-    if (rateLimited('debt', req, res)) {
+    // Catalog navigation reads the shared cache; explicit refreshes keep their
+    // stricter budget and the service's minimum upstream-refresh interval.
+    const force = url.searchParams.get('refresh') === '1' || url.searchParams.get('force') === 'true';
+    if (rateLimited(force ? 'debtRefresh' : 'debtRead', req, res)) {
       return sendJSON(req, res, 429, { error: 'Please wait before refreshing the dashboard.' }, { 'retry-after': '60', 'cache-control': 'no-store' });
     }
     try {
       const snapshot = await debtService.getSnapshot({
-        force: url.searchParams.get('refresh') === '1' || url.searchParams.get('force') === 'true',
+        force,
         expanded: url.searchParams.get('catalog') === 'expanded',
       });
       return sendJSON(req, res, 200, snapshot, { 'cache-control': 'no-store' });

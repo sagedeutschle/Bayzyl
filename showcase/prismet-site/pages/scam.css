@@ -1,12 +1,12 @@
 /* Uncle Scam (/scam): a counter at night and the receipt it prints. Colours follow the site's slate and brass;
-   the receipt is the one piece of paper on the page. */
+   the two receipts continue the same paper treatment. */
 :root {
   color-scheme: dark;
   --ground: #0F161D; --surface: #17212B; --raised: #1E2934;
   --ink: #E6E1D4; --ink-2: #B5BCC0; --ink-3: #8C959B; --rule: rgba(230, 225, 212, .22);
   --brass: #C9A260; --brass-ink: #D9B978; --on-brass: #17130A;
   --paper: #F4F0E4; --paper-ink: #1B1D21; --paper-dim: #5A5D63; --stamp: #B3261E;
-  --display: 'Unbounded', 'Arial Black', system-ui, sans-serif;
+  --display: 'Marcellus', Georgia, serif;
   --sans: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'Martian Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 }
@@ -25,7 +25,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 .hero { text-align: center; }
 .seal { width: 168px; height: 168px; display: block; margin: 0 auto 12px; }
-h1 { font-family: var(--display); font-weight: 700; font-size: clamp(2rem, 9vw, 3rem); line-height: 1.05; margin: 0; letter-spacing: -.01em; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2rem, 9vw, 3rem); line-height: 1.05; margin: 0; letter-spacing: -.01em; }
 .ask { font-family: var(--mono); font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--brass-ink); margin: 10px 0 0; }
 .lede { color: var(--ink-2); margin: 14px auto 0; max-width: 44ch; }
 
@@ -60,15 +60,15 @@ p.status { margin: 14px 0 0; font-size: .88rem; color: var(--ink-3); text-align:
 .receipt.printing { animation: print .9s cubic-bezier(.2, .7, .2, 1) both; transform-origin: top; }
 @keyframes print { from { opacity: 0; transform: translateY(-18px) scaleY(.96); } to { opacity: 1; transform: none; } }
 .r-center { text-align: center; }
-.r-title { font: 800 1.25rem/1.2 var(--display); letter-spacing: .02em; margin-bottom: 2px; }
-.r-small { font-size: .68rem; color: var(--paper-dim); }
+.r-title { font: 400 1.25rem/1.2 var(--display); letter-spacing: .02em; margin-bottom: 2px; }
+.r-small { font-size: .8125rem; color: var(--paper-dim); }
 .r-rule { border: 0; border-top: 1px dashed var(--paper-ink); margin: 10px 0; opacity: .55; }
 .r-head { font-weight: 700; letter-spacing: .08em; margin: 2px 0 4px; }
 .r-row { display: flex; justify-content: space-between; gap: 12px; }
 .r-row span:first-child { min-width: 0; }
 .r-row span:last-child { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .r-total { font-weight: 800; font-size: .95rem; margin-top: 6px; padding-top: 6px; border-top: 2px solid var(--paper-ink); }
-.r-note { font-size: .68rem; color: var(--paper-dim); margin: 6px 0 0; }
+.r-note { font-size: .8125rem; color: var(--paper-dim); margin: 6px 0 0; }
 .r-red { color: var(--stamp); font-weight: 700; }
 .r-stamp { display: inline-block; margin: 8px auto 2px; padding: 4px 10px; border: 2px solid var(--stamp); color: var(--stamp); font-weight: 800; letter-spacing: .12em; transform: rotate(-4deg); }
 .r-barcode { height: 38px; margin: 12px auto 6px; width: 78%;
@@ -80,7 +80,7 @@ p.status { margin: 14px 0 0; font-size: .88rem; color: var(--ink-3); text-align:
 
 /* the two panels under the receipt: who signs off, what landed near you */
 .panel { margin-top: 34px; border-top: 1px solid var(--rule); padding-top: 18px; }
-.panel h2 { font: 700 1.25rem/1.2 var(--display); margin: 0; }
+.panel h2 { font: 400 1.25rem/1.2 var(--display); margin: 0; }
 .panel h3 { font: 400 1.05rem/1.3 var(--sans); color: var(--ink-2); margin: 18px 0 6px; }
 .panel-intro { color: var(--ink-2); margin: 6px 0 14px; }
 .panel-intro:empty { display: none; }
@@ -111,3 +111,22 @@ p.status { margin: 14px 0 0; font-size: .88rem; color: var(--ink-3); text-align:
 
 @media (max-width: 420px) { .form { grid-template-columns: 1fr; } .seal { width: 136px; height: 136px; } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* A second tear-off, with one device-local housing choice at its start. */
+.rest-bill{margin:28px auto 0;max-width:400px}
+.housing-choice{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 8px;padding:16px 0 0;border:0;border-top:1px dashed var(--rule)}
+.housing-choice legend{padding:0 10px 0 0;font:500 .75rem/1.5 var(--mono);letter-spacing:.03em;color:var(--brass-ink)}
+.housing-choice label{flex:1;position:relative;cursor:pointer}
+.housing-choice input{position:absolute;opacity:0}
+.housing-choice span{display:block;text-align:center;border:1px solid var(--rule);border-radius:3px;min-height:46px;padding:10px 14px;color:var(--ink-2);font-size:.95rem}
+.housing-choice input:checked+span{border-color:var(--brass);color:var(--ink);background:var(--raised)}
+.housing-choice input:focus-visible+span{outline:3px solid var(--brass-ink);outline-offset:3px}
+.housing-choice input:disabled+span{opacity:.6;cursor:default}
+.housing-note{font-size:.8rem;line-height:1.55;color:var(--ink-2);margin:8px 0 18px}
+.rest-status{font-size:.9rem;line-height:1.65;color:var(--ink-2);margin:16px 0;padding-left:12px;border-left:2px solid var(--brass)}
+.rest-retry{margin-bottom:14px;font-size:.9rem}
+.rest-context{font-size:.85rem;line-height:1.65;color:var(--ink-2);margin-top:18px}
+.rest-context p{margin:10px 0}.rest-coverage{color:var(--ink);border-left:2px solid var(--brass);padding-left:12px}
+.rest-warnings p{color:var(--brass-ink)}.rest-context a{overflow-wrap:anywhere}
+#save-scope{margin:10px auto 0;max-width:400px;font-size:.8rem;color:var(--ink-2)}
+[hidden]{display:none!important}

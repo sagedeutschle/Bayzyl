@@ -85,6 +85,20 @@ else
   bad "expanded debt catalog request failed"
 fi
 chk /scam 200; chk /scam.js 200; chk /scam-calc.js 200; chk /scam.css 200; chk /scam-seal.svg 200; chk /scam-data/tax-2026.json 200; chk /scam-data/mts-snapshot.json 200
+chk /scam-data/local-2026.json 200; chk /scam-data/zip-local/432.json 200; chk /scam-data/zip-local/100.json 200; chk /scam-data/zip-local/000.json 404
+if local_tax=$(curl -fsS --max-time 20 --max-filesize 1048576 "$B/scam-data/local-2026.json"); then
+  if printf '%s' "$local_tax" | python3 -c 'import json,sys
+try:
+  d=json.load(sys.stdin)
+  assert len(d["counties"])>=3200
+  assert len(d["localIncome"]["MD"]["rates"])==24
+  assert len(d["localIncome"]["IN"]["rates"])==92
+  assert len(d["localIncome"]["OH"]["rates"])>=600
+  assert len(d["sales"]["bands"])==19 and len(d["sales"]["states"])==46
+  assert d["property"]["year"]==2024
+except (AssertionError,KeyError,TypeError,ValueError): sys.exit(1)
+'; then ok "Uncle Scam additive local data contract"; else bad "Uncle Scam local data invalid"; fi
+else bad "Uncle Scam local data request failed"; fi
 chk /edit 200; chk /edit.js 200; chk /edit/store.js 200; chk /lib/render.js 200; chk /edit/assets.json 200; chk /robots.txt 200
 st=$(curl -s --max-time 20 "$B/api/edit/status"); printf '%s' "$st" | grep -q '"ok":true' && ok "/api/edit/status answers ($(printf '%s' "$st" | grep -o '"configured":[a-z]*'))" || bad "/api/edit/status = $(printf '%s' "$st" | head -c 80)"
 chk /shots/helm-1-full.webp 404; chk /shots/ 404; chk /nope 404; chk /api/nope 404; chk /../etc/passwd 404

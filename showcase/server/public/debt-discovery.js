@@ -17,3 +17,37 @@ export function comparisonCoverage(series){if(series.length<2)return {series,win
 export function validSnapshot(data,catalog){const known=new Set(catalog.map(m=>m.id));return data?.version===1&&data.catalog==='expanded'&&Array.isArray(data.metrics)&&data.metrics.length===known.size&&new Set(data.metrics.map(m=>m?.id)).size===known.size&&Array.isArray(data.sources)&&data.metrics.every(m=>m&&known.has(m.id)&&Array.isArray(m.history));}
 
 export function measurementBasis(m){if(['dollars','dollarsPerPerson','dollarsPerSecond'].includes(m.unit))return 'Nominal · not adjusted for inflation';if(m.unit==='realDollars1982_84PerWeek')return 'Real · 1982–84 purchasing power';if(m.unit==='index')return `Index${m.basis?` · ${m.basis}`:''}`;return '';}
+
+// Fit reported values to legible ticks. A nonnegative percentage never acquires a
+// negative floor from padding; genuine negative observations remain visible.
+export function chartAxis(series){
+ const values=series.flatMap(s=>s.history.map(p=>p.value)).filter(Number.isFinite);
+ if(!values.length)return null;
+ const lo=Math.min(...values),hi=Math.max(...values),padding=(hi-lo)*.1||Math.max(Math.abs(hi)*.025,1);
+ let lower=lo-padding,upper=hi+padding;
+ if(series.every(s=>s.unit==='percent')&&lo>=0)lower=Math.max(0,lower);
+ const rough=(upper-lower)/4,power=10**Math.floor(Math.log10(rough));
+ const step=([1,2,2.5,5,10].find(n=>n*power>=rough)||10)*power;
+ const clean=n=>Number(n.toPrecision(12));
+ const min=clean(Math.floor(lower/step)*step),max=clean(Math.ceil(upper/step)*step);
+ const ticks=Array.from({length:Math.round((max-min)/step)+1},(_,i)=>clean(min+i*step));
+ return {min,max,step,ticks};
+}
+export function axisLabel(value,axis,unit){
+ const magnitude=Math.max(Math.abs(axis.min),Math.abs(axis.max));
+ const [scale,suffix]=unit==='percent'?[1,'%']:magnitude>=1e12?[1e12,'T']:magnitude>=1e9?[1e9,'B']:magnitude>=1e6?[1e6,'M']:magnitude>=1e3?[1e3,'K']:[1,''];
+ const step=axis.step/scale;let decimals=0;
+ while(decimals<12&&Math.abs(Number(step.toFixed(decimals))-step)>Math.abs(step)*1e-9)decimals++;
+ const amount=new Intl.NumberFormat('en-US',{minimumFractionDigits:decimals,maximumFractionDigits:decimals}).format(value/scale);
+ const currency=unit.startsWith('dollars')||unit==='realDollars1982_84PerWeek';
+ return `${currency?'$':''}${amount}${suffix}`;
+}
+export function readoutValues(series,date){return series.map(s=>({label:s.label,unit:s.unit,status:s.status,value:s.history.find(p=>p.date===date)?.value??null}));}
+export function emptyChartState({loaded,loading=false,sourceSeries,rangedSeries,compared}){
+ if(loading&&!loaded)return {kind:'loading',message:'Gathering published history…'};
+ if(!loaded)return {kind:'unavailable',message:'The figures did not load. Nothing is substituted. Use Refresh sources to try again in a minute.'};
+ if(sourceSeries.some(s=>!s.history.length))return {kind:'unavailable',message:'Published history is unavailable for one or more selected measures. Nothing is substituted. Use Refresh sources to try again, or choose an available measure.'};
+ if(rangedSeries.some(s=>!s.history.length))return {kind:'period',message:'No observations for one or more selected measures in this period. Try a longer period.'};
+ if(compared)return {kind:'overlap',message:'No matching reported dates in this period. Try a longer period or remove the comparison. No values are interpolated or backfilled.'};
+ return {kind:'period',message:'No observations in this period. Try a longer period.'};
+}

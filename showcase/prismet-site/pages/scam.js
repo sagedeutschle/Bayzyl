@@ -1,7 +1,7 @@
-// scam.js: the Uncle Scam page (/scam). Everything is worked out here in the browser by scam-calc.js; the salary and
-// the ZIP code are never sent anywhere. The only requests are this site's own data file and the Treasury's public
-// statement (which carries nothing about the visitor), with a snapshot to fall back on.
-import { computeBill, placeForZip, statementRows, pickStatement, splitByFunction, borrowedFor, timeUnits, officialsFor, debtSince, lastFiscalYear, topRecipients } from './scam-calc.js';
+// scam.js: the Uncle Scam page (/scam). Everything is worked out here in the browser by scam-calc.js;
+// only public ZIP-prefix files are fetched automatically; salary stays in memory. The optional USAspending lookup
+// sends the requested ZIP only after the visitor asks. Treasury requests carry no visitor inputs.
+import { computeBill, placeForZip, statementRows, pickStatement, splitByFunction, borrowedFor, timeUnits, officialsFor, debtSince, lastFiscalYear, topRecipients, localBill, localRows } from './scam-calc.js?v=20261004e';
 
 const YEAR = 2026;
 const MTS_URL = 'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_9'
@@ -46,8 +46,81 @@ const getJSON = async (url, init, ms = 12000) => {
   try { const r = await fetch(url, { ...init, signal: ctl.signal }); if (!r.ok) throw new Error(`HTTP ${r.status}`); return await r.json(); } finally { clearTimeout(timer); }
 };
 
+// A separate lifecycle keeps local-data failures and old ZIP responses away from the first receipt.
+// Only the most recent explicit housing choice is stored; no wage, bill or lookup history is persisted.
+const HOUSING_KEY = 'prismet.scam.housing';
+export function createLocalReceiptSession({ loadJSON = getJSON, storage = null, onChange = () => {} } = {}) {
+  let generation = 0, saved = null, storageAvailable = !!storage;
+  let state = { phase: 'idle', zipCode: '', bill: null, tax: null, local: null, zipRow: null, county: null, choice: null, result: null, warnings: [], message: '' };
+  try {
+    const raw = storage?.getItem(HOUSING_KEY);
+    try { const candidate = JSON.parse(raw || 'null'); if (candidate && /^\d{5}$/.test(candidate.zip) && typeof candidate.owns === 'boolean') saved = candidate; } catch { /* Malformed preference is ignored, never a reason to block a receipt. */ }
+  } catch { storageAvailable = false; }
+  function forget() { saved = null; try { storage?.removeItem(HOUSING_KEY); } catch { storageAvailable = false; } }
+  function calculate() {
+    if (state.phase !== 'ready') return;
+    try { state.result = localBill({ bill: state.bill, zipCode: state.zipCode, county: state.county, zipRow: state.zipRow, owns: state.choice }, state.tax, state['local']); }
+    catch { state.phase = 'unavailable'; state.result = null; state.message = 'The local tables could not be read. Local amounts are not included. Your first receipt is unchanged. Try loading again.'; }
+  }
+  function view(percent = false) {
+    const warnings = [...state.warnings];
+    const coverage = state.result?.incomplete ? 'Some lines are not on file and are left out of ALL IN. Other tax categories are not modeled.' : 'ALL IN adds modeled income taxes and typical sales/property figures. It is an estimate, not a bill; other tax categories are not modeled.';
+    return { ...state, warnings, storageAvailable, coverage, retryable: state.phase === 'unavailable' || warnings.length > 0, rows: state.phase === 'ready' ? localRows(state.result, state.bill, state.tax, state['local'], percent) : [] };
+  }
+  function emit() { onChange(view()); }
+  function invalidate(zipCode) {
+    if (!state.zipCode || state.zipCode === zipCode) return;
+    generation++; forget();
+    state = { ...state, phase: 'idle', zipCode, bill: null, local: null, zipRow: null, county: null, choice: null, result: null, warnings: [], message: 'ZIP changed. Print again to load the matching local receipt. The receipt above still shows your previous calculation.' };
+    emit();
+  }
+  async function load({ bill, tax, zipCode }) {
+    const attempt = ++generation;
+    if (!/^\d{5}$/.test(zipCode)) throw new Error('A five-digit ZIP is required.');
+    let choice = state.zipCode === zipCode ? state.choice : saved?.zip === zipCode ? saved.owns : null;
+    if (state.zipCode !== zipCode && saved?.zip !== zipCode) forget();
+    state = { phase: 'loading', zipCode, bill, tax, local: null, zipRow: null, county: null, choice, result: null, warnings: [], message: 'Loading the public local-tax and ZIP tables. Your first receipt is ready.' };
+    emit();
+    const results = await Promise.allSettled([
+      `scam-data/local-${YEAR}.json`, `scam-data/zip-local/${zipCode.slice(0, 3)}.json`, `scam-data/zip/${zipCode.slice(0, 3)}.json`,
+    ].map(url => Promise.resolve().then(() => loadJSON(url))));
+    if (attempt !== generation) return view();
+    const [tables, localZIP, countyZIP] = results;
+    const local = tables.status === 'fulfilled' ? tables.value : null;
+    const validShard = localZIP.status === 'fulfilled' && localZIP.value && typeof localZIP.value === 'object' && !Array.isArray(localZIP.value);
+    const rowAbsent = validShard && !Object.hasOwn(localZIP.value, zipCode);
+    const row = validShard && !rowAbsent ? localZIP.value[zipCode] : null;
+    const county = countyZIP.status === 'fulfilled' ? countyZIP.value?.[zipCode]?.c || null : null;
+    const validTables = local && local.localIncome && Array.isArray(local.sales?.bands) && local.sales?.states && Number.isInteger(local.property?.year);
+    const validRow = Array.isArray(row) && row.length > 0 && row.length <= 6 && row.every((value, index) => value == null || (index === 3 ? typeof value === 'string' && /^\d{7}$/.test(value) : Number.isFinite(value) && value >= 0 && (![2, 4].includes(index) || Number.isInteger(value) && value <= 100)));
+    if (!validTables || !validShard || (!rowAbsent && !validRow)) {
+      state.phase = 'unavailable';
+      state.message = !validTables ? 'The local tax tables did not load or could not be read. Local amounts are not included. Your first receipt is unchanged.' : localZIP.status === 'rejected' ? 'The ZIP-level local file did not load. Local amounts are not included; missing coverage is not zero tax. Your first receipt is unchanged.' : 'The ZIP-level local file could not be read. Local amounts are not included; missing coverage is not zero tax. Your first receipt is unchanged.';
+    } else {
+      state = { ...state, phase: 'ready', local, zipRow: row, county, message: '' };
+      calculate();
+      if (local.localIncome[bill.stateCode]?.by === 'county' && state.result?.incomeStatus === 'countyUnknown' && countyZIP.status === 'rejected') state.warnings.push('The county lookup failed. Retry local tables can try that connection again.');
+    }
+    emit(); return view();
+  }
+  function choose(owns) {
+    if (typeof owns !== 'boolean' || !/^\d{5}$/.test(state.zipCode)) return;
+    state.choice = owns; saved = { zip: state.zipCode, owns };
+    try { if (storage) storage.setItem(HOUSING_KEY, JSON.stringify(saved)); else storageAvailable = false; } catch { storageAvailable = false; }
+    calculate(); emit();
+  }
+  return { load, choose, invalidate, view };
+}
+
+export function combinedReceiptRows(first, localView) {
+  if (localView.phase !== 'ready') return first.slice();
+  return [...first, { k: 'rule' }, { k: 'note', t: localView.coverage }, ...localView.rows,
+    ...localView.warnings.map(t => ({ k: 'note', t }))];
+}
+
 let data = null, statement = null, live = false, last = null;
-let congress = null, debtNow = null, lastZip = '';
+let congress = null, debtNow = null, lastZip = '', printedZip = '', officialsGeneration = 0, lookupGeneration = 0;
+let localSession = null;
 
 // "65,000", "$65000", "65k" → 65000; anything else → NaN
 export function parseSalary(text) {
@@ -102,8 +175,8 @@ export function receiptRows(bill, st, tax, percent) {
   return rows;
 }
 
-function drawDom(rows) {
-  const el = $('receipt');
+export function drawDom(rows, target = $('receipt')) {
+  const el = target;
   el.textContent = '';
   for (const row of rows) {
     let node;
@@ -153,8 +226,8 @@ export function drawCanvas(rows) {
       ops.push({ y: y + 13, text: row.r, font, x: W - PAD, align: 'right', red: row.c === 'red' });
       y += ls.length * LINE + (row.k === 'total' ? 4 : 0); continue;
     }
-    const font = row.c === 'title' ? `800 20px "Unbounded", "Arial Black", sans-serif` : mono(row.k === 'note' || row.c === 'small' ? 10.5 : 12, row.k === 'head' ? 700 : 400);
-    const step = row.c === 'title' ? 28 : row.k === 'note' || row.c === 'small' ? 15 : LINE;
+    const font = row.c === 'title' ? `400 22px "Marcellus", Georgia, serif` : mono(row.k === 'note' || row.c === 'small' ? 13 : 12, row.k === 'head' ? 700 : 400);
+    const step = row.c === 'title' ? 28 : row.k === 'note' || row.c === 'small' ? 19 : LINE;
     if (row.k === 'note') y += 4;
     for (const text of wrap(row.t, font, W - PAD * 2)) {
       ops.push({ y: y + 13, text, font, x: row.k === 'center' ? W / 2 : PAD, align: row.k === 'center' ? 'center' : 'left', dim: row.k === 'note' || row.c === 'small', red: row.c === 'red' });
@@ -183,7 +256,46 @@ function render() {
   if (!last) return;
   const percent = $('percent').checked;
   drawDom(receiptRows(last, statement, data, percent));
+  renderRest();
 }
+
+function renderRest() {
+  if (!localSession || !last) return;
+  const view = localSession.view($('percent').checked), ready = view.phase === 'ready';
+  $('rest-receipt').hidden = !ready;
+  $('rest-context').hidden = !ready;
+  $('rest-status').textContent = view.message;
+  $('rest-status').hidden = !view.message;
+  $('rest-retry').hidden = !view.retryable;
+  $('rest-retry').disabled = view.phase === 'loading';
+  $('housing-rent').disabled = $('housing-own').disabled = !ready;
+  $('housing-rent').checked = ready && !view.result.owns;
+  $('housing-own').checked = ready && view.result.owns;
+  $('housing-note').textContent = ready ? (view.choice === null
+    ? Number.isFinite(view.zipRow?.[2]) ? `Default for ZIP ${view.zipCode}: ${view.zipRow[2]}% of homes are owned. It selects “I own” at 50% or above. You can change it.` : 'Homeownership share is not on file. The default is “I rent” until you choose.'
+    : `Your choice for ZIP ${view.zipCode} ${view.storageAvailable ? 'is saved only on this device' : 'lasts for this visit; browser storage is unavailable'}. Changing ZIP clears it.`)
+    : 'Choose after the ZIP data loads. Your choice stays on this device and resets when the ZIP changes.';
+  if (ready) {
+    drawDom(view.rows, $('rest-receipt'));
+    $('rest-coverage').textContent = view.coverage;
+    $('rest-warnings').replaceChildren(...view.warnings.map(text => el('p', '', text)));
+    const incomeSource = view['local'].localIncome[last.stateCode];
+    const sources = [incomeSource?.source, incomeSource?.methodSource, incomeSource?.placeSource, view['local'].sales.source, view['local'].sales.localRates?.[last.stateCode], ...(view['local'].property.sources || [])].filter(source => source?.name && /^https:\/\//.test(source.url));
+    const seen = new Set(); const target = $('rest-sources'); target.textContent = 'Local receipt sources: ';
+    for (const source of sources) {
+      if (seen.has(source.url)) continue;
+      if (seen.size) target.append('; ');
+      seen.add(source.url); const a = el('a', '', source.name); a.href = source.url; a.rel = 'noopener'; target.append(a);
+    }
+    target.append('.');
+  } else {
+    $('rest-receipt').replaceChildren();
+    $('rest-warnings').replaceChildren();
+  }
+  $('save').textContent = ready ? 'Save both receipts as an image' : 'Save first receipt as an image';
+  $('save-scope').textContent = ready ? 'The image includes both receipts, the selected dollar/percent view and the local coverage notes.' : 'The image includes only the first receipt. The local receipt is not ready.';
+}
+
 
 function fail(id, message) { $(id).textContent = message; if (message) $(id.replace('-err', '')).focus(); return !message; }
 
@@ -205,6 +317,8 @@ function submit(event) {
   } else $('state-field').hidden = true;
   const status = new FormData($('form')).get('status');
   last = computeBill({ wages, status, stateCode }, data);
+  printedZip = zip;
+  localSession.load({ bill: last, tax: data, zipCode: zip });
   render();
   $('result').hidden = false;
   const paper = $('receipt');
@@ -235,11 +349,14 @@ function personCard(m, role) {
 }
 
 async function showOfficials(zip, stateCode) {
+  const attempt = ++officialsGeneration;
   const box = $('officials'), list = $('officials-list'), intro = $('officials-intro');
+  box.hidden = true;
   try {
     congress ||= await getJSON('scam-data/congress.json');
     debtNow ||= congress.debtNow;
     const entry = zip ? (await getJSON(`scam-data/zip/${zip.slice(0, 3)}.json`))[zip] || null : null;
+    if (attempt !== officialsGeneration) return;
     const { senators, seats } = officialsFor(entry, stateCode, congress);
     const stateName = (c) => (data.state.states[c] || {}).name || c;
     list.textContent = '';
@@ -255,12 +372,14 @@ async function showOfficials(zip, stateCode) {
     } else if (!seats.length && senators.length) intro.textContent = 'Without a ZIP code in the Census list only your senators can be named.';
     else if (!senators.length && seats.length) intro.textContent = 'The District has a delegate in the House and no senators.';
     box.hidden = !list.children.length;
-  } catch { box.hidden = true; }
+  } catch { if (attempt === officialsGeneration) box.hidden = true; }
 }
 
 // ── what landed near you: asked for, never automatic ──
 function showLocal(zip) {
+  lookupGeneration++;
   lastZip = zip;
+  $('lookup').disabled = false;
   $('local').hidden = !zip;
   $('local-out').hidden = true;
   $('local-status').textContent = '';
@@ -269,8 +388,8 @@ function showLocal(zip) {
 }
 
 async function lookup() {
-  const zip = lastZip;
-  if (!zip || !last) return;
+  const zip = lastZip, attempt = ++lookupGeneration, lookupBill = last;
+  if (!zip || !lookupBill) return;
   $('lookup').disabled = true;
   $('local-status').textContent = 'Asking USAspending.gov…';
   try {
@@ -282,14 +401,14 @@ async function lookup() {
       post('spending_by_category/recipient', { filters: { time_period: period, place_of_performance_locations: [{ country: 'USA', zip }] }, limit: 30 }),
       entry ? post('spending_by_geography', { scope: 'place_of_performance', geo_layer: 'county', geo_layer_filters: [entry.c], filters: { time_period: period } }).catch(() => null) : null,
     ]);
-    if (zip !== lastZip) return;
+    if (attempt !== lookupGeneration || zip !== lastZip) return;
     const top = topRecipients(recipients.results, 8);
     const c = county && county.results && county.results[0];
     const head = $('local-county'); head.textContent = '';
     if (c && c.aggregated_amount > 0) {
       head.append(el('strong', '', big(c.aggregated_amount)), ` in federal awards went to ${c.display_name} in fiscal ${fy.fy}`);
       if (c.per_capita > 0) head.append(', ', el('strong', '', usd(c.per_capita)), ' for each resident');
-      head.append(`. Your federal bill was ${usd(last.federalTotal)}.`);
+      head.append(`. Your federal bill was ${usd(lookupBill.federalTotal)}.`);
     }
     $('local-zip-title').textContent = top.length ? `Largest recipients with work in ${zip}` : `No awards are recorded with work in ${zip} for fiscal ${fy.fy}.`;
     const list = $('local-list'); list.textContent = '';
@@ -301,18 +420,21 @@ async function lookup() {
     $('local-status').textContent = '';
     $('lookup').hidden = true; $('lookup-note').hidden = true;
   } catch {
+    if (attempt !== lookupGeneration) return;
     $('local-status').textContent = 'USAspending.gov did not answer. Try again in a moment.';
-  } finally { $('lookup').disabled = false; }
+  } finally { if (attempt === lookupGeneration) $('lookup').disabled = false; }
 }
 
 async function save() {
   if (!last) return;
   try { await document.fonts.ready; } catch { /* fall back to the system monospace */ }
-  const canvas = drawCanvas(receiptRows(last, statement, data, $('percent').checked));
+  const percent = $('percent').checked;
+  const localView = localSession.view(percent);
+  const canvas = drawCanvas(combinedReceiptRows(receiptRows(last, statement, data, percent), localView));
   canvas.toBlob((blob) => {
     if (!blob) return;
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = 'uncle-scam-receipt.png';
+    a.href = URL.createObjectURL(blob); a.download = localView.phase === 'ready' ? 'uncle-scam-both-receipts.png' : 'uncle-scam-receipt.png';
     document.body.append(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   }, 'image/png');
@@ -357,10 +479,19 @@ async function start() {
 }
 
 if (typeof document !== 'undefined') {
+  let storage = null; try { storage = localStorage; } catch { /* device storage can be blocked */ }
+  localSession = createLocalReceiptSession({ storage, onChange: renderRest });
+  $('housing-rent').addEventListener('change', event => { if (event.target.checked) localSession.choose(false); });
+  $('housing-own').addEventListener('change', event => { if (event.target.checked) localSession.choose(true); });
+  $('rest-retry').addEventListener('click', () => { if (last && printedZip === $('zip').value.trim()) localSession.load({ bill: last, tax: data, zipCode: printedZip }); });
   $('form').addEventListener('submit', submit);
   $('percent').addEventListener('change', render);
   $('save').addEventListener('click', save);
   $('lookup').addEventListener('click', lookup);
-  $('zip').addEventListener('input', () => { $('state-field').hidden = true; $('state').value = ''; });
+  $('zip').addEventListener('input', () => {
+    $('state-field').hidden = true; $('state').value = '';
+    localSession.invalidate($('zip').value.trim());
+    if (printedZip && printedZip !== $('zip').value.trim()) { officialsGeneration++; $('officials').hidden = true; showLocal(''); }
+  });
   start();
 }

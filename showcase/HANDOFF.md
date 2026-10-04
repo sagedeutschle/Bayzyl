@@ -1,5 +1,37 @@
 # prismet.xyz — handoff (2026-10-03)
 
+## Uncle Scam local receipt extension — 2026-10-04
+
+The browser port follows the corrected native contract `3275077`: seventeen reference cases
+for local-income, sales and property estimates, including their complete dollar and percent
+receipt rows. The original federal/payroll/state receipt remains intact. A second paper receipt
+adds the available ZIP-based figures and federal/state/local totals; an explicit rent/own choice
+stays on the device and resets when the ZIP changes. The image download includes both available
+receipts and their coverage notes.
+
+New public files are additive: `scam-data/local-2026.json` and 889 `scam-data/zip-local/` shards.
+Their 33,007 nonempty ZIP records come from government sources. The source years differ: 2026
+local-income rates, IRS 2025 sales tables, and Census 2020–2024 property estimates. Local-income
+coverage currently includes Maryland and Indiana counties and Ohio cities; ZIP sales rates
+currently include Ohio. Missing coverage is not a zero-tax claim. A failed local-data request
+leaves the first receipt usable and offers Retry. A successfully loaded file with no record for
+the ZIP prints the shared model's explicit "not on file" receipt instead.
+
+The corrected shared calculations distinguish an unknown ZIP from a known untaxed city, leave
+uncovered local sales tax absent (including Alaska), identify simplified household assumptions,
+and carry capped property medians into lower-bound totals and percentage rows. A combined bill
+is a partial modeled estimate, not a precise household liability. The first receipt's existing
+data and definitions were preserved by this extension.
+
+`tools/uncle-scam/build-local-data.mjs` reproduces the government-source bundle. The data generation
+recreates the local shard directory, so retain the committed release before refreshing it.
+The static verifier checks these dynamically fetched assets and intentionally uncovered prefixes;
+the live gate checks the new paths and table shape. Golden parity, race handling, device-only
+choice/reset, missing-file fallback, export content and route checks are blocking CI tests.
+Browser and production acceptance are recorded separately; source checks do not establish either.
+Focused local checks: 474 arithmetic/data assertions, all seventeen native receipt cases in both
+display modes, and fourteen UI behavior tests pass. New bundle and HTTP route checks pass.
+
 ## Financial explorer extension — 2026-10-04
 
 The owner approved ten additional public statistics and three question presets. The current
@@ -21,6 +53,9 @@ published baseline is `25f738a` (Fly v38); this section describes the extension 
   earnings cannot be treated as nominal totals or divided by population. Different price-index
   bases and percentages with different denominators are excluded from automatic comparisons.
   Wealth shares are official distributional estimates, not a quarterly census.
+- Chart axes use readable intervals, percentage padding never hides negative observations, and
+  comparison readouts identify both series. Missing data and unmatched dates have distinct states.
+  Cached catalog reads have a separate bounded request budget from forced upstream refreshes.
 - Uncle Scam native features remain a separate active lane. This extension does not change
   `/scam`, the native app, cloud-account activation or the previous debt-growth definitions.
 

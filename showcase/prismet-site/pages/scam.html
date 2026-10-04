@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0F161D">
-<meta name="description" content="Type a salary and a ZIP code. Get an itemized receipt for your taxes: what you paid, what it bought, and what was borrowed on top. Nothing you type leaves your browser.">
+<meta name="description" content="Type a salary and a ZIP code. Get an itemized receipt for your taxes: what you paid, what it bought, and what was borrowed on top. Salary stays in your browser; ZIP prefixes select public data files.">
 <title>Uncle Scam · where is my money going?</title>
 <link rel="icon" href="scam-seal.svg">
 <link rel="stylesheet" href="assets/fonts/fonts.css">
-<link rel="stylesheet" href="scam.css">
-<script type="module" src="scam.js"></script>
+<link rel="stylesheet" href="scam.css?v=20261004e">
+<script type="module" src="scam.js?v=20261004e"></script>
 <link rel="stylesheet" href="/product-shell.css">
 </head>
 <body>
@@ -47,7 +47,7 @@
       <label><input type="radio" name="status" value="head"><span>Head of household</span></label>
     </fieldset>
     <button id="go" type="submit" disabled>Print my receipt</button>
-    <p class="private">Your salary never leaves this browser. Your ZIP code only picks public data files.</p>
+    <p class="private">Your salary never leaves this browser. Only public ZIP-prefix files are fetched automatically. A separate spending lookup asks before sending a full ZIP.</p>
   </form>
 
   <p id="status" class="status" role="status">Loading the tax tables…</p>
@@ -56,9 +56,28 @@
     <h2 id="result-title" class="sr-only">Your receipt</h2>
     <div id="receipt" class="receipt"></div>
     <div class="actions">
-      <button id="save" type="button">Save as an image</button>
+      <button id="save" type="button">Save first receipt as an image</button>
       <label class="toggle"><input id="percent" type="checkbox"><span>Percent only (hide the dollar amounts)</span></label>
     </div>
+    <p id="save-scope" class="private">The image includes only the first receipt until the local receipt is ready.</p>
+    <section class="rest-bill" aria-labelledby="rest-title">
+      <h2 id="rest-title" class="sr-only">The rest of the bill</h2>
+      <fieldset class="housing-choice" aria-describedby="housing-note">
+        <legend>For the rest of the bill</legend>
+        <label><input id="housing-rent" type="radio" name="housing" value="rent" disabled><span>I rent</span></label>
+        <label><input id="housing-own" type="radio" name="housing" value="own" disabled><span>I own</span></label>
+      </fieldset>
+      <p id="housing-note" class="housing-note">Your choice stays on this device and resets when the ZIP changes.</p>
+      <p id="rest-status" class="rest-status" role="status"></p>
+      <button id="rest-retry" class="rest-retry" type="button" hidden>Retry local tables</button>
+      <div id="rest-receipt" class="receipt" hidden></div>
+      <div id="rest-context" class="rest-context" hidden>
+        <p id="rest-coverage" class="rest-coverage"></p>
+        <div id="rest-warnings" class="rest-warnings"></div>
+        <p id="rest-sources" class="sources"></p>
+      </div>
+    </section>
+
   </section>
 
   <section id="officials" class="panel" hidden aria-labelledby="officials-title">
@@ -86,7 +105,11 @@
     <summary>How this is worked out</summary>
     <ul id="assumptions">
       <li>An estimate for tax year <span data-year>2026</span>, not tax advice. It assumes wages from one job are your only income, the standard deduction, no dependents and no credits. Married, joint treats the salary as the household's wages.</li>
-      <li>State tax uses each state's published brackets, standard deduction and personal exemption. Head of household uses the single schedule. City, county and school district income taxes are not included, nor are sales, property or gas taxes.</li>
+      <li>State tax uses each state's published brackets, standard deduction and personal exemption. Head of household uses the single schedule. The first receipt excludes local income, sales and property tax. The second receipt adds the available local income taxes and typical sales/property amounts. School district income tax and gas taxes are not included.</li>
+      <li>The rest of the bill: city income tax covers Ohio; county income tax covers Maryland and Indiana. A ZIP-level city assignment is not an address-level determination and Ohio assumes you live and work in the same city. Other local income taxes may apply and are not counted.</li>
+      <li>Sales tax is a typical estimate from the IRS 2025 tables, using wages as household income and a household size of one for single, two for joint or head of household. Ohio has ZIP-level local sales rates; other local rates have incomplete coverage. Alaska local sales taxes are not included even though Alaska has no state sales tax.</li>
+      <li>Property tax uses the Census 2020–2024 median for homeowners in the ZIP area, not the tax on your home. Owner totals count that median; renter totals count no direct property payment. The amount a landlord passes through in rent is not measured.</li>
+      <li>Government levels are an illustrative grouping: California and Nevada state sales-table amounts include a uniform local portion, and Census property tax can cover several taxing jurisdictions.</li>
       <li>Where it went: your federal income tax is spread across the budget in proportion to what Washington has spent this fiscal year. Social Security and Medicare are left out of that split because your payroll taxes are listed for them on their own lines; in truth Medicare also draws on income taxes.</li>
       <li>Put on the card: what Washington spent beyond what it collected, scaled to your federal bill.</li>
       <li>Who signs off: your House district comes from the Census Bureau's ZIP to district file for the 119th Congress. A ZIP code that crosses a district line lists every district it touches.</li>

@@ -26,3 +26,11 @@
 @media(max-width:700px){.question-buttons{grid-template-columns:1fr;gap:8px}.question-buttons button{font-size:17px;min-height:44px}.discovery{padding:14px 0;margin-bottom:18px}.question-context{font-size:13px}.measurement-context{font-size:12px;gap:12px}}
 
 .intro-note .text-link+.text-link{margin-left:18px}
+
+/* Reviewed chart refinements: values remain readable in either theme. */
+.chart-readout .readout-series{color:var(--violet)}.chart-readout .readout-series.compare{color:var(--gold)}
+.chart-frame .empty button{margin:14px auto 0;min-height:44px}
+.explorer button,.status-line button{min-height:44px}
+.chart-controls label,.chart-legend,.chart-readout,.metric-meta,.key-figures dt span{font-size:12px}
+.chart-controls .check:has(input:disabled){opacity:.65}
+@media(max-width:860px){.intro{grid-template-columns:1fr;gap:24px;align-items:start}.intro-note .text-link+.text-link{margin-left:0}.intro-note .text-link{margin-right:18px}}

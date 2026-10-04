@@ -6,7 +6,7 @@
 // 4. The Treasury statement is picked, checked and split so the lines add up to the bill.
 // 5. No state or status ever taxes a higher wage less, or takes more than the wage.
 // 6. Members of Congress resolve for a ZIP, each with a debt figure for their first day; recipient lists fold and tidy.
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
@@ -170,5 +170,106 @@ assert.equal(calc.tidyName('ACME  WIDGETS OF OHIO LLC'), 'Acme Widgets of Ohio L
 assert.equal(calc.tidyName("O'NEIL-SMITH & SONS"), "O'Neil-Smith & Sons"); checks += 4;
 assert.deepEqual(calc.topRecipients([{ name: 'OHIO STATE UNIVERSITY, THE', amount: 90 }, { name: 'BATTELLE', amount: 300 }, { name: 'OHIO STATE UNIVERSITY, THE', amount: 7 }, { name: 'REFUND CO', amount: -5 }, { name: '', amount: 9 }], 8),
   [{ name: 'Battelle', amount: 300 }, { name: 'The Ohio State University', amount: 97 }]); checks++;
+
+// ── Native local-tax contract: all 17 answers and both printed row modes ──
+const localGolden = JSON.parse(readFileSync(join(HERE, 'fixtures', 'uncle-scam-local-golden.json'), 'utf8'));
+assert.equal(localGolden.cases.length, 17);
+assert.equal(typeof calc.localBill, 'function', 'The browser must expose the native local bill calculation');
+assert.equal(typeof calc.localRows, 'function', 'The browser must expose native local receipt rows');
+const localData = JSON.parse(readFileSync(join(PAGES, 'scam-data', 'local-2026.json'), 'utf8'));
+const localShard = zip => JSON.parse(readFileSync(join(PAGES, 'scam-data', 'zip-local', zip.slice(0,3)+'.json'), 'utf8'))[zip] ?? null;
+const answerKeys = ['incomeStatus','incomeName','incomeRate','income','incomeIfInside','salesState','salesLocal','salesLocalRate','propertyTypical','propertyCapped','salesHousehold','lowerBound','incomplete','owns','property','federal','state','local','total','takeHome','rate'];
+const rowsAsNative = rows => rows.map(row=>[row.k,row.t??row.l??'',row.r??'',row.c??'']);
+for (const golden of localGolden.cases) {
+  const i=golden.input, label=`${i.zip} ${i.wages} ${i.status} ${i.owns}`, zipRow=localShard(i.zip);
+  const actualCells=zipRow?Array.from({length:6},(_,j)=>zipRow[j]??''):[];
+  assert.deepEqual(actualCells,golden.zipRow.map((v,j)=>v===''?'':j===3?v:Number(v)),label+' source row');
+  const bill=calc.computeBill({wages:i.wages,status:i.status,stateCode:i.state},data);
+  const result=calc.localBill({bill,zipCode:i.zip,county:i.county,zipRow,owns:i.owns},data,localData);
+  const answer=Object.fromEntries(answerKeys.filter(k=>Object.hasOwn(result,k)).map(k=>[k,result[k]]));
+  assert.deepEqual(Object.keys(answer).sort(),Object.keys(golden.answer).sort(),label+' omitted optional fields');
+  for(const [key,value] of Object.entries(golden.answer)) {
+    if(typeof value==='number')assert.ok(Math.abs(answer[key]-value)<1e-9,label+' '+key);
+    else assert.equal(answer[key],value,label+' '+key);
+  }
+  assert.deepEqual(rowsAsNative(calc.localRows(result,bill,data,localData,false)),golden.rows,label+' dollar rows');
+  assert.deepEqual(rowsAsNative(calc.localRows(result,bill,data,localData,true)),golden.percentRows,label+' percent rows');
+  checks+=4;
+}
+
+// Data coverage and boundaries beyond the 17 published golden examples.
+assert.equal(Object.keys(localData.localIncome.MD.rates).length,24);
+assert.equal(Object.keys(localData.localIncome.IN.rates).length,92);
+assert.ok(Object.keys(localData.localIncome.OH.rates).length>500);
+assert.equal(localData.sales.bands.length,19);
+assert.ok(Object.keys(localData.sales.states).length>=45);
+assert.ok(!Object.hasOwn(localData.sales.states,'DE'));
+for(const table of Object.values(localData.sales.states)) {
+  assert.equal(table.amounts.length,19);
+  assert.ok(table.amounts.every(row=>row.length===6 && row.every(n=>Number.isFinite(n)&&n>=0)));
+  assert.ok(['none','extra','partly-included'].includes(table.local));
+}
+const prefixFiles=readdirSync(join(PAGES,'scam-data','zip-local'));
+assert.ok(prefixFiles.length>880);
+let zipCount=0;
+for(const filename of prefixFiles) {
+  assert.match(filename,/^\d{3}\.json$/);
+  const rows=JSON.parse(readFileSync(join(PAGES,'scam-data','zip-local',filename),'utf8'));
+  for(const [zip,row] of Object.entries(rows)) {
+    assert.match(zip,/^\d{5}$/);assert.equal(zip.slice(0,3),filename.slice(0,3));
+    assert.ok(Array.isArray(row)&&row.length>0&&row.length<=6);
+    row.forEach((value,index)=>{if(value==null)return;if(index===3)assert.match(value,/^\d{7}$/);else assert.ok(Number.isFinite(value)&&value>=0);});
+    if(row[2]!=null)assert.ok(row[2]<=100);if(row[4]!=null)assert.ok(row[4]<=100);
+    if(row[5]!=null)assert.ok(row[5]<=0.15);zipCount++;
+  }
+}
+assert.ok(zipCount>33000);checks+=8;
+{
+  const bill=calc.computeBill({wages:60000,status:'single',stateCode:'OH'},data);
+  const args={bill,zipCode:'43201',county:'39049',zipRow:[1200,null,50,'3918000',49,0.08]};
+  const before=JSON.stringify(args), partial=calc.localBill(args,data,localData);
+  assert.equal(partial.owns,true);assert.equal(partial.incomeStatus,'partOfZip');
+  assert.equal(partial.income,0);assert.equal(partial.incomeIfInside,1500);assert.equal(partial.property,1200);
+  const renter=calc.localBill({...args,owns:false},data,localData);assert.equal(renter.property,0);
+  assert.equal(partial.total-renter.total,1200);
+  const covered=calc.localBill({...args,zipRow:[1200,null,49,'3918000',50,0.08]},data,localData);
+  assert.equal(covered.owns,false);assert.equal(covered.incomeStatus,'taxed');assert.equal(covered.income,1500);
+  assert.equal(JSON.stringify(args),before,'calculation preserves source objects');
+  const missing=calc.localBill({...args,zipRow:null},data,localData);
+  assert.equal(missing.owns,false);assert.ok(!Object.hasOwn(missing,'propertyTypical'));
+  assert.ok(!Object.hasOwn(missing,'salesLocal'));
+  // Revised native contract distinguishes a missing ZIP row from known no-city coverage.
+  assert.equal(missing.incomeStatus,'zipUnknown');checks+=14;
+}
+{
+  const stateBill=(wages,status='single')=>calc.computeBill({wages,status,stateCode:'MD'},data);
+  const localAt=(base,status='single')=>calc.localBill({bill:{...stateBill(base,status),wages:base},zipCode:'21701',county:'24021'},
+    {...data,state:{...data.state,states:{...data.state.states,MD:{...data.state.states.MD,deduct:{single:0,joint:0}}}}},localData);
+  assert.equal(localAt(25000).income,562.5,'Frederick exact step retains lower whole-income rate');
+  assert.equal(localAt(25001).income,687.53,'one dollar over switches whole-income rate with cents rounding');
+  assert.equal(localAt(60000).income,1776);assert.equal(localAt(60000,'head').income,1650);
+  assert.equal(localAt(0).income,0);checks+=5;
+}
+{
+  const amount=(wages,status='single')=>{
+    const bill=calc.computeBill({wages,status,stateCode:'OH'},data);
+    return calc.localBill({bill,zipCode:'43201',zipRow:[null,null,0,null,null,0.08]},data,localData).salesState;
+  };
+  assert.equal(amount(19999.99),localData.sales.states.OH.amounts[0][0]);
+  assert.equal(amount(20000),localData.sales.states.OH.amounts[1][0]);
+  assert.equal(amount(5000000),localData.sales.states.OH.amounts[18][0]);
+  assert.equal(amount(20000,'head'),localData.sales.states.OH.amounts[1][1]);
+  const bill=calc.computeBill({wages:0,status:'single',stateCode:'OH'},data);
+  const local=calc.localBill({bill,zipCode:'43201',zipRow:[null,null,0,null,null,0.08]},data,localData);
+  assert.equal(local.rate,0);assert.ok(calc.localRows(local,bill,data,localData,true).filter(r=>r.r?.endsWith('%')).every(r=>r.r==='0.0%'));
+  checks+=6;
+}
+
+{
+  const bill=calc.computeBill({wages:100,status:'single',stateCode:'OH'},data);
+  const b=calc.localBill({bill,zipCode:'43201',zipRow:[]},data,localData);
+  const rows=calc.localRows({...b,takeHome:-0.01},bill,data,localData,true);
+  assert.equal(rows.find(r=>r.l==='You keep').r,'0.0%','native formatter suppresses negative zero after rounding');checks++;
+}
 
 console.log(`✓ scam-check: ${checks} checks`);
