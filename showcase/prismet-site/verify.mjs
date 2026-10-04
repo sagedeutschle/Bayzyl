@@ -24,6 +24,10 @@ import { fileURLToPath } from 'node:url';
 const RESERVED_FILES = ['style.css', 'steam.js', 'debt.js', 'icon.svg', 'manifest.webmanifest', 'og-image.png'];
 const RESERVED_ROOT = ['shots', 'api', 'steam', 'steam.html', 'debt', 'debt.html', 'rtc', 'healthz'];
 const ROUTES = new Set(['/steam', '/debt', '/edit', '/privacy', '/support', '/scam']);            // served by the live server, not by this build
+const STATIC_ALIASES = new Map([
+  ['/arcade', 'arcade.html'], ['/arcade/', 'arcade.html'], ['/tools', 'tools.html'], ['/tools/', 'tools.html'],
+  ...['2048', 'minesweeper', 'lights-out', 'wordle', 'rubiks-cube', 'snake', 'sudoku', 'sliding-15', 'nonogram', 'chess', 'reversi', 'checkers', 'connect-four', 'gomoku', 'sea-battle', 'solitaire', 'spider', 'crazy-8', 'catan', 'brick-bench'].flatMap((id) => [[`/arcade/${id}`, 'arcade/game.html'], [`/arcade/${id}/`, 'arcade/game.html']]),
+]);
 const TEXT = new Set(['.html', '.css', '.js', '.json', '.svg', '.txt', '.xml', '.webmanifest']);
 const BUDGET = 20;                                      // requests on the home page's first view
 const PRIVATE = [
@@ -80,7 +84,7 @@ export function verify(dist = join(dirname(fileURLToPath(import.meta.url)), 'dis
     const url = new URL(u, `https://site.invalid/${from}`);
     const path = decodeURIComponent(url.pathname);
     if (ROUTES.has(path)) return;
-    const target = path.slice(1) || 'index.html';
+    const target = STATIC_ALIASES.get(path) || path.slice(1) || 'index.html';
     if (!fileSet.has(target)) return fail(from, `${what} ${u} does not resolve to a file in dist`);
     const frag = url.hash.slice(1);
     if (frag && target.endsWith('.html') && !anchors(target).has(decodeURIComponent(frag))) fail(from, `${what} ${u}: no #${frag} on ${target}`);

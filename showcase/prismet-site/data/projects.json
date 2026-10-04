@@ -11,9 +11,9 @@
   "layout": {
     "sections": [
       "selected",
+      "lenses",
       "work",
       "plate",
-      "lenses",
       "about"
     ],
     "hiddenSections": []
@@ -22,7 +22,9 @@
     "bayzyl",
     "prismet-app",
     "the-helm",
-    "prismcode"
+    "prismcode",
+    "the-long-now",
+    "steam-rewind"
   ],
   "beams": [
     {
@@ -178,6 +180,56 @@
       "doorFacts": [
         0,
         1
+      ],
+      "portfolio": [
+        {
+          "src": "assets/minecraft/bayzyl-scene-overview.webp",
+          "alt": "Bayzyl demonstration world with a glass dome, cylindrical tower, copper ring and sandstone pyramid.",
+          "caption": "A small world of generated shapes",
+          "evidence": "In-game capture"
+        },
+        {
+          "src": "assets/minecraft/bayzyl-scene-tower.webp",
+          "alt": "Close view of the stone cylinder tower and wooden pyramid roof in the Bayzyl demonstration world.",
+          "caption": "Cylinder walls, stepped roof",
+          "evidence": "In-game capture"
+        },
+        {
+          "src": "assets/minecraft/bayzyl-scene-formula-ring.webp",
+          "alt": "A large copper torus surrounded by trees in the Bayzyl demonstration world.",
+          "caption": "A copper ring from a formula",
+          "evidence": "In-game capture"
+        },
+        {
+          "src": "assets/minecraft/bayzyl-scene-inside-dome.webp",
+          "alt": "View from inside the glass dome toward the tower and copper ring.",
+          "caption": "Inside the glass shell",
+          "evidence": "In-game capture"
+        },
+        {
+          "src": "assets/minecraft/bayzyl-scene-plaza-dome.webp",
+          "alt": "Bayzyl demonstration plaza with quartz pillars around a glass dome.",
+          "caption": "The plaza and glass dome",
+          "evidence": "In-game capture"
+        },
+        {
+          "src": "assets/portfolio/bayzyl/sandstone-pyramid.webp",
+          "alt": "A sandstone pyramid beside the Bayzyl dome and tower in a Minecraft demonstration world.",
+          "caption": "A stepped sandstone pyramid",
+          "evidence": "In-game capture"
+        },
+        {
+          "src": "assets/portfolio/bayzyl/overhead-geometry.webp",
+          "alt": "Overhead view of the Bayzyl demonstration plaza, dome, tower, pyramid and ring.",
+          "caption": "The geometry from above",
+          "evidence": "In-game capture"
+        },
+        {
+          "src": "assets/minecraft/bayzyl-help-page-01.webp",
+          "alt": "Historical Bayzyl in-game help introducing its command namespace, selection tools and profiles.",
+          "caption": "Commands within reach",
+          "evidence": "Historical interface"
+        }
       ]
     },
     {
@@ -308,7 +360,63 @@
       "doorFacts": [
         2
       ],
-      "doorCover": "assets/prismet/iphone-home.webp"
+      "doorCover": "assets/prismet/iphone-home.webp",
+      "portfolio": [
+        {
+          "src": "assets/prismet/iphone-home.webp",
+          "alt": "Prismet iPhone home screen with game and puzzle tiles.",
+          "caption": "A pocket arcade",
+          "evidence": "Co-developed"
+        },
+        {
+          "src": "assets/prismet/iphone-chess2d.webp",
+          "alt": "Prismet chess board with Stockfish opponent settings and board themes.",
+          "caption": "Chess with adjustable opposition",
+          "evidence": "Co-developed"
+        },
+        {
+          "src": "assets/prismet/iphone-seabattle.webp",
+          "alt": "Prismet Sea Battle ship-placement screen with a ten-by-ten ocean grid.",
+          "caption": "Place a fleet",
+          "evidence": "Co-developed"
+        },
+        {
+          "src": "assets/prismet/iphone-sudoku.webp",
+          "alt": "Prismet Sudoku interface with difficulty controls and a number pad.",
+          "caption": "A daily Sudoku sheet",
+          "evidence": "Co-developed"
+        },
+        {
+          "src": "assets/prismet/iphone-solitaire.webp",
+          "alt": "Prismet Solitaire interface with a dealt card tableau and game controls.",
+          "caption": "Cards on green felt",
+          "evidence": "Co-developed"
+        },
+        {
+          "src": "assets/prismet/raw-checkers.webp",
+          "alt": "Prismet checkers board with opponent controls.",
+          "caption": "Checkers in red and black",
+          "evidence": "Co-developed"
+        },
+        {
+          "src": "assets/prismet/raw-snake.webp",
+          "alt": "Prismet Snake interface with a green snake and pink target.",
+          "caption": "Snake after dark",
+          "evidence": "Co-developed"
+        },
+        {
+          "src": "assets/portfolio/prismet-app/ipad-library.webp",
+          "alt": "Prismet iPad library with puzzles, board games and card games arranged in wide rows.",
+          "caption": "Room for the whole collection",
+          "evidence": "Co-developed"
+        },
+        {
+          "src": "assets/portfolio/prismet-app/ipad-chess.webp",
+          "alt": "Prismet iPad chess screen with a centered board, theme choices and opponent controls.",
+          "caption": "Chess on a larger canvas",
+          "evidence": "Co-developed"
+        }
+      ]
     },
     {
       "slug": "the-helm",
@@ -416,6 +524,56 @@
       ],
       "doorFacts": [
         1
+      ],
+      "portfolio": [
+        {
+          "src": "assets/helm2/worldclock.webp",
+          "alt": "Helm world-clock face arranging multiple city clocks in a red command-panel design.",
+          "caption": "Time across the world",
+          "evidence": "Rendered widget"
+        },
+        {
+          "src": "assets/helm2/chronos.webp",
+          "alt": "Helm Chronos face with a large digital clock and sample kernel and uptime fields.",
+          "caption": "A clock for the bridge",
+          "evidence": "Rendered widget"
+        },
+        {
+          "src": "assets/helm2/cpu.webp",
+          "alt": "Helm CPU face with a thread matrix and sample utilization, temperature and clock readings.",
+          "caption": "Twenty-four threads at a glance",
+          "evidence": "Rendered widget"
+        },
+        {
+          "src": "assets/helm2/gpu.webp",
+          "alt": "Helm GPU face with a utilization graph and sample memory and power readings.",
+          "caption": "The shape of a workload",
+          "evidence": "Rendered widget"
+        },
+        {
+          "src": "assets/helm2/reactor.webp",
+          "alt": "Helm circular reactor visualization in red and blue.",
+          "caption": "The reactor face",
+          "evidence": "Rendered widget"
+        },
+        {
+          "src": "assets/helm2/theme.webp",
+          "alt": "Helm accent chooser showing seven available color palettes.",
+          "caption": "One palette across the bridge",
+          "evidence": "Rendered widget"
+        },
+        {
+          "src": "assets/portfolio/the-helm/storage-map.webp",
+          "alt": "Helm storage face combining a circular usage chart and generic system-directory totals.",
+          "caption": "Storage as a visual map",
+          "evidence": "Rendered widget"
+        },
+        {
+          "src": "assets/portfolio/the-helm/process-rankings.webp",
+          "alt": "Helm process-ranking face with sample CPU and memory usage bars.",
+          "caption": "What is using the machine",
+          "evidence": "Rendered widget"
+        }
       ]
     },
     {
@@ -473,7 +631,21 @@
         0,
         3
       ],
-      "doorCover": "assets/ai/prismcode-compare-door.webp"
+      "doorCover": "assets/ai/prismcode-compare-door.webp",
+      "portfolio": [
+        {
+          "src": "assets/ai/prismcode-prism-compare.webp",
+          "alt": "PrismCode scripted interface demonstration comparing two proposed code changes side by side.",
+          "caption": "Compare two proposed changes",
+          "evidence": "Scripted demo"
+        },
+        {
+          "src": "assets/ai/prismcode-diff.webp",
+          "alt": "PrismCode scripted interface demonstration showing an HTML code diff beside Git controls.",
+          "caption": "Inspect the diff",
+          "evidence": "Scripted demo"
+        }
+      ]
     },
     {
       "slug": "the-long-now",
@@ -524,6 +696,50 @@
           "dyson",
           "Dyson"
         ]
+      ],
+      "portfolio": [
+        {
+          "src": "assets/portfolio/the-long-now/stone-era.webp",
+          "alt": "Early Long Now prototype scene with tents, forage, trees and a river crossing.",
+          "caption": "Before the first city",
+          "evidence": "Historical prototype"
+        },
+        {
+          "src": "assets/worlds/long-now-medieval.webp",
+          "alt": "Early Long Now medieval prototype scene with huts, a river bridge and a gate.",
+          "caption": "A bridge into the medieval era",
+          "evidence": "Historical prototype"
+        },
+        {
+          "src": "assets/worlds/long-now-industrial.webp",
+          "alt": "Early Long Now industrial prototype scene with factories and a rail crossing.",
+          "caption": "The industrial turn",
+          "evidence": "Historical prototype"
+        },
+        {
+          "src": "assets/worlds/long-now-dyson.webp",
+          "alt": "Early Long Now far-future prototype scene with large golden energy structures.",
+          "caption": "A far-future horizon",
+          "evidence": "Historical prototype"
+        },
+        {
+          "src": "assets/portfolio/the-long-now/castle-hall.webp",
+          "alt": "September Long Now prototype showing the castle hall, pixel-art characters and travel controls.",
+          "caption": "The Wizard King’s castle",
+          "evidence": "Historical prototype"
+        },
+        {
+          "src": "assets/portfolio/the-long-now/settlement-valley.webp",
+          "alt": "September Long Now prototype with named fictional settlers foraging beside a river and settlement controls.",
+          "caption": "Life in the valley",
+          "evidence": "Historical prototype"
+        },
+        {
+          "src": "assets/portfolio/the-long-now/gaming-parlor.webp",
+          "alt": "September Long Now prototype showing the furnished gaming parlor and travel controls.",
+          "caption": "Inside the gaming parlor",
+          "evidence": "Historical prototype"
+        }
       ]
     },
     {
@@ -574,6 +790,20 @@
         "backlog of shame",
         "latest release",
         "playtime"
+      ],
+      "portfolio": [
+        {
+          "src": "assets/portfolio/steam-rewind/demo-backlog.webp",
+          "alt": "Steam Rewind backlog lens showing a list of games from its built-in demonstration data.",
+          "caption": "Rediscover the backlog",
+          "evidence": "Demo data"
+        },
+        {
+          "src": "assets/portfolio/steam-rewind/demo-deck-time.webp",
+          "alt": "Steam Rewind Deck-time lens ranking games from its built-in demonstration data.",
+          "caption": "Time spent on the Deck",
+          "evidence": "Demo data"
+        }
       ]
     },
     {
@@ -619,6 +849,20 @@
         "read current values",
         "pause motion",
         "debt"
+      ],
+      "portfolio": [
+        {
+          "src": "assets/web/debt-clock-desktop-dark.webp",
+          "alt": "Debt Clock dark desktop interface with read and pause controls and historical fallback figures.",
+          "caption": "The clock after dark",
+          "evidence": "Historical figures"
+        },
+        {
+          "src": "assets/web/debt-clock-desktop-light.webp",
+          "alt": "Debt Clock light desktop interface with historical fallback debt figures and large readable cards.",
+          "caption": "The same figures in daylight",
+          "evidence": "Historical figures"
+        }
       ]
     },
     {
@@ -676,6 +920,20 @@
         "jsqr",
         "github pages",
         "offline"
+      ],
+      "portfolio": [
+        {
+          "src": "assets/web/qr-homescreen-filled-desktop.webp",
+          "alt": "Home Screen Planner browser tool showing categorized apps and a populated phone-layout preview.",
+          "caption": "An app list becomes a plan",
+          "evidence": "Browser interface"
+        },
+        {
+          "src": "assets/web/qr-scanner-decoding-desktop.webp",
+          "alt": "QR scanner interface showing a detected demonstration QR code.",
+          "caption": "A code in view",
+          "evidence": "Browser interface"
+        }
       ]
     },
     {
@@ -1009,5 +1267,59 @@
       "MusicKit JS",
       "qr-tools"
     ]
-  ]
+  ],
+  "plateGallery": {
+    "titleKey": "plate.gallery_title",
+    "shots": [
+      {
+        "src": "assets/minecraft/portfolio/sunset-harbor.webp",
+        "caption": "Harbor at sunset",
+        "alt": "Sunset over a broad Minecraft harbor, with terraced stone walls, colonnades and a distant tower.",
+        "evidence": "Minecraft · July 2026"
+      },
+      {
+        "src": "assets/minecraft/portfolio/city-overview.webp",
+        "caption": "A city above the water",
+        "alt": "Daylight view across a Minecraft city of temples, terraces, gardens and waterways.",
+        "evidence": "Minecraft · July 2026"
+      },
+      {
+        "src": "assets/minecraft/portfolio/city-after-dark.webp",
+        "caption": "A night build on a Minecraft server I ran.",
+        "alt": "A Minecraft city at night, with illuminated towers, planted terraces and beacon beams.",
+        "evidence": "Minecraft · July 2026",
+        "captionKey": "plate.caption"
+      },
+      {
+        "src": "assets/minecraft/portfolio/pagoda-at-night.webp",
+        "caption": "Lanterns on the hillside",
+        "alt": "A red pagoda and lantern-lit buildings on a wooded Minecraft hillside at night.",
+        "evidence": "Minecraft · July 2026"
+      },
+      {
+        "src": "assets/minecraft/portfolio/temple-interior.webp",
+        "caption": "Inside the colonnade",
+        "alt": "A long Minecraft temple hall with white columns, a red-and-white tiled floor and glowing braziers.",
+        "evidence": "Minecraft · July 2026"
+      },
+      {
+        "src": "assets/minecraft/portfolio/lava-castle.webp",
+        "caption": "A castle lit from within",
+        "alt": "A dark Minecraft castle surrounded by water, with gold-orange lava running down its walls.",
+        "evidence": "Minecraft · July 2026"
+      },
+      {
+        "src": "assets/minecraft/portfolio/liberty-statue.webp",
+        "caption": "A landmark by the water",
+        "alt": "A tall green statue on a stone pedestal beside a Minecraft city and broad waterway.",
+        "evidence": "Minecraft · July 2026"
+      },
+      {
+        "src": "assets/minecraft/portfolio/cherry-gardens.webp",
+        "caption": "Cherry trees after dark",
+        "alt": "Rows of pink cherry trees, paths and a lantern-lit tower in a Minecraft landscape at night.",
+        "evidence": "Minecraft · July 2026"
+      }
+    ]
+  }
 }

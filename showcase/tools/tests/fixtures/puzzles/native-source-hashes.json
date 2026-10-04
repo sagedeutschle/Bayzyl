@@ -1,0 +1,8 @@
+{
+  "macos/Sources/Model/Game2048.swift": "d2c5591940374ee48a480e94f260e95015efce536604df1c7f320c7be1f6b95f",
+  "macos/Sources/Model/SlidingPuzzle.swift": "7f0fc0bc21055cfd1b6554369a26c415e80d35da3ac5d61ba5c82c5415d3a3ba",
+  "macos/Sources/Model/RubiksCube.swift": "12ddf6705cdcce4fb622628a36e8c5e6a35c713bf314e4f77662b1946faa3389",
+  "macos/Sources/Model/SnakeGame.swift": "bc072650ec9da99a30cf8fc5204fb67efd1bc4749889f6d4241e9f10602c615f",
+  "ios/Sources/Core/Games/CatanBoard.swift": "5499f6bd241ae7e4f5a8e013381fe7f1d10fa081e76e6d5be28011fcce82f121",
+  "ios/Sources/Core/Games/CatanGame.swift": "cdc1926967d7a4faaf302602b6234e0ef98b645d2d2c3f4ff6e093feba8ab302"
+}

@@ -1,0 +1,14 @@
+import { generator } from '../engines.js';
+import { WORD_ANSWERS,WORD_GUESSES } from './puzzle-data.js';
+import { same } from './puzzle-common.js';
+const letters=/^[a-z]{5}$/;
+const approved=new Set(WORD_GUESSES);
+export function evaluate(answer,guess){const marks=Array(5).fill('absent'),left={};for(let i=0;i<5;i++)if(answer[i]===guess[i])marks[i]='correct';else left[answer[i]]=(left[answer[i]]||0)+1;for(let i=0;i<5;i++)if(marks[i]!=='correct'&&left[guess[i]]){marks[i]='present';left[guess[i]]--;}return marks;}
+const engine={
+ initial(seed='1',{answer}={}){const rng=generator(seed);return {answer:letters.test(answer||'')?answer:WORD_ANSWERS[rng.next(WORD_ANSWERS.length)],rows:[],draft:'',message:''};},
+ apply(s,a){if(engine.status(s)!=='playing'||!a)return s;if(a.type==='letter'&&/^[a-z]$/i.test(a.value)&&s.draft.length<5)return {...s,draft:s.draft+a.value.toLowerCase(),message:''};if(a.type==='backspace')return {...s,draft:s.draft.slice(0,-1),message:''};if(!['guess','submit'].includes(a.type))return s;const guess=(a.type==='submit'?s.draft:String(a.value||'')).trim().toLowerCase();if(!letters.test(guess))return {...s,message:'Enter five letters.'};if(!approved.has(guess)&&guess!==s.answer)return {...s,message:'That word is not in the native word list. Try another.'};return {...s,rows:[...s.rows,{guess,marks:evaluate(s.answer,guess)}],draft:'',message:''};},
+ status:s=>s.rows.at(-1)?.guess===s.answer?'won':s.rows.length===6?'lost':'playing',
+ validate(s){if(!s||typeof s.answer!=='string'||!letters.test(s.answer)||!Array.isArray(s.rows)||s.rows.length>6||typeof s.draft!=='string'||!/^[a-z]{0,5}$/.test(s.draft)||typeof s.message!=='string'||s.message.length>200)return false;return s.rows.every((r,i)=>r&&letters.test(r.guess||'')&&(approved.has(r.guess)||r.guess===s.answer)&&same(r.marks,evaluate(s.answer,r.guess))&&(!s.rows.slice(0,i).some(p=>p.guess===s.answer)));},
+ keymap:key=>/^[a-z]$/i.test(key)?{type:'letter',value:key}:key==='Backspace'?{type:'backspace'}:key==='Enter'?{type:'submit'}:undefined,
+ view(s){const status=engine.status(s);return {kind:'word',columns:5,cells:Array.from({length:30},(_,i)=>{const row=Math.floor(i/5),col=i%5,r=s.rows[row],text=r?.guess[col]||(row===s.rows.length?s.draft[col]||'':'');return {text:text.toUpperCase(),label:`Guess ${row+1}, letter ${col+1}${text?`, ${text}`:''}${r?`, ${r.marks[col]}`:''}`,tone:r?.marks[col]||'empty',disabled:true};}),stats:[{label:'Guesses',value:`${s.rows.length}/6`}],message:s.message||(status==='won'?'Found it.':status==='lost'?`The word was ${s.answer.toUpperCase()}.`:'Six guesses, five letters. Green: correct spot. Gold: another spot. Gray: absent. Native word collection.'),input:status==='playing'?{label:'Your five-letter guess',placeholder:'CRANE',actionType:'guess',maxLength:5}:undefined};},
+};export default engine;

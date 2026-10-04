@@ -1,182 +1,72 @@
-"use strict";
-/* ----------------------------------------------------------------------------
-   Accessible U.S. Debt Clock — single-file proof of concept.
-   Units are kept small and named so this can later drop into another app
-   (e.g. a WKWebView inside Kaleidoscope) without untangling globals.
----------------------------------------------------------------------------- */
-
-const CONFIG = {
-  // Treasury Fiscal Data API — free, no key, CORS-enabled, updated each business day.
-  api: "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny"
-     + "?fields=tot_pub_debt_out_amt,record_date&sort=-record_date&page[size]=10",
-  // Clearly-labelled estimates. Swap for a live Census/IRS source later.
-  population: 342_000_000,   // ~U.S. resident population, mid-2026 est.
-  taxpayers: 136_000_000,    // ~individual income-tax returns filed, est.
-  // Fallback if the network is unavailable, so we never show a blank/wrong clock.
-  fallback: { amount: 39_340_000_000_000, perSecond: 130_000, date: "recent estimate" },
-  announceEverySec: 20,      // how often the live region speaks on its own
-};
-
-// --- Formatter: numbers -> display + plain-spoken strings ---------------------
-const Formatter = {
-  usd(n) {
-    return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
-  },
-  // "approximately 36.2 trillion dollars" — friendlier than 14 digits read aloud.
-  spoken(n) {
-    const abs = Math.abs(n);
-    const say = (v, unit) => `approximately ${(+v.toFixed(2)).toLocaleString("en-US")} ${unit}`;
-    let body;
-    if (abs >= 1e12) body = say(n / 1e12, "trillion dollars");
-    else if (abs >= 1e9) body = say(n / 1e9, "billion dollars");
-    else if (abs >= 1e6) body = say(n / 1e6, "million dollars");
-    else body = `${Math.round(n).toLocaleString("en-US")} dollars`;
-    return body;
-  },
-};
-
-// --- DebtData: fetch latest records, derive current value + per-second rate ---
-const DebtData = {
-  anchorAmount: 0,      // most recent Treasury figure
-  anchorTime: 0,        // when that figure is anchored (ms epoch)
-  perSecond: 0,         // estimated growth per second
-  todayBase: 0,         // figure at local midnight (for "increase today")
-  asOf: "",
-  live: false,
-
-  async load() {
-    try {
-      const res = await fetch(CONFIG.api, { headers: { "Accept": "application/json" } });
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      const json = await res.json();
-      const rows = (json.data || [])
-        .map(r => ({ amt: parseFloat(r.tot_pub_debt_out_amt), date: r.record_date }))
-        .filter(r => isFinite(r.amt));
-      if (rows.length < 2) throw new Error("insufficient data");
-
-      const latest = rows[0];
-      const older = rows[Math.min(rows.length - 1, 5)]; // ~a week of business days back
-      const days = Math.max(1, daysBetween(older.date, latest.date));
-      const perDay = (latest.amt - older.amt) / days;
-
-      this.anchorAmount = latest.amt;
-      this.anchorTime = endOfDay(latest.date);   // figure represents end of its record day
-      this.perSecond = perDay / 86400;
-      this.asOf = latest.date;
-      this.live = true;
-      this.todayBase = this.estimateAt(startOfLocalDay());
-      return true;
-    } catch (e) {
-      // Graceful, honest fallback — labelled as an estimate.
-      const f = CONFIG.fallback;
-      this.anchorAmount = f.amount;
-      this.anchorTime = Date.now();
-      this.perSecond = f.perSecond;
-      this.asOf = f.date;
-      this.live = false;
-      this.todayBase = this.estimateAt(startOfLocalDay());
-      return false;
-    }
-  },
-
-  estimateAt(ms) { return this.anchorAmount + this.perSecond * ((ms - this.anchorTime) / 1000); },
-  current() { return this.estimateAt(Date.now()); },
-  increaseToday() { return Math.max(0, this.current() - this.todayBase); },
-};
-
-function endOfDay(iso) { const d = new Date(iso + "T23:59:59"); return d.getTime(); }
-function startOfLocalDay() { const d = new Date(); d.setHours(0,0,0,0); return d.getTime(); }
-function daysBetween(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
-
-// --- Announcer: manages the single polite live region -----------------------
-const Announcer = {
-  el: document.getElementById("live"),
-  last: 0,
-  maybeSpeak(now) {
-    if (now - this.last >= CONFIG.announceEverySec * 1000) { this.speakNow(); this.last = now; }
-  },
-  speakNow() {
-    const d = DebtData;
-    this.el.textContent =
-      `National debt: ${Formatter.spoken(d.current())}. ` +
-      `Debt per citizen: ${Formatter.spoken(d.current() / CONFIG.population)}. ` +
-      `Growing about ${Formatter.spoken(d.perSecond)} per second.`;
-  },
-};
-
-// --- UI: render the panels ---------------------------------------------------
-const UI = {
-  els: {
-    debt: document.getElementById("debt"),
-    debtSpoken: document.getElementById("debt-spoken"),
-    perCitizen: document.getElementById("per-citizen"),
-    perTaxpayer: document.getElementById("per-taxpayer"),
-    today: document.getElementById("today"),
-    rate: document.getElementById("rate"),
-    status: document.getElementById("status"),
-    asof: document.getElementById("asof"),
-  },
-  render() {
-    const d = DebtData;
-    const now = d.current();
-    this.els.debt.textContent = Formatter.usd(now);
-    this.els.debtSpoken.textContent = Formatter.spoken(now);
-    this.els.perCitizen.textContent = Formatter.usd(now / CONFIG.population);
-    this.els.perTaxpayer.textContent = Formatter.usd(now / CONFIG.taxpayers);
-    this.els.today.textContent = Formatter.usd(d.increaseToday());
-    this.els.rate.textContent = Formatter.usd(d.perSecond);
-  },
-  showStatus() {
-    const d = DebtData;
-    if (d.live) {
-      this.els.status.textContent = `Live — latest U.S. Treasury figure dated ${d.asOf}, ticking by estimate between updates.`;
-      this.els.status.className = "status";
-    } else {
-      this.els.status.textContent = "Couldn’t reach the U.S. Treasury just now — showing a clearly-labelled estimate. Reconnect to go live.";
-      this.els.status.className = "status warn";
-    }
-    this.els.asof.textContent = d.live ? `Latest Treasury data: ${d.asOf}.` : "";
-  },
-};
-
-// --- Ticker: the animation loop, honouring reduced-motion + manual pause -----
-const Ticker = {
-  paused: false,
-  reduced: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  lastStep: 0,
-  start() {
-    const loop = (t) => {
-      const now = Date.now();
-      if (!this.paused) {
-        if (this.reduced) {
-          // No per-frame motion: update at a calm 2s step instead of easing digits.
-          if (now - this.lastStep >= 2000) { UI.render(); this.lastStep = now; }
-        } else {
-          UI.render();
-        }
-        Announcer.maybeSpeak(now);
-      }
-      requestAnimationFrame(loop);
-    };
-    requestAnimationFrame(loop);
-  },
-};
-
-// --- Wire up controls --------------------------------------------------------
-document.getElementById("announce").addEventListener("click", () => Announcer.speakNow());
-const motionBtn = document.getElementById("motion");
-motionBtn.addEventListener("click", () => {
-  Ticker.paused = !Ticker.paused;
-  motionBtn.setAttribute("aria-pressed", String(Ticker.paused));
-  motionBtn.textContent = Ticker.paused ? "▶ Resume motion" : "⏸ Pause motion";
-  if (Ticker.paused) UI.render(); // freeze on a clean current value
-});
-
-// --- Boot --------------------------------------------------------------------
-(async function init() {
-  await DebtData.load();
-  UI.render();
-  UI.showStatus();
-  Announcer.speakNow();          // announce once on load
-  Ticker.start();
-})();
+import {METRICS,GROUPS,UNIT_LABELS,formatValue,perPersonHistory,rangeHistory,csvForSeries} from './debt-metrics.js';
+const $=id=>document.getElementById(id), esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const known=new Set(METRICS.map(m=>m.id));
+const state={snapshot:null,selected:'totalDebt',compare:'',period:'1y',perPerson:false,pins:new Set(),query:'',paused:false,loading:false};
+try{const p=JSON.parse(localStorage.getItem('prismet.debt.pins')||'[]');if(Array.isArray(p))state.pins=new Set(p.filter(id=>known.has(id)));}catch{}
+const initial=new URLSearchParams(location.search).get('metric');if(known.has(initial))state.selected=initial;
+const metrics=()=>state.snapshot?.metrics||METRICS.map(m=>({...m,status:'missing',value:null,history:[],observedAt:null,derived:!m.series}));
+const metric=id=>metrics().find(m=>m.id===id), statusText=m=>m.status==='stale'?'Stale observation':m.status==='missing'?'Unavailable':m.derived?'Derived':'Observed';
+const dateText=d=>d||'No observation';
+function safeURL(v){try{const u=new URL(v);return u.protocol==='https:'?u.href:'#';}catch{return '#';}}
+function announce(t){$('live').textContent='';requestAnimationFrame(()=>$('live').textContent=t);}
+function setTheme(v){document.documentElement.dataset.theme=v;$('theme').textContent=v==='dark'?'Light theme':'Dark theme';try{localStorage.setItem('prismet.debt.theme',v);}catch{}}
+let theme;try{theme=localStorage.getItem('prismet.debt.theme');}catch{}setTheme(['light','dark'].includes(theme)?theme:matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+$('theme').addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
+function basis(m){if(m.frequency.includes('annual rate'))return 'annual-rate';if(m.frequency.includes('fiscal year'))return 'fiscal-year';if(['monthlyReceipts','monthlyOutlays','monthlyDeficit'].includes(m.id))return 'monthly-flow';return 'level';}
+function selectOptions(){
+ const all=metrics(),s=metric(state.selected);
+ $('metric-select').innerHTML=GROUPS.map(g=>`<optgroup label="${esc(g.label)}">${all.filter(m=>m.group===g.id).map(m=>`<option value="${m.id}">${esc(m.label)}</option>`).join('')}</optgroup>`).join('');$('metric-select').value=s.id;
+ const alternatives=all.filter(m=>m.id!==s.id&&m.unit===s.unit&&basis(m)===basis(s));if(!alternatives.some(m=>m.id===state.compare))state.compare='';
+ $('compare-select').innerHTML='<option value="">No comparison</option>'+alternatives.map(m=>`<option value="${m.id}">${esc(m.label)}</option>`).join('');$('compare-select').value=state.compare;
+ const canDivide=s.unit==='dollars'&&metric('population').history.length>0;$('per-capita').disabled=!canDivide;$('per-capita').title=canDivide?'Divide by dated population observations':'Requires a dollar measure and population history';if(!canDivide)state.perPerson=false;$('per-capita').checked=state.perPerson;
+}
+function overview(){const m=metric('totalDebt');$('debt').textContent=formatValue(m.value,m.unit);$('debt-date').textContent=m.value===null?'Treasury unavailable. No estimate substituted.':`${statusText(m)} · ${dateText(m.observedAt)} · official daily balance`;for(const [id,k] of [['debt-person','debtPerCitizen'],['debt-gdp','debtToGDP'],['debt-rate','debtGrowthPerSecond']]){const v=metric(k);$(id).textContent=formatValue(v.value,v.unit);$(id).title=`${statusText(v)} · ${dateText(v.observedAt)}`;}}
+function updatePin(){const p=state.pins.has(state.selected);$('pin-current').setAttribute('aria-pressed',String(p));$('pin-current').textContent=p?'Unpin metric':'Pin metric';}
+function togglePin(id){const restore=document.activeElement?.dataset?.pin;if(state.pins.has(id))state.pins.delete(id);else state.pins.add(id);try{localStorage.setItem('prismet.debt.pins',JSON.stringify([...state.pins]));}catch{announce('Pins last for this visit. Browser storage is unavailable.');}renderRegister();updatePin();if(restore)$('register').querySelector(`[data-pin="${restore}"]`)?.focus();}
+function renderRegister(){const all=metrics(),q=state.query.toLowerCase().trim();let count=0;
+ $('pins').innerHTML=[...state.pins].map(id=>`<button type="button" data-select="${id}">★ ${esc(metric(id).label)}</button>`).join('');
+ $('metric-groups').innerHTML=GROUPS.map((g,i)=>{const found=all.filter(m=>m.group===g.id&&`${m.label} ${g.label} ${m.note}`.toLowerCase().includes(q));count+=found.length;if(!found.length)return '';
+ return `<section class="metric-group" aria-labelledby="group-${g.id}"><div class="group-head"><span>${String(i+1).padStart(2,'0')}</span><h3 id="group-${g.id}">${esc(g.label)}</h3></div>${found.map(m=>`<div class="metric-row${m.id===state.selected?' current':''}"><button class="metric-open" type="button" data-select="${m.id}" aria-label="Explore ${esc(m.label)}">${esc(m.label)}</button><span class="metric-value">${esc(formatValue(m.value,m.unit,{compact:true}))}</span><span class="metric-meta"><span class="state-${m.status}">${esc(statusText(m))}${m.derived&&m.status!=='ok'?' · derived':''}</span><span>${esc(dateText(m.observedAt))} · ${esc(m.frequency)}</span></span><button class="pin" type="button" data-pin="${m.id}" aria-label="${state.pins.has(m.id)?'Unpin':'Pin'} ${esc(m.label)}" aria-pressed="${state.pins.has(m.id)}">${state.pins.has(m.id)?'★':'☆'}</button></div>`).join('')}</section>`;}).join('');
+ $('register-count').textContent=`${count} of 43 measures. Select any row to explore its history.`;$('search-empty').hidden=count>0;
+}
+function displaySeries(){return [state.selected,state.compare].filter(Boolean).map(id=>{const m=metric(id);let h=m.history||[],unit=m.unit,label=m.label;if(state.perPerson){h=perPersonHistory(h,metric('population').history);unit='dollarsPerPerson';label+=' · per person';}const end=metric(state.selected).history.at(-1)?.date||new Date().toISOString().slice(0,10);return {...m,label,unit,derived:m.derived||state.perPerson,estimated:m.estimated||state.perPerson,status:state.perPerson&&metric('population').status==='stale'&&m.status==='ok'?'stale':m.status,history:rangeHistory(h,state.period,end)};});}
+function drawChart(container,readout,series){const all=series.flatMap(s=>s.history);container.replaceChildren();
+ if(!all.length){const p=document.createElement('p');p.className='empty';p.textContent=state.loading?'Gathering published history…':'No observations in this view. Try a longer period or a measure with available data.';container.append(p);$(readout).textContent='No observation available.';return;}
+ const w=Math.max(300,container.clientWidth||900),h=Math.max(240,container.clientHeight||330),left=w<500?72:88,right=18,top=24,bottom=38;
+ const points=all.map(p=>[Date.parse(p.date),p.value]),tmin=Math.min(...points.map(p=>p[0])),tmax=Math.max(...points.map(p=>p[0]));let min=Math.min(...points.map(p=>p[1])),max=Math.max(...points.map(p=>p[1]));const pad=(max-min)*.1||Math.max(Math.abs(max)*.025,1);min-=pad;max+=pad;
+ const x=t=>left+(t-tmin)/(tmax-tmin||1)*(w-left-right),y=v=>top+(max-v)/(max-min)*(h-top-bottom);
+ const ticks=Array.from({length:5},(_,i)=>{const v=min+(max-min)*i/4,py=y(v);return `<line class="grid-line" x1="${left}" x2="${w-right}" y1="${py}" y2="${py}"/><text x="${left-10}" y="${py+4}" text-anchor="end">${esc(formatValue(v,series[0].unit,{compact:true}))}</text>`;}).join('');
+ const paths=series.map((s,i)=>`<polyline class="series-line${i?' compare':''}" points="${s.history.map(p=>`${x(Date.parse(p.date))},${y(p.value)}`).join(' ')}"/>${s.history.length<30?s.history.map(p=>`<circle class="point${i?' compare':''}" cx="${x(Date.parse(p.date))}" cy="${y(p.value)}" r="3"/>`).join(''):''}`).join('');const date=t=>new Date(t).toISOString().slice(0,10);
+ container.innerHTML=`<svg viewBox="0 0 ${w} ${h}" role="img" tabindex="0" aria-label="${esc(series.map(s=>s.label).join(' compared with '))}. ${all.length} observed points. Use left and right arrows to inspect." aria-describedby="${readout}"><title>${esc(series[0].label)}: observed history</title>${ticks}${paths}<text x="${left}" y="${h-8}">${date(tmin)}</text><text x="${w-right}" y="${h-8}" text-anchor="end">${date(tmax)}</text></svg>`;
+ const svg=container.querySelector('svg'),primary=series[0].history.length?series[0]:series.find(s=>s.history.length);let index=primary.history.length-1;
+ function read(i){index=Math.max(0,Math.min(primary.history.length-1,i));const p=primary.history[index];$(readout).textContent=`${p.date} · ${primary.label}: ${formatValue(p.value,primary.unit)}${primary.status==='stale'?' · stale series':''}`;}
+ svg.addEventListener('keydown',e=>{const k=e['key'];if(['ArrowLeft','ArrowRight','Home','End'].includes(k)){e.preventDefault();read(k==='Home'?0:k==='End'?primary.history.length-1:index+(k==='ArrowLeft'?-1:1));announce($(readout).textContent);}});
+ svg.addEventListener('pointermove',e=>{const b=svg.getBoundingClientRect(),px=(e.clientX-b.left)*w/b.width,d=tmin+(px-left)/(w-left-right)*(tmax-tmin);let best=0;for(let i=1;i<primary.history.length;i++)if(Math.abs(Date.parse(primary.history[i].date)-d)<Math.abs(Date.parse(primary.history[best].date)-d))best=i;read(best);});read(index);
+}
+function renderDetail(series){
+ $('metric-detail').innerHTML=series.map(m=>`<div class="metric-method"><h3>${esc(m.label)}</h3><p>${esc(statusText(m))} · ${esc(m.frequency)} · ${esc(UNIT_LABELS[m.unit])}. ${esc(m.note||'Latest published observations; values may be revised by the source.')}</p><p>${m.sourceUrl?`<a href="${esc(safeURL(m.sourceUrl))}" target="_blank" rel="noopener">${esc(m.source||'Official source')} ↗</a>`:'Calculated from official observations'} · Observation: ${esc(dateText(m.observedAt))}${m.fetchedAt?` · Retrieved: ${esc(m.fetchedAt.slice(0,16).replace('T',' '))} UTC`:''}</p>${m.inputDates?`<p>Input dates: ${Object.entries(m.inputDates).map(([id,d])=>`${esc(metric(id)?.label||id)}: ${esc(d)}`).join(' · ')}</p>`:''}${m.sources?`<p>Calculation inputs: ${m.sources.map(s=>`<a href="${esc(safeURL(s.url))}" target="_blank" rel="noopener">${esc(metric(s.id)?.label||s.id)}</a>`).join(' · ')}</p>`:''}${state.perPerson?'<p>Population is matched at or before each chart date. Exact input dates are included in the CSV.</p>':''}</div>`).join('');
+ $('chart-table').innerHTML=series.map(m=>`<table><caption>${esc(m.label)} · ${esc(UNIT_LABELS[m.unit])} · ${m.history.length} observations</caption><thead><tr><th scope="col">Observation date</th><th scope="col">Value</th></tr></thead><tbody>${m.history.map(p=>`<tr><td>${esc(p.date)}</td><td>${esc(formatValue(p.value,m.unit))}</td></tr>`).join('')||'<tr><td colspan="2">No observations in this period.</td></tr>'}</tbody></table>`).join('');
+}
+function renderChart(){const selected=metric(state.selected),series=displaySeries();$('chart-title').textContent=selected.label;
+ $('chart-legend').innerHTML=series.map((s,i)=>`<span class="legend-key${i?' compare':''}">${esc(s.label)} <span class="muted">· ${esc(statusText(s))}</span></span>`).join('');drawChart($('chart'),'chart-readout',series);
+ const first=series[0].history[0],last=series[0].history.at(-1);$('chart-caption').textContent=`${first?`${series[0].history.length} observations · ${first.date} to ${last.date}. `:''}${selected.frequency}. ${UNIT_LABELS[series[0].unit]}. Range ends at the selected series' latest observation. Lines connect reported points, not forecasts.${state.compare?' Comparison uses compatible units and stock/flow basis; observation frequencies may differ.':''}`;
+ $('export-csv').disabled=!series.some(s=>s.history.length);$('expand-chart').disabled=!series.some(s=>s.history.length);renderDetail(series);updatePin();if($('chart-dialog').open){$('dialog-title').textContent=selected.label;drawChart($('dialog-chart'),'dialog-readout',series);}
+}
+function renderSources(){$('source-list').innerHTML=(state.snapshot?.sources||[]).map(s=>`<div class="source-row"><a href="${esc(safeURL(s.url))}" target="_blank" rel="noopener">${esc(s.label)} ↗</a><span class="source-state ${s.status}">${s.status==='ok'?'Responded':s.status==='stale'?'Cached · refresh failed':'Unavailable'}</span>${s.error?`<small>${esc(s.error)}${s.status==='stale'?'. Last valid observations retained.':''}</small>`:''}</div>`).join('');}
+function choose(id,scroll=false){if(!known.has(id))return;state.selected=id;state.compare='';selectOptions();renderChart();renderRegister();try{const u=new URL(location.href);u.searchParams.set('metric',id);history.replaceState(null,'',u);}catch{}if(scroll){$('chart-title').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});$('metric-select').focus({preventScroll:true});}}
+async function load(force=false){if(state.loading)return;state.loading=true;$('refresh').disabled=true;$('refresh').textContent='Refreshing…';$('status').textContent='Gathering official observations. Sources refresh independently.';
+ try{const r=await fetch(`/api/debt${force?'?refresh=1':''}`,{signal:AbortSignal.timeout(100000),headers:{Accept:'application/json'}});if(!r.ok)throw new Error(r.status===429?'Refresh limit reached. Try again in a minute.':`Data service returned HTTP ${r.status}.`);const data=await r.json();
+ if(data.version!==1||!Array.isArray(data.metrics)||data.metrics.length!==43||!Array.isArray(data.sources)||data.metrics.some(m=>!known.has(m.id)||!Array.isArray(m.history)))throw new Error('Unexpected data-service response.');
+ state.snapshot=data;overview();selectOptions();renderChart();renderRegister();renderSources();const ok=data.metrics.filter(m=>m.status==='ok').length,stale=data.metrics.filter(m=>m.status==='stale').length,missing=data.metrics.filter(m=>m.status==='missing').length;
+ $('status').textContent=`${ok} current · ${stale} stale · ${missing} unavailable. Checked ${new Date(data.fetchedAt).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}.${state.paused?' Automatic updates paused.':''}`;if(force)announce(`Sources refreshed. ${ok} current, ${stale} stale and ${missing} unavailable measures.`);
+ }catch(e){$('status').textContent=`${e.message} ${state.snapshot?'Previously loaded observations remain visible with their original dates.':'No fallback figures substituted.'}`;announce($('status').textContent);}finally{state.loading=false;$('refresh').disabled=false;$('refresh').textContent='Refresh sources';}}
+$('refresh').addEventListener('click',()=>load(true));
+$('motion').addEventListener('click',()=>{state.paused=!state.paused;$('motion').setAttribute('aria-pressed',String(state.paused));$('motion').textContent=state.paused?'Resume automatic updates':'Pause automatic updates';announce(state.paused?'Automatic updates paused. Manual refresh remains available.':'Automatic updates resumed. Values remain still between observations.');});
+$('announce').addEventListener('click',()=>{const m=metric(state.selected);announce(`${m.label}: ${formatValue(m.value,m.unit)}. ${statusText(m)}. Observation ${dateText(m.observedAt)}. ${m.note}`);});
+$('metric-select').addEventListener('change',e=>choose(e.target.value));$('compare-select').addEventListener('change',e=>{state.compare=e.target.value;renderChart();});$('period').addEventListener('change',e=>{state.period=e.target.value;renderChart();});$('per-capita').addEventListener('change',e=>{state.perPerson=e.target.checked;renderChart();});$('metric-search').addEventListener('input',e=>{state.query=e.target.value;renderRegister();});$('pin-current').addEventListener('click',()=>togglePin(state.selected));
+$('register').addEventListener('click',e=>{const p=e.target.closest('[data-pin]'),s=e.target.closest('[data-select]');if(p)togglePin(p.dataset.pin);else if(s)choose(s.dataset.select,true);});
+$('expand-chart').addEventListener('click',()=>{$('dialog-title').textContent=metric(state.selected).label;$('chart-dialog').showModal();drawChart($('dialog-chart'),'dialog-readout',displaySeries());$('close-chart').focus();});$('close-chart').addEventListener('click',()=>$('chart-dialog').close());$('chart-dialog').addEventListener('close',()=>$('expand-chart').focus());
+$('export-csv').addEventListener('click',()=>{const b=new Blob([csvForSeries(displaySeries())],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=`prismet-${state.selected}-${state.period}${state.perPerson?'-per-person':''}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);});
+let resizeTimer;new ResizeObserver(()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(renderChart,100);}).observe($('chart'));
+setInterval(()=>{if(!state.paused&&!document.hidden)load();},6*60*60*1000);
+selectOptions();renderRegister();renderChart();load();

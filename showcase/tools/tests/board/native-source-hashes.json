@@ -1,0 +1,17 @@
+{
+  "ios/Sources/Core/Games/Game2048.swift": "c46abc67229a554e7ff886d50859c451a2a24155bd4a2e622dcb5819f1b5402f",
+  "ios/Sources/Core/Games/ConnectFourGame.swift": "148111bb7003bd9a7e43e94ce31d3e34a8247bd13d540306403a2b38b2543011",
+  "ios/Sources/Core/Games/ConnectFourAI.swift": "c5ad6ba2845b930e8577eae7588da97f135e505da14c694fd4a1f6a1de55e5e5",
+  "ios/Sources/Core/Games/ReversiGame.swift": "5eeffa970db033933fc11de73cf6c89654d2421ce4a24230f12aba459c498757",
+  "ios/Sources/Core/Games/ReversiAI.swift": "0e8e5a285772af583f5eb2301c9dfe5094aa99c7a2188f43c63c7045dd0c3c3b",
+  "ios/Sources/Core/Games/GomokuGame.swift": "6507730cef6ec9313dc54292279c810b83ea73e44146a5d374df61f67eacc6f3",
+  "ios/Sources/Core/Games/GomokuAI.swift": "5530a219c4b89dd4161b2a047135e5ebee0a94df7e51f4bddc9f23d0101d44bf",
+  "ios/Sources/Core/Games/CheckersGame.swift": "8a0fc98760fee7dbb08af1b1cddd081e342f90ad3f25865f0aa26d07d3b80284",
+  "ios/Sources/Core/Games/CheckersAI.swift": "ee11a3edd73afbf4843315fd851fc6117b19e2c8499f6e1d4c6d4eb40a0fb18d",
+  "ios/Sources/Core/Games/SeaBattleGame.swift": "5f4133b9910c4777febf2954292db2eaf6f572715e48d01cd1df300fdb0c3813",
+  "ios/Sources/Core/Games/SeaBattleAI.swift": "1051401b1896cf871d91ec59cf401b6552302084b5aa49735003d42dc2a52b4e",
+  "macos/Sources/Model/ChessTypes.swift": "b824979ef392f28f1d2d1c8e75c71d50ede4671b83f6317e29e2510b42cf3080",
+  "macos/Sources/Model/Position.swift": "eb4842ce91186952716b2d11d6446aae74eadd8114ab54d057ebb4ce84fe9e0e",
+  "macos/Sources/Model/MoveGenerator.swift": "e20d902bd7594beb0633b4ce5e99aa4ebcc17294544ab3eb237b98ae281e04e9",
+  "macos/Sources/Model/ChessAI.swift": "7fb53c378c588c89bd78176501504f9f2b43a3e27ec3e4cc34c9bfc0138f2018"
+}

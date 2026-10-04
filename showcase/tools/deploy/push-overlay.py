@@ -59,9 +59,12 @@ with tarfile.open(fileobj=raw, mode='w', format=tarfile.PAX_FORMAT) as tar:
         else:
             with open(path, 'rb') as f:
                 tar.addfile(ti, f)
-    add(os.path.join(deploy_dir, 'server.js'), 'app/server.js')
-    if os.path.exists(os.path.join(deploy_dir, 'edit-api.js')):
-        add(os.path.join(deploy_dir, 'edit-api.js'), 'app/edit-api.js')
+    # Server imports must travel in the same layer as their caller. The base image
+    # predates Arcade/debt-data and must not supply stale signaling behavior.
+    for name in sorted(os.listdir(deploy_dir)):
+        path = os.path.join(deploy_dir, name)
+        if name.endswith('.js') and os.path.isfile(path):
+            add(path, f'app/{name}')
     site = os.path.join(deploy_dir, 'site')
     for root, dirs, files in os.walk(site):
         dirs.sort()

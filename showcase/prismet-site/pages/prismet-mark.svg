@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Prismet">
+  <rect width="64" height="64" rx="8" fill="#0F161D"/>
+  <path d="M41 30 63 15V20Z" fill="#EF6573"/>
+  <path d="M41 30 63 20V25Z" fill="#F4A24D"/>
+  <path d="M41 30 63 25V30Z" fill="#E7CA65"/>
+  <path d="M41 30 63 30V35Z" fill="#69BB84"/>
+  <path d="M41 30 63 35V40Z" fill="#64A2DA"/>
+  <path d="M41 30 63 40V45Z" fill="#A27CDE"/>
+  <path d="M41 30 63 15" fill="none" stroke="#C9A260" stroke-width="1.5"/>
+  <path d="M2 30H21" fill="none" stroke="#E6E1D4" stroke-width="3"/>
+  <path d="M21 30H41" fill="none" stroke="#E6E1D4" stroke-width="1.5" opacity=".55"/>
+  <path d="M31 9 49 48H13Z" fill="none" stroke="#C9A260" stroke-width="3" stroke-linejoin="round"/>
+</svg>

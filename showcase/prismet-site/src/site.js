@@ -14,7 +14,8 @@
   const tint = () => { if (!root.dataset.theme) return; const c = getComputedStyle(root).getPropertyValue('--ground').trim(); if (c) document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute('content', c)); };
   tint();
   root.classList.add('js');
-  const motionOK = () => !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const motionOK = () => !reducedMotion.matches;
 
   document.addEventListener('DOMContentLoaded', () => {
     // Day / night
@@ -28,29 +29,223 @@
       tint(); labelToggle();
     });
 
-    // The hall plan: draw it once per session; the lantern follows the wing in hand.
+    // The hall plan: fixed navigation, with responsive glass and light in its centre.
     const plan = document.getElementById('plan');
-    if (plan) {
+    if (plan && !plan.classList.contains('plan-strip')) {
       if (motionOK()) {
         let drawn = false;
         try { drawn = sessionStorage.getItem('prismet.plan') === '1'; } catch { /* no session storage */ }
         if (!drawn) { plan.classList.add('draw'); try { sessionStorage.setItem('prismet.plan', '1'); } catch { /* ignore */ } }
       }
       const svg = plan.querySelector('svg');
+      const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
       const lantern = (wing) => {
-        if (!wing) { plan.style.setProperty('--lo', '.55'); plan.style.setProperty('--lx', '50%'); plan.style.setProperty('--ly', '50%'); return; }
+        if (!wing || !motionOK()) { plan.style.setProperty('--lo', '.55'); plan.style.setProperty('--lx', '50%'); plan.style.setProperty('--ly', '50%'); return; }
         const r = wing.querySelector('.room').getBBox(), vb = svg.viewBox.baseVal;
         plan.style.setProperty('--lx', `${((r.x + r.width / 2) / vb.width * 100).toFixed(1)}%`);
         plan.style.setProperty('--ly', `${((r.y + r.height / 2) / vb.height * 100 * (svg.clientHeight / plan.clientHeight)).toFixed(1)}%`);
         plan.style.setProperty('--lo', '.9');
       };
       plan.querySelectorAll('a.wing').forEach((w) => {
-        w.addEventListener('pointerenter', () => lantern(w));
+        w.addEventListener('pointerenter', (event) => { if (event.pointerType !== 'touch' && finePointer.matches) lantern(w); });
         w.addEventListener('focus', () => lantern(w));
         w.addEventListener('pointerleave', () => lantern(null));
         w.addEventListener('blur', () => lantern(null));
       });
+
+      // One update per pointer frame, never a perpetual animation loop. CSS eases to the new pose.
+      let lightFrame = 0, pointerX = 0, pointerY = 0;
+      const opticsProperties = ['--prism-x', '--prism-y', '--prism-turn', '--fan-turn', '--fan-spread', '--prism-light'];
+      const resetOptics = () => {
+        if (lightFrame) cancelAnimationFrame(lightFrame);
+        lightFrame = 0;
+        opticsProperties.forEach((name) => plan.style.removeProperty(name));
+        lantern(null);
+      };
+      svg.addEventListener('pointermove', (event) => {
+        if (event.pointerType === 'touch' || !finePointer.matches || !motionOK() || document.hidden) return;
+        const rect = svg.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        pointerX = Math.max(-1, Math.min(1, (event.clientX - rect.left) / rect.width * 2 - 1));
+        pointerY = Math.max(-1, Math.min(1, (event.clientY - rect.top) / rect.height * 2 - 1));
+        if (lightFrame) return;
+        lightFrame = requestAnimationFrame(() => {
+          lightFrame = 0;
+          plan.style.setProperty('--prism-x', `${(pointerX * 7).toFixed(2)}px`);
+          plan.style.setProperty('--prism-y', `${(pointerY * 5).toFixed(2)}px`);
+          plan.style.setProperty('--prism-turn', `${(pointerX * 7).toFixed(2)}deg`);
+          plan.style.setProperty('--fan-turn', `${(pointerY * 15).toFixed(2)}deg`);
+          plan.style.setProperty('--fan-spread', (1.15 + pointerX * .22).toFixed(2));
+          plan.style.setProperty('--prism-light', '.85');
+        });
+      });
+      svg.addEventListener('pointerleave', resetOptics);
+      svg.addEventListener('pointercancel', resetOptics);
+      window.addEventListener('blur', resetOptics);
+      document.addEventListener('visibilitychange', resetOptics);
+      window.addEventListener('resize', resetOptics);
+      finePointer.addEventListener('change', resetOptics);
+      reducedMotion.addEventListener('change', () => {
+        if (!motionOK()) plan.classList.remove('draw');
+        resetOptics();
+      });
     }
+
+    // Homepage optics: sparse local transforms on input only. Editor previews retain the static artwork.
+    const opticalHome = document.querySelector('.portfolio-home[data-optical-motion]');
+    if (opticalHome) {
+      const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+      const entrance = opticalHome.querySelector('.entrance');
+      const heroArt = entrance.querySelector('.hero-optics');
+      const layers = [...opticalHome.querySelectorAll('.hero-optics, .optical-rail')];
+      const visible = new Set(), lastDrift = new WeakMap();
+      let frame = 0, focused = true, scrollDirty = true, pointerDirty = false, x = 0, y = 0, overHero = false;
+      const enabled = () => motionOK() && finePointer.matches && !document.hidden && focused && !root.classList.contains('pe-on');
+      const draw = () => {
+        frame = 0;
+        if (!enabled()) return;
+        if (scrollDirty) {
+          visible.forEach((layer) => {
+            const rect = layer.parentElement.getBoundingClientRect();
+            const progress = Math.max(-1, Math.min(1, (innerHeight / 2 - rect.top - rect.height / 2) / (innerHeight / 2 + rect.height / 2)));
+            const drift = Math.round(progress * 10);
+            if (lastDrift.get(layer) !== drift) {
+              layer.style.setProperty('--decor-scroll', `${drift}px`);
+              lastDrift.set(layer, drift);
+            }
+          });
+          scrollDirty = false;
+        }
+        if (pointerDirty) {
+          heroArt.style.setProperty('--decor-x', `${(x * 8).toFixed(1)}px`);
+          heroArt.style.setProperty('--decor-y', `${(y * 6).toFixed(1)}px`);
+          heroArt.style.setProperty('--decor-light', overHero ? '1' : '.85');
+          heroArt.style.setProperty('--hero-prism-turn', `${(x * 6).toFixed(1)}deg`);
+          heroArt.style.setProperty('--hero-beam-turn', `${(y * 12).toFixed(1)}deg`);
+          heroArt.style.setProperty('--hero-fan-spread', (1 + x * .16).toFixed(2));
+          pointerDirty = false;
+        }
+      };
+      const schedule = () => { if (!frame && enabled()) frame = requestAnimationFrame(draw); };
+      const reset = () => {
+        if (frame) cancelAnimationFrame(frame);
+        frame = 0; x = 0; y = 0; overHero = false; pointerDirty = false; scrollDirty = true;
+        layers.forEach((layer) => {
+          ['--decor-scroll', '--decor-x', '--decor-y', '--decor-light', '--hero-prism-turn', '--hero-beam-turn', '--hero-fan-spread'].forEach((key) => layer.style.removeProperty(key));
+          lastDrift.delete(layer);
+        });
+      };
+      // Observe the reserved illustration/heading slots, so drift cannot change intersection state.
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            const layer = layers.find((item) => item.parentElement === entry.target);
+            if (entry.isIntersecting) visible.add(layer); else visible.delete(layer);
+          });
+          scrollDirty = true; schedule();
+        }, { rootMargin: '80px' });
+        layers.forEach((layer) => observer.observe(layer.parentElement));
+      } else layers.forEach((layer) => visible.add(layer));
+      entrance.addEventListener('pointermove', (event) => {
+        if (event.pointerType === 'touch' || !enabled()) return;
+        const rect = entrance.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        x = Math.max(-1, Math.min(1, (event.clientX - rect.left) / rect.width * 2 - 1));
+        y = Math.max(-1, Math.min(1, (event.clientY - rect.top) / rect.height * 2 - 1));
+        overHero = true; pointerDirty = true; schedule();
+      });
+      const leaveHero = () => { x = 0; y = 0; overHero = false; pointerDirty = true; schedule(); };
+      entrance.addEventListener('pointerleave', leaveHero);
+      entrance.addEventListener('pointercancel', leaveHero);
+      window.addEventListener('scroll', () => { scrollDirty = true; schedule(); }, { passive: true });
+      window.addEventListener('resize', () => { scrollDirty = true; schedule(); }, { passive: true });
+      window.addEventListener('blur', () => { focused = false; reset(); });
+      window.addEventListener('focus', () => { focused = true; scrollDirty = true; schedule(); });
+      document.addEventListener('visibilitychange', () => { reset(); schedule(); });
+      reducedMotion.addEventListener('change', () => { reset(); schedule(); });
+      finePointer.addEventListener('change', () => { reset(); schedule(); });
+      schedule();
+    }
+
+    // Native scrolling remains available without JavaScript; links always name the full image.
+    const viewer = document.getElementById('image-viewer');
+    let viewerLinks = [], viewerIndex = 0, viewerOrigin = null, viewerRequest = 0;
+    const showViewerImage = (index) => {
+      if (!viewer || !viewerLinks.length) return;
+      viewerIndex = Math.max(0, Math.min(index, viewerLinks.length - 1));
+      const link = viewerLinks[viewerIndex], source = link.querySelector('img');
+      const stage = viewer.querySelector('[data-viewer-stage]'), status = viewer.querySelector('[data-viewer-status]');
+      const image = document.createElement('img'), request = ++viewerRequest;
+      image.alt = source.alt; image.width = Number(link.dataset.width); image.height = Number(link.dataset.height);
+      stage.setAttribute('aria-busy', 'true'); status.hidden = false; status.textContent = viewer.dataset.loading;
+      image.addEventListener('load', () => {
+        if (request !== viewerRequest) return;
+        stage.setAttribute('aria-busy', 'false'); status.hidden = true;
+      });
+      image.addEventListener('error', () => {
+        if (request !== viewerRequest) return;
+        stage.setAttribute('aria-busy', 'false'); status.textContent = viewer.dataset.error;
+      });
+      stage.replaceChildren(image); image.src = link.href;
+      viewer.querySelector('#viewer-caption').textContent = link.closest('figure').querySelector('[data-gallery-caption]').innerText;
+      viewer.querySelector('[data-viewer-count]').textContent = `${viewerIndex + 1} / ${viewerLinks.length}`;
+      viewer.querySelector('[data-viewer-prev]').disabled = viewerIndex === 0;
+      viewer.querySelector('[data-viewer-next]').disabled = viewerIndex === viewerLinks.length - 1;
+      viewer.querySelector('[data-viewer-full]').href = link.href;
+    };
+    if (viewer && typeof viewer.showModal === 'function') {
+      viewer.querySelector('[data-viewer-close]').addEventListener('click', () => viewer.close());
+      viewer.querySelector('[data-viewer-prev]').addEventListener('click', () => showViewerImage(viewerIndex - 1));
+      viewer.querySelector('[data-viewer-next]').addEventListener('click', () => showViewerImage(viewerIndex + 1));
+      viewer.addEventListener('keydown', (event) => {
+        if (!viewer.open || event.altKey || event.ctrlKey || event.metaKey) return;
+        if (event['key'] === 'ArrowLeft' || event['key'] === 'ArrowRight') {
+          event.preventDefault(); showViewerImage(viewerIndex + (event['key'] === 'ArrowLeft' ? -1 : 1));
+        }
+      });
+      viewer.addEventListener('close', () => {
+        viewerRequest++; viewer.querySelector('[data-viewer-stage]').replaceChildren();
+        viewerOrigin?.focus({ preventScroll: true });
+      });
+    }
+    document.querySelectorAll('[data-gallery]').forEach((gallery) => {
+      if (gallery.hasAttribute('data-gallery-edit')) return;
+      const track = gallery.querySelector('.gallery-track'), slides = [...gallery.querySelectorAll('[data-gallery-slide]')];
+      const links = [...gallery.querySelectorAll('[data-gallery-open]')];
+      const previous = gallery.querySelector('[data-gallery-prev]'), next = gallery.querySelector('[data-gallery-next]');
+      const count = gallery.querySelector('[data-gallery-count]');
+      let scrollFrame = 0, current = 0;
+      const refresh = () => {
+        scrollFrame = 0;
+        const box = track.getBoundingClientRect(), bounds = slides.map((slide) => slide.getBoundingClientRect());
+        current = bounds.reduce((best, rect, i) => Math.abs(rect.left - box.left) < Math.abs(bounds[best].left - box.left) ? i : best, 0);
+        const visible = bounds.map((rect, i) => rect.right > box.left + 8 && rect.left < box.right - 8 ? i + 1 : 0).filter(Boolean);
+        const first = visible[0] || current + 1, last = visible.at(-1) || first;
+        const value = `${first === last ? first : `${first}–${last}`} / ${slides.length}`;
+        if (count.textContent !== value) count.textContent = value;
+        previous.disabled = track.scrollLeft <= 2;
+        next.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
+      };
+      const schedule = () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(refresh); };
+      const move = (direction) => {
+        if (scrollFrame) cancelAnimationFrame(scrollFrame);
+        refresh();
+        const target = slides[Math.max(0, Math.min(current + direction, slides.length - 1))];
+        const left = target.getBoundingClientRect().left - track.getBoundingClientRect().left + track.scrollLeft - 4;
+        track.scrollTo({ left, behavior: motionOK() ? 'smooth' : 'instant' });
+      };
+      previous.addEventListener('click', () => move(-1)); next.addEventListener('click', () => move(1));
+      track.addEventListener('scroll', schedule, { passive: true });
+      if ('ResizeObserver' in window) new ResizeObserver(schedule).observe(track);
+      else window.addEventListener('resize', schedule, { passive: true });
+      links.forEach((link, index) => link.addEventListener('click', (event) => {
+        if (!viewer || typeof viewer.showModal !== 'function' || root.classList.contains('pe-on') || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault(); viewerLinks = links; viewerOrigin = link;
+        viewer.querySelector('#viewer-title').textContent = gallery.dataset.galleryTitle;
+        showViewerImage(index); viewer.showModal();
+      }));
+      gallery.classList.add('is-ready'); refresh();
+    });
 
     // The register: the wing (plan, chips, #hash) and the seek line compose into one view. Only the wing reaches the URL.
     const ledger = document.getElementById('grid');

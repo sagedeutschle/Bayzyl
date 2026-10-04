@@ -29,7 +29,7 @@ export const SECTION_TYPES = {
 };
 export const SLUG = /^[a-z0-9][a-z0-9-]{0,40}$/;
 /** Names a page cannot take: the site's own pages and the server's routes. */
-export const RESERVED = new Set(['index', 'colophon', 'edit', 'steam', 'debt', 'privacy', 'support', 'work', 'assets', 'lib', 'api', 'rtc', 'healthz', 'shots', 'site', 'favicon', 'robots', 'style', 'icon', 'manifest', 'home']);
+export const RESERVED = new Set(['index', 'colophon', 'edit', 'steam', 'debt', 'arcade', 'tools', 'privacy', 'support', 'work', 'assets', 'lib', 'api', 'rtc', 'healthz', 'shots', 'site', 'favicon', 'robots', 'style', 'icon', 'manifest', 'home']);
 export const validSlug = (s) => SLUG.test(s || '') && !RESERVED.has(s);
 /** An image a section or record may name: a file under assets/, no way out of that folder, nothing that could be markup. */
 export const validAsset = (p) => typeof p === 'string' && /^assets\/[A-Za-z0-9._/-]+$/.test(p) && !p.includes('..') && !p.includes('//');

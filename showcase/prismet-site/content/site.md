@@ -451,3 +451,51 @@ Uncle Scam
 
 ## lens.uncle-scam.blurb
 Where is my money going? A salary and a ZIP code in, an itemized receipt for your taxes out.
+
+
+<!-- Portfolio interface labels added for the local screenshot-gallery pass. -->
+## gallery.previous
+Previous image
+
+## gallery.next
+Next image
+
+## gallery.open
+Open image
+
+## gallery.close
+Close image viewer
+
+## gallery.title
+Project portfolio
+
+## gallery.hint
+Scroll to explore · select an image to enlarge
+
+## gallery.full
+Open full image
+
+## gallery.loading
+Loading image…
+
+## gallery.error
+This image could not be loaded. Use the full-image link to try again.
+
+## hero.cta_employer
+Discuss a role
+
+<!-- Product hub navigation. Existing authored labels remain available to the editor. -->
+## nav.arcade
+Arcade
+
+## nav.tools
+Tools
+
+## nav.contact
+Contact
+
+## plate.gallery_eyebrow
+Minecraft · a world of details
+
+## plate.gallery_title
+Built, block by block.

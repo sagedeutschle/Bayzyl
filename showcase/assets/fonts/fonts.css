@@ -1,5 +1,13 @@
 /* Self-hosted Google Fonts (latin subset, SIL Open Font License 1.1). Regenerate: see showcase/README.md.
-   Unbounded (display), Hanken Grotesk (body) and Martian Mono (data): the type Sage chose for v18, restored in round 3. */
+   Marcellus for site wording; Martian Mono for technical data. Marcellus license: Marcellus-OFL.txt.
+   Hanken Grotesk and Unbounded remain available to standalone tools that declare them explicitly. */
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(Marcellus.woff2) format('woff2');
+}
 @font-face {
   font-family: 'Hanken Grotesk';
   font-style: normal;

@@ -1,0 +1,16 @@
+{
+  "bricks" : [
+    {
+      "color" : "classicRed",
+      "id" : 1,
+      "layer" : 12,
+      "origin" : {
+        "x" : 8,
+        "y" : 0
+      },
+      "rotationQuarters" : 1,
+      "size" : "twoByFour"
+    }
+  ],
+  "xml" : "<INVENTORY>\n  <ITEM>\n    <ITEMTYPE>P<\/ITEMTYPE>\n    <ITEMID>3001<\/ITEMID>\n    <COLOR>5<\/COLOR>\n    <MINQTY>1<\/MINQTY>\n    <CONDITION>N<\/CONDITION>\n  <\/ITEM>\n<\/INVENTORY>"
+}

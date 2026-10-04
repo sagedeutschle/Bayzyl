@@ -80,20 +80,26 @@ function img(p, { alt = '', root = '', cls = '', lazy = true, sizesAttr = '', sr
   }
   return `<img${cls ? ` class="${cls}"` : ''} src="${at(out)}"${srcset ? ` srcset="${srcset}" sizes="${sizesAttr}"` : ''} width="${w}" height="${h}" alt="${esc(alt)}"${lazy ? ' loading="lazy" decoding="async"' : priority ? ' fetchpriority="high"' : ''}>`;
 }
-// favicon: the app icon, at 128px when that variant exists (the 512px original is 15 KB on every first view)
-const FAVICON = asset(['assets/icons/prismet-app-128.webp', 'assets/icons/prismet-app.webp'].find((p) => has(p)));
+// The website mark has its own small SVG; the app and legacy tool icons keep their identities.
+const FAVICON = 'prismet-mark.svg';
 
 // ── shared pieces ───────────────────────────────────────────────────────────────────────────
 const hue = (id) => `--h:var(--${id});--hi:var(--${id}-ink)`;
 const arrow = '<svg class="ext" viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="M3 9.5 9.5 3M4.5 3h5v5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 // The artifact preview can't load fonts from its own files, so it uses Google Fonts; production self-hosts.
-const GOOGLE_FONTS = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&family=Hanken+Grotesk:wght@100..900&family=Martian+Mono:wdth,wght@75..112.5,100..800&display=swap">';
-// The mark: the rotunda seen from above, with the prism inlaid in its floor.
+const GOOGLE_FONTS = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Martian+Mono:wdth,wght@75..112.5,100..800&display=swap">';
+// The mark: a beam refracted through a brass prism into six distinct bands of dispersed light.
 const mark = (size = 28) => `<svg class="mark" width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true">
-  <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" stroke-width="2"/>
-  <circle cx="32" cy="32" r="21" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/>
-  <path d="M32 19 L44 40 L20 40 Z" fill="none" stroke="var(--brass)" stroke-width="2.4" stroke-linejoin="round"/>
-  ${SPECTRUM.map((c, i) => { const a = (i * 60 - 90) * Math.PI / 180; const x1 = 32 + Math.cos(a) * 23, y1 = 32 + Math.sin(a) * 23, x2 = 32 + Math.cos(a) * 28, y2 = 32 + Math.sin(a) * 28; return `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)}" stroke="var(--${c})" stroke-width="3" stroke-linecap="round"/>`; }).join('')}
+  <path d="M41 30 63 15V20Z" fill="#EF6573"/>
+  <path d="M41 30 63 20V25Z" fill="#F4A24D"/>
+  <path d="M41 30 63 25V30Z" fill="#E7CA65"/>
+  <path d="M41 30 63 30V35Z" fill="#69BB84"/>
+  <path d="M41 30 63 35V40Z" fill="#64A2DA"/>
+  <path d="M41 30 63 40V45Z" fill="#A27CDE"/>
+  <path d="M41 30 63 15" fill="none" stroke="var(--brass)" stroke-width="1.5"/>
+  <path d="M2 30H21" fill="none" stroke="var(--ink)" stroke-width="3"/>
+  <path d="M21 30H41" fill="none" stroke="var(--ink)" stroke-width="1.5" opacity=".55"/>
+  <path d="M31 9 49 48H13Z" fill="none" stroke="var(--brass)" stroke-width="3" stroke-linejoin="round"/>
 </svg>`;
 
 const head = ({ title, desc, root = '', noindex = false, url = '' }) => `<meta charset="utf-8">
@@ -110,9 +116,8 @@ const head = ({ title, desc, root = '', noindex = false, url = '' }) => `<meta c
 <meta name="twitter:card" content="summary_large_image">${url ? `\n<meta property="og:url" content="https://prismet.xyz/${esc(url)}">` : ''}
 <meta name="theme-color" content="#0F161D" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#E4E8EA" media="(prefers-color-scheme: light)">
-<link rel="icon" href="${root}${FAVICON}">
-<link rel="preload" href="${root}assets/fonts/HankenGrotesk.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="${root}assets/fonts/Unbounded.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" type="image/svg+xml" href="${root}${FAVICON}">
+<link rel="preload" href="${root}assets/fonts/Marcellus.woff2" as="font" type="font/woff2" crossorigin>
 ${PREVIEW ? GOOGLE_FONTS + '\n' : ''}<link rel="stylesheet" href="${root}${CSS_URL}">${PREVIEW ? `\n<link rel="stylesheet" href="${root}editor.css">` : ''}
 <script src="${root}${JS_URL}"></script>`;
 const scripts = (root = '') => (PREVIEW ? `<script src="${root}editor.js"></script>` : '');
@@ -120,19 +125,18 @@ const scripts = (root = '') => (PREVIEW ? `<script src="${root}editor.js"></scri
 const HOME = (root = '') => (PREVIEW ? (root || './') : `${root}index.html`);
 
 const bar = (root = '') => {
-  const [w, l, a, h, g, li] = ['nav.work', 'nav.lenses', 'nav.about', 'nav.hire', 'nav.github', 'nav.linkedin'].map((k) => T(k));
+  const [w, arcade, tools, a, contact] = ['nav.work', 'nav.arcade', 'nav.tools', 'nav.about', 'nav.contact'].map((key) => T(key));
   return `<a class="skip" href="#main">Skip to content</a>
-<header class="bar"><div class="wrap">
+<header class="bar product-bar"><div class="wrap">
   <a class="brand" href="${HOME(root)}">${mark(28)}<strong>Prismet</strong><span>${esc(owner.name)}</span></a>
-  <nav class="nav" aria-label="Main">
-    <a class="keep" href="${HOME(root)}#work"${w.a}>${w.h}</a>
-    <a href="${HOME(root)}#lenses"${l.a}>${l.h}</a>
-    <a href="${HOME(root)}#about"${a.a}>${a.h}</a>${navPages(root)}
-    <a class="wide" href="${esc(owner.github)}"${g.a}>${g.h}</a>
-    <a class="wide" href="${esc(owner.linkedin)}"${li.a}>${li.h}</a>
-    <a class="btn primary keep" href="${esc(owner.fiverr)}"${h.a}>${h.h}</a>
-    <button class="btn theme keep" type="button" id="theme-toggle" aria-label="${esc(T('footer.day_night').p)}" data-to-day="${esc(T('theme.to_day').p)}" data-to-night="${esc(T('theme.to_night').p)}"><span class="sun" aria-hidden="true"></span></button>
+  <nav class="nav product-nav" aria-label="Main">
+    <a href="${HOME(root)}#work"${w.a}>${w.h}</a>
+    <a href="${root}arcade.html"${arcade.a}>${arcade.h}</a>
+    <a href="${root}tools.html"${tools.a}>${tools.h}</a>
+    <a href="${HOME(root)}#about"${a.a}>${a.h}</a>
+    <a href="${HOME(root)}#hire"${contact.a}>${contact.h}</a>${navPages(root)}
   </nav>
+  <button class="btn theme keep" type="button" id="theme-toggle" aria-label="${esc(T('footer.day_night').p)}" data-to-day="${esc(T('theme.to_day').p)}" data-to-night="${esc(T('theme.to_night').p)}"><span class="sun" aria-hidden="true"></span></button>
 </div></header>`;
 };
 
@@ -220,24 +224,36 @@ function plan() {
   const pd = (R + Ri) / 2 / Math.SQRT2;
   const piers = [[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([sx, sy]) => `<rect class="pier" x="${f(cx + sx * pd - 4.5)}" y="${f(cy + sy * pd - 4.5)}" width="9" height="9" pathLength="1"/>`).join('');
   // The prism: an equilateral triangle centred on the rotunda; the beam meets its left face on the cross axis.
-  const ph = 54, pw = 31, apex = cy - ph * 2 / 3, base = cy + ph / 3, face = cx - pw * (cy - apex) / ph;
-  return `<figure class="plan" id="plan">
+  const ph = 72, pw = 42, apex = cy - ph * 2 / 3, base = cy + ph / 3, face = cx - pw * (cy - apex) / ph;
+  return `<figure class="plan plan-strip" id="plan">
 <svg viewBox="0 0 ${W_} ${H_}" role="group" aria-label="${esc(T('plan.caption').p)}">
+  <defs><radialGradient id="prism-light"><stop stop-color="var(--ai-ink)" stop-opacity=".7"/><stop offset="1" stop-color="var(--ai-ink)" stop-opacity="0"/></radialGradient></defs>
   <g class="g-court"><rect class="court" x="24" y="24" width="${W_ - 48}" height="${H_ - 48}" pathLength="1"/><rect class="court inner" x="34" y="34" width="${W_ - 68}" height="${H_ - 68}" pathLength="1"/></g>
   <g class="g-rotunda">
     <path class="beacon" d="M${cx} ${cy - R}V34" pathLength="1"/>
     <circle class="rotunda" cx="${cx}" cy="${cy}" r="${R}" pathLength="1"/>
     <circle class="rotunda inner" cx="${cx}" cy="${cy}" r="${Ri}" pathLength="1"/>
     ${piers}
-    <path class="prism" d="M${cx} ${f(apex)}L${cx + pw} ${f(base)}L${cx - pw} ${f(base)}Z" pathLength="1"/>
-    <path class="beam-in" d="M${cx - Ri} ${cy}H${f(face)}" pathLength="1"/>
+    <g class="optics" aria-hidden="true">
+      <circle class="prism-halo" cx="${cx}" cy="${cy}" r="94" fill="url(#prism-light)"/>
+      <path class="beam-in" d="M${cx - Ri} ${cy}H${f(face)}"/>
+      <g class="refraction">
+        <path d="M${f(2 * cx - face)} ${cy}L${cx + Ri - 3} ${cy - 30}V${cy - 10}Z" fill="var(--ai-ink)"/>
+        <path d="M${f(2 * cx - face)} ${cy}L${cx + Ri - 3} ${cy - 10}V${cy + 10}Z" fill="var(--live)"/>
+        <path d="M${f(2 * cx - face)} ${cy}L${cx + Ri - 3} ${cy + 10}V${cy + 30}Z" fill="#7654AD"/>
+        <path class="refraction-edge" d="M${f(2 * cx - face)} ${cy}L${cx + Ri - 3} ${cy - 30}"/>
+      </g>
+      <path class="prism" d="M${cx} ${f(apex)}L${cx + pw} ${f(base)}L${cx - pw} ${f(base)}Z" pathLength="1"/>
+      <path class="prism-facet" d="M${cx} ${f(apex)}V${f(base)}H${cx + pw}Z"/>
+      <path class="beam-in" d="M${f(face)} ${cy}H${f(2 * cx - face)}"/>
+    </g>
   </g>
   <g class="g-wings">${wings}</g>
 </svg>
 <div class="lantern" aria-hidden="true"></div>
 <figcaption>
   <span${T('plan.caption').a}>${T('plan.caption').h}</span>
-  <ul class="wing-list" aria-label="Wings">${SPECTRUM.map((id) => { const b = beamLabel(id), n = count(id); return `<li><a href="#work" data-beam="${id}" style="${hue(id)}" aria-label="${esc(b.p)}: ${n} record${n === 1 ? '' : 's'}"><i></i><span${b.a}>${b.h}</span><small>${(() => { const lead = shown.find((p) => p.beam === id); return lead ? esc(plain(work(lead.slug, 'title'))) + (n > 1 ? ` + ${n - 1}` : '') : ''; })()}</small></a></li>`; }).join('')}</ul>
+  <ul class="wing-list" aria-label="Wings">${SPECTRUM.map((id) => { const b = beamLabel(id), n = count(id); return `<li><a href="#work" data-beam="${id}" style="${hue(id)}" aria-label="${esc(b.p)}: ${n} record${n === 1 ? '' : 's'}"><i></i><span${b.a}>${b.h}</span><small>${(() => { const lead = shown.find((p) => p.beam === id); return lead ? esc(plain(work(lead.slug, 'title'))) + (n > 1 ? ` <span class="wing-more">+ ${n - 1}</span>` : '') : ''; })()}</small></a></li>`; }).join('')}</ul>
 </figcaption>
 </figure>`;
 }
@@ -385,6 +401,51 @@ function signature(p, root = '../') {
   return '';
 }
 
+// ── screenshot portfolios: metadata is separate from signature-module gallery indexes ─────
+const portfolioOf = (p) => {
+  const candidates = Array.isArray(p.portfolio) ? p.portfolio : (p.gallery || []).map((src, i) => ({ src, alt: (p.shotAlts || [])[i] || '', caption: (p.shotAlts || [])[i] || '' }));
+  const seen = new Set();
+  return candidates.filter((shot) => {
+    if (!shot || !validAsset(shot.src) || !has(shot.src) || seen.has(shot.src)) return false;
+    seen.add(shot.src); return true;
+  });
+};
+const imageGallery = ({ shots, title, id }, root = '', detail = false) => {
+  if (!shots.length) return '';
+  return `<div class="portfolio-gallery" data-gallery${ANNOTATE ? ' data-gallery-edit' : ''} data-gallery-title="${esc(title)}">
+  <div class="gallery-topline"><p${T('gallery.hint').a}>${T('gallery.hint').h}</p>
+    <div class="gallery-controls"><button type="button" class="btn gallery-arrow" data-gallery-prev aria-controls="${id}" aria-label="${esc(T('gallery.previous').p)}" disabled>←</button><output data-gallery-count aria-live="polite" aria-atomic="true">1 / ${shots.length}</output><button type="button" class="btn gallery-arrow" data-gallery-next aria-controls="${id}" aria-label="${esc(T('gallery.next').p)}"${shots.length < 2 ? ' disabled' : ''}>→</button></div>
+  </div>
+  <ol class="gallery-track" id="${id}" tabindex="0" aria-label="${esc(title)} — ${esc(T('gallery.title').p)}">
+    ${shots.map((shot, i) => {
+      const { w, h } = sizeOf(shot.src), portrait = h > w * 1.1;
+      const alt = shot.alt || `${title}, ${i + 1}`, caption = shot.captionKey ? T(shot.captionKey).p : shot.caption || alt;
+      return `<li class="gallery-slide${portrait ? ' portrait' : ''}" data-gallery-slide><figure>
+      <a class="gallery-image" href="${root}${esc(asset(shot.src))}" data-gallery-open data-width="${w}" data-height="${h}" aria-label="${esc(T('gallery.open').p)} ${i + 1}: ${esc(alt)}">
+        ${img(shot.src, { root, alt, lazy: !detail || i > 0, sizesAttr: portrait ? '(max-width: 600px) 72vw, 300px' : '(max-width: 600px) 84vw, (max-width: 1240px) 78vw, 960px' })}
+        <span class="gallery-expand" aria-hidden="true">↗</span>
+      </a>
+      <figcaption><span class="gallery-image-number" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span><span data-gallery-caption><span${shot.captionKey ? T(shot.captionKey).a : ''}>${esc(caption)}</span>${shot.evidence ? `<span class="gallery-evidence">${esc(shot.evidence)}</span>` : ''}</span></figcaption>
+    </figure></li>`;
+    }).join('\n')}
+  </ol>
+</div>`;
+};
+const portfolioGallery = (p, root = '', detail = false) => imageGallery({ shots: portfolioOf(p), title: plain(work(p.slug, 'title')), id: `portfolio-${p.slug}` }, root, detail);
+const imageViewer = () => ANNOTATE ? '' : `<dialog class="image-viewer" id="image-viewer" aria-labelledby="viewer-title" aria-describedby="viewer-caption" data-loading="${esc(T('gallery.loading').p)}" data-error="${esc(T('gallery.error').p)}">
+  <div class="viewer-head"><h2 id="viewer-title">${T('gallery.title').h}</h2><button class="btn" type="button" data-viewer-close autofocus>${T('gallery.close').h} <span aria-hidden="true">×</span></button></div>
+  <div class="viewer-stage" data-viewer-stage></div>
+  <p class="viewer-status" data-viewer-status role="status" hidden></p>
+  <div class="viewer-foot"><p id="viewer-caption"></p><div class="viewer-controls"><button class="btn gallery-arrow" type="button" data-viewer-prev aria-label="${esc(T('gallery.previous').p)}">←</button><output data-viewer-count aria-live="polite" aria-atomic="true"></output><button class="btn gallery-arrow" type="button" data-viewer-next aria-label="${esc(T('gallery.next').p)}">→</button><a class="link" href="#main" data-viewer-full>${T('gallery.full').h}</a></div></div>
+</dialog>`;
+const portfolioChapter = (p, index, isOff = false) => {
+  const title = P(p.slug, 'title'), sub = P(p.slug, 'subtitle'), st = status(p), tl = typeLine(p);
+  return `<article class="project-chapter feature${off(isOff)}" data-slug="${p.slug}" data-room="${p.room || 'cabinet'}" style="${hue(p.beam)}">
+  <div class="chapter-heading"><span class="chapter-number" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span><div class="chapter-name"><p class="typeline"${tl.a}>${tl.h}</p><h3><a href="${href(p)}"${title.a}>${title.h}</a></h3><p class="chapter-stack">${(p.stack || []).slice(0, 4).map(esc).join(' · ')}</p></div><div class="chapter-description"><p${sub.a}>${sub.h}</p><p class="access"><span class="plaque status"${st.a}>${st.h}</span><a class="link" href="${href(p)}"${T('selected.read_more').a}>${T('selected.read_more').h}</a>${accessLinks(p)}</p></div></div>
+  ${portfolioGallery(p) || `<a class="chapter-fallback" href="${href(p)}">${doorModule(p)}</a>`}
+</article>`;
+};
+
 // ── home: principal works (doors) ───────────────────────────────────────────────────────────
 const door = (p, isOff = false) => {
   const title = P(p.slug, 'title'), sub = P(p.slug, 'subtitle'), st = status(p), tl = typeLine(p);
@@ -395,13 +456,13 @@ const door = (p, isOff = false) => {
     <h3><a href="${href(p)}"${title.a}>${title.h}</a></h3>
     <p class="sub"${sub.a}>${sub.h}</p>
     ${factList(p.doorFacts ? factRows(p.slug).filter((_, i) => p.doorFacts.includes(i)) : factRows(p.slug, [], 2), 'small')}
-    <p class="access"><span class="plaque status"${st.a}>${st.h}</span>${accessLinks(p)}</p>
+    <p class="access"><span class="plaque status"${st.a}>${st.h}</span><a class="link" href="${href(p)}"${T('selected.read_more').a}>${T('selected.read_more').h}</a>${accessLinks(p)}</p>
   </div>
 </article>`;
 };
 
 // ── home: the register (ledger) ─────────────────────────────────────────────────────────────
-// Row thumbnails are 96×60 boxes: use <cover>-thumb.webp when it exists, so the register doesn't pull full-size covers.
+// Row thumbnails are 72×48 boxes: use <cover>-thumb.webp when it exists, so the register doesn't pull full-size covers.
 // Make one with: convert <cover>.webp -strip -resize '320x200^' -define webp:method=6 <cover>-thumb.webp
 const thumbOf = (src) => { const t = src.replace(/\.webp$/, '-thumb.webp'); return t !== src && has(t) ? t : src; };
 // data-seek: what the seek line matches besides the visible title, subtitle, wing and status (projects.json `aliases`,
@@ -411,7 +472,7 @@ const threadSlugs = (p) => (p.related || []).filter((s) => bySlug[s] && shown.in
 const row = (p) => {
   const title = P(p.slug, 'title'), sub = P(p.slug, 'subtitle'), st = status(p), tl = typeLine(p);
   const links = accessOf(p);
-  const thumb = p.cover ? img(thumbOf(p.cover), { cls: 'row-thumb', alt: '' }) : '<span class="row-thumb blank" aria-hidden="true"></span>';
+  const thumb = p.cover ? img(thumbOf(p.cover), { cls: 'row-thumb', alt: '', sizesAttr: '72px' }) : '<span class="row-thumb blank" aria-hidden="true"></span>';
   const rel = threadSlugs(p);
   return `<div class="row card${off(p.hidden)}" data-slug="${p.slug}" data-beam="${p.beam}" data-group="${tierOf(p)}" data-seek="${esc(seekWords(p))}"${rel ? ` data-related="${rel}"` : ''} style="${hue(p.beam)}">
     <span class="row-tick" aria-hidden="true"></span>
@@ -460,15 +521,40 @@ function skills() {
 const GIGS = [['mc-plugin', 'minecraft'], ['mc-server', 'minecraft'], ['ios-app', 'apps'], ['web-tool', 'web'], ['ai-agents', 'ai'], ['linux-desktop', 'desktop']];
 const tileFor = { 'steam-rewind': 'steamrewind', 'debt-clock': 'debtclock', 'uncle-scam': 'unclescam' };
 const k = (key, vars) => T(key, vars);
+// Original generated ornaments frame the page; project evidence and editable structure stay untouched.
+const opticalRail = () => `<div class="optical-rail" aria-hidden="true">${img('assets/magic/enchanted-optics.webp', { alt: '', cls: 'magic-fragment', sizesAttr: '(max-width: 600px) 180px, 240px' })}</div>`;
+const heroOptics = () => `<div class="hero-optics" aria-hidden="true">
+  <div class="optic-depth">${img('assets/magic/enchanted-optics.webp', { alt: '', cls: 'hero-crystal', lazy: false, sizesAttr: '(max-width: 600px) 320px, 500px' })}</div>
+  <svg class="hero-prism" viewBox="0 0 360 240" width="360" height="240" aria-hidden="true" focusable="false">
+    <defs><radialGradient id="hero-prism-light"><stop stop-color="var(--ai-ink)" stop-opacity=".28"/><stop offset="1" stop-color="var(--ai-ink)" stop-opacity="0"/></radialGradient></defs>
+    <g class="hero-prism-core">
+      <circle cx="170" cy="126" r="92" fill="url(#hero-prism-light)"/>
+      <path class="hero-entry-beam" d="M12 132H132"/>
+      <g class="hero-prism-fan">
+        <path d="M208 132 336 78V94Z" fill="#EF6573"/>
+        <path d="M208 132 336 94V110Z" fill="#F4A24D"/>
+        <path d="M208 132 336 110V126Z" fill="#E7CA65"/>
+        <path d="M208 132 336 126V142Z" fill="#69BB84"/>
+        <path d="M208 132 336 142V158Z" fill="#64A2DA"/>
+        <path d="M208 132 336 158V174Z" fill="#A27CDE"/>
+        <path d="M208 132 336 94M208 132 336 110M208 132 336 126M208 132 336 142M208 132 336 158" fill="none" stroke="var(--ground)" stroke-width=".65" opacity=".45"/>
+        <path class="hero-refraction-edge" d="M208 132 336 78"/>
+      </g>
+      <path class="hero-prism-glass" d="M170 66 230 170H110Z"/>
+      <path class="hero-prism-facet" d="M170 66V170H230Z"/>
+      <path class="hero-entry-beam interior" d="M132 132H208"/>
+    </g>
+  </svg>
+</div>`;
 const sec = (id, attrs, inner) => (hiddenSections.has(id) && !ANNOTATE ? '' :
-  `<section id="${id}" data-section="${id}" class="${off(hiddenSections.has(id)).trim()}" ${attrs}>${inner}</section>`);
+  `<section id="${id}" data-section="${id}" class="home-section${off(hiddenSections.has(id))}" ${attrs}>${inner}</section>`);
 
 const SECTIONS = {
   selected: () => sec('selected', 'aria-labelledby="selected-title"', `<div class="wrap">
   <div class="sec-head"><h2 id="selected-title"${k('selected.title_new').a}>${k('selected.title_new').h}</h2></div>
-  <div class="doors">
-  ${featuredSlugs.map((s) => door(bySlug[s])).join('\n')}
-  ${PREVIEW ? projects.filter((p) => !featuredSlugs.includes(p.slug) && !isTodo(p) && !p.hidden).map((p) => door(p, true)).join('\n') : ''}
+  <div class="doors portfolio-chapters">
+  ${featuredSlugs.map((s, i) => portfolioChapter(bySlug[s], i)).join('\n')}
+  ${PREVIEW ? projects.filter((p) => !featuredSlugs.includes(p.slug) && !isTodo(p) && !p.hidden).map((p, i) => portfolioChapter(p, featuredSlugs.length + i, true)).join('\n') : ''}
   </div>
 </div>`),
   work: () => sec('work', 'aria-labelledby="work-title"', `<div class="wrap">
@@ -480,14 +566,12 @@ const SECTIONS = {
   </div>
   ${ledger()}
 </div>`),
-  plate: () => sec('plate', 'aria-label="Plate"', `<div class="wrap">
-  <figure class="plate" style="${hue('minecraft')}">
-    ${img('assets/minecraft/server-dark-spire-1655.webp', { alt: T('plate.alt').p, srcset: `${asset('assets/minecraft/server-dark-spire-860.webp')} 860w, ${asset('assets/minecraft/server-dark-spire-1655.webp')} 1655w`, sizesAttr: '(max-width: 900px) 100vw, 860px' })}
-    <figcaption><i></i><span${k('plate.caption').a}>${k('plate.caption').h}</span> <a href="#minecraft" data-beam="minecraft">${beamLabel('minecraft').h}</a></figcaption>
-  </figure>
+  plate: () => sec('plate', 'aria-labelledby="minecraft-gallery-title"', `<div class="wrap minecraft-gallery">
+  <div class="sec-head"><div><p class="eyebrow"${k('plate.gallery_eyebrow').a}>${k('plate.gallery_eyebrow').h}</p><h2 id="minecraft-gallery-title"${k('plate.gallery_title').a}>${k('plate.gallery_title').h}</h2></div><a class="link" href="#minecraft" data-beam="minecraft">${beamLabel('minecraft').h} →</a></div>
+  ${imageGallery({ id: 'minecraft-build-gallery', title: T('plate.gallery_title').p, shots: (data.plateGallery?.shots || []).filter((shot) => validAsset(shot.src) && has(shot.src)) })}
 </div>`),
   lenses: () => sec('lenses', 'aria-labelledby="lenses-title"', `<div class="wrap">
-  <div class="sec-head"><div><h2 id="lenses-title"${k('lenses.title').a}>${k('lenses.title').h}</h2><p${k('lenses.intro').a}>${k('lenses.intro').h}</p></div></div>
+  <div class="sec-head"><div><h2 id="lenses-title"${k('lenses.title').a}>${k('lenses.title').h}</h2><p${k('lenses.intro').a}>${k('lenses.intro').h}</p></div>${opticalRail()}</div>
   <div class="lenses">${lenses.map((l) => { const t = k(`lens.${l.id}.title`), d = k(`lens.${l.id}.blurb`); return `<a class="lens" href="${esc(l.href)}">
     ${img('assets/prismet/tiles/' + tileFor[l.id] + '.webp', { alt: '', sizesAttr: '64px' })}
     <span class="lens-text"><span class="plaque live"${k('lenses.live').a}>${k('lenses.live').h}</span><h3${t.a}>${t.h}</h3><p${d.a}>${d.h}</p></span></a>`; }).join('')}</div>
@@ -531,25 +615,22 @@ const layoutState = {
 };
 
 const indexBody = `${bar()}
-<main id="main">
+<main id="main" class="portfolio-home"${ANNOTATE ? '' : ' data-optical-motion'}>
 <section class="entrance" aria-labelledby="hero-title"><div class="wrap">
   <div class="entrance-text">
     <p class="plaque brass"${k('hero.eyebrow').a}>${k('hero.eyebrow').h}</p>
     <p class="salute"${k('hero.title').a}>${k('hero.title').h}</p>
     <h1 id="hero-title">${esc(owner.name)}</h1>
     <p class="lede"${k('hero.lede').a}>${k('hero.lede').h}</p>
-    <dl class="directory">
-      <div><dt${k('hero.directory_source').a}>${k('hero.directory_source').h}</dt><dd><a href="${esc(owner.github)}">github.com/sagedeutschle${arrow}</a></dd></div>
-      <div><dt${k('hero.directory_contact').a}>${k('hero.directory_contact').h}</dt><dd><a href="${esc(owner.linkedin)}">LinkedIn${arrow}</a></dd></div>
-      <div><dt${k('hero.directory_commissions').a}>${k('hero.directory_commissions').h}</dt><dd><a href="${esc(owner.fiverr)}">Fiverr${arrow}</a></dd></div>
-    </dl>
-    <div class="ctas"><a class="btn primary" href="#work"${k('hero.cta_primary').a}>${k('hero.cta_primary').h}</a><a class="btn" href="${esc(owner.fiverr)}"${k('hero.cta_secondary').a}>${k('hero.cta_secondary').h}</a></div>
+    <div class="ctas"><a class="btn primary" href="${hiddenSections.has('selected') ? '#work' : '#selected'}"${k('hero.cta_primary').a}>${k('hero.cta_primary').h}</a><a class="btn" href="${esc(owner.linkedin)}"${k('hero.cta_employer').a}>${k('hero.cta_employer').h}</a><a class="link hero-freelance" href="${esc(owner.fiverr)}"${k('hero.cta_secondary').a}>${k('hero.cta_secondary').h}</a></div>
   </div>
+  <div class="entrance-visual">${heroOptics()}</div>
   ${plan()}
 </div></section>
 ${sectionOrder.map((id) => (SECTIONS[id] ? SECTIONS[id]() : homeSection(id))).join('\n')}
 </main>
 ${footer()}
+${imageViewer()}
 ${PREVIEW ? `<script type="application/json" id="bz-layout">${JSON.stringify(layoutState).replace(/</g, '\\u003c')}</script>` : ''}
 ${scripts()}`;
 
@@ -606,6 +687,7 @@ shown.forEach((p, i) => {
   const hl = listItems(work(s, 'highlights')), hlT = T('project.highlights');
   const roleK = T('project.role_label'), yearK = T('project.year_label');
   const isFlag = p.tier === 'flagship' || p.tier === 'featured';
+  const hasPortfolio = portfolioOf(p).length > 0;
   const front = !isFlag && p.cover ? `<figure class="frontispiece${p.cover.includes('/icons/') ? ' icon' : ''}"><div class="wrap">${img(p.cover, { root: '../', alt: (p.shotAlts || [])[0] || plain(work(s, 'title')), lazy: false, priority: true, sizesAttr: frontSizes(p.cover) })}</div></figure>` : '';
   const body = `${bar('../')}
 <main id="main" data-room="${p.room || 'cabinet'}" data-beam="${p.beam}" style="${hue(p.beam)}">
@@ -615,7 +697,7 @@ shown.forEach((p, i) => {
     <p class="sub"${sub.a}>${sub.h}</p>
     <div class="row"><span class="plaque status"${st.a}>${st.h}</span>${accessLinks(p, '../', true).replace(/class="link"/g, 'class="btn"')}</div>
   </div>
-  ${isFlag ? signature(p) : front}
+  ${hasPortfolio ? `<section class="project-portfolio" aria-label="${esc(T('gallery.title').p)}"><div class="wrap">${portfolioGallery(p, '../', true)}</div></section>` : isFlag ? signature(p) : front}
   <div class="wrap p-body">
     <div class="prose">
       <div class="summary${isTodo(p) ? ' todo' : ''}"${sum.a}>${sum.h.split(/\n\s*\n/).map((para) => `<p>${para}</p>`).join('')}</div>
@@ -631,7 +713,7 @@ shown.forEach((p, i) => {
       ${threads(p)}
     </aside>
   </div>
-  ${isFlag ? (p.rack || p.eras ? '' : plates(p)) : (p.gallery || []).length > 1 ? plates({ ...p, gallery: p.gallery.slice(1), shotAlts: (p.shotAlts || []).slice(1) }) : ''}
+  ${hasPortfolio ? (isFlag ? signature(p) : '') : isFlag ? (p.rack || p.eras ? '' : plates(p)) : (p.gallery || []).length > 1 ? plates({ ...p, gallery: p.gallery.slice(1), shotAlts: (p.shotAlts || []).slice(1) }) : ''}
   <nav class="wrap next" aria-label="Register">
     <a href="${prev.slug}.html"><small>← ${T('project.previous').h}</small><strong>${inline(work(prev.slug, 'title'))}</strong></a>
     <a class="back" href="../index.html#work"${T('project.back').a}>${T('project.back').h}</a>
@@ -639,6 +721,7 @@ shown.forEach((p, i) => {
   </nav>
 </main>
 ${footer('../')}
+${hasPortfolio ? imageViewer() : ''}
 ${scripts('../')}`;
   emit(`work/${s}.html`, `<!doctype html><html lang="en"><head>${head({ title: `${plain(work(s, 'title'))} · Prismet`, desc: plain(work(s, 'subtitle')), root: '../', url: `work/${s}.html` })}</head><body>${body}</body></html>`);
 });
@@ -677,7 +760,7 @@ ${scripts()}`;
   <h1${t.a}>${t.h}</h1>
   <div class="prose">${paras.map((key) => `<p${k(key).a}>${k(key).h}</p>`).join('')}</div>
   <dl class="facts">
-    <div><dt>Type</dt><dd>Unbounded · Hanken Grotesk · Martian Mono</dd></div>
+    <div><dt>Type</dt><dd>Marcellus · Martian Mono</dd></div>
     <div><dt>Licence</dt><dd>SIL Open Font License 1.1</dd></div>
     <div><dt>Requests to other sites</dt><dd>0</dd></div>
     <div><dt>Records</dt><dd>${shown.length}</dd></div>

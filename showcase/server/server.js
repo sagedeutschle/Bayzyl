@@ -9,6 +9,7 @@ import { createProjectFeed } from './project-feed.js';
 import { readCurrentDailyWordCache, sanitizeDailyWordPayload } from './wordle-daily.js';
 import { createSignaling } from './signaling.js';
 import { createEditApi } from './edit-api.js';
+import { createArcadeApi } from './arcade-api.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PUBLIC_ROOT = resolve(__dirname, 'public');
@@ -126,6 +127,9 @@ const editApi = createEditApi({ clientAddress, sendJSON });   // prismet.xyz/edi
 const RATE_LIMITS = {
   steam: { max: 12, windowMs: 60_000 },
   wordle: { max: 30, windowMs: 60_000 },
+  debt: { max: 6, windowMs: 60_000 },
+  arcade: { max: 90, windowMs: 60_000 },
+  arcadeAuth: { max: 8, windowMs: 60_000 },
   static: { max: 600, windowMs: 60_000 },   // one visit is ~70 requests (fonts, plates, tiles); 75 cut real visitors off
   rtc: { max: 20, windowMs: 60_000 },
 };
@@ -300,6 +304,8 @@ function safeStaticPath(urlPath, staticRoot) {
   let rel = urlPath === '/' ? 'index.html' : urlPath.replace(/^\/+/, '');
   if (rel === 'steam') rel = 'steam.html';
   if (rel === 'debt') rel = 'debt.html';
+  if (/^(arcade|tools)\/?$/.test(rel)) rel = `${rel.replace(/\/$/, '')}.html`;
+  if (/^arcade\/(2048|minesweeper|lights-out|wordle|rubiks-cube|snake|sudoku|sliding-15|nonogram|chess|reversi|checkers|connect-four|gomoku|sea-battle|solitaire|spider|crazy-8|catan|brick-bench)\/?$/.test(rel)) rel = 'arcade/game.html';
   if (rel === 'edit' || rel === 'privacy' || rel === 'support' || rel === 'scam') rel = `${rel}.html`;   // pages shipped by the site build (site/)
   rel = rel.split('?')[0].split('#')[0];
   if (/%/i.test(rel)) {
@@ -337,7 +343,7 @@ async function serveStatic(req, res, urlPath, versioned = false) {
       continue;
     }
     return sendResponse(req, res, 200, data, {
-      'content-type': MIME[extname(file)] || 'application/octet-stream',
+      'content-type': file.endsWith('/.well-known/apple-app-site-association') ? 'application/json; charset=utf-8' : MIME[extname(file)] || 'application/octet-stream',
       'cache-control': versioned && file.startsWith(SITE_ROOT) ? VERSIONED_CACHE_CONTROL : file.startsWith(SHOTS_ROOT) ? SHOTS_CACHE_CONTROL : DEFAULT_CACHE_CONTROL,
     });
   }
@@ -616,7 +622,7 @@ async function handleWordle(req, res) {
   }
 }
 
-async function routeRequest(req, res, projectFeed) {
+async function routeRequest(req, res, projectFeed, debtService, arcadeApi) {
   if (!req.url) return sendText(req, res, 400, 'Bad request.');
   setCorsIfAllowed(req, res);
 
@@ -628,6 +634,10 @@ async function routeRequest(req, res, projectFeed) {
     return;
   }
   const method = req.method?.toUpperCase() || 'GET';
+
+  if (url.pathname.startsWith('/api/arcade/') && method !== 'OPTIONS') {
+    if (await arcadeApi.handle(req, res, url, method)) return;
+  }
 
   if (method === 'OPTIONS') {
     sendResponse(req, res, 204, '', {
@@ -685,6 +695,18 @@ async function routeRequest(req, res, projectFeed) {
   if (url.pathname === '/api/wordle') {
     return handleWordle(req, res);
   }
+  if (url.pathname === '/api/debt') {
+    if (method === 'HEAD') return sendJSON(req, res, 200, {}, { 'cache-control': 'no-store' });
+    if (rateLimited('debt', req, res)) {
+      return sendJSON(req, res, 429, { error: 'Please wait before refreshing the dashboard.' }, { 'retry-after': '60', 'cache-control': 'no-store' });
+    }
+    try {
+      const snapshot = await debtService.getSnapshot({ force: url.searchParams.get('refresh') === '1' || url.searchParams.get('force') === 'true' });
+      return sendJSON(req, res, 200, snapshot, { 'cache-control': 'no-store' });
+    } catch {
+      return sendJSON(req, res, 503, { error: 'Economic data is temporarily unavailable. Please try again.' }, { 'cache-control': 'no-store' });
+    }
+  }
   if (url.pathname.startsWith('/api/')) {
     sendJSON(req, res, 404, { ok: false, error: 'Endpoint not found.' });
     return;
@@ -693,7 +715,7 @@ async function routeRequest(req, res, projectFeed) {
   return serveStatic(req, res, url.pathname, /^[0-9a-f]{6,}$/.test(url.searchParams.get('v') || ''));
 }
 
-export function createPrismetServer({ feed, signaling } = {}) {
+export function createPrismetServer({ feed, signaling, debt, arcade } = {}) {
   const projectFeed = feed ?? createProjectFeed({
     bundledCatalog: BUNDLED_CATALOG,
     projectsUrl: process.env.PROJECTS_URL || undefined,
@@ -712,7 +734,13 @@ export function createPrismetServer({ feed, signaling } = {}) {
     clientAddress,
   });
 
-  const server = createServer((req, res) => routeRequest(req, res, projectFeed));
+  let debtModule;
+  const debtService = debt ?? { async getSnapshot(options) {
+    debtModule ??= import('./debt-data.js').then(({ createDebtService }) => createDebtService());
+    return (await debtModule).getSnapshot(options);
+  } };
+  const arcadeApi = arcade ?? createArcadeApi({ sendJSON, rateLimited });
+  const server = createServer((req, res) => routeRequest(req, res, projectFeed, debtService, arcadeApi));
 
   // Stateless WebRTC signaling sibling route — /rtc — alongside the HTTP handling
   // above. No table, no row, no persisted game state (universal-room-system

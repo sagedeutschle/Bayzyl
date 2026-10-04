@@ -84,10 +84,10 @@ for (const [w, h, dpr] of SIZES) {
       await page.click('[data-filter="all"]');
       s = await state();
       check(`index @${w}: All shows every row again`, s.shown.length === s.total && s.pressed.join() === 'all' && s.hash === '', `${s.shown.length} of ${s.total}`);
-      const wing = w < 900 ? '.wing-list a[data-beam="ai"]' : '#plan a.wing[data-beam="ai"]';
+      const wing = '.wing-list a[data-beam="ai"]';
       await page.click(wing);
       s = await state();
-      check(`index @${w}: the plan's AI wing filters the register`, expect(s, 'ai'), `${s.shown.length} rows`);
+      check(`index @${w}: the Developer Tools category navigation filters the register`, expect(s, 'ai'), `${s.shown.length} rows`);
 
       const deep = await open(ctx, 'index.html#web', { scroll: false });
       await deep.page.waitForTimeout(300);

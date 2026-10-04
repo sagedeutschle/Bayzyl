@@ -1,0 +1,8985 @@
+[
+  {
+    "actions" : [
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "auto"
+      }
+    ],
+    "final" : {
+      "drawCount" : 3,
+      "foundations" : {
+        "clubs" : [
+
+        ],
+        "diamonds" : [
+
+        ],
+        "hearts" : [
+
+        ],
+        "spades" : [
+
+        ]
+      },
+      "moves" : 9,
+      "stock" : [
+        {
+          "rank" : 8,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 5,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 6,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 3,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 4,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 1,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 3,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 1,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 10,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 4,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 4,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 8,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 7,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 2,
+          "suit" : "clubs"
+        }
+      ],
+      "tableau" : [
+        [
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : true
+          }
+        ]
+      ],
+      "waste" : [
+
+      ]
+    },
+    "game" : "solitaire",
+    "initial" : {
+      "drawCount" : 3,
+      "foundations" : {
+        "clubs" : [
+
+        ],
+        "diamonds" : [
+
+        ],
+        "hearts" : [
+
+        ],
+        "spades" : [
+
+        ]
+      },
+      "moves" : 0,
+      "stock" : [
+        {
+          "rank" : 8,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 5,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 6,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 3,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 4,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 1,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 3,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 1,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 10,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 4,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 4,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 8,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 7,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 2,
+          "suit" : "clubs"
+        }
+      ],
+      "tableau" : [
+        [
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : true
+          }
+        ]
+      ],
+      "waste" : [
+
+      ]
+    },
+    "options" : {
+      "drawCount" : 3
+    },
+    "seed" : "42"
+  },
+  {
+    "actions" : [
+      {
+        "type" : "deal"
+      },
+      {
+        "from" : 1,
+        "index" : 6,
+        "to" : 0,
+        "type" : "move"
+      },
+      {
+        "from" : 0,
+        "index" : 7,
+        "to" : 5,
+        "type" : "move"
+      },
+      {
+        "from" : 1,
+        "index" : 5,
+        "to" : 9,
+        "type" : "move"
+      }
+    ],
+    "final" : {
+      "completedSets" : 0,
+      "moves" : 4,
+      "stockRows" : [
+        [
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          }
+        ]
+      ],
+      "tableau" : [
+        [
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ]
+      ]
+    },
+    "game" : "spider",
+    "initial" : {
+      "completedSets" : 0,
+      "moves" : 0,
+      "stockRows" : [
+        [
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          }
+        ]
+      ],
+      "tableau" : [
+        [
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ]
+      ]
+    },
+    "seed" : "42"
+  },
+  {
+    "actions" : [
+      {
+        "index" : 0,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 0,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 3,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 5,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "index" : 0,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 4,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 1,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "index" : 1,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 1,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 0,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 1,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "type" : "draw"
+      }
+    ],
+    "final" : {
+      "currentPlayer" : "host",
+      "declaredSuit" : "clubs",
+      "discardPile" : [
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 8,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 3,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 4,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 4,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 7,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 3,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 1,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 1,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "clubs"
+        }
+      ],
+      "drawPile" : [
+        {
+          "rank" : 4,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 8,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 7,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 2,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 5,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 10,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 11,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 10,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 9,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 3,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 13,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 13,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 11,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 8,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 13,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 6,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 2,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 4,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 2,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "spades"
+        }
+      ],
+      "hands" : {
+        "guest" : [
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "hearts"
+          }
+        ],
+        "host" : [
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          }
+        ]
+      },
+      "winner" : null
+    },
+    "game" : "crazy-8",
+    "initial" : {
+      "currentPlayer" : "host",
+      "declaredSuit" : "spades",
+      "discardPile" : [
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        }
+      ],
+      "drawPile" : [
+        {
+          "rank" : 4,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 8,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 7,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 2,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 5,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 10,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 11,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 10,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 9,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 3,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 13,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 13,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 11,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 8,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 13,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 6,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 2,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 4,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 2,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 13,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 6,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "clubs"
+        }
+      ],
+      "hands" : {
+        "guest" : [
+          {
+            "rank" : 3,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 4,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 1,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 3,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 1,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "hearts"
+          }
+        ],
+        "host" : [
+          {
+            "rank" : 8,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 12,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "diamonds"
+          }
+        ]
+      },
+      "winner" : null
+    },
+    "options" : {
+      "mode" : "passAndPlay"
+    },
+    "seed" : "42"
+  },
+  {
+    "actions" : [
+      {
+        "index" : 0,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "index" : 0,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "index" : 0,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "index" : 3,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "index" : 1,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "index" : 3,
+        "suit" : "spades",
+        "type" : "play"
+      }
+    ],
+    "final" : {
+      "currentPlayer" : "host",
+      "declaredSuit" : "hearts",
+      "discardPile" : [
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 8,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 10,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 5,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 7,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 4,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 3,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 3,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 4,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 13,
+          "suit" : "hearts"
+        }
+      ],
+      "drawPile" : [
+        {
+          "rank" : 4,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 8,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 7,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 2,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 5,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 10,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 11,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 10,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 9,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 3,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 13,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 13,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 11,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 8,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 13,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 6,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 2,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 4,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 2,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "clubs"
+        }
+      ],
+      "hands" : {
+        "guest" : [
+          {
+            "rank" : 1,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 7,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          }
+        ],
+        "host" : [
+          {
+            "rank" : 6,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          }
+        ]
+      },
+      "winner" : null
+    },
+    "game" : "crazy-8",
+    "initial" : {
+      "currentPlayer" : "host",
+      "declaredSuit" : "spades",
+      "discardPile" : [
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        }
+      ],
+      "drawPile" : [
+        {
+          "rank" : 4,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 8,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 7,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 2,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 5,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 10,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 11,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 10,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 9,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 3,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 13,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 13,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 11,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 8,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 13,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 6,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 2,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 4,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 2,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 13,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 6,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "clubs"
+        }
+      ],
+      "hands" : {
+        "guest" : [
+          {
+            "rank" : 3,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 4,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 1,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 3,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 1,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "hearts"
+          }
+        ],
+        "host" : [
+          {
+            "rank" : 8,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 12,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "diamonds"
+          }
+        ]
+      },
+      "winner" : null
+    },
+    "options" : {
+      "mode" : "soloBot"
+    },
+    "seed" : "42"
+  },
+  {
+    "actions" : [
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "auto"
+      }
+    ],
+    "final" : {
+      "drawCount" : 3,
+      "foundations" : {
+        "clubs" : [
+          {
+            "rank" : 1,
+            "suit" : "clubs"
+          }
+        ],
+        "diamonds" : [
+          {
+            "rank" : 1,
+            "suit" : "diamonds"
+          }
+        ],
+        "hearts" : [
+
+        ],
+        "spades" : [
+
+        ]
+      },
+      "moves" : 11,
+      "stock" : [
+        {
+          "rank" : 8,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 10,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 8,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 2,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 12,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 10,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 2,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 7,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 6,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 3,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 6,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 7,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 6,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 5,
+          "suit" : "clubs"
+        }
+      ],
+      "tableau" : [
+        [
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : true
+          }
+        ]
+      ],
+      "waste" : [
+
+      ]
+    },
+    "game" : "solitaire",
+    "initial" : {
+      "drawCount" : 3,
+      "foundations" : {
+        "clubs" : [
+
+        ],
+        "diamonds" : [
+
+        ],
+        "hearts" : [
+
+        ],
+        "spades" : [
+
+        ]
+      },
+      "moves" : 0,
+      "stock" : [
+        {
+          "rank" : 8,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 10,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 8,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 2,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 12,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 10,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 2,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 7,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 6,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 3,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 6,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 7,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 6,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 5,
+          "suit" : "clubs"
+        }
+      ],
+      "tableau" : [
+        [
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : true
+          }
+        ]
+      ],
+      "waste" : [
+
+      ]
+    },
+    "options" : {
+      "drawCount" : 3
+    },
+    "seed" : "0"
+  },
+  {
+    "actions" : [
+      {
+        "type" : "deal"
+      },
+      {
+        "from" : 1,
+        "index" : 6,
+        "to" : 6,
+        "type" : "move"
+      },
+      {
+        "from" : 2,
+        "index" : 6,
+        "to" : 4,
+        "type" : "move"
+      },
+      {
+        "from" : 2,
+        "index" : 5,
+        "to" : 1,
+        "type" : "move"
+      }
+    ],
+    "final" : {
+      "completedSets" : 0,
+      "moves" : 4,
+      "stockRows" : [
+        [
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          }
+        ]
+      ],
+      "tableau" : [
+        [
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ]
+      ]
+    },
+    "game" : "spider",
+    "initial" : {
+      "completedSets" : 0,
+      "moves" : 0,
+      "stockRows" : [
+        [
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          }
+        ]
+      ],
+      "tableau" : [
+        [
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ]
+      ]
+    },
+    "seed" : "0"
+  },
+  {
+    "actions" : [
+      {
+        "index" : 0,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 0,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 0,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 0,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 0,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 1,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 0,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 0,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "index" : 2,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 3,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      }
+    ],
+    "final" : {
+      "currentPlayer" : "host",
+      "declaredSuit" : "hearts",
+      "discardPile" : [
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 10,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 8,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 8,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 3,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 4,
+          "suit" : "hearts"
+        }
+      ],
+      "drawPile" : [
+        {
+          "rank" : 6,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 7,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 6,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 5,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 7,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 5,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 13,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 1,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 3,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 1,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 3,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 9,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 5,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 5,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 9,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 13,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "hearts"
+        }
+      ],
+      "hands" : {
+        "guest" : [
+          {
+            "rank" : 7,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          }
+        ],
+        "host" : [
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "diamonds"
+          }
+        ]
+      },
+      "winner" : null
+    },
+    "game" : "crazy-8",
+    "initial" : {
+      "currentPlayer" : "host",
+      "declaredSuit" : "hearts",
+      "discardPile" : [
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        }
+      ],
+      "drawPile" : [
+        {
+          "rank" : 6,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 7,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 6,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 5,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 7,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 5,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 13,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 1,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 3,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 1,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 3,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 9,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 5,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 5,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 9,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 13,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 13,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 13,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 12,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "hearts"
+        }
+      ],
+      "hands" : {
+        "guest" : [
+          {
+            "rank" : 10,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 2,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 9,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 8,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 7,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "hearts"
+          }
+        ],
+        "host" : [
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 2,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 8,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          }
+        ]
+      },
+      "winner" : null
+    },
+    "options" : {
+      "mode" : "passAndPlay"
+    },
+    "seed" : "0"
+  },
+  {
+    "actions" : [
+      {
+        "index" : 0,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "index" : 2,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "index" : 2,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "index" : 0,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "index" : 3,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      }
+    ],
+    "final" : {
+      "currentPlayer" : "host",
+      "declaredSuit" : "hearts",
+      "discardPile" : [
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 8,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 8,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 2,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 2,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 10,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 10,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 4,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 3,
+          "suit" : "hearts"
+        }
+      ],
+      "drawPile" : [
+        {
+          "rank" : 6,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 7,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 6,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 5,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 7,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 5,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 13,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 1,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 3,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 1,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 3,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 9,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 5,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 5,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 9,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 13,
+          "suit" : "hearts"
+        }
+      ],
+      "hands" : {
+        "guest" : [
+          {
+            "rank" : 7,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 13,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 8,
+            "suit" : "hearts"
+          }
+        ],
+        "host" : [
+          {
+            "rank" : 2,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          }
+        ]
+      },
+      "winner" : null
+    },
+    "game" : "crazy-8",
+    "initial" : {
+      "currentPlayer" : "host",
+      "declaredSuit" : "hearts",
+      "discardPile" : [
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        }
+      ],
+      "drawPile" : [
+        {
+          "rank" : 6,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 7,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 6,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 5,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 7,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 5,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 13,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 1,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 3,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 1,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 3,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 9,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 5,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 5,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 9,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 13,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 13,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 13,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 12,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "hearts"
+        }
+      ],
+      "hands" : {
+        "guest" : [
+          {
+            "rank" : 10,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 2,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 9,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 8,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 7,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "hearts"
+          }
+        ],
+        "host" : [
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 2,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 8,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          }
+        ]
+      },
+      "winner" : null
+    },
+    "options" : {
+      "mode" : "soloBot"
+    },
+    "seed" : "0"
+  },
+  {
+    "actions" : [
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "auto"
+      }
+    ],
+    "final" : {
+      "drawCount" : 3,
+      "foundations" : {
+        "clubs" : [
+
+        ],
+        "diamonds" : [
+          {
+            "rank" : 1,
+            "suit" : "diamonds"
+          }
+        ],
+        "hearts" : [
+
+        ],
+        "spades" : [
+
+        ]
+      },
+      "moves" : 10,
+      "stock" : [
+        {
+          "rank" : 3,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 6,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 4,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 9,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 4,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 1,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 2,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 13,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 5,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 4,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 8,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 3,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 9,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 1,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "clubs"
+        }
+      ],
+      "tableau" : [
+        [
+
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : true
+          }
+        ]
+      ],
+      "waste" : [
+
+      ]
+    },
+    "game" : "solitaire",
+    "initial" : {
+      "drawCount" : 3,
+      "foundations" : {
+        "clubs" : [
+
+        ],
+        "diamonds" : [
+
+        ],
+        "hearts" : [
+
+        ],
+        "spades" : [
+
+        ]
+      },
+      "moves" : 0,
+      "stock" : [
+        {
+          "rank" : 3,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 6,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 4,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 9,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 4,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 1,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 2,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 13,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 5,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 4,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 8,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 3,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 9,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 1,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "clubs"
+        }
+      ],
+      "tableau" : [
+        [
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "hearts"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "clubs"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "diamonds"
+            },
+            "isFaceUp" : true
+          }
+        ]
+      ],
+      "waste" : [
+
+      ]
+    },
+    "options" : {
+      "drawCount" : 3
+    },
+    "seed" : "18446744073709551615"
+  },
+  {
+    "actions" : [
+      {
+        "type" : "deal"
+      },
+      {
+        "from" : 1,
+        "index" : 6,
+        "to" : 8,
+        "type" : "move"
+      },
+      {
+        "from" : 2,
+        "index" : 6,
+        "to" : 4,
+        "type" : "move"
+      },
+      {
+        "from" : 1,
+        "index" : 5,
+        "to" : 2,
+        "type" : "move"
+      }
+    ],
+    "final" : {
+      "completedSets" : 0,
+      "moves" : 4,
+      "stockRows" : [
+        [
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          }
+        ]
+      ],
+      "tableau" : [
+        [
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ]
+      ]
+    },
+    "game" : "spider",
+    "initial" : {
+      "completedSets" : 0,
+      "moves" : 0,
+      "stockRows" : [
+        [
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 3,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 8,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          }
+        ],
+        [
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 10,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 2,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          }
+        ]
+      ],
+      "tableau" : [
+        [
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 7,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 9,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 2,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 12,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 5,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 6,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 10,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 11,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ],
+        [
+          {
+            "card" : {
+              "rank" : 3,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 1,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 13,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 4,
+              "suit" : "spades"
+            },
+            "isFaceUp" : false
+          },
+          {
+            "card" : {
+              "rank" : 8,
+              "suit" : "spades"
+            },
+            "isFaceUp" : true
+          }
+        ]
+      ]
+    },
+    "seed" : "18446744073709551615"
+  },
+  {
+    "actions" : [
+      {
+        "index" : 1,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 0,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 3,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 5,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 3,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 1,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 2,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 0,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 1,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 1,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "index" : 0,
+        "suit" : "hearts",
+        "type" : "play"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "index" : 2,
+        "suit" : "hearts",
+        "type" : "play"
+      }
+    ],
+    "final" : {
+      "currentPlayer" : "host",
+      "declaredSuit" : "diamonds",
+      "discardPile" : [
+        {
+          "rank" : 4,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 6,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 12,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 9,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 5,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 4,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 7,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 7,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 3,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 1,
+          "suit" : "diamonds"
+        }
+      ],
+      "drawPile" : [
+        {
+          "rank" : 8,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 3,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 9,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 1,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 3,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 10,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 7,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 8,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 10,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 6,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 11,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 5,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 2,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 13,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 13,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 8,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 2,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 10,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 13,
+          "suit" : "clubs"
+        }
+      ],
+      "hands" : {
+        "guest" : [
+          {
+            "rank" : 12,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 13,
+            "suit" : "hearts"
+          }
+        ],
+        "host" : [
+          {
+            "rank" : 4,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          }
+        ]
+      },
+      "winner" : null
+    },
+    "game" : "crazy-8",
+    "initial" : {
+      "currentPlayer" : "host",
+      "declaredSuit" : "spades",
+      "discardPile" : [
+        {
+          "rank" : 4,
+          "suit" : "spades"
+        }
+      ],
+      "drawPile" : [
+        {
+          "rank" : 8,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 3,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 9,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 1,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 3,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 10,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 7,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 8,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 10,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 6,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 11,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 5,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 2,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 13,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 13,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 8,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 2,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 10,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 13,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 11,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "diamonds"
+        }
+      ],
+      "hands" : {
+        "guest" : [
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 1,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 12,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 2,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 13,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          }
+        ],
+        "host" : [
+          {
+            "rank" : 3,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 4,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "clubs"
+          }
+        ]
+      },
+      "winner" : null
+    },
+    "options" : {
+      "mode" : "passAndPlay"
+    },
+    "seed" : "18446744073709551615"
+  },
+  {
+    "actions" : [
+      {
+        "index" : 1,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "index" : 3,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "index" : 3,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "index" : 2,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "type" : "draw"
+      },
+      {
+        "index" : 1,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "index" : 0,
+        "suit" : "spades",
+        "type" : "play"
+      },
+      {
+        "index" : 1,
+        "suit" : "spades",
+        "type" : "play"
+      }
+    ],
+    "final" : {
+      "currentPlayer" : "host",
+      "declaredSuit" : "diamonds",
+      "discardPile" : [
+        {
+          "rank" : 4,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 6,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 12,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 9,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 5,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 4,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 13,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 7,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 7,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 3,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 1,
+          "suit" : "diamonds"
+        }
+      ],
+      "drawPile" : [
+        {
+          "rank" : 8,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 3,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 9,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 1,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 3,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 10,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 7,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 8,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 10,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 6,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 11,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 5,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 2,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 13,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 13,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 8,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 2,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 10,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "hearts"
+        }
+      ],
+      "hands" : {
+        "guest" : [
+          {
+            "rank" : 12,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 11,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 13,
+            "suit" : "clubs"
+          }
+        ],
+        "host" : [
+          {
+            "rank" : 4,
+            "suit" : "clubs"
+          }
+        ]
+      },
+      "winner" : null
+    },
+    "game" : "crazy-8",
+    "initial" : {
+      "currentPlayer" : "host",
+      "declaredSuit" : "spades",
+      "discardPile" : [
+        {
+          "rank" : 4,
+          "suit" : "spades"
+        }
+      ],
+      "drawPile" : [
+        {
+          "rank" : 8,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 3,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 9,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 9,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 11,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 1,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 10,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 6,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 5,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 3,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 8,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 10,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 7,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 12,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 7,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 8,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 10,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 6,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 11,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 11,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 5,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 2,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 2,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 3,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 13,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 13,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 9,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 4,
+          "suit" : "diamonds"
+        },
+        {
+          "rank" : 8,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 2,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 10,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 12,
+          "suit" : "hearts"
+        },
+        {
+          "rank" : 13,
+          "suit" : "clubs"
+        },
+        {
+          "rank" : 11,
+          "suit" : "spades"
+        },
+        {
+          "rank" : 1,
+          "suit" : "diamonds"
+        }
+      ],
+      "hands" : {
+        "guest" : [
+          {
+            "rank" : 12,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 1,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 12,
+            "suit" : "clubs"
+          },
+          {
+            "rank" : 2,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 13,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 5,
+            "suit" : "spades"
+          }
+        ],
+        "host" : [
+          {
+            "rank" : 3,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 6,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 7,
+            "suit" : "diamonds"
+          },
+          {
+            "rank" : 4,
+            "suit" : "hearts"
+          },
+          {
+            "rank" : 9,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 1,
+            "suit" : "spades"
+          },
+          {
+            "rank" : 4,
+            "suit" : "clubs"
+          }
+        ]
+      },
+      "winner" : null
+    },
+    "options" : {
+      "mode" : "soloBot"
+    },
+    "seed" : "18446744073709551615"
+  }
+]

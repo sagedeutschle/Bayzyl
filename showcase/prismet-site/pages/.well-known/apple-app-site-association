@@ -1,0 +1,14 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["ZW9HBTRLRT.com.spocksclub.kaleidoscope", "YJR3ABV3H4.com.gtrktscrb.kaleidoscope"],
+        "components": [
+          {"/": "/arcade/2048"},
+          {"/": "/arcade/minesweeper"},
+          {"/": "/arcade/lights-out"}
+        ]
+      }
+    ]
+  }
+}

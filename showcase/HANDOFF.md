@@ -1,5 +1,48 @@
 # prismet.xyz — handoff (2026-10-03)
 
+## Current release candidate — 2026-10-04
+
+Sage authorized publishing the accumulated website work on 2026-10-04. This section supersedes the
+historical candidate/status paragraphs below; deployment evidence will be recorded after the live gate.
+
+- Marcellus, the purple/gold prism with separated rainbow beams, and generated crystal decoration remain
+  the approved visual direction. Real project evidence stays separate from decorative artwork.
+- Six homepage project chapters and eight project portfolios now include scrollable screenshot galleries
+  with accessible full-image viewing. The Minecraft plate has eight selected real views, preserving the
+  original historical attribution rather than inventing authorship.
+- `/arcade` is the native-style library: 19 browser games, Brick Bench, and Debt/Steam lenses. Each playable
+  route uses the shared shell. Native rules, seeded fixtures and tile art were reused where available.
+  The App Store link is `https://apps.apple.com/us/app/kaleidescope/id6785993194`.
+- `/debt` exposes 43 metrics in nine groups, with sources, dates, stale labels, search, pins, details,
+  comparisons and CSV export. Mixed frequencies are labeled; unavailable upstream observations are not
+  invented. `/steam`, `/scam`, `/api/wordle`, `/rtc` and the editor remain supported.
+- All games save locally. Only 2048, Minesweeper and Lights Out implement the portable native save schema.
+  Other facets use browser-only saves. Imports validate and back up displaced sessions before replacement.
+  Lights Out supports cooperative browser rooms; cross-network reliability is not established by unit tests.
+- Cloud progress is optional and unavailable unless `ARCADE_SUPABASE_URL` and
+  `ARCADE_SUPABASE_PUBLISHABLE_KEY` are configured and the migration in `server/migrations/` is applied.
+  The website deployment does not apply that migration or create accounts. Native transfer changes were
+  checked in unsigned local builds in the app checkout; they are not a released native app update.
+
+The release gate includes pure engine/native-fixture tests, save/API/signaling contracts, debt and route
+checks, portfolio/editor contracts, and the overlay archive. `assemble-overlay.sh` and `push-overlay.py`
+must both include every top-level server module; the old base image lacks the new modules. Use the normal
+main-branch GitHub workflow and its complete `tools/deploy/fly.toml`.
+
+Fresh pre-release reconciliation: remote main is `d74c03e`, deployed Fly release is v35
+(`site-37-d74c03e`), and the live editor reports its source branch as main with no remote drafts.
+The older preview-artifact and Mac-copy notes below are historical, not competing deployment sources.
+
+Pre-publication evidence: build/verify passed (25 pages, 1,330 files, 163 images, 1,346 URLs). Editor287,
+portfolio189, core Arcade235, library162, card/workshop169, room lifecycle8 and Uncle Scam372 assertions
+passed, alongside41 board and18 debt tests, native puzzle/Catan fixtures, API/signaling and product-route
+suites. The complete local deployment gate passed, including all20 playable routes,43-metric schema,
+WebSocket101 and the shipping daily-word response. The overlay archive was inspected for all9 server
+modules and20 game modules. Independent desktop dark-mode visual review passed the supplied Firefox
+Arcade/chess captures; a chess move was exercised. Full390px/light-theme, Debt/Minecraft and two-browser
+room acceptance remain unverified because user activity interrupted the shared native-browser slot.
+The build request-budget heuristic counts below-fold lazy galleries; no new measured performance claim is made.
+
 For whoever takes over Sage Deutschle's website: Sage, a future Claude session, or Codex. Read it all before you
 touch production. This repository is public: no secrets, tokens, host names, IPs or other people's names belong in
 it, in this file included.
@@ -25,7 +68,10 @@ protected route intact, the two privacy leaks of the old server closed.
    `content/work/*.md` are Sage's. Agents add new keys below that comment and flag them as proposed; they do not
    rewrite Sage's lines. Sage edits anything through `/edit`.
 2. **Real visuals only.** Screenshots and renders of the actual work; cropping, resizing, masking a private string
-   and re-encoding to WebP are fine. No mockups, generated images, collages or device frames.
+   and re-encoding to WebP are fine. No mockups, generated images, collages or device frames as project evidence.
+   **Sage's 2026-10-04 exception:** original generated magical imagery is authorized for decorative website
+   ornaments (violet crystalline refraction, light wisps and gold sparks). Keep it visually separate from project
+   screenshots and claims, decorative to assistive technology, and local until deployment is approved.
 3. **Privacy.** No host names, IPs, mesh addresses, emails, account names, Steam ids, clipboard text or other
    people's names on the site or in this repo. `verify.mjs` enforces the mechanical part on every build; the word
    list of host names lives outside the repo (secret `PRISMET_PRIVATE_WORDS` or `PRISMET_PRIVATE_FILE`).
@@ -76,7 +122,61 @@ protected route intact, the two privacy leaks of the old server closed.
 
 ## 5. The design, in short
 
-**2026-10-04: the original look stands.** Over 2026-10-03 and 10-04 an agent tried a blue-green palette with
+**2026-10-04 portfolio expansion (latest local candidate, unpublished):** Broad product engineering hiring
+portfolio, retaining the approved Marcellus/purple/gold prism and crystal hero. Six homepage project chapters
+now show 36 selected views; eight project pages carry 40 curated views in total. Native horizontal galleries
+have captions/evidence labels, position ranges, previous/next buttons and full-resolution links. A native dialog
+adds keyboard navigation, Escape, focus return and contained full-image viewing. Annotated editor previews
+keep normal editing behavior. New employer CTA is "Discuss a role" via the existing LinkedIn link; Fiverr remains.
+Prismet evidence remains co-developed; PrismCode badges explicitly say "Scripted demo". Original authored work
+copy and protected tool source are unchanged. Twelve imported base images plus 44 responsive variants total
+3,446,008 bytes; private selection provenance is outside this public repository.
+
+Build/verify: 22 pages, 151 image references, 1,244 URLs. Portfolio contracts 188 and editor contracts 287 pass.
+Desktop Firefox has exercised a gallery image and dialog next/arrow/Escape navigation. Final viewport captures,
+mobile/light-theme gallery checks and scroller endpoint checks remain pending: the user's active native browser
+session was preserved. The request-budget heuristic is 47/20 because it counts below-fold lazy gallery images;
+this is not a measured first-view network result. No push, merge or deployment. A new Arcade/native-app Debt
+Clock expansion is under source research and brainstorming only; those features are not implemented here.
+
+**2026-10-04 prism restoration and spectrum correction (latest local candidate):** Keep a prominent
+gold-edged prism in the open center of the generated crystal crescent. It must stay visible at desktop and
+phone widths. A pale incoming beam separates into six distinct red/orange/yellow/green/blue/violet bands;
+header mark and favicon match this spectrum. The overall artwork remains predominantly purple with gold
+highlights. Pointer input tilts the prism and spreads the fan; static reduced-motion/touch/editor guards remain.
+The category navigation strip stays below. Final Firefox desktop and 390px views show both artwork and prism;
+desktop light theme and pointer response also checked. Build/verify and 287 editor checks pass. Not deployed.
+
+**2026-10-04 placement correction (local, unpublished):** Sage liked the generated crescent but found that
+section layers hid it. It now occupies a reserved hero illustration column beside the introduction, at full
+opacity without masks or a diagram veil. The six category destinations use a compact navigation strip below;
+the hall SVG remains in source but is hidden on this homepage and its animation handlers are skipped. One
+full ornament sits beside the tools heading in normal flow, replacing three clipped section accents. Marcellus,
+purple/gold branding and input-driven artwork motion remain. Build/verify and editor checks pass; current
+Firefox visual acceptance is still pending because another session owns that browser.
+
+**Latest direction, 2026-10-03 (local candidate, not deployed):** Sage explicitly chose **Marcellus** as
+Prismet's preferred font going forward, superseding the font restoration below. Use it for the brand, headings,
+navigation and prose; reserve monospace for code and technical metadata. The current local layout pass retains
+slate, chalk and brass, tightens the hero and directory, moves the tools after featured work, and develops a
+purple-dominant refracting prism with restrained gold and pointer-responsive light. Preserve reduced-motion,
+touch and keyboard use. The logo direction is inspired by the prism/refraction idea of Dark Side of the Moon.
+This is a new direction, not permission to restore the withdrawn palette, sun-cycle or foliage designs.
+
+**2026-10-04 local iteration:** Sage approved that direction and asked for more dynamic decoration in the
+empty areas. The homepage now adds asymmetric purple rays and angular glass geometry around the hero, alternating
+optical rails in the margins, and segmented spectral dividers. Fine-pointer and scroll input move only decorative
+layers; touch, reduced-motion and editor previews retain static artwork. Decoration is inline, adds no asset
+requests and stays off project-detail and standalone tool pages. This candidate remains unpublished.
+
+**Later 2026-10-04 local iteration:** Sage requested less generic vector decoration and explicitly asked for
+image generation. A generated amethyst/quartz crescent with violet filaments and gold glints now replaces those
+background vectors. `assets/magic/enchanted-optics.webp` supplies the hero and small cropped ornaments at three
+section boundaries, using the same pointer/scroll motion. The transparent, lossless asset is 1,158,116 bytes;
+smaller exports damaged its soft edges. Project imagery, Marcellus and the small prism logo are preserved. Build
+and editor checks pass; artwork itself was visually reviewed, while a fresh full-page browser review is pending.
+
+**Earlier restoration, 2026-10-03:** On 2026-10-03 an agent tried a blue-green palette with
 Marcellus, then a "prism and glass" sun cycle, then (unmerged, PR #16) a leaf-wreath emblem. Sage withdrew all of it:
 "revert the site back to what it was before we got rid of yellowness, except keep all the uncle scam stuff".
 `src/site.css`, `src/site.js`, `pages/lib/render.js` and `assets/fonts/` are back to their state at `115097e` (slate,

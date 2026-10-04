@@ -1,4 +1,4 @@
-import { randomInt } from 'node:crypto';
+import { randomInt, randomBytes, timingSafeEqual } from 'node:crypto';
 import { WebSocketServer } from 'ws';
 
 // Stateless WebRTC signaling for the Prismet universal room system.
@@ -188,11 +188,14 @@ export function createSignaling({
       gameID: sanitizeText(msg.gameId, 64) || null,
       maxPlayers,
       hostPeerId: socketState.peerId,
+      // Optional browser capability; legacy native rooms retain their existing wire contract.
+      hostResumeToken: msg.requireHostResumeProof === true ? randomBytes(32).toString('base64url') : null,
       peers: new Map(),
       createdAt: Date.now(),
       expiresAt: Date.now() + ROOM_TTL_MS,
       emptySince: null,
     };
+    removePeerFromRoom(ws);
     room.peers.set(socketState.peerId, {
       peerId: socketState.peerId,
       ws,
@@ -202,7 +205,8 @@ export function createSignaling({
     });
     rooms.set(code, room);
     socketState.roomCode = code;
-    send(ws, { type: 'room_created', roomCode: code });
+    send(ws, { type: 'room_created', roomCode: code,
+      ...(room.hostResumeToken ? { hostResumeToken: room.hostResumeToken } : {}) });
   }
 
   function handleJoinRoom(ws, socketState, msg) {
@@ -225,12 +229,32 @@ export function createSignaling({
       sendError(ws, 'invalid_code');
       return;
     }
-    if (room.peers.size >= room.maxPlayers && !room.peers.has(peerId)) {
+    const occupied = room.peers.get(peerId);
+    if (occupied && occupied.ws !== ws) {
+      sendError(ws, 'peer_id_in_use');
+      return;
+    }
+    if (room.hostResumeToken && peerId === room.hostPeerId) {
+      const proof = msg.hostResumeToken;
+      if (typeof proof !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(proof)
+          || !timingSafeEqual(Buffer.from(proof), Buffer.from(room.hostResumeToken))) {
+        sendError(ws, 'host_proof_required');
+        return;
+      }
+    }
+    const replacesOwnSeat = socketState.roomCode === code && socketState.peerId !== peerId
+      && room.peers.get(socketState.peerId)?.ws === ws;
+    const joiningCount = room.peers.size - (replacesOwnSeat ? 1 : 0) + (occupied ? 0 : 1);
+    const hostPresentAfterJoin = peerId === room.hostPeerId
+      || (room.peers.has(room.hostPeerId) && !(replacesOwnSeat && socketState.peerId === room.hostPeerId));
+    // A protected host keeps one seat during reconnect, even if guests know the room code.
+    const reservedHostSeat = room.hostResumeToken && !hostPresentAfterJoin ? 1 : 0;
+    if (joiningCount + reservedHostSeat > room.maxPlayers) {
       sendError(ws, 'room_full');
       return;
     }
 
-    if (socketState.roomCode && socketState.roomCode !== code) {
+    if (socketState.roomCode && (socketState.roomCode !== code || socketState.peerId !== peerId)) {
       removePeerFromRoom(ws);
     }
 
@@ -272,10 +296,13 @@ export function createSignaling({
     if (!room) return;
     const fromPeerId = sanitizeText(msg.fromPeerId, 64);
     if (!fromPeerId || fromPeerId !== socketState.peerId) return; // best-effort sender spoofing guard
+    if (room.peers.get(fromPeerId)?.ws !== ws) return;
     const toPeerId = sanitizeText(msg.toPeerId, 64);
     const target = room.peers.get(toPeerId);
     if (!target) return; // target not present (already left/never joined) — drop, no error frame defined
-    send(target.ws, msg); // relay verbatim
+    // Keep legacy payload fields, but never forward a reconnect capability.
+    const { hostResumeToken, requireHostResumeProof, ...payload } = msg;
+    send(target.ws, payload);
     socketState.lastSeen = Date.now();
   }
 
