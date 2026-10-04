@@ -35,7 +35,7 @@ Hire me
 Prismet · the workshop of Sage Deutschle
 
 ## hero.title
-Hello There!
+Hello There! My name is:
 
 ## hero.lede
 I have shipped iPhone and Mac games. Coded Minecraft plugins and ran Minecraft servers. I also like to make custom Linux desktops, AI agent systems, and small web tools that keep your data on your device and in your control.
