@@ -46,6 +46,10 @@ public final class SelectionCommandParser {
             }
         }
 
+        if (!allDirections && !direction.isBlank() && !DirectionUtil.isKnownDirection(direction)) {
+            throw new IllegalArgumentException("Unknown direction: " + direction);
+        }
+
         return new SelectionResizeRequest(amount, direction, allDirections);
     }
 }

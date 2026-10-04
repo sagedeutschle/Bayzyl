@@ -8,6 +8,17 @@ public final class DirectionUtil {
     private DirectionUtil() {
     }
 
+    private static final java.util.Set<String> KNOWN_DIRECTIONS = java.util.Set.of(
+            "north", "south", "east", "west",
+            "northeast", "north-east", "ne", "northwest", "north-west", "nw",
+            "southeast", "south-east", "se", "southwest", "south-west", "sw",
+            "up", "down", "back", "left", "right", "me", "forward");
+
+    /** True for a direction word {@link #resolve} understands; anything else silently falls back to look direction. */
+    public static boolean isKnownDirection(String direction) {
+        return direction != null && KNOWN_DIRECTIONS.contains(direction.toLowerCase(Locale.ROOT));
+    }
+
     public static int[] resolve(Player player, String direction) {
         String value = direction == null || direction.isBlank() ? "forward" : direction.toLowerCase(Locale.ROOT);
         switch (value) {

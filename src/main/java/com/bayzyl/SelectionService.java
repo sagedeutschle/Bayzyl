@@ -81,19 +81,19 @@ public final class SelectionService {
         int maxZ = selection.getMaxZ();
 
         if (expand) {
-            minX -= amount;
-            minY -= amount;
-            minZ -= amount;
-            maxX += amount;
-            maxY += amount;
-            maxZ += amount;
+            minX = saturate((long) minX - amount);
+            minY = saturate((long) minY - amount);
+            minZ = saturate((long) minZ - amount);
+            maxX = saturate((long) maxX + amount);
+            maxY = saturate((long) maxY + amount);
+            maxZ = saturate((long) maxZ + amount);
         } else {
-            minX = Math.min(maxX, minX + amount);
-            minY = Math.min(maxY, minY + amount);
-            minZ = Math.min(maxZ, minZ + amount);
-            maxX = Math.max(minX, maxX - amount);
-            maxY = Math.max(minY, maxY - amount);
-            maxZ = Math.max(minZ, maxZ - amount);
+            minX = Math.min(maxX, saturate((long) minX + amount));
+            minY = Math.min(maxY, saturate((long) minY + amount));
+            minZ = Math.min(maxZ, saturate((long) minZ + amount));
+            maxX = Math.max(minX, saturate((long) maxX - amount));
+            maxY = Math.max(minY, saturate((long) maxY - amount));
+            maxZ = Math.max(minZ, saturate((long) maxZ - amount));
         }
 
         Location pos1 = new Location(selection.getPos1().getWorld(), minX, minY, minZ);
@@ -106,9 +106,9 @@ public final class SelectionService {
             return min;
         }
         if (expand) {
-            return min - amount;
+            return saturate((long) min - amount);
         }
-        return Math.min(max, min + amount);
+        return Math.min(max, saturate((long) min + amount));
     }
 
     private int adjustMax(int min, int max, int axisDirection, int amount, boolean expand) {
@@ -116,8 +116,13 @@ public final class SelectionService {
             return max;
         }
         if (expand) {
-            return max + amount;
+            return saturate((long) max + amount);
         }
-        return Math.max(min, max - amount);
+        return Math.max(min, saturate((long) max - amount));
+    }
+
+    // A huge expand amount must not wrap around Integer.MIN/MAX and flip the box to the far side.
+    private static int saturate(long value) {
+        return (int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, value));
     }
 }
