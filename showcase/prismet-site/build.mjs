@@ -71,6 +71,8 @@ function asset(p) {
   return copied.get(p);
 }
 cpSync(join(SHOWCASE, 'assets/fonts'), join(DIST, 'assets/fonts'), { recursive: true });
+// The rendered leaves (showcase/tools/foliage/render.sh): the emblem's wreath and the two sprays behind the page.
+cpSync(join(SHOWCASE, 'assets/foliage'), join(DIST, 'assets/foliage'), { recursive: true });
 // site.css = the design's defaults (src/site.css) plus whatever data/theme.json (tokens) and data/styles.json (single
 // elements) change; nothing is added when they are empty.
 const readData = (name) => (existsSync(join(HERE, 'data', name)) ? JSON.parse(readFileSync(join(HERE, 'data', name), 'utf8')) : {});

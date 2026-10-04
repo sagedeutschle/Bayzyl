@@ -117,6 +117,17 @@ sits on clear ground, and from 1200px a vine that is also a circuit (stem, leave
 margin. The background art is two `data:` SVGs inside `site.css` (`body::before`, `body::after`), so nothing is
 fetched; `#work` is slightly see-through so the weave carries behind it.
 
+**2026-10-04, rendered leaves** (Sage: "don't be afraid to make the nature aspect actually be renders of leaves").
+The nature is now a render and the tech stays drawn. `showcase/tools/foliage/foliage.html` builds each leaf from two
+halves folded along the midrib and lit from the upper left, with a cast shadow, veins, gloss, rim and grain; one leaf
+in nine carries live veins (a circuit with a joint at each end). `showcase/tools/foliage/render.sh` captures three
+scenes in headless Chromium on a transparent ground and writes `showcase/assets/foliage/{wreath,spray-tl,spray-br}.webp`
+(about 127, 51 and 41 KB); the sequence of random numbers is fixed, so a scene renders the same every time. The build
+copies `assets/foliage/` into `dist`. The wreath is an `<image>` in the emblem (it replaces the drawn leaves, sprout
+and trace leaves); the sprays are `body::after` backgrounds from 1100px (they replace the drawn margin vines). These
+are made by this repo's own code, not found or generated elsewhere, so the "real visuals only" rule for project
+captures is untouched.
+
 The site is **a workshop and the register it keeps**. The home page opens on a hall plan, six wings (Sage's six
 categories) around a rotunda with the prism in its floor; each wing filters the register. Then four doors (Bayzyl,
 Prismet, Helm, PrismCode, each with one signature module built from its own material), the register (a ledger grouped

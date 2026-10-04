@@ -182,8 +182,8 @@ const tierOf = (p) => (featuredSlugs.includes(p.slug) ? 'principal' : p.tier ===
 const href = (p, root = '') => `${root}work/${p.slug}.html`;
 
 // ── the emblem (hero + navigation): the prism at the heart of a living wreath, six wings as modules around it ────
-// Sunlight comes down into the prism and leaves as six traces in the wing colours, one to each module. Everything
-// is drawn here from numbers (no image files), and the same numbers every time: `rnd` is a fixed sequence.
+// Sunlight comes down into the prism and leaves as six traces in the wing colours, one to each module. The tech is
+// drawn here from numbers; the wreath is a render of leaves (showcase/tools/foliage), laid over the disc's rim.
 const WING_ICONS = {
   desktop: 'M-7 -6H7V3H-7ZM-3 7H3M0 3V7',
   apps: 'M-7 -7H-1V-1H-7ZM1 -7H7V-1H1ZM-7 1H-1V7H-7ZM1 1H7V7H1Z',
@@ -200,20 +200,6 @@ function plan() {
   // module centres: three down each side, the top left free for the sunbeam and the foot for the sprout
   const at = { desktop: [-176, -150], apps: [-228, 0], worlds: [-176, 150], minecraft: [176, -150], web: [228, 0], ai: [176, 150] };
 
-  // the wreath: two rings of leaves leaning out and in, darker ones underneath
-  const GREENS = ['#174A33', '#1D5A3C', '#2A7A50', '#3E9B6E', '#57B585', '#7BD0A4', '#2F8F7E', '#23685A'];
-  const leaves = [];
-  for (let ring = 0; ring < 3; ring++) {
-    const n = [74, 60, 44][ring];
-    for (let i = 0; i < n; i++) {
-      const a = (i + (ring ? 0.5 : 0) + (rnd(i, ring) - 0.5) * 0.5) * (360 / n);
-      const r = [364, 342, 322][ring] + (rnd(i, ring + 5) - 0.5) * 16;
-      const lean = (ring === 1 ? -1 : 1) * (34 + rnd(i, ring + 9) * 40) * (i % 2 ? 1 : -1);
-      const sc = [1.1, 0.9, 0.62][ring] + rnd(i, ring + 13) * 0.6;
-      const x = C + Math.cos(a * Math.PI / 180) * r, y = C + Math.sin(a * Math.PI / 180) * r;
-      leaves.push(`<use href="#leaf" fill="${GREENS[Math.floor(rnd(i, ring + 17) * GREENS.length) % GREENS.length]}" transform="translate(${f(x)} ${f(y)}) rotate(${f(a + 90 + lean)}) scale(${f(sc)})"/>`);
-    }
-  }
   // fireflies: small lights inside the wreath, kept clear of the modules and the rotunda
   const inPod = (x, y) => Object.values(at).some(([dx, dy]) => Math.abs(x - C - dx) < PW / 2 + 8 && Math.abs(y - C - dy) < PH / 2 + 22);
   const flies = [];
@@ -221,12 +207,6 @@ function plan() {
     const a = rnd(i, 31) * Math.PI * 2, r = 110 + rnd(i, 37) * 205, x = C + Math.cos(a) * r, y = C + Math.sin(a) * r;
     if (!inPod(x, y)) flies.push(`<circle cx="${f(x)}" cy="${f(y)}" r="${f(1.2 + rnd(i, 41) * 1.6)}" opacity="${f(0.35 + rnd(i, 43) * 0.55)}"/>`);
   }
-  // the sprout at the foot: a stem from the rotunda down to the wreath, leaves either side
-  const sprout = [0, 1, 2, 3, 4, 5, 6].map((i) => {
-    const y = C + R + 34 + i * 30, side = i % 2 ? 1 : -1, x = C + Math.sin(i * 0.9) * 7;
-    return `<use href="#leaf" fill="${GREENS[(i + 2) % GREENS.length]}" transform="translate(${f(x)} ${f(y)}) rotate(${side > 0 ? -28 : 208}) scale(${f(0.95 - i * 0.04)})"/>`;
-  }).join('');
-
   const ph = 62, pw = 36, apex = C - ph * 2 / 3, base = C + ph / 3;
   // a flower of solar cells around the rotunda: photovoltaic petals, blue into violet
   const petals = Array.from({ length: 20 }, (_, i) => `<use href="#cell" transform="translate(${C} ${C}) rotate(${i * 18 + 9})"/>`).join('');
@@ -237,10 +217,8 @@ function plan() {
     const curl = `c${side * 6} -26 ${side * -22} -40 ${side * -34} -22c${side * -7} 12 ${side * 6} 22 ${side * 15} 14`;
     const stem = `<path class="vine" d="M${f(x0)} ${f(y0)}A${rr} ${rr} 0 0 ${side > 0 ? 0 : 1} ${f(x1)} ${f(y1)}${curl}"/>`;
     const growth = [76, 62, 48, 34, 20, 6, -8, -20].map((deg, i) => {
-      const [x, y] = pt(deg), out = side > 0 ? deg - 90 : 270 - deg;
-      return i % 2
-        ? `<circle class="lamp" style="--c:var(--${SPECTRUM[(i + (side > 0 ? 0 : 3)) % 6]}-ink)" cx="${f(x - side * Math.cos(deg * Math.PI / 180) * 13)}" cy="${f(y - Math.sin(deg * Math.PI / 180) * 13)}" r="4"/>`
-        : `<use href="#leaf" fill="${GREENS[(i + 3) % GREENS.length]}" transform="translate(${f(x)} ${f(y)}) rotate(${f(out + side * 150)}) scale(.8)"/>`;
+      const [x, y] = pt(deg);
+      return `<circle class="lamp" style="--c:var(--${SPECTRUM[(i + (side > 0 ? 0 : 3)) % 6]}-ink)" cx="${f(x - side * Math.cos(deg * Math.PI / 180) * 13)}" cy="${f(y - Math.sin(deg * Math.PI / 180) * 13)}" r="${i % 2 ? 4 : 3}"/>`;
     }).join('');
     return stem + growth;
   };
@@ -252,14 +230,10 @@ function plan() {
     const ang = Math.atan2(dy, dx), kx = C + Math.cos(ang) * (R + 18), ky = C + Math.sin(ang) * (R + 18);
     const trace = dy === 0 ? `M${C} ${C}H${ex}` : `M${C} ${C}L${f(kx)} ${f(ky)}L${f(kx)} ${py}H${ex}`;
     const n = count(id), label = beamLabel(id), lead = shown.find((p) => p.beam === id);
-    // where the trace turns (or its middle, when it runs straight) it puts out a pair of leaves
-    const bx = dy === 0 ? (C + ex) / 2 + (left ? -14 : 14) : kx, by = dy === 0 ? C : (ky + py) / 2;
-    const bud = `<use href="#leaf" class="bud" transform="translate(${f(bx)} ${f(by)}) rotate(${dy === 0 ? -58 : (left ? 200 : -20)}) scale(.62)"/><use href="#leaf" class="bud" transform="translate(${f(bx)} ${f(by)}) rotate(${dy === 0 ? 58 : (left ? 160 : 20)}) scale(.5)"/>`;
     // the module is a chip: pins along its top and bottom edges, clear of the badge
     const pins = [-78, -52, 52, 78].map((o) => `M${px + o} ${y}v-7M${px + o} ${y + PH}v7`).join('') + `M${px - 26} ${y + PH}v7M${px} ${y + PH}v7M${px + 26} ${y + PH}v7`;
     return `<a class="wing" href="#work" data-beam="${id}" style="--i:${i};--c:var(--${id});--ci:var(--${id}-ink)" aria-label="${esc(label.p)}: ${n} record${n === 1 ? '' : 's'}">
       <path class="inlay" d="${trace}"/>
-      ${bud}
       <path class="pins" d="${pins}"/>
       ${dy === 0 ? '' : `<circle class="node" cx="${f(kx)}" cy="${f(ky)}" r="3.4"/><circle class="node" cx="${f(kx)}" cy="${py}" r="3.4"/>`}<circle class="node" cx="${ex}" cy="${py}" r="4.2"/>
       <rect class="room-fill" x="${x}" y="${y}" width="${PW}" height="${PH}" rx="16"/>
@@ -274,7 +248,6 @@ function plan() {
   <defs>
     <radialGradient id="plan-disc"><stop offset="0" stop-color="#16404A"/><stop offset=".55" stop-color="#0E222B"/><stop offset="1" stop-color="#081218"/></radialGradient>
     <filter id="plan-glow" filterUnits="userSpaceOnUse" x="0" y="0" width="${S}" height="${S}"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-    <g id="leaf"><path d="M0 0C9 -12 27 -12 36 0C27 12 9 12 0 0Z"/><path class="rib" d="M3 0H31M12 0l6 -5M12 0l6 5M21 0l5 -4M21 0l5 4"/></g>
     <linearGradient id="plan-pv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3FB6C8"/><stop offset=".5" stop-color="#3382BF"/><stop offset="1" stop-color="#6A5BD0"/></linearGradient>
     <g id="cell"><rect x="-9" y="-121" width="18" height="24" rx="3"/><path class="grid" d="M0 -121v24M-9 -109h18"/></g>
     <pattern id="plan-geo" width="64" height="110.85" patternUnits="userSpaceOnUse"><path d="M0 0H64M0 55.4H64M0 0L32 55.4L64 0M0 110.85L32 55.4L64 110.85"/></pattern>
@@ -282,12 +255,10 @@ function plan() {
   </defs>
   <circle class="disc" cx="${C}" cy="${C}" r="372"/>
   <rect class="geo" x="0" y="0" width="${S}" height="${S}" fill="url(#plan-geo)" clip-path="url(#plan-clip)"/>
-  <g class="wreath">${leaves.join('')}</g>
   <circle class="ring" cx="${C}" cy="${C}" r="318"/>
   <g class="flies">${flies.join('')}</g>
   <g class="vines">${vine(-1)}${vine(1)}</g>
-  <path class="stem" d="M${C} ${C + R}C${C - 10} ${C + R + 60} ${C + 12} ${C + R + 130} ${C} ${C + R + 222}"/>
-  <g class="sprout">${sprout}</g>
+  <image class="wreath" href="assets/foliage/wreath.webp" x="-50" y="-50" width="900" height="900"/>
   <g class="g-rotunda">
     <path class="beacon" d="M${C} 44V${f(apex)}"/>
     ${sun}

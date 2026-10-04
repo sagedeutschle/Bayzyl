@@ -9,7 +9,7 @@ bad()  { printf 'FAIL %s\n' "$1"; fail=1; }
 code() { curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$B$1"; }
 chk()  { [ "$(code "$1")" = "$2" ] && ok "$1 = $2" || bad "$1 = $(code "$1") (want $2)"; }
 chk / 200; chk /index.html 200; chk /work/bayzyl.html 200; chk /colophon.html 200; chk /site.css 200; chk /site.js 200
-chk /assets/fonts/fonts.css 200; chk /assets/og.jpg 200; chk /favicon.ico 200; chk /healthz 200
+chk /assets/fonts/fonts.css 200; chk /assets/foliage/wreath.webp 200; chk /assets/og.jpg 200; chk /favicon.ico 200; chk /healthz 200
 chk /steam 200; chk /steam.html 200; chk /debt 200; chk /debt.html 200; chk /style.css 200; chk /steam.js 200; chk /debt.js 200
 chk /icon.svg 200; chk /manifest.webmanifest 200
 chk /scam 200; chk /scam.js 200; chk /scam-calc.js 200; chk /scam.css 200; chk /scam-seal.svg 200; chk /scam-data/tax-2026.json 200; chk /scam-data/mts-snapshot.json 200
