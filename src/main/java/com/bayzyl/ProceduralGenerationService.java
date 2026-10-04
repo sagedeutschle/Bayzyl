@@ -44,6 +44,9 @@ public final class ProceduralGenerationService {
     private static final int TARGET_RANGE = 64;
     private static final int TREE_SNAPSHOT_RADIUS = 8;
     private static final int PUMPKIN_SNAPSHOT_HEIGHT = 2;
+    /** Cap on formula nodes visited per command (nodes x blocks); one block also costs a few nodes of overhead. */
+    private static final long MAX_FORMULA_WORK = 100_000_000L;
+    private static final int FORMULA_BLOCK_OVERHEAD = 8;
 
     private final HistoryService historyService;
     private final SelectionManager selectionManager;
@@ -129,7 +132,17 @@ public final class ProceduralGenerationService {
             return GeneratorResult.failed("Invalid expression: " + ex.getMessage());
         }
 
-        Set<Long> included = evaluateSelection(bounds, request.coordinateMode(), resolvePlacement(player), program);
+        String budgetRefusal = formulaBudgetRefusal(program, bounds);
+        if (budgetRefusal != null) {
+            return GeneratorResult.failed(budgetRefusal);
+        }
+        Set<Long> included;
+        try {
+            included = evaluateSelection(bounds, request.coordinateMode(), resolvePlacement(player), program);
+        } catch (IllegalArgumentException ex) {
+            // Unknown variables/functions and wrong arities only surface while evaluating the first block.
+            return GeneratorResult.failed("Invalid expression: " + ex.getMessage());
+        }
         List<BlockChange> changes = applyShape(player, bounds.world(), request.material(), included, request.hollow());
         historyService.record(player.getUniqueId(), changes);
         return GeneratorResult.success(changes.size(),
@@ -159,7 +172,15 @@ public final class ProceduralGenerationService {
             } catch (IllegalArgumentException ex) {
                 return GeneratorResult.failed("Invalid expression: " + ex.getMessage());
             }
-            included = evaluateSelection(bounds, request.coordinateMode(), resolvePlacement(player), program);
+            String budgetRefusal = formulaBudgetRefusal(program, bounds);
+            if (budgetRefusal != null) {
+                return GeneratorResult.failed(budgetRefusal);
+            }
+            try {
+                included = evaluateSelection(bounds, request.coordinateMode(), resolvePlacement(player), program);
+            } catch (IllegalArgumentException ex) {
+                return GeneratorResult.failed("Invalid expression: " + ex.getMessage());
+            }
         } else {
             included = generateBiomeTargets(bounds, request);
         }
@@ -583,6 +604,15 @@ public final class ProceduralGenerationService {
                 bounds.minX(), bounds.maxX(),
                 bounds.minY(), bounds.maxY(),
                 bounds.minZ(), bounds.maxZ());
+    }
+
+    private String formulaBudgetRefusal(ExpressionEngine.Program program, SelectionBounds bounds) {
+        long work = (long) (program.nodeCount() + FORMULA_BLOCK_OVERHEAD) * bounds.volume();
+        if (work <= MAX_FORMULA_WORK) {
+            return null;
+        }
+        return "Formula is too expensive for this selection (" + program.nodeCount() + " nodes x "
+                + bounds.volume() + " blocks). Shorten the formula or select a smaller area.";
     }
 
     private Set<Long> evaluateSelection(SelectionBounds bounds, CoordinateMode mode, Location placement, ExpressionEngine.Program program) {

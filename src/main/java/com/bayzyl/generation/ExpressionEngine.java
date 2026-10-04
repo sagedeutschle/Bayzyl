@@ -7,8 +7,15 @@ import java.util.Locale;
 import java.util.Map;
 
 public final class ExpressionEngine {
+    /**
+     * Token cap. It bounds parser and evaluator recursion depth (so malformed or hostile input cannot overflow the
+     * stack) and, together with {@link Program#nodeCount()}, the per-block cost the caller budgets against.
+     */
+    public static final int MAX_TOKENS = 1024;
+
     private final List<Token> tokens;
     private int index;
+    private int nodeCount;
 
     private ExpressionEngine(List<Token> tokens) {
         this.tokens = tokens;
@@ -26,13 +33,14 @@ public final class ExpressionEngine {
                 throw parser.error("Expected ';' or end of expression.");
             }
         }
-        return new Program(statements);
+        return new Program(statements, parser.nodeCount);
     }
 
     private Node parseStatement() {
         if (peek(TokenType.IDENTIFIER) && peekNext(TokenType.ASSIGN)) {
             String name = consume(TokenType.IDENTIFIER).text;
             consume(TokenType.ASSIGN);
+            nodeCount++;
             return new AssignmentNode(name, parseExpression());
         }
         return parseExpression();
@@ -47,6 +55,7 @@ public final class ExpressionEngine {
         while (peek(TokenType.LESS, TokenType.LESS_EQUAL, TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.EQUAL_EQUAL, TokenType.NOT_EQUAL)) {
             Token operator = advance();
             Node right = parseAdditive();
+            nodeCount++;
             left = new BinaryNode(left, operator.type, right);
         }
         return left;
@@ -57,45 +66,52 @@ public final class ExpressionEngine {
         while (peek(TokenType.PLUS, TokenType.MINUS)) {
             Token operator = advance();
             Node right = parseMultiplicative();
+            nodeCount++;
             left = new BinaryNode(left, operator.type, right);
         }
         return left;
     }
 
     private Node parseMultiplicative() {
-        Node left = parsePower();
+        Node left = parseUnary();
         while (peek(TokenType.STAR, TokenType.SLASH, TokenType.PERCENT)) {
             Token operator = advance();
-            Node right = parsePower();
+            Node right = parseUnary();
+            nodeCount++;
             left = new BinaryNode(left, operator.type, right);
         }
         return left;
     }
 
+    // Unary minus binds looser than '^' (so -2^2 is -4, as in ordinary maths) but 2^-1 still parses.
+    private Node parseUnary() {
+        if (peek(TokenType.PLUS, TokenType.MINUS)) {
+            Token operator = advance();
+            nodeCount++;
+            return new UnaryNode(operator.type, parseUnary());
+        }
+        return parsePower();
+    }
+
     private Node parsePower() {
-        Node left = parseUnary();
+        Node left = parsePrimary();
         if (peek(TokenType.CARET)) {
             Token operator = advance();
-            Node right = parsePower();
+            Node right = parseUnary();
+            nodeCount++;
             return new BinaryNode(left, operator.type, right);
         }
         return left;
     }
 
-    private Node parseUnary() {
-        if (peek(TokenType.PLUS, TokenType.MINUS)) {
-            Token operator = advance();
-            return new UnaryNode(operator.type, parseUnary());
-        }
-        return parsePrimary();
-    }
-
     private Node parsePrimary() {
         if (peek(TokenType.NUMBER)) {
+            nodeCount++;
             return new NumberNode(Double.parseDouble(advance().text));
         }
         if (peek(TokenType.IDENTIFIER)) {
             Token identifier = advance();
+            nodeCount++;
             if (peek(TokenType.LEFT_PAREN)) {
                 consume(TokenType.LEFT_PAREN);
                 List<Node> args = new ArrayList<>();
@@ -162,6 +178,9 @@ public final class ExpressionEngine {
         List<Token> tokens = new ArrayList<>();
         int i = 0;
         while (i < input.length()) {
+            if (tokens.size() >= MAX_TOKENS) {
+                throw new IllegalArgumentException("Expression is too long (max " + MAX_TOKENS + " tokens).");
+            }
             char c = input.charAt(i);
             if (Character.isWhitespace(c)) {
                 i++;
@@ -172,7 +191,13 @@ public final class ExpressionEngine {
                 while (i < input.length() && (Character.isDigit(input.charAt(i)) || input.charAt(i) == '.')) {
                     i++;
                 }
-                tokens.add(new Token(TokenType.NUMBER, input.substring(start, i)));
+                String number = input.substring(start, i);
+                try {
+                    Double.parseDouble(number);
+                } catch (NumberFormatException ex) {
+                    throw new IllegalArgumentException("Invalid number: " + number);
+                }
+                tokens.add(new Token(TokenType.NUMBER, number));
                 continue;
             }
             if (Character.isLetter(c) || c == '_') {
@@ -234,7 +259,8 @@ public final class ExpressionEngine {
         return tokens;
     }
 
-    public record Program(List<Node> statements) {
+    /** {@code nodeCount} is the number of AST nodes one evaluation visits, for callers that budget total work. */
+    public record Program(List<Node> statements, int nodeCount) {
         public double evaluate(Map<String, Double> variables) {
             Map<String, Double> env = new HashMap<>();
             env.put("pi", Math.PI);
