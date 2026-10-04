@@ -72,6 +72,8 @@ jobs:
         with:
           name: dist
           path: showcase/prismet-site/dist
+          # The reviewed .well-known association document is required for app links.
+          include-hidden-files: true
           retention-days: 7
           if-no-files-found: error
 
@@ -117,7 +119,9 @@ jobs:
           if [ -z "$FLY_API_TOKEN" ]; then
             echo "::error::FLY_API_TOKEN is not set. Add it under Settings → Secrets and variables → Actions, then re-run."; exit 1; fi
       - name: Assemble the overlay (server.js + site/ + scrubbed public/ + whiteouts)
-        run: showcase/tools/deploy/assemble-overlay.sh /tmp/overlay
+        run: |
+          test -f showcase/prismet-site/dist/.well-known/apple-app-site-association
+          showcase/tools/deploy/assemble-overlay.sh /tmp/overlay
       - name: Push the image (the v13 base plus one layer)
         id: push
         run: |
