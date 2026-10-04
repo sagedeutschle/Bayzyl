@@ -458,7 +458,7 @@ function skills() {
 }
 
 const GIGS = [['mc-plugin', 'minecraft'], ['mc-server', 'minecraft'], ['ios-app', 'apps'], ['web-tool', 'web'], ['ai-agents', 'ai'], ['linux-desktop', 'desktop']];
-const tileFor = { 'steam-rewind': 'steamrewind', 'debt-clock': 'debtclock' };
+const tileFor = { 'steam-rewind': 'steamrewind', 'debt-clock': 'debtclock', 'uncle-scam': 'unclescam' };
 const k = (key, vars) => T(key, vars);
 const sec = (id, attrs, inner) => (hiddenSections.has(id) && !ANNOTATE ? '' :
   `<section id="${id}" data-section="${id}" class="${off(hiddenSections.has(id)).trim()}" ${attrs}>${inner}</section>`);

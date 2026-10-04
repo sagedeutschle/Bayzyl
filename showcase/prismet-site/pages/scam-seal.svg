@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 240 240" role="img" aria-label="Uncle Scam seal: an eagle in a star-banded top hat gripping a wallet and a long receipt">
+  <defs>
+    <path id="ring-top" d="M 36 120 A 84 84 0 0 1 204 120"/>
+    <path id="ring-bottom" d="M 28 120 A 92 92 0 0 0 212 120"/>
+  </defs>
+  <circle cx="120" cy="120" r="118" fill="#F4F0E4"/>
+  <circle cx="120" cy="120" r="112" fill="none" stroke="#1D2A3A" stroke-width="5"/>
+  <circle cx="120" cy="120" r="70" fill="#1D2A3A"/>
+  <circle cx="120" cy="120" r="70" fill="none" stroke="#B3261E" stroke-width="2.5" stroke-dasharray="2 5"/>
+  <g font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif" font-weight="900" fill="#1D2A3A" text-anchor="middle">
+    <text font-size="21" letter-spacing="5"><textPath href="#ring-top" xlink:href="#ring-top" startOffset="50%">UNCLE SCAM</textPath></text>
+    <text font-size="11.5" letter-spacing="2.2"><textPath href="#ring-bottom" xlink:href="#ring-bottom" startOffset="50%">INFERNAL REVENUE SERVICE</textPath></text>
+  </g>
+  <g fill="#B3261E">
+    <path d="M22 120l3.2 6.5 7.2 1-5.2 5 1.2 7.1-6.4-3.4-6.4 3.4 1.2-7.1-5.2-5 7.2-1z" transform="translate(4 -12) scale(.7)"/>
+    <path d="M22 120l3.2 6.5 7.2 1-5.2 5 1.2 7.1-6.4-3.4-6.4 3.4 1.2-7.1-5.2-5 7.2-1z" transform="translate(205 -12) scale(.7)"/>
+  </g>
+  <!-- wings: stepped feathers -->
+  <g fill="#F4F0E4">
+    <path d="M104 104 L58 86 L62 98 L54 100 L60 111 L54 115 L63 124 L59 130 L72 136 L70 143 L104 138 Z"/>
+    <path d="M136 104 L182 86 L178 98 L186 100 L180 111 L186 115 L177 124 L181 130 L168 136 L170 143 L136 138 Z"/>
+    <!-- body and tail -->
+    <path d="M104 100 Q120 92 136 100 L138 140 L130 158 L120 150 L110 158 L102 140 Z"/>
+    <!-- head, turned to its wallet side -->
+    <path d="M108 84 Q108 68 122 68 Q134 68 134 82 L134 98 Q120 104 108 98 Z"/>
+  </g>
+  <path d="M108 80 L92 85 L108 91 Z" fill="#E0A93B"/>
+  <circle cx="117" cy="80" r="2.6" fill="#1D2A3A"/>
+  <path d="M112 75 L123 77" stroke="#1D2A3A" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- the hat -->
+  <g>
+    <rect x="98" y="62" width="46" height="6" rx="2" fill="#F4F0E4"/>
+    <path d="M106 62 L108 34 L134 34 L136 62 Z" fill="#F4F0E4"/>
+    <path d="M106.6 54 L135.4 54 L136 62 L106 62 Z" fill="#B3261E"/>
+    <path d="M112 34 L111 54 M118 34 L118 54 M124 34 L124 54 M130 34 L131 54" stroke="#B3261E" stroke-width="2.4"/>
+    <circle cx="121" cy="58" r="2" fill="#F4F0E4"/>
+    <circle cx="112" cy="58" r="1.4" fill="#F4F0E4"/>
+    <circle cx="130" cy="58" r="1.4" fill="#F4F0E4"/>
+  </g>
+  <!-- talons -->
+  <path d="M106 150 l-6 10 M110 152 l-2 11 M130 152 l2 11 M134 150 l6 10" stroke="#E0A93B" stroke-width="3" stroke-linecap="round"/>
+  <!-- the wallet, bills leaving it -->
+  <g transform="rotate(-12 86 166)">
+    <rect x="70" y="150" width="9" height="12" fill="#6FA86B"/>
+    <rect x="81" y="147" width="9" height="15" fill="#6FA86B"/>
+    <rect x="92" y="151" width="9" height="11" fill="#6FA86B"/>
+    <rect x="66" y="158" width="40" height="20" rx="3" fill="#8A5A2B"/>
+    <path d="M66 165 h40" stroke="#5E3B19" stroke-width="2"/>
+    <circle cx="100" cy="170" r="2.2" fill="#E0A93B"/>
+  </g>
+  <!-- the receipt, longer than the seal has room for -->
+  <g>
+    <path d="M132 160 L158 160 L160 186 L156 183 L152 187 L148 183 L144 187 L140 183 L136 187 L134 184 Z" fill="#F4F0E4"/>
+    <path d="M138 166 h16 M138 171 h16 M138 176 h10" stroke="#1D2A3A" stroke-width="1.6"/>
+    <path d="M150 176 h5" stroke="#B3261E" stroke-width="1.6"/>
+  </g>
+</svg>

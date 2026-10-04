@@ -42,6 +42,8 @@ jobs:
         run: node showcase/prismet-site/build.mjs
       - name: The edit page reads and writes the content files exactly as the build does
         run: node showcase/tools/tests/edit-check.mjs
+      - name: Uncle Scam's arithmetic and data (/scam)
+        run: node showcase/tools/tests/scam-check.mjs
       - name: Start the live server locally with this build and gate every route
         env:
           GATE_WORDLE: require

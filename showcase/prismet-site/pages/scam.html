@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0F161D">
+<meta name="description" content="Type a salary and a ZIP code. Get an itemized receipt for your taxes: what you paid, what it bought, and what was borrowed on top. Nothing you type leaves your browser.">
+<title>Uncle Scam · where is my money going?</title>
+<link rel="icon" href="scam-seal.svg">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="scam.css">
+<script type="module" src="scam.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the form</a>
+<header class="top">
+  <a href="index.html">← prismet</a>
+  <a href="/debt">Debt Clock →</a>
+</header>
+
+<main id="main" class="wrap">
+  <section class="hero">
+    <img class="seal" src="scam-seal.svg" width="168" height="168" alt="The Uncle Scam seal: an eagle in a star-banded top hat gripping a wallet and a long receipt.">
+    <h1>Uncle Scam</h1>
+    <p class="ask">Where is my money going?</p>
+    <p class="lede">Type a salary and a ZIP code. Get the receipt nobody hands you: what you paid, what it bought, and what got put on the card.</p>
+  </section>
+
+  <form id="form" class="form" novalidate>
+    <div class="field">
+      <label for="salary">Salary, before taxes</label>
+      <div class="money"><span aria-hidden="true">$</span><input id="salary" name="salary" type="text" inputmode="numeric" autocomplete="off" placeholder="65,000" required aria-describedby="salary-err"></div>
+      <p class="err" id="salary-err" role="alert"></p>
+    </div>
+    <div class="field">
+      <label for="zip">ZIP code</label>
+      <input id="zip" name="zip" type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="43201" required aria-describedby="zip-err">
+      <p class="err" id="zip-err" role="alert"></p>
+    </div>
+    <div class="field" id="state-field" hidden>
+      <label for="state">State</label>
+      <select id="state" name="state"><option value="">Pick a state</option></select>
+    </div>
+    <fieldset class="field status">
+      <legend>Filing status</legend>
+      <label><input type="radio" name="status" value="single" checked><span>Single</span></label>
+      <label><input type="radio" name="status" value="joint"><span>Married, joint</span></label>
+      <label><input type="radio" name="status" value="head"><span>Head of household</span></label>
+    </fieldset>
+    <button id="go" type="submit" disabled>Print my receipt</button>
+    <p class="private">Your numbers stay in this browser. Nothing you type is sent anywhere.</p>
+  </form>
+
+  <p id="status" class="status" role="status">Loading the tax tables…</p>
+
+  <section id="result" class="result" hidden aria-labelledby="result-title">
+    <h2 id="result-title" class="sr-only">Your receipt</h2>
+    <div id="receipt" class="receipt"></div>
+    <div class="actions">
+      <button id="save" type="button">Save as an image</button>
+      <label class="toggle"><input id="percent" type="checkbox"><span>Percent only (hide the dollar amounts)</span></label>
+    </div>
+  </section>
+
+  <details class="fine">
+    <summary>How this is worked out</summary>
+    <ul id="assumptions">
+      <li>An estimate for tax year <span data-year>2026</span>, not tax advice. It assumes wages from one job are your only income, the standard deduction, no dependents and no credits. Married, joint treats the salary as the household's wages.</li>
+      <li>State tax uses each state's published brackets, standard deduction and personal exemption. Head of household uses the single schedule. City, county and school district income taxes are not included, nor are sales, property or gas taxes.</li>
+      <li>Where it went: your federal income tax is spread across the budget in proportion to what Washington has spent this fiscal year. Social Security and Medicare are left out of that split because your payroll taxes are listed for them on their own lines; in truth Medicare also draws on income taxes.</li>
+      <li>Put on the card: what Washington spent beyond what it collected, scaled to your federal bill.</li>
+      <li>Time served counts every day of the year and an eight-hour workday; a paycheck is one of 26.</li>
+    </ul>
+    <p id="sources" class="sources"></p>
+    <p class="sources">A parody. Not affiliated with the IRS, the Treasury or any government.</p>
+  </details>
+</main>
+</body>
+</html>

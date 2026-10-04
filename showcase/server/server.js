@@ -300,7 +300,7 @@ function safeStaticPath(urlPath, staticRoot) {
   let rel = urlPath === '/' ? 'index.html' : urlPath.replace(/^\/+/, '');
   if (rel === 'steam') rel = 'steam.html';
   if (rel === 'debt') rel = 'debt.html';
-  if (rel === 'edit' || rel === 'privacy' || rel === 'support') rel = `${rel}.html`;   // pages shipped by the site build (site/)
+  if (rel === 'edit' || rel === 'privacy' || rel === 'support' || rel === 'scam') rel = `${rel}.html`;   // pages shipped by the site build (site/)
   rel = rel.split('?')[0].split('#')[0];
   if (/%/i.test(rel)) {
     try {
