@@ -64,6 +64,10 @@
     {
       "id": "debt-clock",
       "href": "/debt"
+    },
+    {
+      "id": "uncle-scam",
+      "href": "/scam"
     }
   ],
   "projects": [

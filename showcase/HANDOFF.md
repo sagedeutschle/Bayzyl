@@ -49,7 +49,7 @@ protected route intact, the two privacy leaks of the old server closed.
 | Wording | `showcase/prismet-site/content/site.md` (home, labels, colophon) and `content/work/<slug>.md` (title, subtitle, tag, status, year, role, summary, facts, highlights). Format: `## key` headings, text under them, `*gold*`, `**bold**`, `- ` lists, `- Label: Value` facts, `{placeholders}` |
 | Structure, images, links | `showcase/prismet-site/data/projects.json` (`room`, `tier`, `hidden`, `related`, `aliases`, `cover`, `gallery`, `shotAlts`, `doorFacts`, `steps`, `tiles`, `rack`, `eras`, `layout`, `featuredOrder`, `skills`) |
 | Styles and script | `showcase/prismet-site/src/site.css`, `src/site.js` (preview editor: `editor.js`, `editor.css`) |
-| Standalone pages | `showcase/prismet-site/pages/` copied verbatim into `dist/`: `edit.html` + `edit.js` + `edit.css` (the editor), `robots.txt`. Future: `privacy.html`, `support.html`, `legal.css` |
+| Standalone pages | `showcase/prismet-site/pages/` copied verbatim into `dist/`: `edit.html` + `edit.js` + `edit.css` (the editor), `robots.txt`; `scam.html` + `scam.js` + `scam-calc.js` + `scam.css` + `scam-seal.svg` + `scam-data/` (the Uncle Scam lens at `/scam`: a tax receipt worked out in the browser; data rebuilt by `showcase/tools/uncle-scam/build-data.mjs`, checked by `tools/tests/scam-check.mjs`; the salary and ZIP code never leave the page). Future: `privacy.html`, `support.html`, `legal.css` |
 | Site images | `showcase/assets/{ai,bench,helm2,icons,live,minecraft,prismet,web,worlds,og,fonts}/`; width variants `<name>-{128,192,360,720,1080,1440}.webp` beside their sources; register thumbnails `<cover>-thumb.webp` |
 | Captures not on the site | `showcase/shots/<project>/`; `shots/README.md` ranks what only Sage can capture |
 | The server | `showcase/server/` (section 7) |
@@ -75,6 +75,16 @@ protected route intact, the two privacy leaks of the old server closed.
   scroll, no image drawn above 2× its CSS width, CLS under 0.01, axe clean in both modes. Fonts are 213 KB.
 
 ## 5. The design, in short
+
+**2026-10-03 revision (Sage's brief: no yellow tint, blues and greens, Marcellus, fewer machine-made habits).** Night is
+deep water `#0D1820` with cool white ink; day is pale sky `#EEF3F5`. Green is the accent, blue marks what is live, and
+the six wing hues run green to indigo. Words are set in Marcellus (one weight, no italic: `font-synthesis: none`, so
+emphasis is colour and size), figures in Martian Mono; Unbounded and Hanken Grotesk are retired. Removed: capital
+letter-spaced micro-labels, boxed plaques and status dots, the arrow after outbound links, doubled section rules, the
+pointer-following glow, the plan's drawing animation and the hover corner ticks. The token names `--brass` and
+`--lantern` are unchanged (the editor and `data/theme.json` use them): read them as accent and second accent. Not yet
+restyled: `/steam`, `/debt` (`server/public/style.css`), the share image, the editor's own chrome. Where the text below
+says slate, chalk, brass or lantern, it describes the earlier palette.
 
 The site is **a workshop and the register it keeps**. The home page opens on a hall plan, six wings (Sage's six
 categories) around a rotunda with the prism in its floor; each wing filters the register. Then four doors (Bayzyl,

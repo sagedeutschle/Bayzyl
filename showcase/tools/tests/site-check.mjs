@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 const { chromium } = await import('playwright').catch(() => import(process.env.PLAYWRIGHT || '/opt/node22/lib/node_modules/playwright/index.mjs'));
 const CHROMIUM = process.env.CHROMIUM || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 const DIST = process.argv[2] || join(dirname(fileURLToPath(import.meta.url)), '../../prismet-site/dist');
-const CSP = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.steampowered.com https://store.steampowered.com https://api.fiscaldata.treasury.gov; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'";
+const CSP = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.steampowered.com https://store.steampowered.com https://api.fiscaldata.treasury.gov https://api.usaspending.gov; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'";
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
 const PAGES = ['index.html', 'work/bayzyl.html', 'work/prismet-app.html', 'work/the-helm.html'];
 const SIZES = [[1440, 900, 1], [390, 844, 3]];

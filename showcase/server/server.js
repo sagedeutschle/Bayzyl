@@ -69,7 +69,7 @@ const MIME = {
 };
 
 const SECURITY_HEADERS = {
-  'content-security-policy': "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.steampowered.com https://store.steampowered.com https://api.fiscaldata.treasury.gov; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none';",
+  'content-security-policy': "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.steampowered.com https://store.steampowered.com https://api.fiscaldata.treasury.gov https://api.usaspending.gov; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none';",
   'strict-transport-security': 'max-age=31536000; includeSubDomains',
   'referrer-policy': 'strict-origin-when-cross-origin',
   'x-content-type-options': 'nosniff',
@@ -300,7 +300,7 @@ function safeStaticPath(urlPath, staticRoot) {
   let rel = urlPath === '/' ? 'index.html' : urlPath.replace(/^\/+/, '');
   if (rel === 'steam') rel = 'steam.html';
   if (rel === 'debt') rel = 'debt.html';
-  if (rel === 'edit' || rel === 'privacy' || rel === 'support') rel = `${rel}.html`;   // pages shipped by the site build (site/)
+  if (rel === 'edit' || rel === 'privacy' || rel === 'support' || rel === 'scam') rel = `${rel}.html`;   // pages shipped by the site build (site/)
   rel = rel.split('?')[0].split('#')[0];
   if (/%/i.test(rel)) {
     try {

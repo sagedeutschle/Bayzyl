@@ -1,46 +1,47 @@
 /* prismet.xyz — the workshop and the register it keeps.
-   One hall plan (six wings around a rotunda, the prism in its floor) is the navigation. Night is slate and chalk,
-   sampled from Sage's night builds; day is cloud and ink, from the build above the clouds. Brass for labels, one
-   lantern, and the six wing hues as inlays. No textures, no glows, no ornament that encodes nothing. */
+   One hall plan (six wings around a rotunda, the prism in its floor) is the navigation. Night is deep water and cool
+   white; day is pale sky and ink. Green for labels, blue for what is live, and the six wing hues as a green-to-blue
+   run. One typeface for words (Marcellus), one for figures (Martian Mono). The token names --brass and --lantern
+   are kept from the earlier palette because data/theme.json and the editor refer to them: read them as "accent"
+   and "second accent". No textures, no glows, no ornament that encodes nothing. */
 
 /* ── fonts (self-hosted, SIL OFL; subset to Latin plus arrows and math symbols) ─────────── */
-@font-face { font-family: 'Unbounded'; font-style: normal; font-weight: 200 900; font-display: swap; src: url(assets/fonts/Unbounded.woff2) format('woff2'); }
-@font-face { font-family: 'Hanken Grotesk'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(assets/fonts/HankenGrotesk.woff2) format('woff2'); }
+@font-face { font-family: 'Marcellus'; font-style: normal; font-weight: 400; font-display: swap; src: url(assets/fonts/Marcellus.woff2) format('woff2'); }
 @font-face { font-family: 'Martian Mono'; font-style: normal; font-weight: 100 800; font-stretch: 75% 112.5%; font-display: swap; src: url(assets/fonts/MartianMono.woff2) format('woff2'); }
 /* Fallback with matched metrics, so the swap moves nothing much. */
 
 /* ── tokens ───────────────────────────────────────────────────────────────────────────────── */
 :root {
   color-scheme: dark;
-  --ground: #0F161D;        /* the night sky over the dark spire */
-  --surface: #17212B;
-  --raised: #1E2934;
-  --ink: #E6E1D4;           /* chalk */
-  --ink-2: #B5BCC0;
-  --ink-3: #8C959B;
-  --line: #3C5770;          /* survey line, decorative only */
-  --hair: rgba(230, 225, 212, .12);
-  --rule: rgba(230, 225, 212, .22);
-  --brass: #C9A260;
-  --brass-ink: #D9B978;
-  --on-brass: #17130A;
-  --lantern: #F2C27A;
-  --live: #9C8BD6;          /* amethyst, from the spire crown: only for things running on prismet.xyz */
+  --ground: #0D1820;        /* the night sky over the dark spire */
+  --surface: #132430;
+  --raised: #1A2F3D;
+  --ink: #E4EDF0;           /* chalk */
+  --ink-2: #AFC0C8;
+  --ink-3: #8497A0;
+  --line: #3F6E8C;          /* survey line, decorative only */
+  --hair: rgba(228, 237, 240, .12);
+  --rule: rgba(228, 237, 240, .22);
+  --brass: #5FB98C;
+  --brass-ink: #7BD0A4;
+  --on-brass: #06170F;
+  --lantern: #7DB4E6;
+  --live: #7DB4E6;          /* amethyst, from the spire crown: only for things running on prismet.xyz */
   --shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 18px 40px rgba(0, 0, 0, .35);
   /* the six wings (muted inlays) and their text-safe companions */
-  --desktop: #A8323E;   --desktop-ink: #F0848F;
-  --apps: #C0702B;      --apps-ink: #F2A55A;
-  --worlds: #A88A2C;    --worlds-ink: #E3C35A;
-  --minecraft: #3F7A5C; --minecraft-ink: #7CC49C;
-  --web: #355F8A;       --web-ink: #7FAEE0;
-  --ai: #6A4F92;        --ai-ink: #B49AE0;
+  --desktop: #2E94A8;   --desktop-ink: #72CDE0;
+  --apps: #2F9C8C;      --apps-ink: #6FD1C1;
+  --worlds: #5AA35B;    --worlds-ink: #98D48E;
+  --minecraft: #3E9B6E; --minecraft-ink: #7BD0A4;
+  --web: #3382BF;       --web-ink: #7DB8EA;
+  --ai: #5B63C0;        --ai-ink: #A3A9EE;
   --h: var(--brass); --hi: var(--brass-ink);
 
-  --display: 'Unbounded', 'Arial Black', system-ui, sans-serif;
-  --sans: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --display: 'Marcellus', Georgia, 'Times New Roman', serif;
+  --sans: 'Marcellus', Georgia, 'Times New Roman', serif;
   --serif: var(--sans);   /* round 3: the serif voice is retired; every old reference now resolves to the sans */
   --mono: 'Martian Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  --t-xs: .8125rem; --t-sm: .9375rem; --t-base: 1.0625rem; --t-md: 1.2rem; --t-lg: 1.5rem;
+  --t-xs: .8125rem; --t-sm: .9375rem; --t-base: 1.125rem; --t-md: 1.2rem; --t-lg: 1.5rem;
   --t-xl: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
   --t-2xl: clamp(2.4rem, 1.2rem + 3.6vw, 4.4rem);
   --gutter: clamp(16px, 4vw, 56px);
@@ -57,21 +58,21 @@
 /* day tokens: applied by system preference unless the toggle says dark, or by the toggle saying light */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    --ground: #E4E8EA; --surface: #F3F5F6; --raised: #FFFFFF;
-    --ink: #141B22; --ink-2: #45515B; --ink-3: #5C6872;
-    --line: #2D5878; --hair: rgba(20, 27, 34, .13); --rule: rgba(20, 27, 34, .28);
-    --brass: #73551F; --brass-ink: #6A4D1A; --on-brass: #FBF8F1; --lantern: #B9842E; --live: #5A4890;
-    --shadow: 0 1px 0 rgba(20, 27, 34, .06), 0 16px 36px rgba(20, 27, 34, .14);
-    --desktop-ink: #A32030; --apps-ink: #9D5112; --worlds-ink: #7E6510; --minecraft-ink: #2F6B4C; --web-ink: #2B5C8A; --ai-ink: #5E4486;
+    --ground: #EEF3F5; --surface: #F7FAFB; --raised: #FFFFFF;
+    --ink: #10212B; --ink-2: #3F5360; --ink-3: #586C78;
+    --line: #2D6A8C; --hair: rgba(16, 33, 43, .13); --rule: rgba(16, 33, 43, .28);
+    --brass: #1F7A54; --brass-ink: #19694A; --on-brass: #F4FBF7; --lantern: #22609A; --live: #22609A;
+    --shadow: 0 1px 0 rgba(16, 33, 43, .06), 0 16px 36px rgba(16, 33, 43, .14);
+    --desktop-ink: #1B6F82; --apps-ink: #1A7366; --worlds-ink: #3B7A3C; --minecraft-ink: #1F7A54; --web-ink: #22609A; --ai-ink: #434AA5;
   }
 }
 :root[data-theme="light"] {
-  --ground: #E4E8EA; --surface: #F3F5F6; --raised: #FFFFFF;
-  --ink: #141B22; --ink-2: #45515B; --ink-3: #5C6872;
-  --line: #2D5878; --hair: rgba(20, 27, 34, .13); --rule: rgba(20, 27, 34, .28);
-  --brass: #73551F; --brass-ink: #6A4D1A; --on-brass: #FBF8F1; --lantern: #B9842E; --live: #5A4890;
-  --shadow: 0 1px 0 rgba(20, 27, 34, .06), 0 16px 36px rgba(20, 27, 34, .14);
-  --desktop-ink: #A32030; --apps-ink: #9D5112; --worlds-ink: #7E6510; --minecraft-ink: #2F6B4C; --web-ink: #2B5C8A; --ai-ink: #5E4486;
+  --ground: #EEF3F5; --surface: #F7FAFB; --raised: #FFFFFF;
+  --ink: #10212B; --ink-2: #3F5360; --ink-3: #586C78;
+  --line: #2D6A8C; --hair: rgba(16, 33, 43, .13); --rule: rgba(16, 33, 43, .28);
+  --brass: #1F7A54; --brass-ink: #19694A; --on-brass: #F4FBF7; --lantern: #22609A; --live: #22609A;
+  --shadow: 0 1px 0 rgba(16, 33, 43, .06), 0 16px 36px rgba(16, 33, 43, .14);
+  --desktop-ink: #1B6F82; --apps-ink: #1A7366; --worlds-ink: #3B7A3C; --minecraft-ink: #1F7A54; --web-ink: #22609A; --ai-ink: #434AA5;
 }
 
 /* ── base ─────────────────────────────────────────────────────────────────────────────────── */
@@ -80,15 +81,15 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
   margin: 0; background: var(--ground); color: var(--ink);
-  font: 400 var(--t-base)/1.6 var(--serif); font-optical-sizing: auto;
+  font: 400 var(--t-base)/1.6 var(--serif); font-synthesis: none;   /* Marcellus has one weight and no italic: never fake them */
   -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
 }
 img, svg { max-width: 100%; height: auto; display: block; }
 a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 a:hover { text-decoration-color: var(--brass); }
 :focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; border-radius: var(--radius); }
-h1, h2, h3, h4 { font-family: var(--display); font-weight: 600; line-height: 1.12; letter-spacing: -.01em; text-wrap: balance; margin: 0; font-variation-settings: 'opsz' 72; }
-h1 { font-size: var(--t-2xl); font-weight: 700; line-height: 1.02; letter-spacing: -.02em; }
+h1, h2, h3, h4 { font-family: var(--display); font-weight: 400; line-height: 1.15; letter-spacing: 0; text-wrap: balance; margin: 0; font-variation-settings: 'opsz' 72; }
+h1 { font-size: var(--t-2xl); line-height: 1.06; }
 h2 { font-size: var(--t-xl); }
 h3 { font-size: var(--t-lg); font-variation-settings: 'opsz' 48; }
 h4 { font-size: var(--t-md); font-variation-settings: 'opsz' 32; }
@@ -101,24 +102,21 @@ code { font: 500 .86em/1.5 var(--mono); font-stretch: 87.5%; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .skip { position: absolute; left: -9999px; }
 .skip:focus { left: 16px; top: 16px; z-index: 20; background: var(--raised); padding: 10px 14px; border: 1px solid var(--rule); }
-.ext { display: inline-block; margin-left: .3em; vertical-align: -.02em; opacity: .75; }
+.ext { display: none; }
 section { scroll-margin-top: calc(var(--bar) + 12px); }
 
 /* data: mono, only where it is data */
 .mono, .step-n, .chip small, .row-stack { font-family: var(--mono); font-stretch: 87.5%; font-weight: 500; }
-.caps { font-family: var(--mono); font-stretch: 87.5%; text-transform: uppercase; letter-spacing: .12em; font-weight: 600; font-size: .72rem; }
-.plaque, .facts dt, .directory dt, .ledger-head, .door-text .typeline, .crumbs, .sig-head h2, .p-body h2, .plates h2, .threads h2, .ledger-group h3, .skills-title, .hire h4, .next small, .rack-group h3, .plate figcaption::before { font-family: var(--serif); font-variant-caps: all-small-caps; letter-spacing: .06em; font-weight: 500; font-variation-settings: 'opsz' 20; text-transform: none; font-style: normal; }
+.caps { font-size: var(--t-sm); color: var(--ink-3); }
+.plaque, .facts dt, .directory dt, .ledger-head, .door-text .typeline, .crumbs, .sig-head h2, .p-body h2, .plates h2, .threads h2, .ledger-group h3, .skills-title, .hire h4, .next small, .rack-group h3, .plate figcaption::before { font-family: var(--serif); font-weight: 400; text-transform: none; font-style: normal; }
 
 /* plaques: a label-holder with a brass hairline. The status of a record, the name of a wing. */
-.plaque { display: inline-flex; align-items: center; gap: .55em; font-size: .72rem; line-height: 1; color: var(--ink-2); padding: .65em .85em; border: 1px solid var(--rule); border-radius: var(--radius); }
-.plaque.brass { color: var(--brass-ink); border-color: color-mix(in srgb, var(--brass) 55%, transparent); }
-.plaque.status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--h); }
-.plaque.live { color: var(--live); border-color: color-mix(in srgb, var(--live) 60%, transparent); }
-.plaque.live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--live); }
+.plaque { display: inline-block; font-size: var(--t-sm); line-height: 1.3; color: var(--ink-2); }
+.plaque.brass { color: var(--brass-ink); }
+.plaque.live { color: var(--live); }
 
 /* rules: a lintel opens a room */
-.sec-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 32px; padding-top: 22px; margin-bottom: 28px; border-top: 3px solid var(--rule); position: relative; }
-.sec-head::after { content: ""; position: absolute; left: 0; right: 0; top: 5px; border-top: 1px solid var(--rule); }
+.sec-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 32px; margin-bottom: 28px; }
 .sec-head p { color: var(--ink-2); max-width: 40rem; }
 
 /* buttons and links */
@@ -133,7 +131,7 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 .bar .wrap { display: flex; align-items: center; gap: 16px; min-height: var(--bar); }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: auto; min-height: 44px; }
 .brand .mark { color: var(--ink-2); }
-.brand strong { font: 700 1rem/1 var(--display); letter-spacing: -.01em; }
+.brand strong { font: 400 1.15rem/1 var(--display); }
 .brand span { font: 400 .95rem/1 var(--serif); font-style: italic; color: var(--ink-2); }
 .nav { display: flex; gap: 2px; align-items: center; }
 .nav a:not(.btn) { text-decoration: none; font: 500 var(--t-sm)/1 var(--serif); color: var(--ink-2); padding: 12px 12px; border-radius: var(--radius); min-height: 44px; display: inline-flex; align-items: center; }
@@ -158,7 +156,7 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 /* ── entrance ─────────────────────────────────────────────────────────────────────────────── */
 .entrance { border-bottom: 1px solid var(--hair); }
 .entrance .wrap { display: grid; grid-template-columns: minmax(0, 10fr) minmax(0, 11fr); gap: clamp(24px, 4vw, 64px); align-items: center; padding-block: clamp(24px, 3vw, 40px) clamp(24px, 3vw, 40px); }
-.salute { font-family: var(--display); font-weight: 500; font-size: var(--t-md); color: var(--brass-ink); margin-top: 18px; letter-spacing: .02em; }
+.salute { font-family: var(--display); font-size: var(--t-md); color: var(--brass-ink); margin-top: 18px; }
 .entrance h1 { margin-top: 4px; }
 .lede { margin-top: 22px; font-size: var(--t-md); line-height: 1.5; color: var(--ink-2); max-width: 34rem; font-variation-settings: 'opsz' 20; }
 .directory { display: flex; flex-wrap: wrap; gap: 20px 28px; margin: 24px 0 0; padding-top: 18px; border-top: 1px solid var(--hair); }
@@ -173,8 +171,8 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 /* the hall plan: surveyed linework. Weights are screen pixels (non-scaling): court 1.5, rotunda 1.25, rooms, walls and
    piers 1, the inner court and inner ring 1 at half strength, inlays 2. Axis-aligned lines snap to the pixel grid. */
 .plan { margin: 0; position: relative; --survey: var(--line); --beacon: var(--lantern); --glow: color-mix(in srgb, var(--lantern) 26%, transparent); --glow-blend: screen; --prism-fill: color-mix(in srgb, var(--brass) 14%, transparent); }
-:root[data-theme="light"] .plan, :root.day .plan { --survey: #5E7B93; --beacon: var(--brass); --glow: color-mix(in srgb, #F8D0A0 34%, transparent); --glow-blend: multiply; --glow-stop: 58%; --prism-fill: color-mix(in srgb, var(--brass) 8%, transparent); }
-@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .plan { --survey: #5E7B93; --beacon: var(--brass); --glow: color-mix(in srgb, #F8D0A0 34%, transparent); --glow-blend: multiply; --glow-stop: 58%; --prism-fill: color-mix(in srgb, var(--brass) 8%, transparent); } }
+:root[data-theme="light"] .plan, :root.day .plan { --survey: #5E7B93; --beacon: var(--brass); --glow: color-mix(in srgb, #A9D3F2 34%, transparent); --glow-blend: multiply; --glow-stop: 58%; --prism-fill: color-mix(in srgb, var(--brass) 8%, transparent); }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .plan { --survey: #5E7B93; --beacon: var(--brass); --glow: color-mix(in srgb, #A9D3F2 34%, transparent); --glow-blend: multiply; --glow-stop: 58%; --prism-fill: color-mix(in srgb, var(--brass) 8%, transparent); } }
 .plan svg { width: 100%; height: auto; overflow: visible; font-family: var(--serif); }
 .plan .court, .plan .rotunda, .plan .room, .plan .wall, .plan .pier { fill: none; stroke: var(--survey); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .plan .court { stroke-width: 1.5; }
@@ -187,17 +185,14 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 .plan .beacon { stroke: var(--beacon); stroke-width: 1; opacity: .7; vector-effect: non-scaling-stroke; }
 .plan .inlay { stroke-width: 2; vector-effect: non-scaling-stroke; }
 .plan .room-fill { fill: var(--surface); opacity: 0; transition: opacity .25s; }
-.plan .room-name { font-family: var(--display); font-size: 13.5px; fill: var(--ink); font-weight: 600; letter-spacing: .01em; }
+.plan .room-name { font-family: var(--display); font-size: 15px; fill: var(--ink); }
 .plan .room-lead { font-size: 15px; fill: var(--ink-2); font-weight: 500; }
 .plan .wing { cursor: pointer; outline: none; }
 .plan .wing:hover .room-fill, .plan .wing:focus-visible .room-fill { opacity: 1; }
 .plan .wing:hover .room, .plan .wing:focus-visible .room { stroke: var(--ink); stroke-width: 1.5; }
 .plan .wing:focus-visible .room { stroke: var(--brass); stroke-width: 3; }
 .plan .wing:hover .room-name { fill: var(--brass-ink); }
-/* One lantern. At rest it pools in the rotunda; on a wing it widens to light the room. */
-.lantern { position: absolute; left: var(--lx, 50%); top: var(--ly, 50%); width: 30%; aspect-ratio: 1; transform: translate(-50%, -50%); pointer-events: none; opacity: var(--lo, .55);
-  background: radial-gradient(closest-side, var(--glow), transparent var(--glow-stop, 72%)); mix-blend-mode: var(--glow-blend); transition: left .45s var(--ease), top .45s var(--ease), width .45s var(--ease), opacity .45s; }
-.plan:has(.wing:hover, .wing:focus-visible) .lantern { width: 42%; }
+.lantern { display: none; }
 .plan figcaption { margin-top: 10px; font-size: var(--t-sm); color: var(--ink-3); font-style: italic; }
 /* The caption hangs below the drawing, so the figure is the drawing and the lantern's 50% is the rotunda. */
 @media (min-width: 901px) { .plan { margin-bottom: 40px; } .plan figcaption { position: absolute; top: 100%; left: 0; right: 0; } }
@@ -205,17 +200,6 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
 .wing-list a { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--ink); min-height: 44px; padding: 4px 0; border-bottom: 1px solid var(--hair); }
 .wing-list i { width: 14px; height: 3px; background: var(--h); border-radius: var(--radius); flex: none; }
 .wing-list small { margin-left: auto; color: var(--ink-3); font-size: .82rem; font-style: italic; text-align: right; }
-/* drawing: the plan assembles once per session. The finished state is the default; .draw animates from undrawn. */
-.plan.draw [pathLength] { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw .9s var(--ease) forwards; animation-delay: calc(var(--d, 0) * 1s); }
-.plan.draw .g-court [pathLength] { --d: 0; }
-.plan.draw .g-rotunda [pathLength] { --d: .35; }
-.plan.draw .wing [pathLength] { --d: calc(.6 + var(--i, 0) * .09); }
-.plan.draw .prism, .plan.draw .pier { animation: draw .9s var(--ease) .35s forwards, fill-in .5s var(--ease) 1.1s both; }   /* the inlay fills once its edge is drawn */
-.plan.draw text { opacity: 0; animation: appear .4s .9s forwards; }
-.plan.draw .wing text { animation-delay: calc(1.3s + var(--i, 0) * .09s); }
-@keyframes draw { to { stroke-dashoffset: 0; } }
-@keyframes appear { to { opacity: 1; } }
-@keyframes fill-in { from { fill-opacity: 0; } }
 
 @media (max-width: 900px) {
   .entrance .wrap { grid-template-columns: 1fr; }
@@ -239,12 +223,12 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
     linear-gradient(var(--c), var(--c)) bottom left / 12px 1.5px no-repeat, linear-gradient(var(--c), var(--c)) bottom left / 1.5px 12px no-repeat,
     linear-gradient(var(--c), var(--c)) bottom right / 12px 1.5px no-repeat, linear-gradient(var(--c), var(--c)) bottom right / 1.5px 12px no-repeat; inset: -10px; }
 .bracket::after { display: none; }
-.bracket:hover::before, .bracket:focus-within::before { opacity: 1; inset: -4px; }
+.bracket::before { display: none; }
 
 /* ── sections ─────────────────────────────────────────────────────────────────────────────── */
 section { padding-block: clamp(40px, 6vw, 80px); }
 #work { background: var(--surface); border-block: 1px solid var(--hair); }
-.count { font-family: var(--mono); font-stretch: 87.5%; text-transform: uppercase; font-variant-numeric: tabular-nums; font-weight: 600; font-size: .72rem; letter-spacing: .1em; color: var(--ink-3); }
+.count { font-variant-numeric: tabular-nums; font-size: var(--t-sm); color: var(--ink-3); }
 
 /* principal works: four doors, one family. Each module sits on its room's material inside a 16:10 frame, inset by one
    margin (5% of the door's width) with one gutter (3%); below it, typeline, title, subtitle, facts and access share
@@ -272,8 +256,8 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 /* door modules */
 .bench-door { background: #2A2C2E; display: flex; flex-direction: column; gap: 2.5cqw; }
 .bench-door img { flex: 1 1 0; min-height: 0; width: 100%; object-fit: cover; object-position: center 58%; }
-.bench-door figcaption { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; color: #FFAA00; font-family: var(--mono); font-stretch: 87.5%; font-size: .78rem; line-height: 1.25; }
-.bench-door figcaption span { color: #E6E1D4; font-family: var(--serif); font-style: italic; font-size: .92rem; font-stretch: normal; }
+.bench-door figcaption { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; color: var(--brass-ink); font-family: var(--mono); font-stretch: 87.5%; font-size: .78rem; line-height: 1.25; }
+.bench-door figcaption span { color: #E4EDF0; font-family: var(--serif); font-style: italic; font-size: .92rem; font-stretch: normal; }
 .tile-mosaic { background: #0B0C14; display: grid; grid-template-columns: repeat(3, 24.75cqw); grid-auto-rows: 24.75cqw; gap: 3cqw; justify-content: center; align-content: center; }
 .tile-mosaic img { width: 100%; height: 100%; border-radius: 18%; box-shadow: 0 8px 20px rgba(0, 0, 0, .45); }
 .face-quad { background: #1C0006; display: flex; flex-direction: column; justify-content: center; gap: 3cqw; }
@@ -281,7 +265,7 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 .face-row img { width: 100%; height: auto; box-shadow: 0 8px 20px rgba(0, 0, 0, .45); }
 .plate-door { display: flex; align-items: center; justify-content: center; }
 .plate-door img { width: 100%; height: 100%; object-fit: cover; object-position: top left; }
-[data-room="notebook"] .plate-door { background: #17212B; }   /* a detail of the A/B panel, cut at the panel's own top-left corner */
+[data-room="notebook"] .plate-door { background: #132430; }   /* a detail of the A/B panel, cut at the panel's own top-left corner */
 
 /* facts: the ledger table */
 .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin: 0; }
@@ -294,7 +278,7 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 /* ── the register: a ruled ledger ─────────────────────────────────────────────────────────── */
 .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
 .filters .chip { padding-inline: 11px; }            /* the seven chips fit one line in the 1128px column at 1440 and up */
-.ledger { border-top: 3px solid var(--rule); }
+.ledger { border-top: 1px solid var(--rule); }
 .ledger-head, .row { display: grid; grid-template-columns: 10px 96px minmax(0, 2.6fr) minmax(0, 1.1fr) minmax(0, 1.3fr) minmax(0, 1.3fr) minmax(0, .9fr); gap: 16px; align-items: center; }
 .ledger-head { padding: 10px 0; font-size: .86rem; color: var(--ink-3); border-bottom: 1px solid var(--rule); }
 .ledger-group h3 { font-size: 1rem; color: var(--ink-3); padding: 18px 0 6px; }
@@ -305,7 +289,7 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 .row-thumb.blank { display: block; background: repeating-linear-gradient(135deg, transparent 0 6px, var(--hair) 6px 7px); }
 .row-record { min-width: 0; }
 .row-record em { display: block; font-style: normal; color: var(--ink-2); font-size: var(--t-sm); line-height: 1.35; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-.row-link { font-family: var(--display); font-weight: 600; font-size: 1rem; text-decoration: none; }
+.row-link { font-family: var(--display); font-weight: 400; font-size: 1.1rem; text-decoration: none; }
 .row-link::after { content: ""; position: absolute; inset: 0; }                         /* the whole row opens the record */
 .row-link:hover { color: var(--brass-ink); }
 .row-wing { font-size: var(--t-sm); color: var(--hi); }
@@ -346,7 +330,7 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 /* discovery: the seek line, the match Enter opens, threads. All of it needs JS, so without JS none of it shows. */
 .seek { display: none; }
 .js .seek { display: grid; grid-template-columns: 122px minmax(0, 26rem) minmax(0, 1fr); gap: 8px 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--rule); scroll-margin-top: calc(var(--bar) + 16px); }
-.seek label { display: inline-flex; align-items: center; min-height: 44px; font-family: var(--mono); font-stretch: 87.5%; text-transform: uppercase; font-size: .72rem; font-weight: 600; letter-spacing: .06em; font-weight: 500; font-variation-settings: 'opsz' 20; font-size: .95rem; color: var(--ink-2); }
+.seek label { display: inline-flex; align-items: center; min-height: 44px; font-size: .95rem; color: var(--ink-2); }
 .seek-field { position: relative; display: block; }
 .seek input { display: block; width: 100%; min-height: 44px; margin: 0; padding: 9px 44px 9px 12px; font: 400 var(--t-base)/1.3 var(--serif); color: var(--ink); background: var(--ground); border: 1px solid var(--rule); border-radius: var(--radius); -webkit-appearance: none; appearance: none; }
 .seek input::placeholder { color: var(--ink-3); font-style: italic; opacity: 1; }
@@ -403,8 +387,7 @@ section { padding-block: clamp(40px, 6vw, 80px); }
 .skills a { text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; flex: none; }
 .skills a:hover { color: var(--brass-ink); }
 .skills small { color: var(--ink-3); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-.hire { border-top: 3px solid var(--rule); padding-top: 22px; position: relative; }
-.hire::after { content: ""; position: absolute; left: 0; right: 0; top: 5px; border-top: 1px solid var(--rule); }
+.hire { border-top: 1px solid var(--rule); padding-top: 22px; }
 .hire h3 { font-size: var(--t-lg); }
 .hire-list { list-style: none; padding: 0; margin: 16px 0 24px; display: grid; gap: 8px; }
 .hire-list li { display: flex; gap: 12px; align-items: baseline; font-weight: 500; }
@@ -484,7 +467,7 @@ footer a:hover { color: var(--ink); }
 .sig-head p { color: var(--ink-2); font-size: var(--t-sm); font-style: italic; }
 
 /* ── rooms: the material of each page ─────────────────────────────────────────────────────── */
-[data-room="bench"] .sig { background: #2A2C2E; color: #E6E1D4; --brass: #C9A260; --live: #9C8BD6; --ink: #E6E1D4; --ground: #2A2C2E; --surface: #343639; --ink-2: #C8C3B6; --ink-3: #9A958A; --rule: rgba(230, 225, 212, .22); --hair: rgba(230, 225, 212, .1); --brass-ink: #E0BC6E; }
+[data-room="bench"] .sig { background: #2A2C2E; color: #E4EDF0; --brass: #5FB98C; --live: #7DB4E6; --ink: #E4EDF0; --ground: #2A2C2E; --surface: #343639; --ink-2: #BCC8CC; --ink-3: #8E9AA0; --rule: rgba(228, 237, 240, .22); --hair: rgba(228, 237, 240, .1); --brass-ink: #7BD0A4; }
 [data-room="bench"] .sig { padding-block: 28px 32px; }
 [data-room] .sig { color-scheme: dark; }   /* every band stays dark in day mode, so native controls and scrollbars do too */
 .stepper { display: grid; gap: 14px; }
@@ -492,7 +475,7 @@ footer a:hover { color: var(--ink); }
 .js .step { grid-area: 1 / 1; }
 .js .step:not([aria-current]) { display: none; }
 .step img { width: 100%; height: auto; border: 1px solid var(--hair); }
-.step-cmd { margin-top: 12px; font-family: var(--mono); font-stretch: 87.5%; font-size: .9rem; color: #FFAA00; overflow-wrap: anywhere; }
+.step-cmd { margin-top: 12px; font-family: var(--mono); font-stretch: 87.5%; font-size: .9rem; color: var(--brass-ink); overflow-wrap: anywhere; }
 .step-cmd code { font-size: inherit; }
 .step-title { margin-top: 6px; color: var(--ink-2); font-style: italic; }
 .step-n { font-style: normal; color: var(--ink-3); font-size: .72rem; margin-right: 8px; }
@@ -517,12 +500,12 @@ footer a:hover { color: var(--ink); }
 @media (max-width: 999px) { .elevation text { font-size: 17px; } }   /* the drawing is smaller beside its caption */
 .elevation figcaption { display: grid; gap: 6px; justify-items: start; }
 @media (min-width: 1000px) { .elevation figcaption { margin-top: 14px; } }
-.elevation .elev-title { font-family: var(--mono); font-stretch: 87.5%; text-transform: uppercase; font-size: .72rem; font-weight: 600; letter-spacing: .06em; font-weight: 500; font-variation-settings: 'opsz' 20; font-size: .95rem; color: var(--ink-3); }
-.elevation .cmd { font-size: .76rem; line-height: 1.45; color: #FFAA00; overflow-wrap: anywhere; }
+.elevation .elev-title { font-size: .95rem; color: var(--ink-3); }
+.elevation .cmd { font-size: .76rem; line-height: 1.45; color: var(--brass-ink); overflow-wrap: anywhere; }
 .elevation .cmd b { font-weight: 500; color: var(--ink); white-space: nowrap; }   /* the numbers the drawing is dimensioned from */
 .elevation small { margin-top: 2px; font-style: italic; font-size: var(--t-sm); line-height: 1.4; color: var(--ink-2); }
 
-[data-room="arcade"] .sig { background: #0B0C14; color: #F2F4FC; --brass: #C9A260; --live: #9C8BD6; --ink: #F2F4FC; --ground: #0B0C14; --surface: #161828; --ink-2: #C3C5D4; --ink-3: #8E91A3; --rule: rgba(242, 244, 252, .2); --hair: rgba(242, 244, 252, .1); --brass-ink: #E2B65C; padding-block: 28px 36px; }
+[data-room="arcade"] .sig { background: #0B0C14; color: #F2F4FC; --brass: #5FB98C; --live: #7DB4E6; --ink: #F2F4FC; --ground: #0B0C14; --surface: #161828; --ink-2: #C3C5D4; --ink-3: #8E91A3; --rule: rgba(242, 244, 252, .2); --hair: rgba(242, 244, 252, .1); --brass-ink: #7BD0A4; padding-block: 28px 36px; }
 .tiles { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 18px 14px; }
 @media (min-width: 760px) { .tiles { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 22px 14px; } }   /* 21 tiles, three full rows */
 .tiles li { text-align: center; font-size: .9rem; }
@@ -532,9 +515,9 @@ footer a:hover { color: var(--ink); }
 .tiles a { text-decoration: none; display: block; }
 .tiles a:hover span { color: var(--brass-ink); }
 
-[data-room="bridge"] .sig { background: #1C0006; color: #E9DADA; --brass: #C9A260; --live: #9C8BD6; --ink: #E9DADA; --ground: #1C0006; --surface: #2A0A12; --ink-2: #D2BCBC; --ink-3: #A58C8C; --rule: rgba(233, 218, 218, .25); --hair: rgba(233, 218, 218, .1); --brass-ink: #FF4D6A; padding-block: 28px 36px; }
-[data-room="bridge"] .sig-head h2 { font-family: var(--mono); font-stretch: 87.5%; font-style: normal; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: #FF4D6A; }
-[data-room="bridge"] .sig-head h2::after { content: " // KDE PLASMA 6"; color: var(--ink-3); }
+[data-room="bridge"] .sig { background: #1C0006; color: #E9DADA; --brass: #5FB98C; --live: #7DB4E6; --ink: #E9DADA; --ground: #1C0006; --surface: #2A0A12; --ink-2: #D2BCBC; --ink-3: #A58C8C; --rule: rgba(233, 218, 218, .25); --hair: rgba(233, 218, 218, .1); --brass-ink: #FF4D6A; padding-block: 28px 36px; }
+[data-room="bridge"] .sig-head h2 { color: #FF4D6A; }
+[data-room="bridge"] .sig-head h2::after { content: " · KDE Plasma 6"; color: var(--ink-3); }
 .rack-group { margin-top: 18px; }
 .rack-group h3 { font-size: .95rem; color: var(--ink-3); margin-bottom: 10px; }
 .rack-row { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
@@ -543,7 +526,7 @@ footer a:hover { color: var(--ink); }
 .rack-row img { width: 100%; height: auto; box-shadow: 0 10px 24px rgba(0, 0, 0, .45); }
 @media (max-width: 700px) { .rack-row.n2 { grid-template-columns: 1fr; } }
 
-[data-room="museum"] .sig { background: #1B1710; color: #EADFC8; --brass: #C9A260; --live: #9C8BD6; --ink: #EADFC8; --ground: #1B1710; --surface: #26211A; --ink-2: #CFC3A8; --ink-3: #9F9480; --rule: rgba(234, 223, 200, .25); --hair: rgba(234, 223, 200, .1); --brass-ink: #F8C060; padding-block: 28px 36px; }
+[data-room="museum"] .sig { background: #131C20; color: #DCE8EA; --brass: #5FB98C; --live: #7DB4E6; --ink: #DCE8EA; --ground: #131C20; --surface: #1B272D; --ink-2: #B9C8CC; --ink-3: #8A9AA0; --rule: rgba(220, 232, 234, .25); --hair: rgba(220, 232, 234, .1); --brass-ink: #7BD0A4; padding-block: 28px 36px; }
 .eras { display: grid; gap: 14px; }
 .era-stage { display: grid; aspect-ratio: 16 / 9; border: 1px solid var(--hair); overflow: hidden; max-width: 760px; }
 .era-stage img { width: 100%; height: 100%; object-fit: cover; transition: clip-path .5s var(--ease), opacity .5s; }
@@ -554,7 +537,7 @@ footer a:hover { color: var(--ink); }
 .era-dial label { position: relative; }
 .era-dial input { position: absolute; opacity: 0; inset: 0; }
 .era-dial span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 1px solid var(--rule); font-style: italic; cursor: pointer; }
-.era-dial input:checked + span { background: #EADFC8; color: #1B1710; border-color: #EADFC8; }
+.era-dial input:checked + span { background: var(--ink); color: var(--ground); border-color: var(--ink); }
 .era-dial input:focus-visible + span { outline: 2px solid var(--brass-ink); outline-offset: 3px; }
 @media (min-width: 1000px) {   /* the placards stand beside the stage, like labels beside an exhibit */
   .js .eras { grid-template-columns: minmax(0, 760px) auto; justify-content: start; align-items: end; column-gap: 28px; }
@@ -568,7 +551,7 @@ footer a:hover { color: var(--ink); }
 .js .eras:has(input[value="dyson"]:checked) .era-dyson, .js .eras:has(input[value="dyson"]:checked) .era-industrial { clip-path: inset(0); }
 @supports not selector(:has(a)) { .era-dial { display: none; } .era-stage { display: grid; grid-template-columns: repeat(3, 1fr); aspect-ratio: auto; } .era-stage img, .js .era-stage img { grid-area: auto; } }
 
-[data-room="notebook"] .sig { padding-block: 24px 32px; background: #17212B; color: #E6E1D4; --ground: #0F161D; --surface: #17212B; --raised: #1E2934; --ink: #E6E1D4; --ink-2: #B5BCC0; --ink-3: #8C959B; --line: #4E7090; --rule: rgba(230, 225, 212, .22); --hair: rgba(230, 225, 212, .12); --brass: #C9A260; --brass-ink: #D9B978; --live: #9C8BD6; border-block: 1px solid color-mix(in srgb, #2D5878 80%, transparent); }
+[data-room="notebook"] .sig { padding-block: 24px 32px; background: #132430; color: #E4EDF0; --ground: #0D1820; --surface: #132430; --raised: #1A2F3D; --ink: #E4EDF0; --ink-2: #AFC0C8; --ink-3: #8497A0; --line: #4E7090; --rule: rgba(228, 237, 240, .22); --hair: rgba(228, 237, 240, .12); --brass: #5FB98C; --brass-ink: #7BD0A4; --live: #7DB4E6; border-block: 1px solid color-mix(in srgb, #2D6A8C 80%, transparent); }
 .notebook-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
 .notebook-plate { margin: 0; }
 .notebook-plate img { width: 100%; height: auto; border: 1px solid var(--hair); }
@@ -596,8 +579,6 @@ footer a:hover { color: var(--ink); }
 @keyframes settle { from { opacity: 0; transform: translateY(6px); } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0s !important; transition-duration: .001ms !important; }
-  .plan.draw [pathLength] { stroke-dashoffset: 0; }
-  .plan.draw text { opacity: 1; }
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
 }
 
@@ -608,21 +589,21 @@ footer a:hover { color: var(--ink); }
 .case h2 { margin-top: 28px; }
 .case .plan-note { color: var(--ink-3); font-size: var(--t-sm); }
 
-/* ── round 3: Sage's own type voice. Unbounded for names and headings, Hanken Grotesk for reading, Martian Mono for
-   labels and data. No italic voice: secondary lines use colour and weight instead. ── */
+/* ── one voice: Marcellus for words, Martian Mono for figures. No italic and no bold: secondary lines use colour
+   and size instead. ── */
 .plan figcaption, .plan .room-lead, .wing-list small, .drafting, .seek-hint, .tiles .tile-note, .plate figcaption, .threads small,
 .plate-grid figcaption, .sig-head p, .elevation small, .notebook-plate figcaption, .row-record em, .skills small, .case .plan-note em,
 .lens h3, .era-caption, .step-title, .bench-door figcaption span, em { font-style: normal; }
-.brand span { font-family: var(--mono); font-stretch: 87.5%; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.brand span { font-size: .9rem; color: var(--ink-3); }
 .lede, .p-head .sub, .p-body .prose, .about-text .prose { font-weight: 400; }
 .hire h3, .hire h4, .lens h3, .sec-head h2 { font-family: var(--display); }
-.btn, .chip, .nav a:not(.btn) { font-weight: 600; }
+.btn, .chip, .nav a:not(.btn) { font-weight: 400; }
 
 /* ── library sections: pages and home sections made at /edit (pages/lib/sections.js) ─────── */
 .x-sec { padding: clamp(40px, 7vw, 88px) 0; }
 .x-page > .x-sec:first-child { padding-top: clamp(56px, 9vw, 120px); }
-.x-sec h2 { font: 600 var(--t-xl)/1.1 var(--display); margin-bottom: .7em; }
-.x-title { font: 700 var(--t-2xl)/1.02 var(--display); margin-top: .35em; max-width: 18ch; }
+.x-sec h2 { font: 400 var(--t-xl)/1.15 var(--display); margin-bottom: .7em; }
+.x-title { font: 400 var(--t-2xl)/1.06 var(--display); margin-top: .35em; max-width: 18ch; }
 .x-sec .prose { color: var(--ink-2); font-size: var(--t-md); line-height: 1.6; max-width: 40rem; }
 .x-sec .prose p + p, .x-sec .prose ul { margin-top: 14px; }
 .x-sec .prose ul { padding-left: 1.2em; }
@@ -631,10 +612,10 @@ footer a:hover { color: var(--ink); }
 .x-media { margin: 0; }
 .x-media img, .x-gallery img { display: block; width: 100%; height: auto; border: 1px solid var(--hair); border-radius: var(--radius); }
 .x-stats dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px; }
-.x-stats dt { font: 500 var(--t-xs)/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--brass-ink); }
-.x-stats dd { margin: 8px 0 0; font: 600 var(--t-xl)/1 var(--display); }
+.x-stats dt { font-size: var(--t-sm); color: var(--brass-ink); }
+.x-stats dd { margin: 8px 0 0; font: 400 var(--t-xl)/1 var(--display); }
 .x-quote figure { margin: 0; }
-.x-quote blockquote { margin: 0; max-width: 24ch; font: 500 var(--t-xl)/1.2 var(--display); }
+.x-quote blockquote { margin: 0; max-width: 24ch; font: 400 var(--t-xl)/1.25 var(--display); }
 .x-quote figcaption { margin-top: 1em; color: var(--ink-3); font: var(--t-xs)/1.3 var(--mono); }
 .x-box { border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); padding: clamp(24px, 4vw, 48px); }
 .x-gallery .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }

@@ -445,3 +445,9 @@ GitHub
 
 ## nav.linkedin
 LinkedIn
+
+## lens.uncle-scam.title
+Uncle Scam
+
+## lens.uncle-scam.blurb
+Where is my money going? A salary and a ZIP code in, an itemized receipt for your taxes out.
