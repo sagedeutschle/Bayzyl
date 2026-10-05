@@ -113,7 +113,7 @@ public final class BayzylCommand implements TabExecutor {
         map.put("susu", "Spawn a calico cat named Susu. Friend command, just for fun.");
         map.put("artie", "Spawn a tuxedo cat named Artie. Friend command, just for fun.");
         map.put("detailbrush", "Bind a preset detail brush (flame, cloud, lightning, vine, bark). Supports presets, variants, and code save/load.");
-        map.put("resume", "Continue a long-running command interrupted by a server restart. Picks up at the last checkpoint.");
+        map.put("resume", "Retry an interrupted copy using its saved selection. Other command types are not resumable.");
         map.put("agitate", "Trigger block physics updates on stuck fluids in your selection. Use it when water or lava refuses to flow.");
         return Collections.unmodifiableMap(map);
     }

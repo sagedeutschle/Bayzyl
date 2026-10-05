@@ -36,6 +36,7 @@ class EditCancellationTest {
     private final EditService service = new EditService(plugin, adapter,
             mock(ClipboardManager.class), history, mock(SelectionManager.class));
     private final Clipboard clipboard;
+    private Runnable activeTask;
 
     EditCancellationTest() {
         when(plugin.getLogger()).thenReturn(Logger.getAnonymousLogger());
@@ -116,7 +117,7 @@ class EditCancellationTest {
             service.cancelPasteTask(id);
             service.cancelAllAsyncTasks();
             ArgumentCaptor<List<BlockChange>> changes = ArgumentCaptor.forClass(List.class);
-            verify(history).record(eq(id), changes.capture(), eq(List.of()), isNull(), isNull());
+            verify(history).recordOnce(eq(id), changes.capture(), eq(List.of()), any(HistoryService.RecordAttempt.class));
             assertFalse(changes.getValue().isEmpty());
             Block block = world.getBlockAt(0, 64, 0);
             verify(block, times(changes.getValue().size())).setType(Material.AIR, false);
@@ -127,11 +128,45 @@ class EditCancellationTest {
     void historyFailureStopsTheTaskAndIsReportedToShutdown() throws Exception {
         withPartialPaste(0, () -> {
             doThrow(new IllegalStateException("history unavailable")).when(history)
-                    .record(eq(id), anyList(), anyList(), isNull(), isNull());
+                    .recordOnce(eq(id), anyList(), anyList(), any(HistoryService.RecordAttempt.class));
             assertThrows(IllegalStateException.class, service::cancelAllAsyncTasks);
             verify(scheduled).cancel();
-            assertFalse(service.hasPasteTask(id));
+            assertTrue(service.hasPasteTask(id), "Pending history must prevent a later edit replacing it");
         });
+    }
+
+    @Test
+    void offlineCancellationRetainsFailedHistoryForShutdown() throws Exception {
+        withPartialPaste(0, () -> {
+            doThrow(new IllegalStateException("history unavailable")).when(history)
+                    .recordOnce(eq(id), anyList(), anyList(), any(HistoryService.RecordAttempt.class));
+            activeTask.run();
+            assertThrows(IllegalStateException.class, service::cancelAllAsyncTasks);
+            verify(scheduled, atLeastOnce()).cancel();
+        });
+    }
+
+    @Test
+    void failedCompletionRetainsHistoryIncludingEntitiesForRetry() throws Exception {
+        try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class);
+             MockedStatic<EditUtil> utility = mockStatic(EditUtil.class, CALLS_REAL_METHODS)) {
+            bukkit.when(Bukkit::getScheduler).thenReturn(scheduler);
+            bukkit.when(() -> Bukkit.getPlayer(id)).thenReturn(player);
+            List<EntityChange> entities = List.of(mock(EntityChange.class));
+            utility.when(() -> EditUtil.pasteEntities(eq(player), eq(clipboard), any(Location.class), eq(0)))
+                    .thenReturn(entities);
+            doThrow(new IllegalStateException("history unavailable")).when(history)
+                    .recordOnce(eq(id), anyList(), anyList(), any(HistoryService.RecordAttempt.class));
+            assertTrue(service.pasteClipboardAsync(player, clipboard, new Location(world, 100, 64, 100), 0, false, false));
+            ArgumentCaptor<Runnable> task = ArgumentCaptor.forClass(Runnable.class);
+            verify(scheduler).runTaskTimer(eq(plugin), task.capture(), eq(1L), eq(1L));
+            task.getValue().run();
+            assertThrows(IllegalStateException.class, service::cancelAllAsyncTasks);
+            doNothing().when(history).recordOnce(eq(id), anyList(), anyList(), any(HistoryService.RecordAttempt.class));
+            service.cancelAllAsyncTasks();
+            verify(history, atLeast(2)).recordOnce(eq(id), anyList(), eq(entities), any(HistoryService.RecordAttempt.class));
+            assertFalse(service.hasPasteTask(id));
+        }
     }
 
     @Test
@@ -157,6 +192,7 @@ class EditCancellationTest {
             ArgumentCaptor<Runnable> task = ArgumentCaptor.forClass(Runnable.class);
             verify(scheduler).runTaskTimer(eq(plugin), task.capture(), eq(1L), eq(1L));
             // Pause at a deterministic point between a block write and task completion.
+            activeTask = task.getValue();
             Method process = task.getValue().getClass().getDeclaredMethod("processBlock", int.class, int.class, int.class);
             process.setAccessible(true);
             process.invoke(task.getValue(), 0, 0, 0);
@@ -166,7 +202,7 @@ class EditCancellationTest {
 
     private void verifyRecordedOnce() {
         ArgumentCaptor<List<BlockChange>> changes = ArgumentCaptor.forClass(List.class);
-        verify(history).record(eq(id), changes.capture(), eq(List.of()), isNull(), isNull());
+        verify(history).recordOnce(eq(id), changes.capture(), eq(List.of()), any(HistoryService.RecordAttempt.class));
         assertEquals(1, changes.getValue().size());
     }
 }

@@ -230,6 +230,7 @@ public final class EditService {
         private int nextProgressReport = 25;
         private final List<BlockChange> changes = Collections.synchronizedList(new ArrayList<>());
         private boolean historyPushed = false;
+        private final HistoryService.RecordAttempt historyAttempt = new HistoryService.RecordAttempt();
 
         AsyncCutTask(Player player, Selection selection, BlockMask mask, Clipboard clipboard, List<EntityChange> entityChanges) {
             this.playerId = player.getUniqueId();
@@ -288,11 +289,12 @@ public final class EditService {
                 processed++;
             }
             if (currentIndex >= totalBlocks) {
-                // finish
-                historyPushed = true;
-                pushHistory(playerId, changes, entityChanges);
-                ChatOutput.send(player, ChatColor.GREEN + "Cut completed: " + changes.size() + " blocks removed.");
-                cleanup();
+                try {
+                    flushHistory();
+                    ChatOutput.send(player, ChatColor.GREEN + "Cut completed: " + changes.size() + " blocks removed.");
+                } finally {
+                    cleanup();
+                }
             } else if (currentIndex >= totalBlocks * nextProgressReport / 100) {
                 int percent = (int) (currentIndex * 100 / totalBlocks);
                 ChatOutput.send(player, ChatColor.GRAY + "Cut progress: " + ChatColor.WHITE + percent + "%");
@@ -316,14 +318,14 @@ public final class EditService {
                 return;
             }
             if (!changes.isEmpty() || !entityChanges.isEmpty()) {
-                pushHistory(playerId, changes, entityChanges);
+                historyService.recordOnce(playerId, changes, entityChanges, historyAttempt);
             }
             historyPushed = true;
         }
 
         private void cleanup() {
             asyncPasteTasks.remove(playerId);
-            partialHistoryFlushers.remove(playerId);
+            if (historyPushed) partialHistoryFlushers.remove(playerId);
             pasteProgress.remove(playerId);
             if (task != null) task.cancel();
         }
@@ -545,7 +547,7 @@ public final class EditService {
         rotation = normalizeRotation(rotation);
 
         UUID playerId = player.getUniqueId();
-        if (asyncPasteTasks.containsKey(playerId)) {
+        if (hasPasteTask(playerId)) {
             ChatOutput.send(player, ChatColor.RED + "Already pasting. Wait for current paste to finish.");
             return false;
         }
@@ -600,7 +602,7 @@ public final class EditService {
     }
     
     public boolean hasPasteTask(UUID playerId) {
-        return asyncPasteTasks.containsKey(playerId);
+        return asyncPasteTasks.containsKey(playerId) || partialHistoryFlushers.containsKey(playerId);
     }
     
     public void cancelPasteTask(UUID playerId) {
@@ -1171,7 +1173,9 @@ public final class EditService {
         private int nextProgressReport = 25;
         private final List<BlockChange> changes = Collections.synchronizedList(new ArrayList<>());
         private boolean entitiesPasted = false;
+        private List<EntityChange> pastedEntityChanges = List.of();
         private boolean historyPushed = false;
+        private final HistoryService.RecordAttempt historyAttempt = new HistoryService.RecordAttempt();
         private int skippedOutOfBounds = 0;
         private int skippedChunkLoad = 0;
         private int placedCount = 0; // actual block.setBlockData() successes; distinct from changes.size()
@@ -1227,8 +1231,13 @@ public final class EditService {
                             + "Server is fine; this paste was stopped to protect it.");
                 }
                 aborted = true;
-                flushPartialHistory(playerId);
-                cleanup();
+                try {
+                    flushPartialHistory(playerId);
+                } catch (RuntimeException failure) {
+                    plugin.getLogger().severe("Undo recording is still pending for a stopped paste: " + failure.getClass().getSimpleName());
+                } finally {
+                    cleanup();
+                }
             }
         }
 
@@ -1370,37 +1379,17 @@ public final class EditService {
 
         private void pasteEntities(Player player) {
             try {
-                List<EntityChange> entityChanges = EditUtil.pasteEntities(
-                    player, clipboard, target, rotation
-                );
-
-                ChatOutput.send(player, ChatColor.GRAY + "Pasted " +
-                               entityChanges.size() + " entities.");
-
-                // Push entity changes to history along with block changes
-                if (recordHistory) {
-                    historyPushed = true;
-                    pushHistory(playerId, changes, entityChanges);
-                }
-
+                pastedEntityChanges = EditUtil.pasteEntities(player, clipboard, target, rotation);
+                ChatOutput.send(player, ChatColor.GRAY + "Pasted " + pastedEntityChanges.size() + " entities.");
             } catch (Exception e) {
-                ChatOutput.send(player, ChatColor.RED + "Failed to paste entities: " +
-                               e.getMessage());
-                // Still push block changes even if entities failed
-                if (recordHistory) {
-                    historyPushed = true;
-                    pushHistory(playerId, changes, List.of());
-                }
+                ChatOutput.send(player, ChatColor.RED + "Failed to paste entities: " + e.getMessage());
             }
+            flushHistory();
         }
 
         private void finish(Player player) {
             try {
-                if (!entitiesPasted && recordHistory) {
-                    // If entities weren't pasted (error case), still save block changes
-                    historyPushed = true;
-                    pushHistory(playerId, changes, List.of());
-                }
+                flushHistory();
                 
                 StringBuilder skipsTail = new StringBuilder();
                 if (skippedOutOfBounds > 0) {
@@ -1467,18 +1456,16 @@ public final class EditService {
 
         /** Records the blocks placed so far (once), so a cancelled or crashed paste can still be undone. */
         void flushHistory() {
-            if (historyPushed || !recordHistory) {
-                return;
-            }
-            if (!changes.isEmpty()) {
-                pushHistory(playerId, changes, List.of());
+            if (historyPushed) return;
+            if (recordHistory && (!changes.isEmpty() || !pastedEntityChanges.isEmpty())) {
+                historyService.recordOnce(playerId, changes, pastedEntityChanges, historyAttempt);
             }
             historyPushed = true;
         }
         
         private void cleanup() {
             asyncPasteTasks.remove(playerId);
-            partialHistoryFlushers.remove(playerId);
+            if (historyPushed) partialHistoryFlushers.remove(playerId);
             pasteProgress.remove(playerId);
             if (task != null) {
                 task.cancel();

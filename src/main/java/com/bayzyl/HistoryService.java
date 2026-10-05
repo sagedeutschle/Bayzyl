@@ -100,6 +100,20 @@ public final class HistoryService {
         this.globalMaskService = globalMaskService;
     }
 
+    static final class RecordAttempt {
+        private boolean appended;
+    }
+
+    void recordOnce(UUID playerId, List<BlockChange> changes, List<EntityChange> entities, RecordAttempt attempt) {
+        if (!attempt.appended) {
+            List<BlockChange> filtered = applyGlobalMask(playerId, changes);
+            editHistory.push(playerId, new EditAction(filtered, entities, List.of(), List.of(), null, null));
+            // Persistence may throw after the action entered memory. A retry must only retry saving it.
+            attempt.appended = true;
+        }
+        savePlayer(playerId);
+    }
+
     public void record(UUID playerId, List<BlockChange> changes, List<EntityChange> entityChanges, List<BiomeChange> biomeChanges, List<BiomeColumnChange> biomeColumnChanges,
                        SelectionSnapshot beforeSelection, SelectionSnapshot afterSelection) {
         List<BlockChange> filteredChanges = applyGlobalMask(playerId, changes);
