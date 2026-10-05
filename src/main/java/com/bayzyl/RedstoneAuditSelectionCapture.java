@@ -33,10 +33,21 @@ final class RedstoneAuditSelectionCapture implements RedstoneAuditCommand.Select
         int halo = RedstoneAuditSnapshot.HALO;
         BoundingBox area = new BoundingBox(min.x() - halo, min.y() - halo, min.z() - halo,
                 max.x() + halo + 1, max.y() + halo + 1, max.z() + halo + 1);
+        boolean[] unloaded = {false};
         RedstoneAuditSnapshotFactory factory = new RedstoneAuditSnapshotFactory(
-                RedstoneAuditSnapshotFactory.loadedOnly(world::isChunkLoaded, world::getBlockData),
+                RedstoneAuditSnapshotFactory.loadedOnly((chunkX, chunkZ) -> {
+                    boolean loaded = world.isChunkLoaded(chunkX, chunkZ);
+                    unloaded[0] |= !loaded;
+                    return loaded;
+                }, world::getBlockData),
                 () -> itemFrames(world, area), world.getMinHeight(), world.getMaxHeight() - 1);
         Capture captured = factory.capture(min, max);
+        // Missing context is unknown, not air: never turn a partial capture into circuit findings.
+        // The factory applies its read cap before probing chunks, and loadedOnly never loads one.
+        if (unloaded[0]) {
+            return Capture.refused("The selection or its two-block context border includes unloaded chunks. "
+                    + "Visit that area to load it, then run the audit again.");
+        }
         return captured.snapshot() == null ? captured : Capture.of(captured.snapshot(), world.getUID());
     }
 

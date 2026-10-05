@@ -65,7 +65,7 @@ class RedstoneAuditSelectionCaptureTest {
     }
 
     @Test
-    void neverReadsBlocksInUnloadedChunks() {
+    void refusesPartialSelectionWithoutReadingUnloadedChunks() {
         World world = world();
         when(world.isChunkLoaded(anyInt(), anyInt())).thenAnswer(call -> (int) call.getArgument(0) == 0);
         SelectionManager selections = new SelectionManager();
@@ -73,10 +73,53 @@ class RedstoneAuditSelectionCaptureTest {
 
         Capture capture = new RedstoneAuditSelectionCapture(selections).capture(player());
 
-        assertNotNull(capture.snapshot());
+        assertNull(capture.snapshot());
+        assertTrue(capture.refusal().contains("unloaded"));
         verify(world).getBlockData(15, 64, 0);
         verify(world, never()).getBlockData(eq(16), anyInt(), anyInt());
         verify(world, never()).getBlockData(eq(19), anyInt(), anyInt());
+    }
+
+    @Test
+    void refusesWhenOnlyTheContextBorderReachesAnUnloadedChunk() {
+        World world = world();
+        when(world.isChunkLoaded(anyInt(), anyInt())).thenAnswer(call -> (int) call.getArgument(0) == -1);
+        SelectionManager selections = new SelectionManager();
+        selections.setCuboid(playerId, new Location(world, -1, 64, 8), new Location(world, -1, 64, 8));
+
+        Capture capture = new RedstoneAuditSelectionCapture(selections).capture(player());
+
+        assertNull(capture.snapshot());
+        assertTrue(capture.refusal().contains("unloaded"));
+        verify(world, never()).getBlockData(eq(0), anyInt(), anyInt());
+    }
+
+    @Test
+    void fullyUnloadedSelectionIsRefusedWithoutBlockReads() {
+        World world = world();
+        SelectionManager selections = new SelectionManager();
+        selections.setCuboid(playerId, new Location(world, 1_000_000, 64, 1_000_000), new Location(world, 1_000_000, 64, 1_000_000));
+
+        Capture capture = new RedstoneAuditSelectionCapture(selections).capture(player());
+
+        assertNull(capture.snapshot());
+        assertTrue(capture.refusal().contains("unloaded"));
+        verify(world, never()).getBlockData(anyInt(), anyInt(), anyInt());
+    }
+
+    @Test
+    void oversizedSelectionIsRefusedBeforeChunkProbesOrEntityQueries() {
+        World world = world();
+        SelectionManager selections = new SelectionManager();
+        selections.setCuboid(playerId, new Location(world, 0, 64, 0), new Location(world, 500, 200, 500));
+
+        Capture capture = new RedstoneAuditSelectionCapture(selections).capture(player());
+
+        assertNull(capture.snapshot());
+        assertTrue(capture.refusal().contains("too large"));
+        verify(world, never()).isChunkLoaded(anyInt(), anyInt());
+        verify(world, never()).getBlockData(anyInt(), anyInt(), anyInt());
+        verify(world, never()).getNearbyEntities(any(BoundingBox.class));
     }
 
     private Player player() {
