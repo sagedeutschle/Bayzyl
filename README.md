@@ -1,5 +1,7 @@
 # Bayzyl
 
+> Just stuff I thought would be useful for the things I want to do. If you think they will be useful for you too feel free to use them as well, just PLEASE dont try and sell it, helpful code should be for everyone. If you use this as a part of another free program credit would be nice smile :).
+
 **An in-game building toolkit for Paper servers.**
 
 Selections, brushes, shapes, shared kits, and builder profiles — with a command surface that aims to be approachable for newer builders while staying useful for those already comfortable in WorldEdit or FAWE.
@@ -7,6 +9,14 @@ Selections, brushes, shapes, shared kits, and builder profiles — with a comman
 ![Bayzyl building a plaza, dome, pyramid, tower, formula ring, and forest one command at a time](docs/images/bayzyl-timelapse.gif)
 
 *Every frame above is one real Bayzyl command on a clean Paper 1.21.4 server with no WorldEdit installed. Renders use vanilla textures.*
+
+## Current update: 0.2.0-alpha.2
+
+[Download the pre-release](https://github.com/sagedeutschle/Bayzyl/releases/tag/v0.2.0-alpha.2) · [Update notes](docs/releases/0.2.0-alpha.2.md) · [Changelog](CHANGELOG.md)
+
+This alpha adds durable clipboard recovery, `/resume` for interrupted copies, and a read-only Redstone Audit (`/redstoneaudit` or `/bzl audit`). It also adds stricter edit limits, permission checks, safer shutdown, partial undo history for cancelled edits, and fixes for clipboard transforms, brush codes, and shared kit overwrites.
+
+Use a backed-up test world first. This remains an alpha; undo is not a full world backup. The [release notes](docs/releases/0.2.0-alpha.2.md#known-limits) describe recovery, entity, and compatibility limits.
 
 ---
 
@@ -51,6 +61,9 @@ Save a complete loadout (toolbar, runtime toggles, preferences) as a profile. Sh
 ### History
 `/undo` `/redo` `/oops` (broadcast undo) — persistent across server restarts, per-player.
 
+### Recovery and audit
+`/resume` retries an interrupted copy using its saved selection. Saved clipboards have a 250,000-block recovery cap. `/redstoneaudit` inspects a loaded selection without changing blocks; `show`, `page`, and `clear` manage its findings and temporary private markers.
+
 ### Server-side QoL
 RAM alerts with configurable thresholds, a tab info panel, decoy player count for events, runtime admin/builder toggles.
 
@@ -73,15 +86,17 @@ In game, `/bzlhelp` pages every command, and the tab panel shows live server mem
 
 ## Install
 
-1. Download the latest `bayzyl.jar` from the [Releases page](https://github.com/sagedeutschle/Bayzyl/releases).
-2. Drop it into your server's `plugins/` folder.
-3. Restart the server.
-4. *(Optional)* Install [WorldEdit](https://enginehub.org/worldedit/) or [FastAsyncWorldEdit](https://www.spigotmc.org/resources/fastasyncworldedit.13932/). Bayzyl runs without either: shapes, edits, clipboard, history, and brushes use Bayzyl's native adapters. Saving and loading schematic **files** needs WorldEdit or FAWE.
+1. Back up your worlds and `plugins/Bayzyl/`, then stop the server.
+2. Download `bayzyl-0.2.0-alpha.2.jar` and its SHA-256 file from the [pre-release](https://github.com/sagedeutschle/Bayzyl/releases/tag/v0.2.0-alpha.2). Verify the checksum.
+3. Replace the old Bayzyl JAR in your server’s `plugins/` folder; keep only one Bayzyl JAR.
+4. Start the server and check its log for version `0.2.0-alpha.2`.
+5. *(Optional)* WorldEdit enables schematic file import/export and supported shape adapters.
 
 **Requirements**
 
-- Paper 1.21 or newer (0.2.0-alpha.1 was tested on Paper 1.21.4)
-- Java 21+
+- Release target: Paper **1.21.11** with **Java 21**. See the release assets for the exact build receipt and runtime checks.
+- The existing screenshots show alpha.1 on Paper 1.21.4; they are not new-release test evidence.
+- WorldEdit is optional. FAWE, Folia, Minecraft 26.x, and other server versions are not verified for this release.
 
 Spigot, Folia, Forge, and Fabric ports are on the v2 roadmap.
 
@@ -127,7 +142,6 @@ Design notes for individual systems live in [`docs/`](docs/): [detail brushes](d
 Planned v2 work, highlights:
 
 - **BzlBlender** — optional Fabric companion mod for client-side ghost rendering and floating GUI panels
-- **Redstone Audit** — static analysis of redstone circuits with fault localization
 - **Vanilla generator tools** — Bayzyl-style wrappers around `/place feature`, bounded chunk regen, parametric noise brushes
 - **Server maintenance pillar** — tick profiling, build impact reports, optimization suggestions
 - Multi-platform ports: Spigot, Folia, Forge, Fabric
