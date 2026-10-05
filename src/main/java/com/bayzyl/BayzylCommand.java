@@ -283,6 +283,11 @@ DecoyTabListService decoyTabListService,
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player player && (editService.hasPasteTask(player.getUniqueId())
+                || historyService.hasAsyncHistoryTask(player.getUniqueId()))) {
+            ChatOutput.send(sender, ChatColor.RED + "Wait for your current edit or undo/redo to finish.");
+            return true;
+        }
         String cmd = command.getName().toLowerCase(Locale.ROOT);
         CommandCapability capability = requiredCapability(cmd, args);
         if (!bayzylAccess.allowed(sender, capability)) {

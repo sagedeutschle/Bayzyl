@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Rotation;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntitySnapshot;
 import org.bukkit.entity.Entity;
@@ -90,7 +91,13 @@ public final class ClipboardEntity {
         Location location = hanging.getLocation();
         BlockFace attachedFace = hanging.getAttachedFace();
         BlockFace facing = hanging.getFacing();
-        Location support = location.getBlock()
+        Block anchor = location.getBlock();
+        if (hanging instanceof Painting painting && painting.getArt() != null) {
+            // A painting's location is the centre of its whole canvas, not the block it is anchored on.
+            int[] cell = paintingAnchor(location, facing, painting.getArt().getBlockWidth(), painting.getArt().getBlockHeight());
+            anchor = location.getWorld().getBlockAt(cell[0], cell[1], cell[2]);
+        }
+        Location support = anchor
                 .getRelative(attachedFace.getModX(), attachedFace.getModY(), attachedFace.getModZ())
                 .getLocation();
         return new ClipboardEntity(
@@ -137,9 +144,39 @@ public final class ClipboardEntity {
         );
     }
 
-    public ClipboardEntity rotateY(int rotationDegrees) {
+    /**
+     * The block a painting is anchored on, recovered from its entity location. Minecraft places an
+     * even-sized canvas half a block off its anchor block along the width and the height, so the
+     * block containing the location is one block off for such paintings.
+     */
+    static int[] paintingAnchor(Location location, BlockFace facing, int widthBlocks, int heightBlocks) {
+        int ccwX = facing.getModZ();
+        int ccwZ = -facing.getModX();
+        double widthOffset = widthBlocks % 2 == 0 ? 0.5 : 0.0;
+        double heightOffset = heightBlocks % 2 == 0 ? 0.5 : 0.0;
+        return new int[]{
+                (int) Math.round(location.getX() + facing.getModX() * 0.46875 - widthOffset * ccwX - 0.5),
+                (int) Math.round(location.getY() - heightOffset - 0.5),
+                (int) Math.round(location.getZ() + facing.getModZ() * 0.46875 - widthOffset * ccwZ - 0.5)
+        };
+    }
+
+    /** Sum of the first and last canvas cell indexes of a painting side, measured from its anchor block. */
+    private static int canvasSpan(int blocks) {
+        int first = -((blocks - 1) / 2);
+        return first + (first + blocks - 1);
+    }
+
+    public ClipboardEntity rotateY(int requestedDegrees) {
+        // Only quarter turns move blocks, so anything else must not turn the entities either.
+        int rotationDegrees = requestedDegrees % 90 == 0 ? requestedDegrees : 0;
         double[] rotated = ClipboardTransforms.rotateVectorY(supportOffsetX, supportOffsetZ, rotationDegrees);
         if (snapshot != null && facing == null) {
+            // Free entities sit at a point inside the block grid, whose cells turn about the centre of the
+            // origin block, so turn about that centre rather than the block corner.
+            rotated = ClipboardTransforms.rotateVectorY(supportOffsetX - 0.5, supportOffsetZ - 0.5, rotationDegrees);
+            rotated[0] += 0.5;
+            rotated[1] += 0.5;
             return new ClipboardEntity(
                     glow,
                     rotated[0],
@@ -183,12 +220,38 @@ public final class ClipboardEntity {
         double x = supportOffsetX;
         double y = supportOffsetY;
         double z = supportOffsetZ;
-        if (axis.equals("x")) {
+        if (snapshot != null && facing == null) {
+            // Mirror the block cells the way flip() maps them: x and z about the centre of the origin block,
+            // y keeping the position inside the cell.
+            if (axis.equals("x")) {
+                x = 1.0 - x;
+            } else if (axis.equals("y")) {
+                y = -Math.floor(y) + (y - Math.floor(y));
+            } else {
+                z = 1.0 - z;
+            }
+        } else if (axis.equals("x")) {
             x = -x;
         } else if (axis.equals("y")) {
             y = -y;
         } else {
             z = -z;
+        }
+        if (paintingArt != null && facing != null) {
+            // An even-sized canvas is anchored off-centre, so the mirrored canvas needs its anchor shifted to
+            // keep covering the mirrored blocks.
+            int spanWidth = canvasSpan(paintingArt.getBlockWidth());
+            int ccwX = facing.getModZ();
+            int ccwZ = -facing.getModX();
+            if (axis.equals("y")) {
+                y -= canvasSpan(paintingArt.getBlockHeight());
+            } else if (axis.equals("x")) {
+                z += ccwZ * spanWidth;
+                x -= ccwX * spanWidth;
+            } else {
+                x += ccwX * spanWidth;
+                z -= ccwZ * spanWidth;
+            }
         }
         if (snapshot != null && facing == null) {
             return new ClipboardEntity(
@@ -353,9 +416,10 @@ public final class ClipboardEntity {
         if (axis.equals("y")) {
             return normalizeYaw(value);
         }
+        // Yaw 0 faces +z and 90 faces -x, so mirroring x negates the yaw and mirroring z reflects it about 180.
         if (axis.equals("x")) {
-            return normalizeYaw(180.0f - value);
+            return normalizeYaw(-value);
         }
-        return normalizeYaw(-value);
+        return normalizeYaw(180.0f - value);
     }
 }

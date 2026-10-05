@@ -41,7 +41,11 @@ public final class ClipboardCommandParser {
             switch (key) {
                 case "rotation", "rotate" -> {
                     try {
-                        rotation = Integer.parseInt(DirectionUtil.normalizeRotationKeyword(value));
+                        // Normalised to 0..270 because the chunked paste turns block positions by the raw value.
+                        int parsed = ((Integer.parseInt(DirectionUtil.normalizeRotationKeyword(value)) % 360) + 360) % 360;
+                        if (parsed % 90 == 0) {
+                            rotation = parsed;
+                        }
                     } catch (NumberFormatException ignored) {
                     }
                 }

@@ -18,6 +18,14 @@ final class SelectionResizeSafetyTest {
     }
 
     @Test
+    void volumeOverflowStillRequiresConfirmation() {
+        Selection extreme = cube(-30_000_000, Integer.MIN_VALUE, -30_000_000,
+                29_999_999, Integer.MAX_VALUE, 29_999_999);
+        assertEquals(Long.MAX_VALUE, extreme.getVolume());
+        assertTrue(EditUtil.requiresConfirm(extreme, false));
+    }
+
+    @Test
     void hugeExpandAllSaturatesInsteadOfWrappingToTheOtherSide() {
         Selection grown = service.expandSelectionAll(cube(0, 0, 0, 10, 10, 10), Integer.MAX_VALUE);
 

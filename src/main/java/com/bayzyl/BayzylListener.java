@@ -186,6 +186,11 @@ public final class BayzylListener implements Listener {
             sendActionBar(player, ChatColor.RED + "You do not have permission to use this Bayzyl tool.");
             return;
         }
+        if (hasPendingEdit(player)) {
+            event.setCancelled(true);
+            sendActionBar(player, ChatColor.RED + "Wait for your current edit or undo/redo to finish.");
+            return;
+        }
 
         if (toolType == ToolType.WAND) {
             handleWand(event, player);
@@ -732,6 +737,11 @@ public final class BayzylListener implements Listener {
         ItemStack previousItem = player.getInventory().getItem(event.getPreviousSlot());
         ToolType previousToolType = toolManager.getToolType(previousItem);
         if (previousToolType == ToolType.WAND && player.isSneaking()) {
+            if (hasPendingEdit(player)) {
+                event.setCancelled(true);
+                sendActionBar(player, ChatColor.RED + "Wait for your current edit or undo/redo to finish.");
+                return;
+            }
             Selection selection = selectionManager.get(player.getUniqueId());
             if (selection != null && selection.isComplete()) {
                 int delta = normalizeHotbarDelta(event.getPreviousSlot(), event.getNewSlot());
@@ -739,6 +749,11 @@ public final class BayzylListener implements Listener {
                     if (!bayzylAccess.allowed(player, commandAccessPolicy.requiredWandScrollCapability())) {
                         event.setCancelled(true);
                         sendActionBar(player, ChatColor.RED + "You do not have permission to nudge selections.");
+                        return;
+                    }
+                    if (editService.requiresConfirm(selection, false)) {
+                        event.setCancelled(true);
+                        sendActionBar(player, ChatColor.RED + "Selection is too large for wand scrolling. Use /nudge with confirm.");
                         return;
                     }
                     NudgeSettings settings = nudgeSettingsService.get(player);
@@ -862,6 +877,7 @@ public final class BayzylListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        editService.cancelPasteTask(player.getUniqueId());
         historyService.savePlayer(player.getUniqueId());
         runtimePreferencesService.savePlayer(player, nightVisionService, autoUnstickService, ghostHandService, stackLookDirectionService, stackAutoMoveService, nudgeSettingsService, visualizationManager, tabMenuSettingsService, recentEditTrailService);
         adminModeService.disable(player);
@@ -874,6 +890,8 @@ public final class BayzylListener implements Listener {
         tabMenuSettingsService.clear(id);
         recentEditTrailService.clear(id);
         tabInfoPanelService.clearPlayer(id);
+        recentJumpIntent.remove(id);
+        recentStructurePlace.remove(id);
         recentAutoUnstick.remove(id);
         recentDetailPaint.remove(id);
         terrainBrushProgress.remove(id);
@@ -920,6 +938,7 @@ public final class BayzylListener implements Listener {
 
         Player player = event.getPlayer();
         if (command.equals("undo")) {
+            if (refusePendingHistory(event, player)) return;
             editService.clearNudgeSession(player.getUniqueId());
             if (!historyService.hasUndo(player)) {
                 return;
@@ -932,6 +951,7 @@ public final class BayzylListener implements Listener {
         }
 
         if (command.equals("redo")) {
+            if (refusePendingHistory(event, player)) return;
             editService.clearNudgeSession(player.getUniqueId());
             if (!historyService.hasRedo(player)) {
                 return;
@@ -949,6 +969,18 @@ public final class BayzylListener implements Listener {
                 && (parts[1].equalsIgnoreCase("nudge") || parts[1].equalsIgnoreCase("ramalert"))))) {
             editService.clearNudgeSession(player.getUniqueId());
         }
+    }
+
+    private boolean hasPendingEdit(Player player) {
+        return editService.hasPasteTask(player.getUniqueId())
+                || historyService.hasAsyncHistoryTask(player.getUniqueId());
+    }
+
+    private boolean refusePendingHistory(PlayerCommandPreprocessEvent event, Player player) {
+        if (!hasPendingEdit(player)) return false;
+        event.setCancelled(true);
+        ChatOutput.send(player, ChatColor.RED + "Wait for your current edit or undo/redo to finish.");
+        return true;
     }
 
     private void handleWand(PlayerInteractEvent event, Player player) {

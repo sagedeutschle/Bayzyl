@@ -71,6 +71,8 @@ public final class EditService {
     private final Map<UUID, BukkitTask> copyTasks = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitTask> asyncPasteTasks = new ConcurrentHashMap<>();
     private final Map<UUID, Integer> pasteProgress = new ConcurrentHashMap<>();
+    /** Records whatever a running paste/cut already changed, so a cancelled task still leaves an undoable edit. */
+    private final Map<UUID, Runnable> partialHistoryFlushers = new ConcurrentHashMap<>();
     private CrashRecoveryService crashRecoveryService;
 
     public EditService(JavaPlugin plugin, EditAdapter adapter, ClipboardManager clipboardManager, HistoryService historyService, SelectionManager selectionManager) {
@@ -191,22 +193,23 @@ public final class EditService {
                 return 0;
             }
             Clipboard clipboard = adapter.copySelection(player, selection, mask);
-            if (clipboard != null) clipboardManager.set(player.getUniqueId(), clipboard);
+            if (clipboard == null) return REFUSED;
+            clipboardManager.set(player.getUniqueId(), clipboard);
             // Cut entities synchronously first
             List<EntityChange> entityChanges = EditUtil.cutEntities(player, selection);
             AsyncCutTask task = new AsyncCutTask(player, selection, mask, clipboard, entityChanges);
             BukkitTask scheduled = Bukkit.getScheduler().runTaskTimer(plugin, task, 1L, 1L);
             task.setTask(scheduled);
             asyncPasteTasks.put(player.getUniqueId(), scheduled);
+            partialHistoryFlushers.put(player.getUniqueId(), task::flushHistory);
             pasteProgress.put(player.getUniqueId(), 0);
             ChatOutput.send(player, ChatColor.GREEN + "Starting chunked cut of " + volume + " blocks. Progress will be shown every 25%.");
             return DEFERRED;
         }
 
         Clipboard clipboard = adapter.copySelection(player, selection, mask);
-        if (clipboard != null) {
-            clipboardManager.set(player.getUniqueId(), clipboard);
-        }
+        if (clipboard == null) return REFUSED;
+        clipboardManager.set(player.getUniqueId(), clipboard);
         List<EntityChange> entityChanges = EditUtil.cutEntities(player, selection);
         List<BlockChange> changes = adapter.cutSelection(player, selection, mask);
         pushHistory(player.getUniqueId(), changes, entityChanges);
@@ -226,6 +229,7 @@ public final class EditService {
         private int currentIndex = 0;
         private int nextProgressReport = 25;
         private final List<BlockChange> changes = Collections.synchronizedList(new ArrayList<>());
+        private boolean historyPushed = false;
 
         AsyncCutTask(Player player, Selection selection, BlockMask mask, Clipboard clipboard, List<EntityChange> entityChanges) {
             this.playerId = player.getUniqueId();
@@ -285,6 +289,7 @@ public final class EditService {
             }
             if (currentIndex >= totalBlocks) {
                 // finish
+                historyPushed = true;
                 pushHistory(playerId, changes, entityChanges);
                 ChatOutput.send(player, ChatColor.GREEN + "Cut completed: " + changes.size() + " blocks removed.");
                 cleanup();
@@ -298,11 +303,27 @@ public final class EditService {
         private void cancel(String reason) {
             Player player = Bukkit.getPlayer(playerId);
             if (player != null) ChatOutput.send(player, ChatColor.RED + "Cut cancelled: " + reason);
-            cleanup();
+            try {
+                flushPartialHistory(playerId);
+            } finally {
+                cleanup();
+            }
+        }
+
+        /** Records the blocks and entities removed so far (once), so a cancelled cut can still be undone. */
+        void flushHistory() {
+            if (historyPushed) {
+                return;
+            }
+            if (!changes.isEmpty() || !entityChanges.isEmpty()) {
+                pushHistory(playerId, changes, entityChanges);
+            }
+            historyPushed = true;
         }
 
         private void cleanup() {
             asyncPasteTasks.remove(playerId);
+            partialHistoryFlushers.remove(playerId);
             pasteProgress.remove(playerId);
             if (task != null) task.cancel();
         }
@@ -323,6 +344,11 @@ public final class EditService {
 
     public int pasteClipboard(Player player, Clipboard clipboard, Location target,
                               int rotation, boolean ignoreAir, boolean confirm) {
+        if (rotation % 90 != 0) {
+            ChatOutput.send(player, ChatColor.RED + "Only 90-degree rotations are supported.");
+            return REFUSED;
+        }
+        rotation = normalizeRotation(rotation);
         try {
             long volume = (long) clipboard.getSizeX() * (long) clipboard.getSizeY() * (long) clipboard.getSizeZ();
 
@@ -379,6 +405,10 @@ public final class EditService {
         static SafetyVerdict note(String msg) { return new SafetyVerdict(false, false, msg); }
         static SafetyVerdict proceedNoUndo(String msg) { return new SafetyVerdict(false, true, msg); }
         static SafetyVerdict refuse(String msg) { return new SafetyVerdict(true, false, msg); }
+    }
+
+    private static int normalizeRotation(int rotation) {
+        return ((rotation % 360) + 360) % 360;
     }
 
     private SafetyVerdict evaluatePasteSafety(Clipboard clipboard, Location target, int rotation,
@@ -506,6 +536,13 @@ public final class EditService {
             ChatOutput.send(player, ChatColor.RED + "Clipboard is empty.");
             return false;
         }
+        if (rotation % 90 != 0) {
+            ChatOutput.send(player, ChatColor.RED + "Only 90-degree rotations are supported.");
+            return false;
+        }
+        // The task rotates block positions with the raw angle but block states with a normalized one,
+        // so -90 or 450 would turn the states and leave the layout unrotated.
+        rotation = normalizeRotation(rotation);
 
         UUID playerId = player.getUniqueId();
         if (asyncPasteTasks.containsKey(playerId)) {
@@ -540,6 +577,7 @@ public final class EditService {
         BukkitTask scheduled = Bukkit.getScheduler().runTaskTimer(plugin, task, 1L, 1L);
         task.setTask(scheduled);
         asyncPasteTasks.put(playerId, scheduled);
+        partialHistoryFlushers.put(playerId, task::flushHistory);
         pasteProgress.put(playerId, 0);
 
         ChatOutput.send(player, ChatColor.GREEN + "Starting async paste of " + totalBlocks +
@@ -567,29 +605,48 @@ public final class EditService {
     
     public void cancelPasteTask(UUID playerId) {
         BukkitTask task = asyncPasteTasks.remove(playerId);
-        if (task != null) {
-            task.cancel();
+        try {
+            if (task != null) task.cancel();
+        } finally {
+            pasteProgress.remove(playerId);
+            flushPartialHistory(playerId);
         }
-        pasteProgress.remove(playerId);
     }
 
-    /** Cancels every running paste/cut/copy task. Called on plugin disable. */
-    public void cancelAllAsyncTasks() {
-        int cancelled = 0;
-        for (BukkitTask task : asyncPasteTasks.values()) {
-            try { task.cancel(); cancelled++; } catch (Exception ignored) {}
-        }
-        for (BukkitTask task : copyTasks.values()) {
-            try { task.cancel(); cancelled++; } catch (Exception ignored) {}
-        }
-        asyncPasteTasks.clear();
-        copyTasks.clear();
-        pasteProgress.clear();
-        if (cancelled > 0) {
-            plugin.getLogger().info("Cancelled " + cancelled + " async edit task(s) on disable.");
+    private void flushPartialHistory(UUID playerId) {
+        Runnable flusher = partialHistoryFlushers.get(playerId);
+        if (flusher != null) {
+            // Keep the flusher available if recording fails, and propagate the failure to shutdown.
+            flusher.run();
+            partialHistoryFlushers.remove(playerId, flusher);
         }
     }
-    
+
+    /** Stops every task and records partial edits before shutdown persists player history. */
+    public void cancelAllAsyncTasks() {
+        RuntimeException failure = null;
+        java.util.Set<UUID> players = new java.util.HashSet<>(asyncPasteTasks.keySet());
+        players.addAll(partialHistoryFlushers.keySet());
+        for (UUID playerId : players) {
+            try {
+                cancelPasteTask(playerId);
+            } catch (RuntimeException ex) {
+                if (failure == null) failure = new IllegalStateException("Could not finish cancelled edit history", ex);
+                else failure.addSuppressed(ex);
+            }
+        }
+        for (BukkitTask task : copyTasks.values()) {
+            try {
+                task.cancel();
+            } catch (RuntimeException ex) {
+                if (failure == null) failure = new IllegalStateException("Could not stop copy task", ex);
+                else failure.addSuppressed(ex);
+            }
+        }
+        copyTasks.clear();
+        if (failure != null) throw failure;
+    }
+
     private boolean validatePasteArea(World world, Clipboard clipboard, Location target, int rotation) {
         // Per-block chunk loading is now handled lazily on the main thread inside
         // AsyncPasteTask.processBlock. The previous pre-validation here ignored
@@ -1114,6 +1171,7 @@ public final class EditService {
         private int nextProgressReport = 25;
         private final List<BlockChange> changes = Collections.synchronizedList(new ArrayList<>());
         private boolean entitiesPasted = false;
+        private boolean historyPushed = false;
         private int skippedOutOfBounds = 0;
         private int skippedChunkLoad = 0;
         private int placedCount = 0; // actual block.setBlockData() successes; distinct from changes.size()
@@ -1169,6 +1227,7 @@ public final class EditService {
                             + "Server is fine; this paste was stopped to protect it.");
                 }
                 aborted = true;
+                flushPartialHistory(playerId);
                 cleanup();
             }
         }
@@ -1320,6 +1379,7 @@ public final class EditService {
 
                 // Push entity changes to history along with block changes
                 if (recordHistory) {
+                    historyPushed = true;
                     pushHistory(playerId, changes, entityChanges);
                 }
 
@@ -1328,6 +1388,7 @@ public final class EditService {
                                e.getMessage());
                 // Still push block changes even if entities failed
                 if (recordHistory) {
+                    historyPushed = true;
                     pushHistory(playerId, changes, List.of());
                 }
             }
@@ -1337,6 +1398,7 @@ public final class EditService {
             try {
                 if (!entitiesPasted && recordHistory) {
                     // If entities weren't pasted (error case), still save block changes
+                    historyPushed = true;
                     pushHistory(playerId, changes, List.of());
                 }
                 
@@ -1396,11 +1458,27 @@ public final class EditService {
             if (player != null) {
                 ChatOutput.send(player, ChatColor.RED + "Paste cancelled: " + reason);
             }
-            cleanup();
+            try {
+                flushPartialHistory(playerId);
+            } finally {
+                cleanup();
+            }
+        }
+
+        /** Records the blocks placed so far (once), so a cancelled or crashed paste can still be undone. */
+        void flushHistory() {
+            if (historyPushed || !recordHistory) {
+                return;
+            }
+            if (!changes.isEmpty()) {
+                pushHistory(playerId, changes, List.of());
+            }
+            historyPushed = true;
         }
         
         private void cleanup() {
             asyncPasteTasks.remove(playerId);
+            partialHistoryFlushers.remove(playerId);
             pasteProgress.remove(playerId);
             if (task != null) {
                 task.cancel();

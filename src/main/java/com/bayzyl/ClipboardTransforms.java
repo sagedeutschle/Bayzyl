@@ -4,18 +4,28 @@ import org.bukkit.Axis;
 import org.bukkit.Rotation;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.FaceAttachable;
 import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.block.data.Orientable;
 import org.bukkit.block.data.Rail;
 import org.bukkit.block.data.Rotatable;
+import org.bukkit.block.data.type.Chest;
+import org.bukkit.block.data.type.Door;
+import org.bukkit.block.data.type.RedstoneWire;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.block.data.type.Stairs;
+import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.block.data.type.Wall;
 
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 public final class ClipboardTransforms {
@@ -285,9 +295,10 @@ public final class ClipboardTransforms {
         if (data instanceof Rail rail) {
             rail.setShape(rotateRailShape(rail.getShape(), rotation));
         }
-        if (data instanceof Stairs stairs) {
-            stairs.setShape(rotateStairShape(stairs.getShape(), rotation));
+        if (data instanceof RedstoneWire wire) {
+            remapRedstoneWire(wire, face -> rotateFaceY(face, rotation));
         }
+        // Stairs shape (inner/outer, left/right) is relative to the facing, so a rotation keeps it.
         return data;
     }
 
@@ -322,7 +333,66 @@ public final class ClipboardTransforms {
         if (data instanceof Stairs stairs) {
             stairs.setShape(flipStairShape(stairs.getShape(), axis));
         }
+        if (data instanceof RedstoneWire wire) {
+            remapRedstoneWire(wire, face -> flipFace(face, axis));
+        }
+        if (axis.equals("y")) {
+            flipVertically(data);
+        } else {
+            flipHandedness(data);
+        }
         return data;
+    }
+
+    /** A vertical mirror turns bottom halves, slabs and floor attachments upside down. */
+    private static void flipVertically(BlockData data) {
+        if (data instanceof Stairs || data instanceof TrapDoor) {
+            Bisected bisected = (Bisected) data;
+            bisected.setHalf(bisected.getHalf() == Bisected.Half.TOP ? Bisected.Half.BOTTOM : Bisected.Half.TOP);
+        }
+        if (data instanceof Slab slab) {
+            if (slab.getType() == Slab.Type.TOP) {
+                slab.setType(Slab.Type.BOTTOM);
+            } else if (slab.getType() == Slab.Type.BOTTOM) {
+                slab.setType(Slab.Type.TOP);
+            }
+        }
+        if (data instanceof FaceAttachable attachable) {
+            FaceAttachable.AttachedFace face = attachable.getAttachedFace();
+            if (face == FaceAttachable.AttachedFace.FLOOR) {
+                attachable.setAttachedFace(FaceAttachable.AttachedFace.CEILING);
+            } else if (face == FaceAttachable.AttachedFace.CEILING) {
+                attachable.setAttachedFace(FaceAttachable.AttachedFace.FLOOR);
+            }
+        }
+    }
+
+    /** A horizontal mirror swaps the left/right sense of door hinges and double chests. */
+    private static void flipHandedness(BlockData data) {
+        if (data instanceof Door door) {
+            door.setHinge(door.getHinge() == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
+        }
+        if (data instanceof Chest chest) {
+            if (chest.getType() == Chest.Type.LEFT) {
+                chest.setType(Chest.Type.RIGHT);
+            } else if (chest.getType() == Chest.Type.RIGHT) {
+                chest.setType(Chest.Type.LEFT);
+            }
+        }
+    }
+
+    /** Moves each side connection of a redstone wire to the face the mapper sends it to. */
+    private static void remapRedstoneWire(RedstoneWire wire, UnaryOperator<BlockFace> mapper) {
+        Map<BlockFace, RedstoneWire.Connection> before = new EnumMap<>(BlockFace.class);
+        for (BlockFace face : wire.getAllowedFaces()) {
+            before.put(face, wire.getFace(face));
+        }
+        for (Map.Entry<BlockFace, RedstoneWire.Connection> entry : before.entrySet()) {
+            BlockFace target = mapper.apply(entry.getKey());
+            if (target != null && before.containsKey(target)) {
+                wire.setFace(target, entry.getValue());
+            }
+        }
     }
 
     private static void rotateMultipleFacingY(MultipleFacing multipleFacing, int rotation) {
@@ -528,19 +598,6 @@ public final class ClipboardTransforms {
             case NORTH_WEST -> axis.equals("x") ? Rail.Shape.NORTH_EAST : axis.equals("z") ? Rail.Shape.SOUTH_WEST : shape;
             case SOUTH_EAST -> axis.equals("x") ? Rail.Shape.SOUTH_WEST : axis.equals("z") ? Rail.Shape.NORTH_EAST : shape;
             case SOUTH_WEST -> axis.equals("x") ? Rail.Shape.SOUTH_EAST : axis.equals("z") ? Rail.Shape.NORTH_WEST : shape;
-            default -> shape;
-        };
-    }
-
-    private static Stairs.Shape rotateStairShape(Stairs.Shape shape, int rotation) {
-        if (rotation == 180 || rotation == 0) {
-            return shape;
-        }
-        return switch (shape) {
-            case INNER_LEFT -> rotation == 90 ? Stairs.Shape.INNER_RIGHT : Stairs.Shape.INNER_RIGHT;
-            case INNER_RIGHT -> rotation == 90 ? Stairs.Shape.INNER_LEFT : Stairs.Shape.INNER_LEFT;
-            case OUTER_LEFT -> rotation == 90 ? Stairs.Shape.OUTER_RIGHT : Stairs.Shape.OUTER_RIGHT;
-            case OUTER_RIGHT -> rotation == 90 ? Stairs.Shape.OUTER_LEFT : Stairs.Shape.OUTER_LEFT;
             default -> shape;
         };
     }

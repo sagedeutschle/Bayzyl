@@ -63,7 +63,7 @@ public final class SuggestionUtil {
         String p = prefix.toLowerCase(Locale.ROOT);
         LinkedHashSet<String> out = new LinkedHashSet<>();
         for (Material material : Material.values()) {
-            if (!material.isBlock() && material != Material.AIR) {
+            if (material.isLegacy() || (!material.isBlock() && material != Material.AIR)) {
                 continue;
             }
             String plain = material.name().toLowerCase(Locale.ROOT);
@@ -85,7 +85,7 @@ public final class SuggestionUtil {
         String p = prefix.toLowerCase(Locale.ROOT);
         LinkedHashSet<String> out = new LinkedHashSet<>();
         for (Material material : Material.values()) {
-            if (!material.isItem() || material == Material.AIR) {
+            if (material.isLegacy() || !material.isItem() || material == Material.AIR) {
                 continue;
             }
             String plain = material.name().toLowerCase(Locale.ROOT);

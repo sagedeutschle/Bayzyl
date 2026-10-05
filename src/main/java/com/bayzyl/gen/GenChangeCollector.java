@@ -43,10 +43,13 @@ public final class GenChangeCollector {
                 || data.getMaterial() == Material.BEDROCK)) {
             return;
         }
+        long key = encode(x, y, z);
         if (current.matches(data)) {
+            // The world still holds the original block, so writing it back must cancel any earlier staged change.
+            after.remove(key);
+            before.remove(key);
             return;
         }
-        long key = encode(x, y, z);
         before.putIfAbsent(key, current.clone());
         after.put(key, data.clone());
     }

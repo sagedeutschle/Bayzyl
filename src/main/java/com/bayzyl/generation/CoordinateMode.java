@@ -14,7 +14,9 @@ public enum CoordinateMode {
             case "raw" -> RAW;
             case "center", "centre" -> CENTER;
             case "origin", "placement" -> ORIGIN;
-            default -> NORMALIZED;
+            case "normalized", "normal", "norm" -> NORMALIZED;
+            default -> throw new IllegalArgumentException(
+                    "Unknown mode: " + value + ". Use normalized, raw, center, or origin.");
         };
     }
 }

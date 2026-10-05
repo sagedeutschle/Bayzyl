@@ -257,24 +257,37 @@ public final class Bayzyl extends JavaPlugin {
         }, 10L, 10L);
     }
 
-@Override
+    @Override
     public void onDisable() {
         // Cancel any in-flight chunked paste/cut/copy tasks before saving anything else,
         // so they can't continue running against a half-disabled plugin.
         boolean quiesced = quiesce(List.of(
                 () -> { if (editService != null) editService.cancelAllAsyncTasks(); },
                 () -> { if (historyService != null) historyService.cancelAllAsyncTasks(); }));
-        runtimePreferencesService.saveGlobal(ramAlertService, messageThemeService, commandAuthorityService);
+        quiesced &= quiesce(List.of(() -> {
+            if (runtimePreferencesService != null && ramAlertService != null && messageThemeService != null
+                    && commandAuthorityService != null) {
+                runtimePreferencesService.saveGlobal(ramAlertService, messageThemeService, commandAuthorityService);
+            }
+        }));
         for (var player : Bukkit.getOnlinePlayers()) {
-            historyService.savePlayer(player.getUniqueId());
-            runtimePreferencesService.savePlayer(player, nightVisionService, autoUnstickService, ghostHandService, stackLookDirectionService, stackAutoMoveService, nudgeSettingsService, visualizationManager, tabMenuSettingsService, recentEditTrailService);
+            quiesced &= quiesce(List.of(
+                    () -> { if (historyService != null) historyService.savePlayer(player.getUniqueId()); },
+                    () -> {
+                        // This is the last dependency built before preferences are loaded on enable.
+                        if (runtimePreferencesService != null && recentEditTrailService != null) {
+                            runtimePreferencesService.savePlayer(player, nightVisionService, autoUnstickService,
+                                    ghostHandService, stackLookDirectionService, stackAutoMoveService, nudgeSettingsService,
+                                    visualizationManager, tabMenuSettingsService, recentEditTrailService);
+                        }
+                    }));
         }
-        ramAlertService.shutdown();
-        decoyTabListService.clearAll();
-        tabInfoPanelService.stop();
-        if (redstoneAuditMarkers != null) {
-            redstoneAuditMarkers.clearAll();
-        }
+        quiesced &= quiesce(List.of(
+                () -> { if (ramAlertService != null) ramAlertService.shutdown(); },
+                () -> { if (decoyTabListService != null) decoyTabListService.clearAll(); },
+                () -> { if (tabInfoPanelService != null) tabInfoPanelService.stop(); },
+                () -> { if (redstoneAuditMarkers != null) redstoneAuditMarkers.clearAll(); }));
+        if (!quiesced) getLogger().warning("Some shutdown work failed; crash recovery will retain the unclean marker.");
         if (crashRecoveryService != null) {
             // CLEAN is written only when in-flight edits stopped cleanly and every recovery write succeeded.
             crashRecoveryService.disable(quiesced);

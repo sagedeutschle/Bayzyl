@@ -73,7 +73,11 @@ public final class Selection {
         long dx = (long) getMaxX() - getMinX() + 1;
         long dy = (long) getMaxY() - getMinY() + 1;
         long dz = (long) getMaxZ() - getMinZ() + 1;
-        return dx * dy * dz;
+        try {
+            return Math.multiplyExact(Math.multiplyExact(dx, dy), dz);
+        } catch (ArithmeticException overflow) {
+            return Long.MAX_VALUE;
+        }
     }
 
     public int getSizeX() {

@@ -23,6 +23,9 @@ public final class BlockDistribution {
     private BlockDistribution(Map<Material, Double> distribution) {
         this.distribution = Collections.unmodifiableMap(new LinkedHashMap<>(distribution));
         this.totalWeight = this.distribution.values().stream().mapToDouble(Double::doubleValue).sum();
+        if (!Double.isFinite(totalWeight) || totalWeight <= 0.0D) {
+            throw new IllegalArgumentException("Distribution weights must have a finite positive total.");
+        }
         this.singleMaterial = this.distribution.size() == 1;
         this.soleMaterial = this.singleMaterial ? this.distribution.keySet().iterator().next() : null;
     }
@@ -62,7 +65,7 @@ public final class BlockDistribution {
         for (String rawPart : rawParts) {
             ParsedPart part = parsePart(rawPart);
             double weight = part.weight() == null ? 1.0D : part.weight();
-            if (weight <= 0.0D) {
+            if (!Double.isFinite(weight) || weight <= 0.0D) {
                 throw new IllegalArgumentException("Weights must be greater than 0.");
             }
             hasExplicitWeight |= part.weight() != null;

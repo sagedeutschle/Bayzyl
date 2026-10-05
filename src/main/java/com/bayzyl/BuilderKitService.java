@@ -115,7 +115,7 @@ public final class BuilderKitService {
 
     public boolean saveKit(Player player, String rawName, BuilderKitScope scope, boolean overwrite) {
         String name = normalizeName(rawName);
-        if (name == null || !canUseLabel(name, null)) {
+        if (name == null || !canUseLabel(name, overwrite && existsCanonicalKit(name) ? name : null)) {
             return false;
         }
         if (!overwrite && existsCanonicalKit(name)) {
@@ -162,7 +162,8 @@ public final class BuilderKitService {
     public boolean renameKit(String fromRawName, String toRawName, boolean overwrite) {
         BuilderKit existing = loadKit(fromRawName);
         String targetName = normalizeName(toRawName);
-        if (existing == null || targetName == null || !canUseLabel(targetName, existing.name())) {
+        if (existing == null || targetName == null || !canUseLabel(targetName,
+                overwrite && existsCanonicalKit(targetName) ? targetName : existing.name())) {
             return false;
         }
 
@@ -197,7 +198,8 @@ public final class BuilderKitService {
     public boolean duplicateKit(String fromRawName, String toRawName, boolean overwrite) {
         BuilderKit existing = loadKit(fromRawName);
         String targetName = normalizeName(toRawName);
-        if (existing == null || targetName == null || !canUseLabel(targetName, null)) {
+        if (existing == null || targetName == null || !canUseLabel(targetName,
+                overwrite && existsCanonicalKit(targetName) ? targetName : null)) {
             return false;
         }
         if (existing.name().equals(targetName)) {

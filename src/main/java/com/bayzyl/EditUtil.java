@@ -1,5 +1,7 @@
 package com.bayzyl;
 
+import com.bayzyl.safety.OperationLimits;
+import com.bayzyl.safety.WorkEstimate;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -75,6 +77,7 @@ public final class EditUtil {
                 return Material.AIR;
             }
         }
+        if (!token.matches("[a-z0-9_]+")) return null;
         Material material = Material.matchMaterial(token);
         if (material == null) {
             return null;
@@ -92,6 +95,31 @@ public final class EditUtil {
         return selection != null && selection.isComplete() && selection.getVolume() > CONFIRM_VOLUME && !confirm;
     }
 
+    private static Selection boundedSelection(Player player, Selection selection, long repetitions) {
+        if (selection == null || !selection.isComplete()) {
+            ChatOutput.send(player, ChatColor.RED + "Selection is incomplete.");
+            return null;
+        }
+        World world = selection.getPos1().getWorld();
+        int minY = Math.max(selection.getMinY(), world.getMinHeight());
+        int maxY = Math.min(selection.getMaxY(), world.getMaxHeight() - 1);
+        if (minY > maxY) return null;
+        if (selection.getMinX() < -30_000_000 || selection.getMaxX() >= 30_000_000
+                || selection.getMinZ() < -30_000_000 || selection.getMaxZ() >= 30_000_000) {
+            ChatOutput.send(player, ChatColor.RED + "Selection exceeds the world coordinate limits.");
+            return null;
+        }
+        WorkEstimate bounds = OperationLimits.estimateSelection(selection.getMinX(), selection.getMaxX(),
+                minY, maxY, selection.getMinZ(), selection.getMaxZ());
+        WorkEstimate work = OperationLimits.checkedMultiply(bounds.workUnits(), repetitions);
+        if (bounds.hardRejected() || work.hardRejected()) {
+            ChatOutput.send(player, ChatColor.RED + (bounds.hardRejected() ? bounds.reason() : work.reason()));
+            return null;
+        }
+        return new Selection(new Location(world, selection.getMinX(), minY, selection.getMinZ()),
+                new Location(world, selection.getMaxX(), maxY, selection.getMaxZ()), selection.getType());
+    }
+
     public static List<BlockChange> setBlocks(Player player,
                                               Selection selection,
                                               BlockDistribution distribution,
@@ -102,6 +130,8 @@ public final class EditUtil {
             ChatOutput.send(player, ChatColor.RED + "Selection is incomplete.");
             return changes;
         }
+        selection = boundedSelection(player, selection, 1L);
+        if (selection == null) return changes;
         World world = selection.getPos1().getWorld();
         if (world == null) {
             return changes;
@@ -137,6 +167,8 @@ public final class EditUtil {
             ChatOutput.send(player, ChatColor.RED + "Selection is incomplete.");
             return changes;
         }
+        selection = boundedSelection(player, selection, 1L);
+        if (selection == null) return changes;
         World world = selection.getPos1().getWorld();
         if (world == null) {
             return changes;
@@ -167,6 +199,8 @@ public final class EditUtil {
             ChatOutput.send(player, ChatColor.RED + "Selection is incomplete.");
             return null;
         }
+        selection = boundedSelection(player, selection, 1L);
+        if (selection == null) return null;
         World world = selection.getPos1().getWorld();
         if (world == null) {
             return null;
@@ -209,6 +243,8 @@ public final class EditUtil {
             ChatOutput.send(player, ChatColor.RED + "Selection is incomplete.");
             return changes;
         }
+        selection = boundedSelection(player, selection, 1L);
+        if (selection == null) return changes;
         World world = selection.getPos1().getWorld();
         if (world == null) {
             return changes;
@@ -236,6 +272,8 @@ public final class EditUtil {
             ChatOutput.send(player, ChatColor.RED + "Selection is incomplete.");
             return changes;
         }
+        selection = boundedSelection(player, selection, 1L);
+        if (selection == null) return changes;
         World world = selection.getPos1().getWorld();
         if (world == null) {
             return changes;
@@ -273,6 +311,8 @@ public final class EditUtil {
             ChatOutput.send(player, ChatColor.RED + "Selection is incomplete.");
             return changes;
         }
+        selection = boundedSelection(player, selection, 1L);
+        if (selection == null) return changes;
         World world = selection.getPos1().getWorld();
         if (world == null) {
             return changes;
@@ -316,6 +356,8 @@ public final class EditUtil {
         if (iterations <= 0) {
             return changes;
         }
+        selection = boundedSelection(player, selection, iterations);
+        if (selection == null) return changes;
         World world = selection.getPos1().getWorld();
         if (world == null) {
             return changes;

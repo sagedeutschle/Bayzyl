@@ -68,7 +68,8 @@ public final class BlockMask {
                 return true;
             }
         }
-        return current.tags().isEmpty() && current.materials().isEmpty();
+        // Only an omitted mask means all blocks. An unresolved mask must never become a wildcard.
+        return (raw == null || raw.isBlank()) && current.tags().isEmpty() && current.materials().isEmpty();
     }
 
     public boolean isAny() {

@@ -36,6 +36,11 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 final class RemainingBrushExecutionSafetyTest {
+    private static void assertHistoryUnchanged(HistoryService history) {
+        org.junit.jupiter.api.Assertions.assertTrue(org.mockito.Mockito.mockingDetails(history).getInvocations()
+                .stream().allMatch(call -> call.getMethod().getName().equals("hasAsyncHistoryTask")));
+    }
+
     @Test
     void eraserHardRefusalCancelsBeforePermissionSelectionOrTargetResolution() {
         Fixture fixture = fixture(ToolType.ERASER);
@@ -45,7 +50,8 @@ final class RemainingBrushExecutionSafetyTest {
         fixture.listener.onInteract(fixture.event);
 
         assertCancelledBeforeTarget(fixture);
-        verifyNoInteractions(fixture.eraserService, fixture.selectionManager, fixture.historyService);
+        verifyNoInteractions(fixture.eraserService, fixture.selectionManager);
+        assertHistoryUnchanged(fixture.historyService);
     }
 
     @Test
@@ -57,7 +63,8 @@ final class RemainingBrushExecutionSafetyTest {
         fixture.listener.onInteract(fixture.event);
 
         assertCancelledBeforeTarget(fixture);
-        verifyNoInteractions(fixture.terrainBrushService, fixture.historyService);
+        verifyNoInteractions(fixture.terrainBrushService);
+        assertHistoryUnchanged(fixture.historyService);
     }
 
     @Test
@@ -69,7 +76,7 @@ final class RemainingBrushExecutionSafetyTest {
         fixture.listener.onInteract(fixture.event);
 
         assertCancelledBeforeTarget(fixture);
-        verifyNoInteractions(fixture.historyService);
+        assertHistoryUnchanged(fixture.historyService);
     }
 
     @Test
@@ -82,7 +89,7 @@ final class RemainingBrushExecutionSafetyTest {
         fixture.listener.onInteract(fixture.event);
 
         assertCancelledBeforeTarget(fixture);
-        verifyNoInteractions(fixture.historyService);
+        assertHistoryUnchanged(fixture.historyService);
     }
 
     @Test
@@ -114,7 +121,6 @@ final class RemainingBrushExecutionSafetyTest {
         fixture.listener.onInteract(fixture.event);
 
         assertCancelledBeforeTarget(fixture);
-        verify(fixture.player, never()).getUniqueId();
         verify(fixture.detailBrushService, never()).registry();
         verify(fixture.detailBrushService, never()).apply(any(), any(), any());
     }
@@ -126,7 +132,6 @@ final class RemainingBrushExecutionSafetyTest {
         fixture.listener.onInteract(fixture.event);
 
         assertCancelledBeforeTarget(fixture);
-        verify(fixture.player, never()).getUniqueId();
         verifyNoInteractions(fixture.detailBrushService);
     }
 

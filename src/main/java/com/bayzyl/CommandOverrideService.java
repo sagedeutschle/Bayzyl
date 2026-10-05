@@ -23,16 +23,23 @@ public final class CommandOverrideService {
         int claimed = 0;
         int replaced = 0;
         for (CommandSpec spec : commands) {
-            ClaimResult result = claimPrimaryCommand(plugin, spec.name());
+            ClaimResult result = claimPrimaryCommand(plugin, spec.name(), false);
             if (result.claimed()) {
                 claimed++;
                 replaced += result.replacedEntries();
             }
         }
+        if (claimed > 0) {
+            syncCommands();
+        }
         return new ClaimSummary(claimed, replaced);
     }
 
     public static ClaimResult claimPrimaryCommand(JavaPlugin plugin, String commandName) {
+        return claimPrimaryCommand(plugin, commandName, true);
+    }
+
+    private static ClaimResult claimPrimaryCommand(JavaPlugin plugin, String commandName, boolean sync) {
         try {
             Object commandMap = Bukkit.getServer().getClass().getMethod("getCommandMap").invoke(Bukkit.getServer());
             Field knownCommandsField = findField(commandMap.getClass(), "knownCommands");
@@ -67,7 +74,7 @@ public final class CommandOverrideService {
             }
             knownCommands.put(normalized, pluginCommand);
             knownCommands.put(plugin.getName().toLowerCase(Locale.ROOT) + ":" + normalized, pluginCommand);
-            syncCommands();
+            if (sync) syncCommands();
             plugin.getLogger().info("Claimed /" + normalized + " for Bayzyl"
                     + (removed > 0 ? " (replaced " + removed + " existing entr" + (removed == 1 ? "y" : "ies") + ")" : "")
                     + ".");
