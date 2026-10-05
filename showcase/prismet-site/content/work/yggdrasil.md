@@ -24,4 +24,5 @@ A project to unify the FromSoft catalog inside one Elden Ring instance, starting
 - Version: M1
 
 ## highlights
+- Dark Souls III's High Wall of Lothric, walkable end to end inside a running Elden Ring
 

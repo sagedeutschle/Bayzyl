@@ -1160,13 +1160,24 @@
         "Games"
       ],
       "links": [],
-      "cover": null,
-      "gallery": [],
-      "shotAlts": [],
+      "cover": "assets/worlds/yggdrasil-high-wall.webp",
+      "gallery": [
+        "assets/worlds/yggdrasil-high-wall.webp"
+      ],
+      "shotAlts": [
+        "A hooded Tarnished stands on broken stone above Dark Souls III's High Wall of Lothric, rebuilt inside a running Elden Ring: a long arched stone bridge leads into fog toward the castle towers, under Elden Ring's own health bars, compass and flask."
+      ],
       "fiverrGig": null,
-      "hidden": true,
       "room": "cabinet",
       "tier": "cabinet",
+      "aliases": [
+        "elden ring",
+        "dark souls iii",
+        "dark souls 3",
+        "high wall of lothric",
+        "fromsoftware",
+        "map port"
+      ],
       "related": []
     },
     {

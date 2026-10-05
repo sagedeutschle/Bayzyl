@@ -45,7 +45,7 @@ Highest value first.
 | Airhorn | 1 small shot (1200×800) | The app window on a Retina Mac. |
 | PrismCode | 7 demo-data screens | Optional: the app on a real project, with paths and account labels out of frame. |
 | WoW Sidepanel (hidden) | 1 ultrawide shot of the character-select screen, with character names | In-game close-ups of the panel, names cropped. |
-| Yggdrasil (hidden) | Nothing | Any 2–3 screens. |
+| Yggdrasil | 1 in-game shot at 1920×1080: the High Wall of Lothric bridge inside Elden Ring, HUD on (`yggdrasil/from-sage/`, 2026-10-05) | 1–2 more High Wall views (the arrival room, the bonfire level), HUD off if possible. |
 | Westeros (UEBS2) (hidden) | Nothing | The map in-game (overview and a battle) and the Steam Workshop page. |
 | Helix Research Desk (hidden) | Nothing | Main window and one result. |
 | Wizard King's Decree (hidden) | Only the app tile | Nothing needed: the project was scrapped. |
