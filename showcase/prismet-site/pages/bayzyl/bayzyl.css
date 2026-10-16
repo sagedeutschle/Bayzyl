@@ -1,0 +1,104 @@
+/* Build Big with Bayzyl (/bayzyl): the pitch page for the Minecraft building toolkit and the clubs built on it.
+   Its own face, from Sage's approved mockup: obsidian and lava at night, parchment and ember by day, Baloo 2 for
+   display and Atkinson Hyperlegible for reading. Fonts are self-hosted (SIL OFL) so the page makes no third-party
+   request. The product shell above the hero is the site's shared navigation and keeps its own colours. */
+@font-face { font-family: 'Baloo 2'; font-style: normal; font-weight: 600 800; font-display: swap; src: url(/bayzyl/fonts/Baloo2.woff2) format('woff2'); }
+@font-face { font-family: 'Atkinson Hyperlegible'; font-style: normal; font-weight: 400; font-display: swap; src: url(/bayzyl/fonts/Atkinson-400.woff2) format('woff2'); }
+@font-face { font-family: 'Atkinson Hyperlegible'; font-style: normal; font-weight: 700; font-display: swap; src: url(/bayzyl/fonts/Atkinson-700.woff2) format('woff2'); }
+@font-face { font-family: 'Atkinson Hyperlegible'; font-style: italic; font-weight: 400; font-display: swap; src: url(/bayzyl/fonts/Atkinson-400-italic.woff2) format('woff2'); }
+
+:root {
+  --bg: #15110f; --bg2: #1f1815; --card: #261d18; --line: #3a2c24;
+  --fg: #f6ecdf; --muted: #c9b7a6; --accent: #ff7a1a; --glow: #ffc46b; --ok: #8fd694;
+  --display: 'Baloo 2', 'Trebuchet MS', sans-serif;
+  --body: 'Atkinson Hyperlegible', 'Helvetica Neue', Arial, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) { --bg: #fbf4ea; --bg2: #f3e8d8; --card: #fff8ef; --line: #e3d3bf; --fg: #241a14; --muted: #6b574a; --accent: #d8540a; --glow: #b4420a; --ok: #2e7d3a; color-scheme: light; }
+}
+:root[data-theme="light"] { --bg: #fbf4ea; --bg2: #f3e8d8; --card: #fff8ef; --line: #e3d3bf; --fg: #241a14; --muted: #6b574a; --accent: #d8540a; --glow: #b4420a; --ok: #2e7d3a; color-scheme: light; }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.55; margin: 0; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.08; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.4rem, 7vw, 4.6rem); font-weight: 800; letter-spacing: -.01em; }
+h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); font-weight: 700; }
+h3 { font-size: 1.2rem; font-weight: 700; }
+p { margin: 0; }
+a { color: var(--glow); }
+code { font-family: var(--mono); font-size: .92em; background: var(--bg2); border: 1px solid var(--line); border-radius: 6px; padding: .08em .4em; white-space: nowrap; }
+.eyebrow { font-family: var(--display); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: .78rem; color: var(--accent); }
+.wrap { max-width: 1100px; margin: 0 auto; padding-inline: 20px; }
+section { padding-block: 56px; }
+.lead { max-width: 62ch; color: var(--muted); font-size: 1.12rem; }
+.sr-only, .skip:not(:focus) { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip:focus { position: fixed; top: 8px; left: 8px; z-index: 2; padding: 8px 12px; background: var(--accent); color: #15110f; }
+
+/* hero */
+.hero { position: relative; min-height: 62vh; display: grid; align-items: end; isolation: isolate; overflow: hidden; }
+.hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(21, 17, 15, .15) 0%, rgba(21, 17, 15, .55) 55%, var(--bg) 100%); }
+.hero .wrap { padding-block: 72px 40px; display: grid; gap: 18px; }
+.hero h1 { color: #f6ecdf; }
+.hero p { max-width: 56ch; font-size: 1.15rem; color: #f6ecdf; }
+.hero .eyebrow { color: var(--glow); }
+.pill { display: inline-flex; gap: 8px; flex-wrap: wrap; }
+.pill span { background: rgba(0, 0, 0, .45); color: #f6ecdf; border: 1px solid rgba(255, 196, 107, .5); border-radius: 999px; padding: 4px 12px; font-size: .9rem; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .hero .eyebrow { color: #ffc46b; } }
+:root[data-theme="light"] .hero .eyebrow { color: #ffc46b; }
+
+/* features */
+.grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 28px; }
+.feat { display: grid; gap: 8px; padding: 18px 0; border-top: 2px solid var(--line); align-content: start; }
+.feat h3 { color: var(--glow); }
+.feat p { color: var(--muted); }
+.feat code { display: inline-block; margin-top: 4px; justify-self: start; }
+
+/* steps */
+.steps { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 24px; counter-reset: step; }
+.step { background: var(--bg2); border-radius: 14px; padding: 18px; display: grid; gap: 8px; align-content: start; }
+.step::before { counter-increment: step; content: "Step " counter(step); font-family: var(--display); font-weight: 700; color: var(--accent); font-size: .9rem; letter-spacing: .08em; text-transform: uppercase; }
+.band { background: var(--bg2); }
+.band .step { background: var(--card); }
+.band code { background: var(--card); }
+
+/* gallery */
+.gallery { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 28px; }
+.gallery figure, .renders figure { margin: 0; display: grid; gap: 8px; min-width: 0; }
+.gallery img { width: 100%; height: auto; max-width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 12px; display: block; background: var(--bg2); }
+.gallery figure.wide { grid-column: 1 / -1; }
+.gallery figure.wide img { aspect-ratio: 21 / 9; }
+figcaption { color: var(--muted); font-size: .95rem; }
+.renders { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 20px; }
+.renders img { width: 100%; height: auto; border-radius: 10px; display: block; background: var(--bg2); }
+
+/* two-column */
+.split { display: grid; gap: 28px; grid-template-columns: 1fr 1fr; margin-top: 28px; }
+@media (max-width: 760px) { .split { grid-template-columns: 1fr; } }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px; display: grid; gap: 12px; min-width: 0; align-content: start; }
+.panel ul { margin: 0; padding-left: 20px; display: grid; gap: 8px; color: var(--muted); }
+.panel li strong { color: var(--fg); }
+
+/* offers */
+.offers { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 28px; }
+.offer { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px; display: grid; grid-template-rows: auto auto auto 1fr; gap: 10px; min-width: 0; }
+.offer .price { font-family: var(--display); font-size: 2rem; font-weight: 800; color: var(--glow); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.offer .price small { font-size: .95rem; color: var(--muted); font-weight: 600; }
+.offer ul { margin: 0; padding-left: 18px; color: var(--muted); display: grid; gap: 6px; align-content: start; }
+.offer .who { font-size: .9rem; color: var(--accent); font-weight: 700; }
+.note { margin-top: 18px; color: var(--muted); font-size: .95rem; max-width: 70ch; }
+
+/* about */
+.about { display: grid; gap: 20px; grid-template-columns: 1.2fr .8fr; align-items: start; margin-top: 24px; }
+@media (max-width: 760px) { .about { grid-template-columns: 1fr; } }
+.links { display: grid; gap: 8px; justify-items: start; }
+.links a { font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--accent); }
+
+footer { padding-block: 36px 48px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+footer .wrap { display: grid; gap: 10px; }
+@media (prefers-reduced-motion: no-preference) { .hero > img { animation: drift 30s ease-in-out infinite alternate; } }
+@keyframes drift { from { transform: scale(1.02) translateY(0); } to { transform: scale(1.07) translateY(-2%); } }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }

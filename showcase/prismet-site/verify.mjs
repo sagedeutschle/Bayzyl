@@ -25,7 +25,7 @@ const RESERVED_FILES = ['style.css', 'steam.js', 'debt.js', 'icon.svg', 'manifes
 const RESERVED_ROOT = ['shots', 'api', 'steam', 'steam.html', 'debt', 'debt.html', 'rtc', 'healthz'];
 const ROUTES = new Set(['/steam', '/debt', '/edit', '/privacy', '/support', '/scam']);            // served by the live server, not by this build
 const STATIC_ALIASES = new Map([
-  ['/arcade', 'arcade.html'], ['/arcade/', 'arcade.html'], ['/tools', 'tools.html'], ['/tools/', 'tools.html'],
+  ['/arcade', 'arcade.html'], ['/arcade/', 'arcade.html'], ['/tools', 'tools.html'], ['/tools/', 'tools.html'], ['/bayzyl', 'bayzyl.html'], ['/bayzyl/', 'bayzyl.html'],
   ...['2048', 'minesweeper', 'lights-out', 'wordle', 'rubiks-cube', 'snake', 'sudoku', 'sliding-15', 'nonogram', 'chess', 'reversi', 'checkers', 'connect-four', 'gomoku', 'sea-battle', 'solitaire', 'spider', 'crazy-8', 'catan', 'brick-bench'].flatMap((id) => [[`/arcade/${id}`, 'arcade/game.html'], [`/arcade/${id}/`, 'arcade/game.html']]),
 ]);
 const TEXT = new Set(['.html', '.css', '.js', '.json', '.svg', '.txt', '.xml', '.webmanifest']);

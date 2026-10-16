@@ -13,6 +13,7 @@ chk /assets/fonts/fonts.css 200; chk /assets/og.jpg 200; chk /favicon.ico 200; c
 chk /steam 200; chk /steam.html 200; chk /debt 200; chk /debt.html 200; chk /style.css 200; chk /steam.js 200; chk /debt.js 200
 chk /icon.svg 200; chk /manifest.webmanifest 200
 chk /arcade 200; chk /tools 200; chk /arcade/game.html 200; chk /arcade/arcade.css 200
+chk /bayzyl 200; chk /bayzyl/ 200; chk /bayzyl/bayzyl.css 200; chk /bayzyl/img/hero.webp 200; chk /bayzyl/fonts/Baloo2.woff2 200
 for game in 2048 minesweeper lights-out wordle rubiks-cube snake sudoku sliding-15 nonogram chess reversi connect-four checkers gomoku sea-battle catan solitaire spider crazy-8 brick-bench; do
   chk "/arcade/$game" 200
 done

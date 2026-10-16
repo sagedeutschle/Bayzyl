@@ -1,5 +1,19 @@
 # prismet.xyz — handoff (2026-10-03)
 
+## Build Big with Bayzyl (/bayzyl) — 2026-10-16
+
+A standalone pitch page for Bayzyl and the clubs built on it, published from Sage's approved mockup
+("Build Big with Bayzyl"). It lives in `showcase/prismet-site/pages/bayzyl.html` with its own stylesheet,
+self-hosted fonts (Baloo 2 and Atkinson Hyperlegible, SIL OFL) and 14 metadata-free WebP images under
+`pages/bayzyl/`. It keeps the shared product shell above its own obsidian-and-lava face; day mode follows
+the system preference. Wording is Sage's from the mockup: prices are starting points, Bayzyl stays MIT.
+
+Wiring: `server.js` maps `/bayzyl` and `/bayzyl/` to `bayzyl.html`; `verify.mjs` knows the alias;
+`gate.sh`, `product-routes-check.mjs` and `site-check.mjs` cover the route, its assets and the page at 1440
+and 390. The Bayzyl project page links to it from its access links (`projects.json`). Local evidence before
+the push: build/verify (26 pages), edit-check 287, portfolio 190, stories 421, product and Uncle Scam route
+checks, the local gate, and site-check 50 of 50 in Chromium.
+
 ## Uncle Scam local receipt extension — 2026-10-04
 
 The browser port follows the corrected native contract `3275077`: seventeen reference cases

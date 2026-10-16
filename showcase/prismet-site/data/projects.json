@@ -86,6 +86,10 @@
         {
           "label": "GitHub",
           "href": "https://github.com/sagedeutschle/Bayzyl"
+        },
+        {
+          "label": "Build Big with Bayzyl",
+          "href": "/bayzyl"
         }
       ],
       "cover": "assets/minecraft/bayzyl-scene-overview.webp",

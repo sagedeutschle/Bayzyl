@@ -20,7 +20,7 @@ try {
   assert.equal(calls, 1, 'HEAD must not trigger an upstream data refresh');
   assert.equal((await fetch(`${base}/api/debt`, { method: 'POST' })).status, 405);
   assert.equal((await fetch(`${base}/api/unrecognized`)).status, 404);
-  for (const route of ['/arcade', '/arcade/', '/arcade/2048', '/arcade/minesweeper', '/arcade/lights-out', ...['wordle','rubiks-cube','snake','sudoku','sliding-15','nonogram','chess','reversi','checkers','connect-four','gomoku','sea-battle','solitaire','spider','crazy-8','catan','brick-bench'].map(id=>`/arcade/${id}`), '/tools', '/tools/']) {
+  for (const route of ['/arcade', '/arcade/', '/arcade/2048', '/arcade/minesweeper', '/arcade/lights-out', ...['wordle','rubiks-cube','snake','sudoku','sliding-15','nonogram','chess','reversi','checkers','connect-four','gomoku','sea-battle','solitaire','spider','crazy-8','catan','brick-bench'].map(id=>`/arcade/${id}`), '/tools', '/tools/', '/bayzyl', '/bayzyl/']) {
     const page = await fetch(base + route);
     assert.equal(page.status, 200, `${route} has a static destination`);
     assert.match(page.headers.get('content-type'), /text\/html/);
@@ -35,7 +35,7 @@ try {
   assert.equal((await config.json()).appStoreUrl, 'https://apps.apple.com/us/app/kaleidescope/id6785993194');
   assert.equal(config.headers.get('cache-control'), 'no-store');
   assert.equal((await fetch(base + '/api/arcade/unknown')).status, 404);
-  console.log('✓ product-routes: debt, Arcade, tools, association JSON, API headers and method boundaries');
+  console.log('✓ product-routes: debt, Arcade, tools, Bayzyl, association JSON, API headers and method boundaries');
 } finally {
   server.closeAllConnections();
   await new Promise((resolve) => server.close(resolve));
