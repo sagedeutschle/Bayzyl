@@ -1,5 +1,17 @@
 # prismet.xyz — handoff (2026-10-03)
 
+## Build Big in the navigation and on the home page — 2026-10-19
+
+Build Big (the /bayzyl pitch page) is in the main navigation after Tools: in `pages/lib/render.js` (`bar()` and
+`footer()`, label `nav.build_big` in `content/site.md`) and in the hand-written navigation of `scam.html`,
+`tools.html`, `arcade.html`, `arcade/game.html`, `bayzyl.html` and `server/public/steam.html`. The home page has a
+`build-big` section (`data/pages.json` → home, placed after `selected` in `projects.json` → layout): an Image + text
+section with the lava fortress from the pitch page (`assets/minecraft/build-big-hero.webp` with 360/720/1080/1440
+variants), two paragraphs taken from that page and a button to `/bayzyl`. The Image + text section type now takes an
+optional button label and link, drawn like the Call to action's; the editor's form shows the two new fields. The home
+page's first-view estimate rose from 47 to 48 requests (one more lazy image above the register). Checks before the
+push: build/verify, the CI's 23 node scripts, the local gate, site-check 50 of 50 at 1440 and 390.
+
 ## Build Big with Bayzyl (/bayzyl) — 2026-10-16
 
 A standalone pitch page for Bayzyl and the clubs built on it, published from Sage's approved mockup

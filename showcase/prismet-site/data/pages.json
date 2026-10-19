@@ -1,5 +1,19 @@
 {
   "_readme": "Sections and pages made at prismet.xyz/edit from the section library (pages/lib/sections.js). home = sections added to the home page (their order and hiding live in projects.json → layout, beside the built-in sections). pages = whole pages: slug, title, description, status (draft | published | hidden), nav, navLabel, sections. A section is { id, type, props }.",
-  "home": [],
+  "home": [
+    {
+      "id": "build-big",
+      "type": "split",
+      "props": {
+        "image": "assets/minecraft/build-big-hero.webp",
+        "alt": "A black fortress on a rocky island, lava pouring down its cliffs into the sea",
+        "heading": "Build Big with Bayzyl",
+        "body": "Bayzyl is a building toolkit for Minecraft. Type one command and a dome appears. Paint a forest with a brush. Copy a whole castle and stack ten more. Made a mess? Undo it.\n\nBuild Clubs, Camp Weeks and hosted servers for libraries, schools and youth organisations, all built on it. Bayzyl itself stays free and open source.",
+        "side": "left",
+        "cta": "See Build Big with Bayzyl",
+        "href": "/bayzyl"
+      }
+    }
+  ],
   "pages": []
 }

@@ -125,7 +125,7 @@ const scripts = (root = '') => (PREVIEW ? `<script src="${root}editor.js"></scri
 const HOME = (root = '') => (PREVIEW ? (root || './') : `${root}index.html`);
 
 const bar = (root = '') => {
-  const [w, arcade, tools, a, contact] = ['nav.work', 'nav.arcade', 'nav.tools', 'nav.about', 'nav.contact'].map((key) => T(key));
+  const [w, arcade, tools, big, a, contact] = ['nav.work', 'nav.arcade', 'nav.tools', 'nav.build_big', 'nav.about', 'nav.contact'].map((key) => T(key));
   return `<a class="skip" href="#main">Skip to content</a>
 <header class="bar product-bar"><div class="wrap">
   <a class="brand" href="${HOME(root)}">${mark(28)}<strong>Prismet</strong><span>${esc(owner.name)}</span></a>
@@ -133,6 +133,7 @@ const bar = (root = '') => {
     <a href="${HOME(root)}#work"${w.a}>${w.h}</a>
     <a href="${root}arcade.html"${arcade.a}>${arcade.h}</a>
     <a href="${root}tools.html"${tools.a}>${tools.h}</a>
+    <a href="${root}bayzyl.html"${big.a}>${big.h}</a>
     <a href="${HOME(root)}#about"${a.a}>${a.h}</a>
     <a href="${HOME(root)}#hire"${contact.a}>${contact.h}</a>${navPages(root)}
   </nav>
@@ -142,7 +143,7 @@ const bar = (root = '') => {
 
 const footer = (root = '') => `<footer><div class="wrap">
   <span${T('footer.copyright').a}>${T('footer.copyright').h}</span>
-  <nav aria-label="Footer"><a href="${HOME(root)}#work">${T('nav.work').h}</a><a href="${HOME(root)}#lenses">${T('nav.lenses').h}</a><a href="${HOME(root)}#about">${T('nav.about').h}</a>${navPages(root)}<a href="${root}colophon.html"${T('footer.colophon').a}>${T('footer.colophon').h}</a><a href="${esc(owner.github)}">GitHub</a><a href="${esc(owner.linkedin)}">LinkedIn</a><a href="${esc(owner.fiverr)}">Fiverr</a></nav>
+  <nav aria-label="Footer"><a href="${HOME(root)}#work">${T('nav.work').h}</a><a href="${HOME(root)}#lenses">${T('nav.lenses').h}</a><a href="${root}bayzyl.html">${T('nav.build_big').h}</a><a href="${HOME(root)}#about">${T('nav.about').h}</a>${navPages(root)}<a href="${root}colophon.html"${T('footer.colophon').a}>${T('footer.colophon').h}</a><a href="${esc(owner.github)}">GitHub</a><a href="${esc(owner.linkedin)}">LinkedIn</a><a href="${esc(owner.fiverr)}">Fiverr</a></nav>
 </div></footer>`;
 
 const factRows = (slug, extra = [], limit = Infinity) => [...extra, ...factPairs(work(slug, 'facts')).map(([k, v], i) => ({

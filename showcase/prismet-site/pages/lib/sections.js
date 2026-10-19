@@ -12,8 +12,8 @@ export const SECTION_TYPES = {
     defaults: { eyebrow: 'Prismet', title: 'A new page', lede: 'One or two sentences that say what this page is for.', cta: '', href: '' } },
   text: { label: 'Text', fields: [['heading', 'Heading', 'line'], ['body', 'Body', 'text']],
     defaults: { heading: 'A heading', body: 'A paragraph. A blank line starts the next one.' } },
-  split: { label: 'Image + text', fields: [['image', 'Image', 'image'], ['alt', 'Image description', 'line'], ['heading', 'Heading', 'line'], ['body', 'Body', 'text'], ['side', 'Image side', 'choice:left,right']],
-    defaults: { image: '', alt: '', heading: 'A heading', body: 'A paragraph beside the image.', side: 'left' } },
+  split: { label: 'Image + text', fields: [['image', 'Image', 'image'], ['alt', 'Image description', 'line'], ['heading', 'Heading', 'line'], ['body', 'Body', 'text'], ['side', 'Image side', 'choice:left,right'], ['cta', 'Button label', 'line'], ['href', 'Button link', 'href']],
+    defaults: { image: '', alt: '', heading: 'A heading', body: 'A paragraph beside the image.', side: 'left', cta: '', href: '' } },
   records: { label: 'Records', fields: [['heading', 'Heading', 'line'], ['slugs', 'Records (slugs, comma separated; empty = the principal works)', 'line']],
     defaults: { heading: 'Selected work', slugs: '' } },
   stats: { label: 'Statistics', fields: [['heading', 'Heading', 'line'], ['items', 'Figures', 'text']],
@@ -57,7 +57,7 @@ export function renderSection(s, scope, ctx) {
   const body = {
     hero: () => `<div class="wrap">${has('eyebrow') ? `<p class="plaque brass"${a('eyebrow')}>${inline(p.eyebrow)}</p>` : ''}<${ctx.top ? 'h1' : 'h2'} class="x-title"${a('title')}>${inline(p.title)}</${ctx.top ? 'h1' : 'h2'}>${has('lede') ? `<p class="lede"${a('lede')}>${inline(p.lede)}</p>` : ''}${button()}</div>`,
     text: () => `<div class="wrap">${h2()}<div class="prose paras"${a('body')}>${paras(p.body)}</div></div>`,
-    split: () => `<div class="wrap"><figure class="x-media">${picture(p.image, p.alt)}</figure><div class="x-copy">${h2()}<div class="prose paras"${a('body')}>${paras(p.body)}</div></div></div>`,
+    split: () => `<div class="wrap"><figure class="x-media">${picture(p.image, p.alt)}</figure><div class="x-copy">${h2()}<div class="prose paras"${a('body')}>${paras(p.body)}</div>${button()}</div></div>`,
     records: () => {
       const list = (has('slugs') ? p.slugs.split(',').map((x) => ctx.bySlug[x.trim()]) : ctx.featured).filter((q) => q && ctx.shown.includes(q));
       return `<div class="wrap">${h2()}<div class="doors">${list.map((q) => ctx.door(q)).join('\n')}</div></div>`;
