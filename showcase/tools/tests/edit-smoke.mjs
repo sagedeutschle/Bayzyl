@@ -126,7 +126,9 @@ try {
   check('theme.json arrives with the token', JSON.parse(gh.written.get('showcase/prismet-site/data/theme.json') || '{}').root?.['--brass'] === '#D07A2C');
   check('styles.json arrives with the size for phones only', JSON.stringify(JSON.parse(gh.written.get('showcase/prismet-site/data/styles.json') || '{}').rules) === '{"text:hero.title":{"mobile":{"font-size":"40px"}}}', gh.written.get('showcase/prismet-site/data/styles.json'));
   { const pg = JSON.parse(gh.written.get('showcase/prismet-site/data/pages.json') || '{}'), pj = JSON.parse(gh.written.get('showcase/prismet-site/data/projects.json') || '{}');
-    check('pages.json arrives with the page and the home section, and the home order names it', pg.pages?.[0]?.title === 'About' && pg.pages[0].status === 'published' && pg.pages[0].sections[0].props.title === 'About this workshop' && pg.home?.[0]?.type === 'quote' && pj.layout.sections.includes(pg.home[0].id), JSON.stringify(pg).slice(0, 200)); }
+    // the quote joins whatever home sections the site already has (build-big since 2026-10-19), so find it rather than assume it is first
+    const quote = (pg.home || []).find((s) => s.type === 'quote');
+    check('pages.json arrives with the page and the home section, and the home order names it', pg.pages?.[0]?.title === 'About' && pg.pages[0].status === 'published' && pg.pages[0].sections[0].props.title === 'About this workshop' && Boolean(quote) && pj.layout.sections.includes(quote.id), JSON.stringify(pg).slice(0, 200)); }
   { const up = [...gh.written.keys()].find((k) => k.startsWith('showcase/assets/uploads/')), bytes = up && gh.written.get(up);
     check('the image arrives as a WebP in the same commit, and the record names it', Boolean(bytes) && bytes.toString('ascii', 0, 4) === 'RIFF' && bytes.toString('ascii', 8, 12) === 'WEBP' && gh.written.get('showcase/prismet-site/data/projects.json').includes(up.replace('showcase/', '')), up || 'no upload'); }
   check('the commit message names the files', /site\.md \(1\); projects\.json; theme\.json/.test(commits[0]?.body.message || ''), commits[0]?.body.message);
