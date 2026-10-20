@@ -5,7 +5,7 @@
 Sage is not selling the clubs yet, so the "Ways to bring this to your kids" section (the four offers with prices
 and the "prices are starting points" note) is gone from `pages/bayzyl.html`, with its `.offers`/`.offer` rules
 from `pages/bayzyl/bayzyl.css` (cache key `?v=20261020a`). The clubs, Block by Block and about sections stay; the
-meta description still names clubs, camp weeks and private servers as the idea, without prices. The gallery grew
+meta description and the home page's Build Big paragraph now call building clubs "the idea behind it" instead of naming Build Clubs, Camp Weeks and hosted servers (`data/pages.json`). The gallery grew
 from one lava-fortress set to 17 images: 12 new builds from Sage's `screenshots of my minecraft` folder (harbour at
 sunset, glass city, pyramid, old town, temple cliff and gate, lava hall, blossom pagoda, lantern town, canyon ships,
 fleet, map room) plus five fortress shots kept (hero, night, walls, spire, cave, mountain); hall, city, crane and
