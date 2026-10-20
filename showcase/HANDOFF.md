@@ -1,5 +1,18 @@
 # prismet.xyz — handoff (2026-10-03)
 
+## /bayzyl: pricing removed, gallery widened — 2026-10-20
+
+Sage is not selling the clubs yet, so the "Ways to bring this to your kids" section (the four offers with prices
+and the "prices are starting points" note) is gone from `pages/bayzyl.html`, with its `.offers`/`.offer` rules
+from `pages/bayzyl/bayzyl.css` (cache key `?v=20261020a`). The clubs, Block by Block and about sections stay; the
+meta description still names clubs, camp weeks and private servers as the idea, without prices. The gallery grew
+from one lava-fortress set to 17 images: 12 new builds from Sage's `screenshots of my minecraft` folder (harbour at
+sunset, glass city, pyramid, old town, temple cliff and gate, lava hall, blossom pagoda, lantern town, canyon ships,
+fleet, map room) plus five fortress shots kept (hero, night, walls, spire, cave, mountain); hall, city, crane and
+library were removed. New images are the game area of 3886×2692 CleanShot window captures (title bar, the mod
+button in the top-right corner and the rounded corners cropped off), 1600 and 800 px WebP via
+`cwebp -q 80/78 -metadata none`, 1600×953.
+
 ## Build Big in the navigation and on the home page — 2026-10-19
 
 Build Big (the /bayzyl pitch page) is in the main navigation after Tools: in `pages/lib/render.js` (`bar()` and
