@@ -6,7 +6,7 @@
       "type": "split",
       "props": {
         "image": "assets/minecraft/build-big-hero.webp",
-        "alt": "A black fortress on a rocky island, lava pouring down its cliffs into the sea",
+        "alt": "Dark stone fortress beside the sea, with bright lava flowing down its walls.",
         "heading": "Build Big with Bayzyl",
         "body": "Bayzyl is a building toolkit for Minecraft. Type one command and a dome appears. Paint a forest with a brush. Copy a whole castle and stack ten more. Made a mess? Undo it.\n\nThe idea behind it: building clubs for libraries, schools and youth organisations, where Minecraft time becomes practice with coordinates, geometry and teamwork. Bayzyl itself stays free and open source.",
         "side": "left",

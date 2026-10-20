@@ -1,5 +1,28 @@
 # prismet.xyz — handoff (2026-10-03)
 
+## Build Big gallery refresh — 2026-10-20
+
+The owner requested removal of inaccurate image labels and authorized the gallery refresh and publication.
+`pages/bayzyl.html` now has no per-image captions in either collection. All 22 images were visually reviewed;
+their alt descriptions describe the visible scenes without invented names, materials or construction methods.
+The wood-lined bedroom, lava cascade, fortress courtyard, patterned hall floor and waterside buildings now
+have accurate descriptions. The homepage Build Big image uses the same corrected hero description. Specific
+help-page counts were removed because the displayed capture does not match the previous number.
+
+The gallery retains all 17 builds and four demonstration images at their natural proportions. Its wider
+two-column desktop layout becomes one column on phones, with larger opening and closing views, improved
+spacing and a direct gallery link from the hero. `bayzyl/gallery.js` progressively enhances the image links
+with a native dialog: full-frame viewing, previous/next controls, keyboard navigation, image counter, close,
+focus restoration, scroll restoration, and loading/error feedback. The links still open original images
+without JavaScript. No per-image tagline is shown in the dialog. CSS and script version: `20261020b`.
+
+Local validation: build/static verification, all 23 workflow Node check scripts, the full local route gate,
+72 browser checks at 1440 and 390 pixels, and the real-server editor smoke test pass. The browser suite now
+checks both collections, caption removal, viewer navigation, Escape, focus/scroll restoration and no-script
+image links. Desktop/mobile gallery and viewer layouts were also inspected in the browser. Publication and
+live-release verification are recorded separately. The existing homepage request estimate remains 48/20;
+the gallery refresh adds no images or external dependencies.
+
 ## /bayzyl: pricing removed, gallery widened — 2026-10-20
 
 Sage is not selling the clubs yet, so the "Ways to bring this to your kids" section (the four offers with prices

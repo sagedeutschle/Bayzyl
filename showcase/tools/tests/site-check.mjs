@@ -117,6 +117,37 @@ for (const [w, h, dpr] of SIZES) {
       const writes = await page.evaluate(() => window.__liveWrites);
       check(`bayzyl @${w}: the live region speaks after each move`, writes >= 4, `${writes} writes`);
     }
+    if (url === 'bayzyl.html') {
+      const gallery = page.locator('[data-gallery="builds"] .image-link');
+      const demos = page.locator('[data-gallery="demos"] .image-link');
+      check(`Build Big @${w}: all 17 builds and four demonstrations remain`, await gallery.count() === 17 && await demos.count() === 4);
+      check(`Build Big @${w}: images have no visible taglines`, await page.locator('#gallery figcaption, #try figcaption').count() === 0);
+      const viewer = page.locator('#build-viewer');
+      const count = () => page.locator('[data-viewer-counter]').innerText();
+      await gallery.first().click();
+      check(`Build Big @${w}: first image opens in the viewer`, await viewer.isVisible() && await count() === '1 / 17');
+      await page.locator('[data-viewer-next]').click();
+      check(`Build Big @${w}: next shows the second full image`, await count() === '2 / 17' && new URL(await page.locator('[data-viewer-image]').getAttribute('src'), BASE).href === new URL(await gallery.nth(1).getAttribute('href'), BASE).href);
+      await page.keyboard.press('ArrowLeft');
+      check(`Build Big @${w}: keyboard navigation returns to the first image`, await count() === '1 / 17');
+      await page.keyboard.press('Escape');
+      await page.waitForFunction(() => getComputedStyle(document.body).position !== 'fixed' && getComputedStyle(document.documentElement).overflow !== 'hidden');
+      check(`Build Big @${w}: Escape closes and restores focus`, !(await viewer.isVisible()) && await gallery.first().evaluate((a) => document.activeElement === a));
+      check(`Build Big @${w}: closing restores page scrolling`, await page.evaluate(() => getComputedStyle(document.body).overflow !== 'hidden' && getComputedStyle(document.documentElement).overflow !== 'hidden'));
+      await demos.first().click();
+      check(`Build Big @${w}: demonstration images use their own collection`, await viewer.isVisible() && await count() === '1 / 4');
+      await page.locator('[data-viewer-close]').click();
+      check(`Build Big @${w}: close button works`, !(await viewer.isVisible()));
+      check(`Build Big @${w}: viewer has no browser errors`, errors.length === 0, errors.slice(0, 3).join('; '));
+      const fallback = await browser.newContext({ viewport: { width: w, height: h }, javaScriptEnabled: false });
+      const plain = await fallback.newPage();
+      await plain.goto(BASE + url);
+      const fallbackLink = plain.locator('[data-gallery="builds"] .image-link').first();
+      const imageURL = new URL(await fallbackLink.getAttribute('href'), BASE).href;
+      await fallbackLink.click();
+      check(`Build Big @${w}: full images remain accessible without JavaScript`, plain.url() === imageURL);
+      await fallback.close();
+    }
     await page.close();
   }
   await ctx.close();
