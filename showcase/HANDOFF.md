@@ -14,12 +14,14 @@ two-column desktop layout becomes one column on phones, with larger opening and 
 spacing and a direct gallery link from the hero. `bayzyl/gallery.js` progressively enhances the image links
 with a native dialog: full-frame viewing, previous/next controls, keyboard navigation, image counter, close,
 focus restoration, scroll restoration, and loading/error feedback. The links still open original images
-without JavaScript. No per-image tagline is shown in the dialog. CSS and script version: `20261020b`.
+without JavaScript. No per-image tagline is shown in the dialog. CSS version: `20261020c`; script: `20261020b`.
+Long command examples scroll within their feature instead of widening the page on narrow phones.
 
 Local validation: build/static verification, all 23 workflow Node check scripts, the full local route gate,
-72 browser checks at 1440 and 390 pixels, and the real-server editor smoke test pass. The browser suite now
+86 browser checks at 1440, 390 and 375 pixels, and the real-server editor smoke test pass. The browser suite now
 checks both collections, caption removal, viewer navigation, Escape, focus/scroll restoration and no-script
-image links. Desktop/mobile gallery and viewer layouts were also inspected in the browser. Publication and
+image links. Desktop/mobile gallery and viewer layouts were also inspected in the browser, including 320px
+and 390px phone views with classic scrollbar space. Publication and
 live-release verification are recorded separately. The existing homepage request estimate remains 48/20;
 the gallery refresh adds no images or external dependencies.
 

@@ -58,10 +58,11 @@ section h2 + .lead { margin-top: 16px; }
 
 /* features */
 .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 28px; }
-.feat { display: grid; gap: 8px; padding: 18px 0; border-top: 2px solid var(--line); align-content: start; }
+.feat { display: grid; gap: 8px; min-width: 0; padding: 18px 0; border-top: 2px solid var(--line); align-content: start; }
 .feat h3 { color: var(--glow); }
 .feat p { color: var(--muted); }
 .feat code { display: inline-block; margin-top: 4px; justify-self: start; }
+.feat > code { max-width: 100%; overflow-x: auto; }
 
 /* steps */
 .steps { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 24px; counter-reset: step; }

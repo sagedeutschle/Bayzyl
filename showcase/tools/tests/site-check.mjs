@@ -20,7 +20,7 @@ const DIST = process.argv[2] || join(dirname(fileURLToPath(import.meta.url)), '.
 const CSP = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.steampowered.com https://store.steampowered.com https://api.fiscaldata.treasury.gov https://api.usaspending.gov; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'";
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
 const PAGES = ['index.html', 'work/bayzyl.html', 'work/prismet-app.html', 'work/the-helm.html', 'bayzyl.html'];
-const SIZES = [[1440, 900, 1], [390, 844, 3]];
+const SIZES = [[1440, 900, 1], [390, 844, 3], [375, 812, 3]];
 
 const server = createServer(async (req, res) => {
   let p = decodeURIComponent(new URL(req.url, 'http://x').pathname);
@@ -62,7 +62,9 @@ for (const [w, h, dpr] of SIZES) {
     const out = document.querySelector('[data-stepper] output'); window.__liveWrites = 0;
     if (out) new MutationObserver((m) => { window.__liveWrites += m.length; }).observe(out, { childList: true, characterData: true, subtree: true });
   }));
-  for (const url of PAGES) {
+  // A narrower Build Big pass also catches command examples that fit at 390px
+  // but overflow on a phone with classic scrollbar space reserved.
+  for (const url of (w === 375 ? ['bayzyl.html'] : PAGES)) {
     const { page, errors, overflow, broken } = await open(ctx, url);
     check(`${url} @${w}: no console or network errors`, errors.length === 0, errors.slice(0, 3).join('; '));
     check(`${url} @${w}: no horizontal overflow`, overflow <= 0, overflow > 0 ? `${overflow}px wider than the viewport` : '');
