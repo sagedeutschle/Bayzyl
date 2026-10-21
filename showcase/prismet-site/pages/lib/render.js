@@ -639,38 +639,78 @@ const layoutState = {
 
 
 // ── margin instruments: the wizard's margin notes beside the column, shown only where a wide window leaves room ──
-// Two tall ornaments, one per side, in the site's own vocabulary: a brass survey rail with ticks, violet filaments,
-// amethyst shards, gold glints, circuit-like traces, one small prism in a ring and one dial. Decorative only; the CSS
-// hides them under 1400px, scales them with the margin, draws them once and drifts the shards with the scroll.
+// Two tall ornaments, one per side, in the site's own vocabulary but with a hand's texture rather than a plotter's:
+// ink lines wobble through a turbulence displacement, shards are grainy watercolour washes with soft violet mist
+// behind them, glints bloom, rings are ruled twice, dots are placed one by one, and a faint paper grain sits over the
+// band. Everything is drawn from the tokens, so day mode follows; no raster, no text, no request. The CSS hides the
+// panels under 1400px, scales them with the margin, draws them once and drifts the shard layers with the scroll.
 const marginArt = () => {
-  const shard = (x, y, h, rot, i) => { const w = +(h * .42).toFixed(1), t = +(w * .6).toFixed(1), a = +(h / 2).toFixed(1), hw = +(w / 2).toFixed(1);
-    return `<g class="ma-shard" style="--i:${i}" transform="translate(${x} ${y}) rotate(${rot})"><path class="ma-glass" d="M0 ${-a}L${hw} ${-a + t}V${a - t}L0 ${a}L${-hw} ${a - t}V${-a + t}Z"/><path class="ma-facet" d="M0 ${-a}L${hw} ${-a + t}V${a - t}L0 ${a}Z"/><path class="ma-edge" d="M0 ${-a}L${-hw} ${-a + t}V${a - t}"/></g>`; };
-  const glint = (x, y, r, i) => `<path class="ma-glint" style="--i:${i}" d="M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z"/>`;
-  const layer = (cls, shards, glints, from) => `<g class="${cls}">${shards.map((p, k) => shard(...p, from + k)).join('')}${glints.map((p, k) => glint(...p, from + shards.length + k)).join('')}</g>`;
-  const ticks = []; for (let y = 70; y <= 1330; y += 35) ticks.push(`M${y % 175 === 0 ? 206 : 214} ${y}H222`);
-  const rail = `<path class="ma-rail" pathLength="1" d="M222 48V1352"/><path class="ma-ticks" d="${ticks.join('')}"/><path class="ma-term" d="M222 32l5 8-5 8-5-8zM222 1352l5 8-5 8-5-8z"/>`;
-  const filaments = '<path class="ma-fil" pathLength="1" d="M152 56C62 256 232 418 122 640S42 982 172 1182 98 1330 130 1382"/><path class="ma-fil thin" pathLength="1" d="M168 84C94 282 240 446 142 664S74 1004 192 1204"/>';
-  const sigil = (x, y) => `<g class="ma-sigil" transform="translate(${x} ${y})"><circle class="ma-ring" r="44" pathLength="1"/><circle class="ma-ring dashed" r="58"/><circle class="ma-dot" cx="41" cy="-41" r="2.5"/><path class="ma-beam" d="M-76 6H-14"/><path class="ma-prism" d="M0-26 24 16H-24Z"/><path class="ma-prism-facet" d="M0-26V16H24Z"/><g class="ma-fan">${['desktop', 'apps', 'worlds', 'minecraft', 'web', 'ai'].map((b, k) => `<path class="b-${b}" d="M16 4 76 ${-17 + k * 7}"/>`).join('')}</g></g>`;
-  const dial = (x, y) => { const t = []; for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6, c = Math.cos(a), s = Math.sin(a); t.push(`M${(24 * c).toFixed(1)} ${(24 * s).toFixed(1)}L${(30 * c).toFixed(1)} ${(30 * s).toFixed(1)}`); }
-    return `<g class="ma-dial" transform="translate(${x} ${y})"><circle class="ma-ring" r="30"/><circle class="ma-ring thin" r="19"/><path class="ma-ticks" d="${t.join('')}"/><circle class="ma-dot" r="2.2"/><path class="ma-needle" d="M0 0 13-16"/></g>`; };
-  const trace = (segments) => `<g class="ma-trace">${segments.join('')}</g>`;
-  const left = [
-    rail, filaments,
-    trace(['<path d="M222 300H190V340H162"/><circle cx="158" cy="340" r="3"/>', '<path d="M222 745H200V700H180"/><circle cx="176" cy="700" r="3"/>', '<path d="M222 1120H196V1160H172V1186"/><rect x="168" y="1186" width="8" height="8"/>']),
-    sigil(120, 520), dial(110, 980),
-    layer('ma-deep', [[90, 400, 30, 10], [70, 880, 26, -8], [180, 1310, 28, 6]], [[190, 205, 5], [140, 470, 5], [45, 1010, 5]], 0),
-    layer('ma-mid', [[170, 250, 22, 20], [40, 640, 18, -30], [130, 1100, 36, 22]], [[100, 130, 7], [75, 590, 6], [95, 1350, 6]], 6),
-    layer('ma-near', [[60, 180, 44, -18], [160, 760, 50, 14], [50, 1260, 20, -15]], [[30, 330, 9], [150, 1220, 9], [200, 840, 8]], 12),
-  ].join('');
-  const right = [
-    rail, filaments,
-    trace(['<path d="M222 200H198V236H176V262"/><rect x="172" y="262" width="8" height="8"/>', '<path d="M222 520H194V560H166"/><circle cx="162" cy="560" r="3"/>', '<path d="M222 1060H204V1100H184"/><circle cx="180" cy="1100" r="3"/>']),
-    dial(112, 430), sigil(118, 900),
-    layer('ma-deep', [[95, 120, 26, -6], [62, 820, 22, 10], [175, 1360, 26, -4]], [[195, 300, 5], [135, 610, 5], [50, 1090, 5]], 0),
-    layer('ma-mid', [[165, 330, 20, -22], [45, 560, 30, 24], [140, 1020, 34, -16]], [[105, 160, 6], [60, 760, 7], [180, 1250, 6]], 6),
-    layer('ma-near', [[70, 240, 46, 16], [150, 700, 40, -12], [60, 1180, 24, 20]], [[40, 420, 9], [190, 960, 8], [120, 1300, 9]], 12),
-  ].join('');
-  const panel = (side, inner, mirror) => `<div class="margin-art ${side}" aria-hidden="true"><svg viewBox="0 0 240 1400" width="240" height="1400" focusable="false">${mirror ? `<g transform="translate(240 0) scale(-1 1)">${inner}</g>` : inner}</svg></div>`;
+  const prng = (seed) => () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const f1 = (n) => +n.toFixed(1);
+  const side = (id, seed, spec) => {
+    const R = prng(seed), j = (v, a) => f1(v + (R() - .5) * 2 * a);
+    const defs = `<defs>
+<filter id="${id}-ink" x="-20%" y="-4%" width="140%" height="108%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency=".028" numOctaves="3" seed="${seed}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="4.6" xChannelSelector="R" yChannelSelector="G"/><feGaussianBlur stdDeviation=".24"/></filter>
+<filter id="${id}-wash" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="4" seed="${seed + 3}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="B" result="d"/><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="${seed + 7}" result="g"/><feColorMatrix in="g" type="luminanceToAlpha" result="l"/><feComponentTransfer in="l" result="ga"><feFuncA type="linear" slope="2.4" intercept=".2"/></feComponentTransfer><feComposite in="d" in2="ga" operator="in" result="grainy"/><feGaussianBlur in="d" stdDeviation="1.6" result="bleed"/><feMerge><feMergeNode in="bleed"/><feMergeNode in="grainy"/></feMerge></filter>
+<filter id="${id}-glow" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="${id}-mist" x="-60%" y="-40%" width="220%" height="180%"><feGaussianBlur stdDeviation="9"/></filter>
+<filter id="${id}-grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="${seed + 11}"/><feColorMatrix type="saturate" values="0"/></filter>
+<linearGradient id="${id}-glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--ink)" stop-opacity=".38"/><stop offset=".42" stop-color="var(--ai-ink)" stop-opacity=".26"/><stop offset="1" stop-color="var(--ai)" stop-opacity=".58"/></linearGradient>
+<radialGradient id="${id}-halo"><stop offset="0" stop-color="var(--ai-ink)" stop-opacity=".34"/><stop offset="1" stop-color="var(--ai-ink)" stop-opacity="0"/></radialGradient>
+<radialGradient id="${id}-spark"><stop offset="0" stop-color="var(--lantern)" stop-opacity=".85"/><stop offset=".38" stop-color="var(--lantern)" stop-opacity=".22"/><stop offset="1" stop-color="var(--lantern)" stop-opacity="0"/></radialGradient>
+<linearGradient id="${id}-fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".1" stop-color="#fff"/><stop offset=".9" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<mask id="${id}-band"><rect width="240" height="1400" fill="url(#${id}-fade)"/></mask>
+</defs>`;
+    const ink = `filter="url(#${id}-ink)"`, wash = `filter="url(#${id}-wash)"`, glow = `filter="url(#${id}-glow)"`, mist = `filter="url(#${id}-mist)"`;
+    // the ruled margin: one pen pass, then a lighter second pass a hair to the side, ticks of uneven length
+    const ticks = []; for (let y = 70; y <= 1330; y += 35) ticks.push(`M${j(y % 175 === 0 ? 206 : 214, 1.2)} ${j(y, .6)}H${j(222, .5)}`);
+    const rail = `<g class="ma-rail-g" ${ink}><path class="ma-rail" pathLength="1" d="M222 48V1352"/><path class="ma-rail second" pathLength="1" d="M${j(223.5, .4)} ${j(60, 6)}V${j(1340, 6)}"/><path class="ma-ticks" d="${ticks.join('')}"/><path class="ma-term" d="M222 32l5 8-5 8-5-8zM222 1352l5 8-5 8-5-8z"/></g>`;
+    // filaments: a wide violet mist, the thread itself, and a thinner companion
+    const fil = `M${j(152, 10)} ${j(56, 8)}C${j(62, 16)} ${j(256, 20)} ${j(232, 16)} ${j(418, 20)} ${j(122, 14)} ${j(640, 20)}S${j(42, 16)} ${j(982, 20)} ${j(172, 14)} ${j(1182, 20)} ${j(98, 12)} ${j(1330, 16)} ${j(130, 10)} ${j(1382, 8)}`;
+    const fil2 = `M${j(168, 10)} ${j(84, 8)}C${j(94, 16)} ${j(282, 20)} ${j(240, 16)} ${j(446, 20)} ${j(142, 14)} ${j(664, 20)}S${j(74, 16)} ${j(1004, 20)} ${j(192, 14)} ${j(1204, 20)}`;
+    const filaments = `<path class="ma-mist-line" ${mist} d="${fil}"/><g ${ink}><path class="ma-fil" pathLength="1" d="${fil}"/><path class="ma-fil thin" pathLength="1" d="${fil2}"/></g>`;
+    // soft violet weather behind the clusters
+    const clouds = spec.clouds.map(([x, y, rx, ry]) => `<ellipse class="ma-cloud" ${mist} cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="url(#${id}-halo)"/>`).join('');
+    // a shard: mist behind, a grainy wash of glass, an inked edge, one brass highlight, one facet line
+    const shard = (x, y, h, rot, i) => { const w = h * .42, t = w * .6, a = h / 2, hw = w / 2, k = h * .05;
+      const p = [[0, -a], [hw, -a + t], [hw * 1.06, a - t], [0, a], [-hw, a - t], [-hw * .94, -a + t]].map(([px, py]) => `${j(px, k)} ${j(py, k)}`);
+      return `<g class="ma-shard" style="--i:${i}" transform="translate(${x} ${y}) rotate(${rot})"><circle class="ma-shard-mist" ${mist} r="${f1(h * .8)}" fill="url(#${id}-halo)"/><path class="ma-glass" ${wash} fill="url(#${id}-glass)" d="M${p.join('L')}Z"/><path class="ma-edge-ink" ${ink} d="M${p.join('L')}Z"/><path class="ma-edge" ${ink} d="M${p[0]}L${p[5]}L${p[4]}"/><path class="ma-facet" ${ink} d="M${p[0]}L${j(0, 1)} ${j(a, 1)}"/><path class="ma-hatch" ${ink} d="${[.15, .4, .65].map((q) => `M${j(-hw * .7, 1)} ${j(a - t - (a * 2 - t * 2) * q, 1)}L${j(hw * .2, 1)} ${j(a - t - (a * 2 - t * 2) * q - h * .18, 1)}`).join('')}"/></g>`; };
+    // a glint: a bloom of lantern light under a small four-point star
+    const glint = (x, y, r, i) => `<g class="ma-glint" style="--i:${i}"><circle cx="${x}" cy="${y}" r="${f1(r * 1.9)}" fill="url(#${id}-spark)"/><path class="ma-star" ${glow} d="M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z"/></g>`;
+    const layer = (cls, shards, glints, from) => `<g class="${cls}">${shards.map((p, k) => shard(...p, from + k)).join('')}${glints.map((p, k) => glint(...p, from + shards.length + k)).join('')}</g>`;
+    // the prized artifact: a prism inside a twice-ruled ring of hand-placed dots, splitting one beam into the six wings
+    const sigil = (x, y) => { const dots = []; for (let k = 0; k < 14; k++) { const a = k * Math.PI / 7 + R() * .2, r = 58 + (R() - .5) * 3; dots.push(`<circle cx="${f1(r * Math.cos(a))}" cy="${f1(r * Math.sin(a))}" r="${f1(1.1 + R() * 1.1)}"/>`); }
+      return `<g class="ma-sigil" transform="translate(${x} ${y})"><circle ${mist} r="52" fill="url(#${id}-halo)"/><g ${ink}><circle class="ma-ring" r="44" pathLength="1"/><circle class="ma-ring second" r="${j(45.6, .4)}" cx="${j(0, 1)}" cy="${j(0, 1)}" pathLength="1"/></g><g class="ma-dots">${dots.join('')}</g><path class="ma-beam" ${ink} d="M-78 ${j(6, 1)}C${j(-50, 4)} ${j(5, 2)} ${j(-30, 4)} ${j(6, 2)} -14 6"/><path class="ma-prism" ${wash} fill="url(#${id}-glass)" d="M${j(0, 1)} ${j(-26, 1)} ${j(24, 1)} ${j(16, 1)}H${j(-24, 1)}Z"/><path class="ma-prism-ink" ${ink} d="M0-26 24 16H-24Z"/><path class="ma-prism-facet" ${ink} d="M0-26V16"/><g class="ma-fan" ${glow}>${['desktop', 'apps', 'worlds', 'minecraft', 'web', 'ai'].map((b, k) => `<path class="b-${b}" d="M16 4Q${j(44, 3)} ${j(2 + (k - 2.5) * 3, 2)} ${j(76, 5)} ${-17 + k * 7}"/>`).join('')}</g></g>`; };
+    // a star chart: a handful of stars joined by faint pencil lines, one of them bright
+    const chart = (x, y) => { const pts = []; for (let k = 0; k < 7; k++) pts.push([j(0, 34), j(0, 44)]);
+      const lines = pts.slice(1).map((p, k) => `M${pts[k][0]} ${pts[k][1]}L${p[0]} ${p[1]}`).join('') + `M${pts[6][0]} ${pts[6][1]}L${pts[2][0]} ${pts[2][1]}`;
+      return `<g class="ma-chart" transform="translate(${x} ${y})"><path class="ma-chart-line" ${ink} d="${lines}"/>${pts.map(([px, py], k) => `<circle class="ma-dot" cx="${px}" cy="${py}" r="${f1(1 + R() * 1.2)}"/>`).join('')}<circle class="ma-chart-bright" cx="${pts[3][0]}" cy="${pts[3][1]}" r="7" fill="url(#${id}-spark)"/></g>`; };
+    // circuit runes: short leads from the rail, ending in a dot or a pad
+    const traces = `<g class="ma-trace" ${ink}>${spec.traces.map(([y1, x1, y2, x2, pad]) => `<path d="M222 ${y1}H${x1}V${y2}H${x2}"/>${pad ? `<rect x="${x2 - 8}" y="${y2 - 4}" width="8" height="8"/>` : `<circle cx="${x2 - 3}" cy="${y2}" r="3"/>`}`).join('')}</g>`;
+    // ink spatter and dust
+    const dust = []; for (let k = 0; k < 16; k++) dust.push(`<circle cx="${j(120, 110)}" cy="${j(700, 660)}" r="${f1(.5 + R() * 1.3)}"/>`);
+    const grain = `<rect class="ma-grain" width="240" height="1400" filter="url(#${id}-grain)" mask="url(#${id}-band)"/>`;
+    return defs + grain + clouds + rail + filaments + traces + spec.instruments.map(([kind, x, y]) => (kind === 'sigil' ? sigil(x, y) : chart(x, y))).join('') +
+      `<g class="ma-dust">${dust.join('')}</g>` +
+      layer('ma-deep', spec.deep[0], spec.deep[1], 0) + layer('ma-mid', spec.mid[0], spec.mid[1], 6) + layer('ma-near', spec.near[0], spec.near[1], 12);
+  };
+  const left = side('ma-l', 7, {
+    clouds: [[70, 230, 60, 130], [150, 760, 56, 150], [60, 1240, 54, 120]],
+    traces: [[300, 190, 340, 162, false], [745, 200, 700, 180, false], [1120, 196, 1160, 172, true]],
+    instruments: [['sigil', 120, 520], ['chart', 110, 980]],
+    deep: [[[90, 400, 30, 10], [70, 880, 26, -8], [180, 1310, 28, 6]], [[190, 205, 5], [140, 470, 5], [45, 1010, 5]]],
+    mid: [[[170, 250, 22, 20], [40, 640, 18, -30], [130, 1100, 36, 22]], [[100, 130, 7], [75, 590, 6], [95, 1350, 6]]],
+    near: [[[60, 180, 44, -18], [160, 760, 50, 14], [50, 1260, 20, -15]], [[30, 330, 9], [150, 1220, 9], [200, 840, 8]]],
+  });
+  const right = side('ma-r', 19, {
+    clouds: [[80, 300, 58, 140], [140, 900, 60, 150], [70, 1300, 50, 110]],
+    traces: [[200, 198, 236, 176, true], [520, 194, 560, 162, false], [1060, 204, 1100, 180, false]],
+    instruments: [['chart', 112, 430], ['sigil', 118, 900]],
+    deep: [[[95, 120, 26, -6], [62, 820, 22, 10], [175, 1360, 26, -4]], [[195, 300, 5], [135, 610, 5], [50, 1090, 5]]],
+    mid: [[[165, 330, 20, -22], [45, 560, 30, 24], [140, 1020, 34, -16]], [[105, 160, 6], [60, 760, 7], [180, 1250, 6]]],
+    near: [[[70, 240, 46, 16], [150, 700, 40, -12], [60, 1180, 24, 20]], [[40, 420, 9], [190, 960, 8], [120, 1300, 9]]],
+  });
+  const panel = (cls, inner, mirror) => `<div class="margin-art ${cls}" aria-hidden="true"><svg viewBox="0 0 240 1400" width="240" height="1400" focusable="false">${mirror ? `<g transform="translate(240 0) scale(-1 1)">${inner}</g>` : inner}</svg></div>`;
   return panel('left', left, false) + panel('right', right, true);
 };
 
@@ -751,6 +791,7 @@ shown.forEach((p, i) => {
   const hasPortfolio = portfolioOf(p).length > 0;
   const front = !isFlag && p.cover ? `<figure class="frontispiece${p.cover.includes('/icons/') ? ' icon' : ''}"><div class="wrap">${img(p.cover, { root: '../', alt: (p.shotAlts || [])[0] || plain(work(s, 'title')), lazy: false, priority: true, sizesAttr: frontSizes(p.cover) })}</div></figure>` : '';
   const body = `${bar('../')}
+${marginArt()}
 <main id="main" data-room="${p.room || 'cabinet'}" data-beam="${p.beam}" style="${hue(p.beam)}">
   <div class="wrap p-head">
     <p class="crumbs"><a href="../index.html#work">${T('nav.work').h}</a> <span>/</span> <a href="../index.html#${p.beam}">${b.h}</a></p>
@@ -792,6 +833,7 @@ ${scripts('../')}`;
 projects.filter((p) => !shown.includes(p)).forEach((p) => {
   const s = p.slug, w = (isTodo(p) || !p.cover) && !/decree|sidepanel/.test(s) ? T('project.drafting_stub') : T('project.withdrawn');
   const body = `${bar('../')}
+${marginArt()}
 <main id="main" class="withdrawn"><div class="wrap">
   <h1>${inline(work(s, 'title'))}</h1>
   <p${w.a}>${w.h}</p>
@@ -805,6 +847,7 @@ ${footer('../')}`;
 CUSTOM.forEach((pg) => {
   const list = (pg.sections || []).filter((s) => s && (ANNOTATE || !s.hidden));
   const body = `${bar()}
+${marginArt()}
 <main id="main" class="x-page">
 ${list.map((s, i) => renderSection(s, pg.slug, sectionCtx(i === 0))).join('\n')}
 </main>
@@ -818,6 +861,7 @@ ${scripts()}`;
   const t = T('colophon.title');
   const paras = Object.keys(S).filter((key) => /^colophon\.p\d+$/.test(key)).sort((a, b) => a.slice(10) - b.slice(10));
   const body = `${bar()}
+${marginArt()}
 <main id="main" class="colophon"><div class="wrap">
   <h1${t.a}>${t.h}</h1>
   <div class="prose">${paras.map((key) => `<p${k(key).a}>${k(key).h}</p>`).join('')}</div>

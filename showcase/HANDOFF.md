@@ -1,25 +1,32 @@
 # prismet.xyz — handoff (2026-10-03)
 
-## Margin instruments beside the home column — 2026-10-21
+## Margin instruments beside every rendered page — 2026-10-21
 
-Sage asked for decorative art in the empty bands either side of the home page's column on wide windows, in the
-site's own voice (a computer wizard whose prized artifact is the prism), art that retracts as the window narrows
-and is absent on phones. `marginArt()` in `pages/lib/render.js` draws two tall inline SVGs (one per side, the right
-one mirrored with its own arrangement) right after the top bar on `index.html` only: a brass survey rail with
-ticks and diamond terminals hugging the column's edge, two violet filaments, nine amethyst shards in three depth
-layers, nine gold glints, three circuit-like traces, one small prism in a ring that splits a beam into the six
-wing colours, and one dial. No raster, no text, no new requests; `aria-hidden`, pointer-transparent.
+Sage asked for decorative art in the empty bands either side of the column on wide windows, in the site's own
+voice (a computer wizard whose prized artifact is the prism), art that retracts as the window narrows and is
+absent on phones; then asked for it on the project pages, the colophon and the other rendered pages too, and for
+"less vectory, more human textures". `marginArt()` in `pages/lib/render.js` draws two tall inline SVGs (one per
+side, the right one mirrored with its own arrangement) right after the top bar on every page the renderer emits:
+the home page, the project pages, the withdrawn stubs, the library pages and the colophon. Not on the hand-written
+product pages (Arcade, Tools, /bayzyl, Uncle Scam), which do not share this renderer.
+
+The drawing: a brass survey rail ruled twice with ticks of uneven length, two violet filaments over a wide mist,
+nine amethyst shards per side as grainy watercolour washes with pencil hatching and a soft halo, nine blooming
+gold glints, circuit-like traces, ink spatter, a prism inside a twice-ruled ring of hand-placed dots that splits
+a beam into the six wing colours, a small star chart, and a faint paper grain over the band. The hand comes from
+SVG filters, all declared per side: `feTurbulence` plus `feDisplacementMap` wobble the ink, a second turbulence
+grains the washes and bleeds their edges, blurs make the mist and the bloom. Positions are jittered by a seeded
+generator, so every build is byte-identical. No raster, no text, no new requests; `aria-hidden`, pointer-transparent.
 
 CSS (`.margin-art`, `src/site.css`): fixed to the viewport from the bar down, `z-index: 1` so the full-bleed
 hairlines pass under it, width `(100vw - 1240px) / 2`, shown only from 1400px wide and 520px tall, scaled by that
 band's width and the viewport height (78px wide at 1440×900, 175px at 1920×1080, 237px at 2560×1440; hidden at
-1280 and below). The rail, filaments and ring draw once per load; shards, glints and instruments fade in after
-them; the three depth layers drift with the scroll through `animation-timeline: scroll(root)` where supported,
-and stay still under `prefers-reduced-motion`. Day mode follows the tokens (brass, violet, line). Checks before
-the push: build and verify, edit-check 287, site-check 87 of 87 at 1440, 390 and 375, plus screenshots at
-2560, 1920 (dark, light, scrolled), 1440, 1280, 1024 and 390 with no overflow and no console errors.
-Tablets and small laptops get no art because the column already fills them; extending the ornaments to the
-project pages is one line per page (`marginArt()` after `bar()`).
+1280 and below). The rail, filaments and rings draw once per load; the rest fades in after them; the three depth
+layers drift with the scroll through `animation-timeline: scroll(root)` where supported, and stay still under
+`prefers-reduced-motion`. Day mode follows the tokens, with the violet mist at a lighter opacity on paper.
+Checks before the push: build and verify, edit-check 287, site-check 87 of 87 at 1440, 390 and 375, plus
+screenshots of the home page (dark, light, 1440), a project page and the colophon at 1920 with no overflow and no
+console errors. Tablets and small laptops get no art because the column already fills them.
 
 ## Build Big gallery refresh — 2026-10-20
 
