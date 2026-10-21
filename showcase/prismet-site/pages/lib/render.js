@@ -637,7 +637,45 @@ const layoutState = {
   names: Object.fromEntries(projects.map((p) => [p.slug, plain(work(p.slug, 'title'))])),
 };
 
+
+// ── margin instruments: the wizard's margin notes beside the column, shown only where a wide window leaves room ──
+// Two tall ornaments, one per side, in the site's own vocabulary: a brass survey rail with ticks, violet filaments,
+// amethyst shards, gold glints, circuit-like traces, one small prism in a ring and one dial. Decorative only; the CSS
+// hides them under 1400px, scales them with the margin, draws them once and drifts the shards with the scroll.
+const marginArt = () => {
+  const shard = (x, y, h, rot, i) => { const w = +(h * .42).toFixed(1), t = +(w * .6).toFixed(1), a = +(h / 2).toFixed(1), hw = +(w / 2).toFixed(1);
+    return `<g class="ma-shard" style="--i:${i}" transform="translate(${x} ${y}) rotate(${rot})"><path class="ma-glass" d="M0 ${-a}L${hw} ${-a + t}V${a - t}L0 ${a}L${-hw} ${a - t}V${-a + t}Z"/><path class="ma-facet" d="M0 ${-a}L${hw} ${-a + t}V${a - t}L0 ${a}Z"/><path class="ma-edge" d="M0 ${-a}L${-hw} ${-a + t}V${a - t}"/></g>`; };
+  const glint = (x, y, r, i) => `<path class="ma-glint" style="--i:${i}" d="M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z"/>`;
+  const layer = (cls, shards, glints, from) => `<g class="${cls}">${shards.map((p, k) => shard(...p, from + k)).join('')}${glints.map((p, k) => glint(...p, from + shards.length + k)).join('')}</g>`;
+  const ticks = []; for (let y = 70; y <= 1330; y += 35) ticks.push(`M${y % 175 === 0 ? 206 : 214} ${y}H222`);
+  const rail = `<path class="ma-rail" pathLength="1" d="M222 48V1352"/><path class="ma-ticks" d="${ticks.join('')}"/><path class="ma-term" d="M222 32l5 8-5 8-5-8zM222 1352l5 8-5 8-5-8z"/>`;
+  const filaments = '<path class="ma-fil" pathLength="1" d="M152 56C62 256 232 418 122 640S42 982 172 1182 98 1330 130 1382"/><path class="ma-fil thin" pathLength="1" d="M168 84C94 282 240 446 142 664S74 1004 192 1204"/>';
+  const sigil = (x, y) => `<g class="ma-sigil" transform="translate(${x} ${y})"><circle class="ma-ring" r="44" pathLength="1"/><circle class="ma-ring dashed" r="58"/><circle class="ma-dot" cx="41" cy="-41" r="2.5"/><path class="ma-beam" d="M-76 6H-14"/><path class="ma-prism" d="M0-26 24 16H-24Z"/><path class="ma-prism-facet" d="M0-26V16H24Z"/><g class="ma-fan">${['desktop', 'apps', 'worlds', 'minecraft', 'web', 'ai'].map((b, k) => `<path class="b-${b}" d="M16 4 76 ${-17 + k * 7}"/>`).join('')}</g></g>`;
+  const dial = (x, y) => { const t = []; for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6, c = Math.cos(a), s = Math.sin(a); t.push(`M${(24 * c).toFixed(1)} ${(24 * s).toFixed(1)}L${(30 * c).toFixed(1)} ${(30 * s).toFixed(1)}`); }
+    return `<g class="ma-dial" transform="translate(${x} ${y})"><circle class="ma-ring" r="30"/><circle class="ma-ring thin" r="19"/><path class="ma-ticks" d="${t.join('')}"/><circle class="ma-dot" r="2.2"/><path class="ma-needle" d="M0 0 13-16"/></g>`; };
+  const trace = (segments) => `<g class="ma-trace">${segments.join('')}</g>`;
+  const left = [
+    rail, filaments,
+    trace(['<path d="M222 300H190V340H162"/><circle cx="158" cy="340" r="3"/>', '<path d="M222 745H200V700H180"/><circle cx="176" cy="700" r="3"/>', '<path d="M222 1120H196V1160H172V1186"/><rect x="168" y="1186" width="8" height="8"/>']),
+    sigil(120, 520), dial(110, 980),
+    layer('ma-deep', [[90, 400, 30, 10], [70, 880, 26, -8], [180, 1310, 28, 6]], [[190, 205, 5], [140, 470, 5], [45, 1010, 5]], 0),
+    layer('ma-mid', [[170, 250, 22, 20], [40, 640, 18, -30], [130, 1100, 36, 22]], [[100, 130, 7], [75, 590, 6], [95, 1350, 6]], 6),
+    layer('ma-near', [[60, 180, 44, -18], [160, 760, 50, 14], [50, 1260, 20, -15]], [[30, 330, 9], [150, 1220, 9], [200, 840, 8]], 12),
+  ].join('');
+  const right = [
+    rail, filaments,
+    trace(['<path d="M222 200H198V236H176V262"/><rect x="172" y="262" width="8" height="8"/>', '<path d="M222 520H194V560H166"/><circle cx="162" cy="560" r="3"/>', '<path d="M222 1060H204V1100H184"/><circle cx="180" cy="1100" r="3"/>']),
+    dial(112, 430), sigil(118, 900),
+    layer('ma-deep', [[95, 120, 26, -6], [62, 820, 22, 10], [175, 1360, 26, -4]], [[195, 300, 5], [135, 610, 5], [50, 1090, 5]], 0),
+    layer('ma-mid', [[165, 330, 20, -22], [45, 560, 30, 24], [140, 1020, 34, -16]], [[105, 160, 6], [60, 760, 7], [180, 1250, 6]], 6),
+    layer('ma-near', [[70, 240, 46, 16], [150, 700, 40, -12], [60, 1180, 24, 20]], [[40, 420, 9], [190, 960, 8], [120, 1300, 9]], 12),
+  ].join('');
+  const panel = (side, inner, mirror) => `<div class="margin-art ${side}" aria-hidden="true"><svg viewBox="0 0 240 1400" width="240" height="1400" focusable="false">${mirror ? `<g transform="translate(240 0) scale(-1 1)">${inner}</g>` : inner}</svg></div>`;
+  return panel('left', left, false) + panel('right', right, true);
+};
+
 const indexBody = `${bar()}
+${marginArt()}
 <main id="main" class="portfolio-home"${ANNOTATE ? '' : ' data-optical-motion'}>
 <section class="entrance" aria-labelledby="hero-title"><div class="wrap">
   <div class="entrance-text">

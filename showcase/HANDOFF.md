@@ -1,5 +1,26 @@
 # prismet.xyz — handoff (2026-10-03)
 
+## Margin instruments beside the home column — 2026-10-21
+
+Sage asked for decorative art in the empty bands either side of the home page's column on wide windows, in the
+site's own voice (a computer wizard whose prized artifact is the prism), art that retracts as the window narrows
+and is absent on phones. `marginArt()` in `pages/lib/render.js` draws two tall inline SVGs (one per side, the right
+one mirrored with its own arrangement) right after the top bar on `index.html` only: a brass survey rail with
+ticks and diamond terminals hugging the column's edge, two violet filaments, nine amethyst shards in three depth
+layers, nine gold glints, three circuit-like traces, one small prism in a ring that splits a beam into the six
+wing colours, and one dial. No raster, no text, no new requests; `aria-hidden`, pointer-transparent.
+
+CSS (`.margin-art`, `src/site.css`): fixed to the viewport from the bar down, `z-index: 1` so the full-bleed
+hairlines pass under it, width `(100vw - 1240px) / 2`, shown only from 1400px wide and 520px tall, scaled by that
+band's width and the viewport height (78px wide at 1440×900, 175px at 1920×1080, 237px at 2560×1440; hidden at
+1280 and below). The rail, filaments and ring draw once per load; shards, glints and instruments fade in after
+them; the three depth layers drift with the scroll through `animation-timeline: scroll(root)` where supported,
+and stay still under `prefers-reduced-motion`. Day mode follows the tokens (brass, violet, line). Checks before
+the push: build and verify, edit-check 287, site-check 87 of 87 at 1440, 390 and 375, plus screenshots at
+2560, 1920 (dark, light, scrolled), 1440, 1280, 1024 and 390 with no overflow and no console errors.
+Tablets and small laptops get no art because the column already fills them; extending the ornaments to the
+project pages is one line per page (`marginArt()` after `bar()`).
+
 ## Build Big gallery refresh — 2026-10-20
 
 The owner requested removal of inaccurate image labels and authorized the gallery refresh and publication.

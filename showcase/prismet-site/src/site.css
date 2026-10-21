@@ -213,6 +213,50 @@ section { scroll-margin-top: calc(var(--bar) + 12px); }
   .optic-depth, .optical-rail img, .hero-prism-core, .hero-prism-fan { transform: none; transition: none; }
 }
 
+/* ── margin instruments: the wizard's margin notes beside the column, only where a wide window leaves room.
+   Fixed to the viewport in the band between its edge and the 1240px column; hidden under 1400px (phones, tablets
+   and small laptops have no spare margin), scaled by that band's width, hugging the column's edge like a ruled margin.
+   Lines draw once; shards and glints appear after them; the three depth layers drift with the scroll where the
+   browser supports scroll-driven animation. Pointer-transparent, aria-hidden, nothing to read. ── */
+.margin-art { position: fixed; top: var(--bar); bottom: 0; z-index: 1; width: calc((100vw - var(--maxw)) / 2); display: none; align-items: center; pointer-events: none; user-select: none; }
+.margin-art.left { left: 0; justify-content: flex-end; padding-right: 22px; }
+.margin-art.right { right: 0; justify-content: flex-start; padding-left: 22px; }
+@media (min-width: 1400px) and (min-height: 520px) { .margin-art { display: flex; } }
+.margin-art svg { height: min(100%, 1400px); width: auto; max-width: 100%; overflow: visible; }
+.ma-rail, .ma-ticks, .ma-term, .ma-ring { fill: none; stroke: var(--brass); stroke-width: 1; vector-effect: non-scaling-stroke; opacity: .55; }
+.ma-term { fill: var(--brass); }
+.ma-ring.dashed { stroke-dasharray: 2 5; opacity: .4; }
+.ma-ring.thin { opacity: .35; }
+.ma-fil { fill: none; stroke: var(--ai-ink); stroke-width: 1.3; stroke-linecap: round; vector-effect: non-scaling-stroke; opacity: .42; }
+.ma-fil.thin { stroke-width: .8; opacity: .24; }
+.ma-trace path { fill: none; stroke: var(--line); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.ma-trace circle, .ma-trace rect { fill: var(--line); }
+.ma-glass { fill: color-mix(in srgb, var(--ai-ink) 20%, transparent); stroke: var(--ai-ink); stroke-width: 1; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.ma-facet { fill: var(--ink); opacity: .08; }
+.ma-edge { fill: none; stroke: var(--brass-ink); stroke-width: 1; stroke-linejoin: round; vector-effect: non-scaling-stroke; opacity: .75; }
+.ma-glint { fill: var(--lantern); opacity: .85; }
+.ma-dot { fill: var(--brass); opacity: .8; }
+.ma-beam { fill: none; stroke: var(--ink); stroke-width: 1.4; vector-effect: non-scaling-stroke; opacity: .8; }
+.ma-prism { fill: color-mix(in srgb, var(--ai-ink) 12%, transparent); stroke: var(--brass); stroke-width: 1.5; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.ma-prism-facet { fill: var(--ai-ink); opacity: .2; }
+.ma-fan path { fill: none; stroke-width: 1.6; stroke-linecap: round; vector-effect: non-scaling-stroke; opacity: .65; }
+.ma-fan .b-desktop { stroke: var(--desktop-ink); } .ma-fan .b-apps { stroke: var(--apps-ink); } .ma-fan .b-worlds { stroke: var(--worlds-ink); }
+.ma-fan .b-minecraft { stroke: var(--minecraft-ink); } .ma-fan .b-web { stroke: var(--web-ink); } .ma-fan .b-ai { stroke: var(--ai-ink); }
+.ma-needle { fill: none; stroke: var(--lantern); stroke-width: 1.2; stroke-linecap: round; vector-effect: non-scaling-stroke; opacity: .8; }
+/* draws once per load: the rail, then the filaments and the ring; shards, glints and instruments appear after the lines */
+.margin-art [pathLength] { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.2s var(--ease) forwards; animation-delay: calc(var(--d, 0) * 1s); }
+.margin-art .ma-fil { --d: .2; } .margin-art .ma-fil.thin { --d: .45; } .margin-art .ma-ring { --d: .6; }
+.ma-shard, .ma-glint, .ma-sigil, .ma-dial, .ma-trace { animation: ma-appear .7s var(--ease) both; animation-delay: calc(.7s + var(--i, 4) * .07s); }
+@keyframes ma-appear { from { opacity: 0; } }
+/* depth: the near layer drifts most as the page scrolls; without scroll-driven animation the shards stay put */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .ma-deep, .ma-mid, .ma-near { animation: ma-drift linear both; animation-timeline: scroll(root block); }
+    .ma-deep { --drift: -26px; } .ma-mid { --drift: -54px; } .ma-near { --drift: -92px; }
+  }
+}
+@keyframes ma-drift { to { transform: translateY(var(--drift, 0px)); } }
+
 /* the hall plan: surveyed linework. Weights are screen pixels (non-scaling): court 1.5, rotunda 1.25, rooms, walls and
    piers 1, the inner court and inner ring 1 at half strength, inlays 2. Axis-aligned lines snap to the pixel grid. */
 .plan { margin: 0; position: relative; --survey: var(--line); --beacon: var(--lantern); --glow: color-mix(in srgb, var(--lantern) 26%, transparent); --glow-blend: screen; --prism-fill: color-mix(in srgb, var(--brass) 14%, transparent); }
