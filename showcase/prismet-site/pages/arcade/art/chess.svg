@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- chess.com-green board, matching the in-app 2D chess theme -->
+  <rect width="512" height="512" fill="#EBECD0"/>
+  <rect x="256" y="0" width="256" height="256" fill="#739552"/>
+  <rect x="0" y="256" width="256" height="256" fill="#739552"/>
+  <!-- white knight (white with ink outline, like the in-app pieces) -->
+  <g transform="translate(256,290) scale(1.14) translate(-250,-290)">
+    <path d="M155 395 C158 330 175 285 210 255 C220 248 228 240 230 230 L165 235 C148 236 140 225 145 212 C150 200 160 195 172 192 C180 175 195 160 215 152 L222 128 L238 148 L252 122 L262 150 C300 165 330 200 345 250 C358 295 360 340 355 395 Z"
+          transform="translate(7,11)" fill="#17142E" opacity="0.16"/>
+    <path d="M155 395 C158 330 175 285 210 255 C220 248 228 240 230 230 L165 235 C148 236 140 225 145 212 C150 200 160 195 172 192 C180 175 195 160 215 152 L222 128 L238 148 L252 122 L262 150 C300 165 330 200 345 250 C358 295 360 340 355 395 Z"
+          fill="#F6F4EC" stroke="#17142E" stroke-width="11" stroke-linejoin="round"/>
+    <!-- mane notches -->
+    <path d="M300 190 C316 214 326 244 330 278" fill="none" stroke="#17142E" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="232" cy="192" r="9" fill="#17142E"/>
+    <path d="M158 216 C162 212 168 210 174 211" fill="none" stroke="#17142E" stroke-width="7" stroke-linecap="round"/>
+    <rect x="118" y="395" width="264" height="44" rx="14" fill="#F6F4EC" stroke="#17142E" stroke-width="11"/>
+  </g>
+</svg>

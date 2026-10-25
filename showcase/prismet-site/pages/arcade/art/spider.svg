@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- dark felt, descending spade run K-Q-J -->
+  <rect width="512" height="512" fill="#4A2B1E"/>
+  <rect x="14" y="14" width="484" height="484" fill="none" stroke="#331C12" stroke-width="16" opacity="0.6"/>
+  <!-- card run: K top, Q mid, J bottom (descending column overlap) -->
+  <g transform="translate(126,84)">
+    <!-- K -->
+    <g>
+      <rect x="0" y="0" width="220" height="308" rx="18" transform="translate(7,12)" fill="#170E08" opacity="0.4"/>
+      <rect x="0" y="0" width="220" height="308" rx="18" fill="#FDFDF8" stroke="#17142E" stroke-width="7"/>
+      <text x="20" y="66" font-family="Helvetica" font-weight="bold" font-size="64" fill="#17142E">K</text>
+      <g transform="translate(178,52) scale(0.62)">
+        <path d="M0,-30 C -26 -6, -26 16, -13 22 C -5 26, 0 20, 0 14 C 0 20, 5 26, 13 22 C 26 16, 26 -6, 0 -30 z" fill="#17142E"/>
+        <path d="M0,12 l-11 26 h22 z" fill="#17142E"/>
+      </g>
+    </g>
+    <!-- Q overlapping lower -->
+    <g transform="translate(26,92)">
+      <rect x="0" y="0" width="220" height="308" rx="18" transform="translate(7,12)" fill="#170E08" opacity="0.4"/>
+      <rect x="0" y="0" width="220" height="308" rx="18" fill="#FDFDF8" stroke="#17142E" stroke-width="7"/>
+      <text x="20" y="66" font-family="Helvetica" font-weight="bold" font-size="64" fill="#17142E">Q</text>
+      <g transform="translate(178,52) scale(0.62)">
+        <path d="M0,-30 C -26 -6, -26 16, -13 22 C -5 26, 0 20, 0 14 C 0 20, 5 26, 13 22 C 26 16, 26 -6, 0 -30 z" fill="#17142E"/>
+        <path d="M0,12 l-11 26 h22 z" fill="#17142E"/>
+      </g>
+    </g>
+    <!-- J overlapping lower, big center spade -->
+    <g transform="translate(52,184)">
+      <rect x="0" y="0" width="220" height="308" rx="18" transform="translate(7,12)" fill="#170E08" opacity="0.4"/>
+      <rect x="0" y="0" width="220" height="308" rx="18" fill="#FDFDF8" stroke="#17142E" stroke-width="7"/>
+      <text x="20" y="66" font-family="Helvetica" font-weight="bold" font-size="64" fill="#17142E">J</text>
+      <g transform="translate(110,180) scale(2.6)">
+        <path d="M0,-30 C -26 -6, -26 16, -13 22 C -5 26, 0 20, 0 14 C 0 20, 5 26, 13 22 C 26 16, 26 -6, 0 -30 z" fill="#17142E"/>
+        <path d="M0,12 l-11 26 h22 z" fill="#17142E"/>
+      </g>
+    </g>
+  </g>
+</svg>

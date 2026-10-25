@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- picross grid with clue margins; filled cells reveal a heart -->
+  <rect width="512" height="512" fill="#FBF8F1"/>
+  <!-- clue numbers -->
+  <g font-family="Helvetica" font-weight="bold" font-size="44" fill="#6B6455" text-anchor="middle">
+    <text x="40" y="150">1 1</text>
+    <text x="40" y="233">5</text>
+    <text x="40" y="316">5</text>
+    <text x="40" y="399">3</text>
+    <text x="40" y="482">1</text>
+    <text x="137" y="62">2</text>
+    <text x="220" y="62">4</text>
+    <text x="303" y="62">4</text>
+    <text x="386" y="62">4</text>
+    <text x="469" y="62">2</text>
+  </g>
+  <!-- grid -->
+  <g stroke="#C9C2B4" stroke-width="4">
+    <line x1="179" y1="96" x2="179" y2="511"/>
+    <line x1="262" y1="96" x2="262" y2="511"/>
+    <line x1="345" y1="96" x2="345" y2="511"/>
+    <line x1="428" y1="96" x2="428" y2="511"/>
+    <line x1="96" y1="179" x2="511" y2="179"/>
+    <line x1="96" y1="262" x2="511" y2="262"/>
+    <line x1="96" y1="345" x2="511" y2="345"/>
+    <line x1="96" y1="428" x2="511" y2="428"/>
+  </g>
+  <g stroke="#1E1B38" stroke-width="10" fill="none">
+    <line x1="96" y1="96" x2="96" y2="512"/>
+    <line x1="96" y1="96" x2="512" y2="96"/>
+  </g>
+  <!-- heart fill (rows top→bottom) -->
+  <g fill="#1E1B38">
+    <rect x="185" y="102" width="71" height="71" rx="8"/>
+    <rect x="351" y="102" width="71" height="71" rx="8"/>
+    <rect x="102" y="185" width="71" height="71" rx="8"/>
+    <rect x="185" y="185" width="71" height="71" rx="8"/>
+    <rect x="268" y="185" width="71" height="71" rx="8"/>
+    <rect x="351" y="185" width="71" height="71" rx="8"/>
+    <rect x="434" y="185" width="71" height="71" rx="8"/>
+    <rect x="102" y="268" width="71" height="71" rx="8"/>
+    <rect x="185" y="268" width="71" height="71" rx="8"/>
+    <rect x="268" y="268" width="71" height="71" rx="8"/>
+    <rect x="351" y="268" width="71" height="71" rx="8"/>
+    <rect x="434" y="268" width="71" height="71" rx="8"/>
+    <rect x="185" y="351" width="71" height="71" rx="8"/>
+    <rect x="268" y="351" width="71" height="71" rx="8"/>
+    <rect x="351" y="351" width="71" height="71" rx="8"/>
+    <rect x="268" y="434" width="71" height="71" rx="8"/>
+  </g>
+  <!-- an X where the solver ruled a cell out -->
+  <g stroke="#C46A5A" stroke-width="10" stroke-linecap="round">
+    <line x1="286" y1="114" x2="326" y2="154"/>
+    <line x1="326" y1="114" x2="286" y2="154"/>
+  </g>
+</svg>

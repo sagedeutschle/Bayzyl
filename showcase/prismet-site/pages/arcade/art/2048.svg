@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- the real 2048 board: authentic tile palette, 2/4/8/16 -->
+  <rect width="512" height="512" fill="#BBADA0"/>
+  <g>
+    <rect x="16" y="16" width="232" height="232" rx="14" transform="translate(0,6)" fill="#17142E" opacity="0.10"/>
+    <rect x="264" y="16" width="232" height="232" rx="14" transform="translate(0,6)" fill="#17142E" opacity="0.10"/>
+    <rect x="16" y="264" width="232" height="232" rx="14" transform="translate(0,6)" fill="#17142E" opacity="0.10"/>
+    <rect x="264" y="264" width="232" height="232" rx="14" transform="translate(0,6)" fill="#17142E" opacity="0.10"/>
+  </g>
+  <rect x="16" y="16" width="232" height="232" rx="14" fill="#EEE4DA"/>
+  <text x="132" y="182" font-family="Helvetica" font-weight="bold" font-size="150" text-anchor="middle" fill="#776E65">2</text>
+  <rect x="264" y="16" width="232" height="232" rx="14" fill="#EDE0C8"/>
+  <text x="380" y="182" font-family="Helvetica" font-weight="bold" font-size="150" text-anchor="middle" fill="#776E65">4</text>
+  <rect x="16" y="264" width="232" height="232" rx="14" fill="#F2B179"/>
+  <text x="132" y="430" font-family="Helvetica" font-weight="bold" font-size="150" text-anchor="middle" fill="#F9F6F2">8</text>
+  <rect x="264" y="264" width="232" height="232" rx="14" fill="#F59563"/>
+  <text x="380" y="424" font-family="Helvetica" font-weight="bold" font-size="132" text-anchor="middle" fill="#F9F6F2">16</text>
+</svg>

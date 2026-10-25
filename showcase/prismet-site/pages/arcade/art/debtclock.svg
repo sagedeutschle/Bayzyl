@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- market board: green line climbing -->
+  <rect width="512" height="512" fill="#0F0F13"/>
+  <rect x="12" y="12" width="488" height="488" rx="18" fill="none" stroke="#2A2A31" stroke-width="14"/>
+  <!-- faint grid -->
+  <g stroke="#1F2027" stroke-width="4">
+    <line x1="40" y1="128" x2="472" y2="128"/>
+    <line x1="40" y1="224" x2="472" y2="224"/>
+    <line x1="40" y1="320" x2="472" y2="320"/>
+    <line x1="40" y1="416" x2="472" y2="416"/>
+    <line x1="128" y1="44" x2="128" y2="452"/>
+    <line x1="256" y1="44" x2="256" y2="452"/>
+    <line x1="384" y1="44" x2="384" y2="452"/>
+  </g>
+  <!-- area under the climb -->
+  <path d="M48 424 L148 344 L212 376 L308 244 L356 276 L436 128 L436 452 L48 452 Z" fill="#34C759" opacity="0.16"/>
+  <!-- the line -->
+  <path d="M48 424 L148 344 L212 376 L308 244 L356 276 L436 128" fill="none" stroke="#34C759" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- node dots at the pivots -->
+  <g fill="#0F0F13" stroke="#34C759" stroke-width="10">
+    <circle cx="148" cy="344" r="13"/>
+    <circle cx="212" cy="376" r="13"/>
+    <circle cx="308" cy="244" r="13"/>
+    <circle cx="356" cy="276" r="13"/>
+  </g>
+  <!-- glow + arrowhead at the tip -->
+  <circle cx="436" cy="128" r="34" fill="#34C759" opacity="0.22"/>
+  <path d="M436 92 L470 148 L402 148 Z" fill="#34C759"/>
+</svg>

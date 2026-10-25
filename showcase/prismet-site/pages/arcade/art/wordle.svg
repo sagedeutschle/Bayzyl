@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- daily word grid mid-guess -->
+  <rect width="512" height="512" fill="#121213"/>
+  <g font-family="Helvetica" font-weight="bold" font-size="68" text-anchor="middle" fill="#FFFFFF">
+    <!-- guessed row -->
+    <rect x="16" y="64" width="88" height="88" rx="8" fill="#538D4E"/>
+    <text x="60" y="131">C</text>
+    <rect x="114" y="64" width="88" height="88" rx="8" fill="#3A3A3C"/>
+    <text x="158" y="131">R</text>
+    <rect x="212" y="64" width="88" height="88" rx="8" fill="#B59F3B"/>
+    <text x="256" y="131">A</text>
+    <rect x="310" y="64" width="88" height="88" rx="8" fill="#3A3A3C"/>
+    <text x="354" y="131">N</text>
+    <rect x="408" y="64" width="88" height="88" rx="8" fill="#538D4E"/>
+    <text x="452" y="131">E</text>
+    <!-- current row: two letters typed -->
+    <rect x="16" y="180" width="88" height="88" rx="8" fill="none" stroke="#565758" stroke-width="6"/>
+    <text x="60" y="247">M</text>
+    <rect x="114" y="180" width="88" height="88" rx="8" fill="none" stroke="#565758" stroke-width="6"/>
+    <text x="158" y="247">E</text>
+    <rect x="212" y="180" width="88" height="88" rx="8" fill="none" stroke="#565758" stroke-width="6"/>
+    <text x="256" y="247">O</text>
+    <rect x="310" y="180" width="88" height="88" rx="8" fill="none" stroke="#565758" stroke-width="6"/>
+    <text x="354" y="247">W</text>
+    <rect x="408" y="180" width="88" height="88" rx="8" fill="none" stroke="#3A3A3C" stroke-width="6"/>
+  </g>
+  <!-- keyboard hint at the bottom -->
+  <g fill="#818384">
+    <rect x="46" y="360" width="60" height="76" rx="8"/>
+    <rect x="116" y="360" width="60" height="76" rx="8"/>
+    <rect x="186" y="360" width="60" height="76" rx="8" fill="#538D4E"/>
+    <rect x="256" y="360" width="60" height="76" rx="8"/>
+    <rect x="326" y="360" width="60" height="76" rx="8"/>
+    <rect x="396" y="360" width="60" height="76" rx="8" fill="#B59F3B"/>
+    <rect x="80" y="446" width="60" height="66" rx="8"/>
+    <rect x="150" y="446" width="60" height="66" rx="8"/>
+    <rect x="220" y="446" width="60" height="66" rx="8"/>
+    <rect x="290" y="446" width="60" height="66" rx="8"/>
+    <rect x="360" y="446" width="60" height="66" rx="8"/>
+  </g>
+</svg>

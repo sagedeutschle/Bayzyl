@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- newspaper sudoku corner: printed digits, one fresh blue entry, pencil marks -->
+  <rect width="512" height="512" fill="#FBF8F1"/>
+  <rect x="128" y="128" width="128" height="128" fill="#DCE9FB"/>
+  <g stroke="#C9C2B4" stroke-width="4">
+    <line x1="128" y1="0" x2="128" y2="512"/>
+    <line x1="256" y1="0" x2="256" y2="512"/>
+    <line x1="0" y1="128" x2="512" y2="128"/>
+    <line x1="0" y1="256" x2="512" y2="256"/>
+  </g>
+  <g stroke="#1E1B38" stroke-width="12">
+    <line x1="384" y1="0" x2="384" y2="512"/>
+    <line x1="0" y1="384" x2="512" y2="384"/>
+    <line x1="6" y1="0" x2="6" y2="512"/>
+    <line x1="0" y1="6" x2="512" y2="6"/>
+  </g>
+  <g font-family="Helvetica" font-weight="bold" text-anchor="middle">
+    <text x="64" y="100" font-size="96" fill="#3A3630">5</text>
+    <text x="320" y="100" font-size="96" fill="#3A3630">3</text>
+    <text x="192" y="228" font-size="96" fill="#2E6FD8">4</text>
+    <text x="64" y="356" font-size="96" fill="#3A3630">9</text>
+    <text x="320" y="356" font-size="96" fill="#3A3630">7</text>
+    <text x="448" y="228" font-size="96" fill="#3A3630">1</text>
+    <text x="192" y="470" font-size="96" fill="#3A3630">6</text>
+  </g>
+  <!-- pencil marks in an empty cell -->
+  <g font-family="Helvetica" font-size="38" fill="#9A917E" text-anchor="middle">
+    <text x="166" y="52">1</text>
+    <text x="218" y="52">2</text>
+    <text x="166" y="104">8</text>
+  </g>
+</svg>

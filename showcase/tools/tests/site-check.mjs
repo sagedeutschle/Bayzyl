@@ -19,12 +19,17 @@ const CHROMIUM = process.env.CHROMIUM || '/opt/pw-browsers/chromium-1194/chrome-
 const DIST = process.argv[2] || join(dirname(fileURLToPath(import.meta.url)), '../../prismet-site/dist');
 const CSP = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.steampowered.com https://store.steampowered.com https://api.fiscaldata.treasury.gov https://api.usaspending.gov; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'";
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
-const PAGES = ['index.html', 'work/bayzyl.html', 'work/prismet-app.html', 'work/the-helm.html', 'bayzyl.html'];
+const PAGES = ['index.html', 'work/bayzyl.html', 'work/prismet-app.html', 'work/the-helm.html', 'bayzyl.html', 'arcade', 'arcade/rubiks-cube', 'arcade/2048', 'arcade/chess', 'arcade/solitaire'];
 const SIZES = [[1440, 900, 1], [390, 844, 3], [375, 812, 3]];
 
 const server = createServer(async (req, res) => {
   let p = decodeURIComponent(new URL(req.url, 'http://x').pathname);
   if (p === '/') p = '/index.html';
+  // The live server's Arcade routes: /arcade is the library, /arcade/<game> the shared game shell, and the cloud
+  // configuration answers "not enabled" so a game page loads without a network error.
+  if (p === '/arcade' || p === '/arcade/') p = '/arcade.html';
+  else if (/^\/arcade\/[a-z0-9-]+\/?$/.test(p) && !extname(p)) p = '/arcade/game.html';
+  if (p === '/api/arcade/config') return res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store' }).end('{"syncAvailable":false,"appStoreUrl":"https://apps.apple.com/us/app/kaleidescope/id6785993194"}');
   try {
     const body = await readFile(join(DIST, normalize(p).replace(/^(\.\.[/\\])+/, '')));
     res.writeHead(200, { 'content-type': TYPES[extname(p)] || 'application/octet-stream', 'content-security-policy': CSP }).end(body);
@@ -149,6 +154,52 @@ for (const [w, h, dpr] of SIZES) {
       await fallbackLink.click();
       check(`Build Big @${w}: full images remain accessible without JavaScript`, plain.url() === imageURL);
       await fallback.close();
+    }
+    if (url === 'arcade') {
+      // Tiles are lazy images; "no broken image" above covers the ones that loaded, this covers presence.
+      const cards = () => page.evaluate(() => ({ all: document.querySelectorAll('#facet-library .facet-card').length, favorites: document.querySelectorAll('#category-favorites .facet-card').length, shown: document.querySelectorAll('#category-favorites:not([hidden]) .facet-card').length, art: [...document.querySelectorAll('#facet-library .facet-art img')].filter((i) => /\/arcade\/art\/[a-z0-9]+\.svg$/.test(i.getAttribute('src'))).length }));
+      let c = await cards();
+      check(`arcade @${w}: every facet has a card with its tile art`, c.all === 23 && c.favorites === 0 && c.art === 23, `${c.all} cards, ${c.art} tiles`);
+      await page.click('[data-favorite="rubiks-cube"]');
+      c = await cards();
+      check(`arcade @${w}: a star puts the game under Your favorites`, c.shown === 1 && await page.evaluate(() => document.querySelector('[data-favorite="rubiks-cube"]').getAttribute('aria-pressed') === 'true'), `${c.shown} shown`);
+      await page.click('#category-favorites [data-favorite="rubiks-cube"]');
+      c = await cards();
+      check(`arcade @${w}: the star removes it again`, c.shown === 0 && c.favorites === 0);
+      await page.fill('#facet-search', 'cube');
+      const filtered = await page.evaluate(() => ({ visible: [...document.querySelectorAll('#facet-library .facet-card')].filter((n) => !n.hidden).map((n) => n.dataset.card), count: document.getElementById('facet-count').textContent }));
+      check(`arcade @${w}: search narrows the library`, filtered.visible.join() === 'rubiks-cube' && filtered.count === '1 of 23 in the collection', `${filtered.visible.join()} "${filtered.count}"`);
+      await page.click('#facet-clear');
+      check(`arcade @${w}: Clear restores the library`, (await cards()).all === 23 && await page.evaluate(() => document.getElementById('facet-search').value === '' && document.getElementById('facet-clear').hidden));
+    }
+    if (url === 'arcade/rubiks-cube') {
+      const scene = () => page.evaluate(() => ({ cubies: document.querySelectorAll('.cube .cubie, .cube-pivot .cubie').length, stickers: document.querySelectorAll('.cube-face.sticker').length, pivots: document.querySelectorAll('.cube-pivot').length, net: document.querySelectorAll('.cube-net .engine-cell').length, moves: document.getElementById('moves').textContent, art: document.getElementById('game-art')?.complete }));
+      let s = await scene();
+      check(`cube @${w}: the scene has 26 cubies, 54 stickers and the flat view`, s.cubies === 26 && s.stickers === 54 && s.net === 54 && s.pivots === 0 && s.art === true, JSON.stringify(s));
+      await page.focus('#board');
+      await page.keyboard.press('r');
+      await page.waitForTimeout(500);
+      s = await scene();
+      check(`cube @${w}: a letter key turns a layer and the pivot settles`, s.moves === '1' && s.cubies === 26 && s.pivots === 0, JSON.stringify(s));
+      await page.click('#engine-controls .btn:last-child');
+      await page.waitForTimeout(500);
+      s = await scene();
+      check(`cube @${w}: Undo turn plays back and settles`, s.moves === '2' && s.pivots === 0 && s.cubies === 26, JSON.stringify(s));
+      const keypad = await page.evaluate(() => document.querySelectorAll('#engine-controls .btn').length);
+      check(`cube @${w}: eighteen face moves and Undo on the keypad`, keypad === 19, `${keypad}`);
+    }
+    if (url === 'arcade/2048') {
+      const board = () => page.evaluate(() => ({ tiles: document.querySelectorAll('#board .tile').length, filled: [...document.querySelectorAll('#board .tile')].filter((t) => t.dataset.value !== '0').length, moves: document.getElementById('moves').textContent }));
+      const start = await board();
+      await page.focus('#board');
+      for (const key of ['ArrowLeft', 'ArrowDown', 'ArrowRight', 'ArrowUp']) await page.keyboard.press(key);
+      await page.waitForTimeout(400);
+      const after = await board();
+      check(`2048 @${w}: arrow keys move the board and spawn tiles`, start.tiles === 16 && after.tiles === 16 && Number(after.moves) >= 1 && after.filled > start.filled, JSON.stringify({ start, after }));
+    }
+    if (url === 'arcade/chess') {
+      const squares = await page.evaluate(() => ({ cells: document.querySelectorAll('#board .engine-cell').length, keyed: document.querySelectorAll('#board [data-key]').length }));
+      check(`chess @${w}: 64 squares, 32 keyed pieces`, squares.cells === 64 && squares.keyed === 32, JSON.stringify(squares));
     }
     await page.close();
   }

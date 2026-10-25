@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- classic red & black checkers: glossy RED man vs BLACK king on a red/black board -->
+  <rect width="512" height="512" fill="#BE3A2B"/>
+  <rect x="256" y="0" width="256" height="256" fill="#241F1D"/>
+  <rect x="0" y="256" width="256" height="256" fill="#241F1D"/>
+
+  <!-- RED man, bottom-left dark square -->
+  <g>
+    <ellipse cx="134" cy="416" rx="98" ry="30" fill="#000000" opacity="0.30"/>
+    <path d="M36 398 A92 34 0 0 0 220 398 L220 366 A92 34 0 0 0 36 366 Z" fill="#8E241A" stroke="#17142E" stroke-width="9"/>
+    <ellipse cx="128" cy="366" rx="92" ry="34" fill="#D63B2D" stroke="#17142E" stroke-width="9"/>
+    <ellipse cx="128" cy="366" rx="64" ry="23" fill="none" stroke="#F0715F" stroke-width="7"/>
+    <ellipse cx="128" cy="366" rx="38" ry="13" fill="none" stroke="#F0715F" stroke-width="6"/>
+    <ellipse cx="104" cy="356" rx="30" ry="10" fill="#FFFFFF" opacity="0.24"/>
+  </g>
+
+  <!-- BLACK king (two stacked discs + gold crown), top-right dark square -->
+  <g>
+    <ellipse cx="390" cy="188" rx="98" ry="30" fill="#000000" opacity="0.34"/>
+    <path d="M292 172 A92 34 0 0 0 476 172 L476 140 A92 34 0 0 0 292 140 Z" fill="#1C1817" stroke="#17142E" stroke-width="9"/>
+    <ellipse cx="384" cy="140" rx="92" ry="34" fill="#2E2926" stroke="#17142E" stroke-width="9"/>
+    <path d="M292 140 A92 34 0 0 0 476 140 L476 108 A92 34 0 0 0 292 108 Z" fill="#26211F" stroke="#17142E" stroke-width="9"/>
+    <ellipse cx="384" cy="108" rx="92" ry="34" fill="#332D2A" stroke="#17142E" stroke-width="9"/>
+    <ellipse cx="384" cy="108" rx="62" ry="22" fill="none" stroke="#57504C" stroke-width="7"/>
+    <g transform="translate(384,108) scale(1,0.5)">
+      <path d="M-40 16 L-40 -22 L-20 -4 L0 -30 L20 -4 L40 -22 L40 16 Z" fill="#E6B84A" stroke="#8A681F" stroke-width="6" stroke-linejoin="round"/>
+    </g>
+    <ellipse cx="360" cy="98" rx="28" ry="9" fill="#FFFFFF" opacity="0.12"/>
+  </g>
+</svg>

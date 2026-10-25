@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- bright table, the wild 8 moment: big 8 card + four suit choices -->
+  <rect width="512" height="512" fill="#2E8C74"/>
+  <rect x="14" y="14" width="484" height="484" fill="none" stroke="#20614F" stroke-width="16" opacity="0.6"/>
+  <!-- draw deck tucked behind -->
+  <g transform="translate(180,236) rotate(-12)">
+    <rect x="-110" y="-160" width="220" height="320" rx="20" transform="translate(8,12)" fill="#123028" opacity="0.35"/>
+    <rect x="-110" y="-160" width="220" height="320" rx="20" fill="#FDFDF8" stroke="#17142E" stroke-width="8"/>
+    <rect x="-90" y="-140" width="180" height="280" rx="12" fill="#994870"/>
+    <g stroke="#B86E92" stroke-width="7" fill="none">
+      <circle cx="0" cy="0" r="52"/>
+      <circle cx="0" cy="0" r="86"/>
+    </g>
+    <rect x="-90" y="-140" width="180" height="280" rx="12" fill="none" stroke="#FDFDF8" stroke-width="7"/>
+  </g>
+  <!-- the 8 card -->
+  <g transform="translate(300,262) rotate(8)">
+    <rect x="-120" y="-172" width="240" height="344" rx="20" transform="translate(9,14)" fill="#123028" opacity="0.4"/>
+    <rect x="-120" y="-172" width="240" height="344" rx="20" fill="#FDFDF8" stroke="#17142E" stroke-width="8"/>
+    <text x="-100" y="-108" font-family="Helvetica" font-weight="bold" font-size="72" fill="#994870">8</text>
+    <text x="58" y="152" font-family="Helvetica" font-weight="bold" font-size="72" fill="#994870">8</text>
+    <text x="-62" y="58" font-family="Helvetica" font-weight="bold" font-size="170" fill="#994870">8</text>
+  </g>
+  <!-- suit picker bubbles -->
+  <g>
+    <g transform="translate(96,96)">
+      <circle r="44" fill="#FDFDF8" stroke="#17142E" stroke-width="7"/>
+      <g transform="scale(0.82)">
+        <path d="M0,-30 C -26 -6, -26 16, -13 22 C -5 26, 0 20, 0 14 C 0 20, 5 26, 13 22 C 26 16, 26 -6, 0 -30 z" fill="#17142E"/>
+        <path d="M0,12 l-11 26 h22 z" fill="#17142E"/>
+      </g>
+    </g>
+    <g transform="translate(416,96)">
+      <circle r="44" fill="#FDFDF8" stroke="#17142E" stroke-width="7"/>
+      <path d="M0,30 C -26 6, -26 -16, -13 -22 C -5 -26, 0 -20, 0 -14 C 0 -20, 5 -26, 13 -22 C 26 -16, 26 6, 0 30 z" fill="#C23434"/>
+    </g>
+    <g transform="translate(96,416)">
+      <circle r="44" fill="#FDFDF8" stroke="#17142E" stroke-width="7"/>
+      <path d="M0,-28 L22,0 L0,28 L-22,0 z" fill="#C23434"/>
+    </g>
+    <g transform="translate(416,416)">
+      <circle r="44" fill="#FDFDF8" stroke="#17142E" stroke-width="7"/>
+      <g fill="#17142E">
+        <circle cx="0" cy="-14" r="13"/>
+        <circle cx="-13" cy="6" r="13"/>
+        <circle cx="13" cy="6" r="13"/>
+        <path d="M0,4 l-8 26 h16 z"/>
+      </g>
+    </g>
+  </g>
+</svg>

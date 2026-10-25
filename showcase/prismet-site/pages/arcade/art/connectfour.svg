@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- the blue rack, red vs yellow, one red disc dropping in -->
+  <rect width="512" height="512" fill="#EEF1F6"/>
+  <!-- dropping disc -->
+  <circle cx="256" cy="60" r="52" fill="#D63B2F" stroke="#17142E" stroke-width="8"/>
+  <circle cx="256" cy="60" r="30" fill="none" stroke="#A92A20" stroke-width="8"/>
+  <path d="M176 30 A96 96 0 0 1 200 6" fill="none" stroke="#B9C3D4" stroke-width="10" stroke-linecap="round"/>
+  <path d="M336 30 A96 96 0 0 0 312 6" fill="none" stroke="#B9C3D4" stroke-width="10" stroke-linecap="round"/>
+  <!-- rack -->
+  <path d="M0 168 Q0 136 32 136 L480 136 Q512 136 512 168 L512 512 L0 512 Z" fill="#1C5DBE"/>
+  <!-- holes: empty show sky through; discs sit in holes -->
+  <g>
+    <circle cx="104" cy="228" r="56" fill="#EEF1F6"/>
+    <circle cx="256" cy="228" r="56" fill="#EEF1F6"/>
+    <circle cx="408" cy="228" r="56" fill="#EEF1F6"/>
+    <circle cx="104" cy="368" r="56" fill="#EEF1F6"/>
+    <circle cx="408" cy="368" r="56" fill="#EEF1F6"/>
+    <!-- red column building -->
+    <circle cx="256" cy="368" r="56" fill="#D63B2F"/>
+    <circle cx="256" cy="368" r="32" fill="none" stroke="#A92A20" stroke-width="8"/>
+    <circle cx="104" cy="498" r="56" fill="#F2C230"/>
+    <circle cx="104" cy="498" r="32" fill="none" stroke="#C99A1D" stroke-width="8"/>
+    <circle cx="256" cy="498" r="56" fill="#D63B2F"/>
+    <circle cx="256" cy="498" r="32" fill="none" stroke="#A92A20" stroke-width="8"/>
+    <circle cx="408" cy="498" r="56" fill="#F2C230"/>
+    <circle cx="408" cy="498" r="32" fill="none" stroke="#C99A1D" stroke-width="8"/>
+  </g>
+  <!-- hole rims (punched look) -->
+  <g fill="none" stroke="#123F8F" stroke-width="7">
+    <circle cx="104" cy="228" r="56"/><circle cx="256" cy="228" r="56"/><circle cx="408" cy="228" r="56"/>
+    <circle cx="104" cy="368" r="56"/><circle cx="256" cy="368" r="56"/><circle cx="408" cy="368" r="56"/>
+    <circle cx="104" cy="498" r="56"/><circle cx="256" cy="498" r="56"/><circle cx="408" cy="498" r="56"/>
+  </g>
+</svg>

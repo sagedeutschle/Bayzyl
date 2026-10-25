@@ -64,6 +64,7 @@ jobs:
           node showcase/tools/tests/arcade-check.mjs
           node showcase/tools/tests/arcade-library-check.mjs
           node showcase/tools/tests/arcade-shell-check.mjs
+          node showcase/tools/tests/arcade-motion-check.mjs
           node showcase/tools/tests/arcade-room-lifecycle-check.mjs
           node showcase/tools/tests/arcade-api-check.mjs
           node showcase/tools/tests/board-games-check.mjs

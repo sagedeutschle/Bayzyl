@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" fill="#1C2A3A"/>
+<ellipse cx="256" cy="446" rx="190" ry="30" fill="#000000" opacity="0.35"/>
+<polygon points="256,96 400,168 400,312 256,384 112,312 112,168" fill="#C9A75A"/>
+<polygon points="256,96 400,168 256,240 112,168" fill="#83A361"/>
+<polygon points="112,168 256,240 256,384 112,312" fill="#3E6D4C"/>
+<polygon points="256,240 400,168 400,312 256,384" fill="#AB6652"/>
+<polygon points="256,180 300,202 256,224 212,202" fill="#C5A449"/>
+<polygon points="212,202 256,224 256,276 212,254" fill="#9B8038"/>
+<polygon points="256,224 300,202 300,254 256,276" fill="#7F6A2E"/>
+<polygon points="226,146 256,128 286,146 286,176 256,194 226,176" fill="#F3E2B9"/>
+<polygon points="226,146 256,164 286,146 256,128" fill="#FFF7E0"/>
+<rect x="316" y="252" width="24" height="60" fill="#F3E2B9"/>
+<polygon points="300,258 328,236 356,258" fill="#D9534F"/>
+<circle cx="172" cy="262" r="22" fill="#F3E2B9"/>
+<text x="172" y="270" text-anchor="middle" font-family="Helvetica" font-weight="bold" font-size="24" fill="#AF3434">8</text>
+</svg>

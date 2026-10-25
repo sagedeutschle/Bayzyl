@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- the classic red 15-puzzle, one tile mid-slide into the gap -->
+  <rect width="512" height="512" fill="#8E2B23"/>
+  <rect x="10" y="10" width="492" height="492" rx="18" fill="#6E1F19"/>
+  <g font-family="Helvetica" font-weight="bold" font-size="86" text-anchor="middle" fill="#FFFFFF">
+    <g>
+      <rect x="16" y="16" width="150" height="150" rx="16" fill="#D64541" stroke="#17142E" stroke-width="8"/>
+      <text x="91" y="122" fill="#FFFFFF">1</text>
+      <rect x="176" y="16" width="150" height="150" rx="16" fill="#D64541" stroke="#17142E" stroke-width="8"/>
+      <text x="251" y="122">2</text>
+      <rect x="336" y="16" width="150" height="150" rx="16" fill="#D64541" stroke="#17142E" stroke-width="8"/>
+      <text x="411" y="122">3</text>
+      <rect x="16" y="176" width="150" height="150" rx="16" fill="#D64541" stroke="#17142E" stroke-width="8"/>
+      <text x="91" y="282">4</text>
+      <rect x="176" y="176" width="150" height="150" rx="16" fill="#D64541" stroke="#17142E" stroke-width="8"/>
+      <text x="251" y="282">5</text>
+      <rect x="336" y="176" width="150" height="150" rx="16" fill="#D64541" stroke="#17142E" stroke-width="8"/>
+      <text x="411" y="282">7</text>
+      <rect x="16" y="336" width="150" height="150" rx="16" fill="#D64541" stroke="#17142E" stroke-width="8"/>
+      <text x="91" y="442">8</text>
+      <!-- tile 6 mid-slide toward the empty bottom-right slot -->
+      <rect x="256" y="336" width="150" height="150" rx="16" fill="#E4635F" stroke="#17142E" stroke-width="8"/>
+      <text x="331" y="442">6</text>
+      <g stroke="#F4B8B5" stroke-width="10" stroke-linecap="round">
+        <line x1="214" y1="384" x2="238" y2="384"/>
+        <line x1="222" y1="428" x2="242" y2="428"/>
+      </g>
+    </g>
+  </g>
+</svg>

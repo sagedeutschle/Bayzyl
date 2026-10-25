@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Othello felt with grid; black disc, white disc, one disc mid-flip -->
+  <rect width="512" height="512" fill="#0E8A4E"/>
+  <g stroke="#0B6B3C" stroke-width="10">
+    <line x1="256" y1="0" x2="256" y2="512"/>
+    <line x1="0" y1="256" x2="512" y2="256"/>
+  </g>
+  <rect x="10" y="10" width="492" height="492" fill="none" stroke="#0B6B3C" stroke-width="14"/>
+  <circle cx="256" cy="256" r="11" fill="#0B6B3C"/>
+  <!-- black disc -->
+  <ellipse cx="132" cy="150" rx="88" ry="30" fill="#000000" opacity="0.30"/>
+  <circle cx="128" cy="128" r="86" fill="#1D1A24" stroke="#17142E" stroke-width="8"/>
+  <path d="M74 92 A70 70 0 0 1 168 78" fill="none" stroke="#4C4760" stroke-width="10" stroke-linecap="round"/>
+  <!-- white disc -->
+  <ellipse cx="388" cy="406" rx="88" ry="30" fill="#000000" opacity="0.30"/>
+  <circle cx="384" cy="384" r="86" fill="#F6F3EA" stroke="#17142E" stroke-width="8"/>
+  <path d="M330 348 A70 70 0 0 1 424 334" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
+  <!-- disc mid-flip: white face tilting up, dark underside edge -->
+  <g transform="translate(384,132) rotate(-16)">
+    <ellipse cx="6" cy="26" rx="88" ry="30" fill="#000000" opacity="0.30"/>
+    <path d="M-84 6 A84 32 0 0 0 84 6 L84 -8 A84 32 0 0 0 -84 -8 Z" fill="#17141F" stroke="#17142E" stroke-width="8"/>
+    <ellipse cx="0" cy="-8" rx="84" ry="32" fill="#F6F3EA" stroke="#17142E" stroke-width="8"/>
+  </g>
+</svg>

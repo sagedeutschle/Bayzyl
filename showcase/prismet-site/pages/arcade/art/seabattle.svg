@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- bright ocean grid: chunky destroyer taking a flaming hit + a lively splash miss -->
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2F97D6"/>
+      <stop offset="1" stop-color="#125F9C"/>
+    </linearGradient>
+    <linearGradient id="hull" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7C8794"/>
+      <stop offset="1" stop-color="#4B545F"/>
+    </linearGradient>
+    <radialGradient id="boom" cx="0.42" cy="0.40" r="0.62">
+      <stop offset="0" stop-color="#FFF3CC"/>
+      <stop offset="0.45" stop-color="#FFC53D"/>
+      <stop offset="1" stop-color="#F5852A"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#sea)"/>
+
+  <!-- gentle wave crests for life -->
+  <g fill="none" stroke="#BFE3F8" stroke-width="7" stroke-linecap="round" opacity="0.26">
+    <path d="M40 96 q26 -18 52 0 t52 0"/>
+    <path d="M332 150 q26 -18 52 0 t52 0"/>
+    <path d="M60 452 q26 -18 52 0 t52 0"/>
+  </g>
+
+  <!-- grid -->
+  <g stroke="#EAF4FC" stroke-width="4" opacity="0.34">
+    <line x1="42" y1="128" x2="470" y2="128"/>
+    <line x1="42" y1="214" x2="470" y2="214"/>
+    <line x1="42" y1="300" x2="470" y2="300"/>
+    <line x1="42" y1="386" x2="470" y2="386"/>
+    <line x1="128" y1="42" x2="128" y2="470"/>
+    <line x1="214" y1="42" x2="214" y2="470"/>
+    <line x1="300" y1="42" x2="300" y2="470"/>
+    <line x1="386" y1="42" x2="386" y2="470"/>
+  </g>
+  <rect x="14" y="14" width="484" height="484" rx="14" fill="none" stroke="#0E3F63" stroke-width="14" opacity="0.55"/>
+
+  <!-- ship: 3-cell destroyer across the upper row -->
+  <g>
+    <rect x="66" y="150" width="330" height="120" rx="60" transform="translate(6,10)" fill="#0C2B47" opacity="0.40"/>
+    <rect x="60" y="144" width="330" height="120" rx="60" fill="url(#hull)" stroke="#16222E" stroke-width="8"/>
+    <rect x="116" y="172" width="218" height="64" rx="30" fill="#8A95A2" stroke="#16222E" stroke-width="6"/>
+    <circle cx="166" cy="204" r="22" fill="#4B545F" stroke="#16222E" stroke-width="6"/>
+    <circle cx="322" cy="204" r="22" fill="#4B545F" stroke="#16222E" stroke-width="6"/>
+    <rect x="232" y="116" width="16" height="56" rx="8" fill="#16222E"/>
+  </g>
+
+  <!-- flaming explosion + red hit peg on the middle hull cell -->
+  <g transform="translate(250,204)">
+    <path d="M0,-96 L22,-34 L86,-50 L40,-4 L96,32 L28,30 L38,94 L0,46 L-38,94 L-28,30 L-96,32 L-40,-4 L-86,-50 L-22,-34 Z" fill="url(#boom)" stroke="#E06B1E" stroke-width="8" stroke-linejoin="round"/>
+    <circle r="30" fill="#EC3B33" stroke="#9E1F1F" stroke-width="8"/>
+    <circle cx="-9" cy="-9" r="8" fill="#FFFFFF" opacity="0.7"/>
+  </g>
+
+  <!-- splash miss, lower-right -->
+  <g transform="translate(360,360)">
+    <circle r="40" fill="none" stroke="#EAF4FC" stroke-width="9" opacity="0.9"/>
+    <circle r="20" fill="none" stroke="#EAF4FC" stroke-width="7" opacity="0.7"/>
+    <circle r="12" fill="#EAF4FC" opacity="0.9"/>
+    <g stroke="#EAF4FC" stroke-width="8" stroke-linecap="round" opacity="0.9">
+      <line x1="0" y1="-58" x2="0" y2="-78"/>
+      <line x1="52" y1="-30" x2="66" y2="-40"/>
+      <line x1="-52" y1="-30" x2="-66" y2="-40"/>
+      <line x1="60" y1="6" x2="78" y2="6"/>
+      <line x1="-60" y1="6" x2="-78" y2="6"/>
+    </g>
+  </g>
+</svg>

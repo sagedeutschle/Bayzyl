@@ -17,8 +17,11 @@ chk /bayzyl 200; chk /bayzyl/ 200; chk /bayzyl/bayzyl.css 200; chk /bayzyl/img/h
 for game in 2048 minesweeper lights-out wordle rubiks-cube snake sudoku sliding-15 nonogram chess reversi connect-four checkers gomoku sea-battle catan solitaire spider crazy-8 brick-bench; do
   chk "/arcade/$game" 200
 done
-for module in boot app-shell catalog extended browser-saves controller-policy import-backup engines saves arcade cloud room room-protocol; do
+for module in boot app-shell catalog extended browser-saves controller-policy import-backup engines saves arcade cloud room room-protocol motion cube-math cube3d; do
   chk "/arcade/$module.js" 200
+done
+for art in rubiks 2048 catan unclescam wordle; do
+  chk "/arcade/art/$art.svg" 200
 done
 for module in wordle rubiks-cube snake sudoku sliding-15 nonogram chess reversi connect-four checkers gomoku sea-battle catan solitaire spider crazy-8 brick-bench puzzle-common puzzle-data catan-board; do
   chk "/arcade/games/$module.js" 200

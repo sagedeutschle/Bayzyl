@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- handheld light panel: the toggle cross glows lit -->
+  <defs>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#FFD54F" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#FFD54F" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="#221E48"/>
+  <rect x="12" y="12" width="488" height="488" rx="26" fill="none" stroke="#332E60" stroke-width="16"/>
+  <!-- glow halos behind the lit cross -->
+  <circle cx="256" cy="256" r="150" fill="url(#glow)"/>
+  <circle cx="256" cy="96" r="110" fill="url(#glow)"/>
+  <circle cx="256" cy="416" r="110" fill="url(#glow)"/>
+  <circle cx="96" cy="256" r="110" fill="url(#glow)"/>
+  <circle cx="416" cy="256" r="110" fill="url(#glow)"/>
+  <g>
+    <!-- row 1 -->
+    <rect x="36" y="36" width="120" height="120" rx="20" fill="#3A356B" stroke="#17142E" stroke-width="8"/>
+    <rect x="196" y="36" width="120" height="120" rx="20" fill="#FFD54F" stroke="#17142E" stroke-width="8"/>
+    <rect x="356" y="36" width="120" height="120" rx="20" fill="#3A356B" stroke="#17142E" stroke-width="8"/>
+    <!-- row 2 -->
+    <rect x="36" y="196" width="120" height="120" rx="20" fill="#FFD54F" stroke="#17142E" stroke-width="8"/>
+    <rect x="196" y="196" width="120" height="120" rx="20" fill="#FFE58A" stroke="#17142E" stroke-width="8"/>
+    <rect x="356" y="196" width="120" height="120" rx="20" fill="#FFD54F" stroke="#17142E" stroke-width="8"/>
+    <!-- row 3 -->
+    <rect x="36" y="356" width="120" height="120" rx="20" fill="#3A356B" stroke="#17142E" stroke-width="8"/>
+    <rect x="196" y="356" width="120" height="120" rx="20" fill="#FFD54F" stroke="#17142E" stroke-width="8"/>
+    <rect x="356" y="356" width="120" height="120" rx="20" fill="#3A356B" stroke="#17142E" stroke-width="8"/>
+  </g>
+  <!-- unlit buttons get a faint inner face -->
+  <g fill="#332E60">
+    <rect x="52" y="52" width="88" height="88" rx="14"/>
+    <rect x="372" y="52" width="88" height="88" rx="14"/>
+    <rect x="52" y="372" width="88" height="88" rx="14"/>
+    <rect x="372" y="372" width="88" height="88" rx="14"/>
+  </g>
+</svg>

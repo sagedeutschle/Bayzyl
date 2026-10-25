@@ -1,5 +1,7 @@
 import { preserveImport } from './import-backup.js';
-import { refreshAppSelection } from './app-shell.js';
+import { refreshAppSelection, showGameArt } from './app-shell.js';
+import { byID } from './catalog.js';
+import { slides2048, spawnIndex, cascadeDelays, flyFrom, pop, reduced } from './motion.js';
 import { mountRoom } from './room.js';
 import { mountCloud } from './cloud.js';
 import { engines, IDS, adjacent, dailySeed } from './engines.js';
@@ -43,7 +45,7 @@ function recordCompletion() {
   completionRecorded = true; updateStreak();
 }
 function heading() {
-  refreshAppSelection(gameID);
+  refreshAppSelection(gameID); showGameArt(byID[gameID]);
   const info = descriptions[gameID]; document.title = `${info.title} · Prismet Arcade`;
   $('game-title').textContent = info.title; $('guide-title').textContent = info.guide; $('instructions').textContent = info.instructions; $('input-hint').textContent = info.input; $('engine-note').textContent = info.note;
   $('game-kicker').textContent = save.mode === 'daily' ? 'The daily board · UTC' : save.mode === 'challenge' ? 'A shared challenge' : 'Prismet Arcade · free play';
@@ -64,8 +66,8 @@ function render(focus = false) {
   const activeIndex = Number(document.activeElement?.dataset?.index); if (Number.isInteger(activeIndex)) focusedCell = activeIndex;
   const fragment = document.createDocumentFragment();
   if (gameID === '2048') {
-    state.grid.forEach((value, i) => { const tile = document.createElement('span'); tile.className = `tile${value >= 128 ? ' high' : ''}`; tile.dataset.value = value; tile.textContent = value || ''; tile.setAttribute('aria-label', `Row ${Math.floor(i / 4) + 1}, column ${i % 4 + 1}: ${value || 'empty'}`); fragment.append(tile); });
-    $('score').textContent = state.score.toLocaleString();
+    state.grid.forEach((value, i) => { const tile = document.createElement('span'); tile.className = `tile${value >= 128 ? ' high' : ''}`; tile.dataset.value = value; tile.dataset.index = i; tile.textContent = value || ''; tile.setAttribute('aria-label', `Row ${Math.floor(i / 4) + 1}, column ${i % 4 + 1}: ${value || 'empty'}`); fragment.append(tile); });
+    const score = state.score.toLocaleString(); if ($('score').textContent !== score) { $('score').textContent = score; if (save.moves) pop($('score'), { from: 1.1, duration: 260 }); }
   } else {
     const size = gameID === 'minesweeper' ? state.width * state.height : 25, width = gameID === 'minesweeper' ? state.width : 5;
     if (gameID === 'minesweeper') { board.style.gridTemplateColumns = `repeat(${width},minmax(44px,1fr))`; board.style.setProperty('--mine-width', `${width * 44 + (width - 1) * 3}px`); } else { board.style.removeProperty('grid-template-columns'); board.style.removeProperty('--mine-width'); }
@@ -88,10 +90,43 @@ function act(action) {
   if (save.moves >= Number.MAX_SAFE_INTEGER) { updateNotice('This save has reached the move limit. Start a new board.'); return; }
   if (localBeforeRoom) { window.dispatchEvent(new CustomEvent('prismet:room-action', { detail: action })); return; }
   if (currentStatus() !== 'playing' && gameID !== '2048') return;
-  elapsed(); const next = engines[gameID].apply(save.state, action); if (next === save.state) return;
+  elapsed(); const before = save.state, next = engines[gameID].apply(save.state, action); if (next === save.state) return;
   if (gameID !== 'minesweeper') { undo.push({ state: structuredClone(save.state), moves: save.moves }); if (undo.length > 64) undo.shift(); }
   save.state = next; save.moves++; persist(); recordCompletion(); render(document.activeElement?.closest('#board') !== null); updateNotice();
+  playMotion(before, next, action);
   window.dispatchEvent(new CustomEvent('prismet:arcade-save', { detail: structuredClone(save) }));
+}
+// Motion answers the move just made: 2048 tiles slide their real paths before merges and spawns pop; Minesweeper
+// reveals cascade out from the pressed square; Lights Out flips the five lights. A win paints one sweep across the board.
+let previousStatus = 'playing';
+function playMotion(before, after, action) {
+  const board = $('board'), status = currentStatus();
+  if (!reduced()) {
+    if (gameID === '2048' && action.direction) {
+      const result = slides2048(before.grid, action.direction, before.size), tiles = [...board.children], rect = (i) => tiles[i].getBoundingClientRect();
+      const arrivals = new Map(), counts = new Map();
+      for (const move of result.moves) {
+        counts.set(move.to, (counts.get(move.to) || 0) + 1);
+        if (move.from === move.to) continue;
+        const distance = Math.abs(move.from - move.to);
+        if (!arrivals.has(move.to) || distance > arrivals.get(move.to).distance) arrivals.set(move.to, { from: move.from, distance });
+      }
+      for (const [to, { from }] of arrivals) flyFrom(tiles[to], rect(from), rect(to), 120);
+      for (const [to, n] of counts) if (n > 1) tiles[to].classList.add('merged');
+      const spawned = spawnIndex(result.grid, after.grid); if (spawned >= 0) tiles[spawned].classList.add('spawn');
+    } else if (gameID === 'minesweeper' && action.type === 'reveal') {
+      const was = new Set(before.revealed), fresh = after.revealed.filter((i) => !was.has(i));
+      for (const [i, delay] of cascadeDelays(fresh, action.index, after.width)) { const cell = board.querySelector(`[data-index="${i}"]`); if (cell) { cell.classList.add('revealing'); cell.style.setProperty('--delay', `${delay}ms`); } }
+      if (status === 'lost') { let n = 0; for (const i of after.mines) { const cell = board.querySelector(`[data-index="${i}"]`); if (cell && i !== action.index) { cell.classList.add('revealing'); cell.style.setProperty('--delay', `${140 + 40 * n++}ms`); } } }
+    } else if (gameID === 'lights-out' && action.type === 'press') {
+      const row = Math.floor(action.index / 5), col = action.index % 5;
+      for (const [r, c] of [[row, col], [row - 1, col], [row + 1, col], [row, col - 1], [row, col + 1]]) if (r >= 0 && r < 5 && c >= 0 && c < 5) board.querySelector(`[data-index="${r * 5 + c}"]`)?.classList.add('flip');
+    }
+  }
+  board.classList.toggle('won', status === 'won');
+  board.classList.toggle('boom', status === 'lost' && gameID === 'minesweeper');
+  if (status === 'won' && previousStatus !== 'won') { board.classList.add('celebrate'); setTimeout(() => board.classList.remove('celebrate'), 1700); }
+  previousStatus = status;
 }
 $('board').addEventListener('click', (event) => { const cell = event.target.closest('[data-index]'); if (!cell) return; focusedCell = Number(cell.dataset.index); act({ type: gameID === 'lights-out' ? 'press' : flagMode ? 'flag' : 'reveal', index: focusedCell }); });
 $('board').addEventListener('contextmenu', (event) => { if (gameID !== 'minesweeper') return; const cell = event.target.closest('[data-index]'); if (!cell) return; event.preventDefault(); focusedCell = Number(cell.dataset.index); act({ type: 'flag', index: focusedCell }); });

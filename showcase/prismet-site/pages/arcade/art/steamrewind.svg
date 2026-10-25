@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Steam Rewind: navy field, chunky gamepad, rewind scrubber, floating stat bars -->
+  <defs>
+    <radialGradient id="glow" cx="0.5" cy="0.42" r="0.72">
+      <stop offset="0" stop-color="#3a648e" stop-opacity="0.55"/>
+      <stop offset="0.55" stop-color="#22364a" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#151e29" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="pad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4b5a70"/>
+      <stop offset="1" stop-color="#27303d"/>
+    </linearGradient>
+  </defs>
+
+  <!-- deep Steam-navy field with radial glow -->
+  <rect width="512" height="512" fill="#151e29"/>
+  <rect width="512" height="512" fill="url(#glow)"/>
+  <rect x="12" y="12" width="488" height="488" rx="18" fill="none" stroke="#2b3b4d" stroke-width="12" opacity="0.5"/>
+
+  <!-- floating stat-bar slivers: ranked-list hints -->
+  <g>
+    <rect x="54" y="58" width="150" height="18" rx="9" fill="#ffc82c"/>
+    <rect x="54" y="86" width="104" height="18" rx="9" fill="#a1cd44"/>
+    <rect x="54" y="114" width="72" height="18" rx="9" fill="#d69a26" opacity="0.9"/>
+    <rect x="338" y="64" width="120" height="18" rx="9" fill="#a1cd44"/>
+    <rect x="374" y="92" width="84" height="18" rx="9" fill="#ffc82c" opacity="0.95"/>
+  </g>
+
+  <!-- chunky controller, center stage -->
+  <path d="M172 152 L340 152 C374 152 396 164 408 188 L458 302 C470 330 462 352 434 358 C410 363 390 354 376 330 L344 276 C338 266 330 262 318 262 L194 262 C182 262 174 266 168 276 L136 330 C122 354 102 363 78 358 C50 352 42 330 54 302 L104 188 C116 164 138 152 172 152 Z"
+        transform="translate(6,10)" fill="#0a1017" opacity="0.45"/>
+  <path d="M172 152 L340 152 C374 152 396 164 408 188 L458 302 C470 330 462 352 434 358 C410 363 390 354 376 330 L344 276 C338 266 330 262 318 262 L194 262 C182 262 174 266 168 276 L136 330 C122 354 102 363 78 358 C50 352 42 330 54 302 L104 188 C116 164 138 152 172 152 Z"
+        fill="url(#pad)" stroke="#0d1218" stroke-width="8"/>
+  <!-- d-pad -->
+  <g fill="#10161e">
+    <rect x="118" y="194" width="84" height="34" rx="9"/>
+    <rect x="143" y="169" width="34" height="84" rx="9"/>
+  </g>
+  <!-- face buttons, Steam-blue diamond -->
+  <g stroke="#0d1218" stroke-width="5">
+    <circle cx="352" cy="180" r="16" fill="#eaf4fc"/>
+    <circle cx="321" cy="211" r="16" fill="#2e6a99"/>
+    <circle cx="383" cy="211" r="16" fill="#66c0f4"/>
+    <circle cx="352" cy="242" r="16" fill="#4a90c9"/>
+  </g>
+  <!-- menu dots -->
+  <circle cx="238" cy="192" r="7" fill="#131a23"/>
+  <circle cx="274" cy="192" r="7" fill="#131a23"/>
+
+  <!-- media scrubber track with elapsed segment -->
+  <rect x="76" y="396" width="360" height="20" rx="10" fill="#0d141d" stroke="#2f4256" stroke-width="5"/>
+  <rect x="76" y="396" width="110" height="20" rx="10" fill="#66c0f4"/>
+
+  <!-- rewind glyphs riding the scrubber -->
+  <circle cx="256" cy="406" r="86" fill="#66c0f4" opacity="0.14"/>
+  <g stroke-width="12" stroke-linejoin="round">
+    <path d="M247 362 L181 406 L247 450 Z" fill="#eaf4fc" stroke="#eaf4fc"/>
+    <path d="M331 362 L265 406 L331 450 Z" fill="#66c0f4" stroke="#66c0f4"/>
+  </g>
+</svg>

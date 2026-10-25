@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" fill="#2B1D1C"/>
+<ellipse cx="256" cy="452" rx="170" ry="26" fill="#000000" opacity="0.35"/>
+<rect x="128" y="96" width="256" height="340" rx="10" fill="#F3EAD6"/>
+<polygon points="128,436 160,412 192,436 224,412 256,436 288,412 320,436 352,412 384,436 384,452 128,452" fill="#F3EAD6"/>
+<rect x="160" y="132" width="192" height="14" rx="4" fill="#B3261F"/>
+<rect x="160" y="170" width="120" height="10" rx="3" fill="#8C8276"/>
+<rect x="304" y="170" width="48" height="10" rx="3" fill="#2B1D1C"/>
+<rect x="160" y="200" width="96" height="10" rx="3" fill="#8C8276"/>
+<rect x="296" y="200" width="56" height="10" rx="3" fill="#2B1D1C"/>
+<rect x="160" y="230" width="136" height="10" rx="3" fill="#8C8276"/>
+<rect x="312" y="230" width="40" height="10" rx="3" fill="#2B1D1C"/>
+<rect x="160" y="260" width="88" height="10" rx="3" fill="#8C8276"/>
+<rect x="288" y="260" width="64" height="10" rx="3" fill="#2B1D1C"/>
+<rect x="160" y="298" width="192" height="4" fill="#B3261F"/>
+<rect x="160" y="318" width="80" height="14" rx="3" fill="#2B1D1C"/>
+<rect x="272" y="318" width="80" height="14" rx="3" fill="#B3261F"/>
+<circle cx="340" cy="382" r="34" fill="#B3261F" opacity="0.9"/>
+<text x="340" y="394" text-anchor="middle" font-family="Helvetica" font-weight="bold" font-size="36" fill="#F3EAD6">$</text>
+</svg>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- checkered garden, blue snake closing in on the apple -->
+  <rect width="512" height="512" fill="#AAD751"/>
+  <g fill="#A2D149">
+    <rect x="64" y="0" width="64" height="64"/><rect x="192" y="0" width="64" height="64"/><rect x="320" y="0" width="64" height="64"/><rect x="448" y="0" width="64" height="64"/>
+    <rect x="0" y="64" width="64" height="64"/><rect x="128" y="64" width="64" height="64"/><rect x="256" y="64" width="64" height="64"/><rect x="384" y="64" width="64" height="64"/>
+    <rect x="64" y="128" width="64" height="64"/><rect x="192" y="128" width="64" height="64"/><rect x="320" y="128" width="64" height="64"/><rect x="448" y="128" width="64" height="64"/>
+    <rect x="0" y="192" width="64" height="64"/><rect x="128" y="192" width="64" height="64"/><rect x="256" y="192" width="64" height="64"/><rect x="384" y="192" width="64" height="64"/>
+    <rect x="64" y="256" width="64" height="64"/><rect x="192" y="256" width="64" height="64"/><rect x="320" y="256" width="64" height="64"/><rect x="448" y="256" width="64" height="64"/>
+    <rect x="0" y="320" width="64" height="64"/><rect x="128" y="320" width="64" height="64"/><rect x="256" y="320" width="64" height="64"/><rect x="384" y="320" width="64" height="64"/>
+    <rect x="64" y="384" width="64" height="64"/><rect x="192" y="384" width="64" height="64"/><rect x="320" y="384" width="64" height="64"/><rect x="448" y="384" width="64" height="64"/>
+    <rect x="0" y="448" width="64" height="64"/><rect x="128" y="448" width="64" height="64"/><rect x="256" y="448" width="64" height="64"/><rect x="384" y="448" width="64" height="64"/>
+  </g>
+  <!-- apple -->
+  <circle cx="416" cy="102" r="36" fill="#E7471D"/>
+  <path d="M414 66 C412 50 420 40 434 36" fill="none" stroke="#5B3A21" stroke-width="10" stroke-linecap="round"/>
+  <path d="M434 44 C452 38 464 44 468 58 C454 66 440 62 434 44 Z" fill="#3F9B2F"/>
+  <!-- snake -->
+  <path d="M64 480 L288 480 Q352 480 352 416 L352 320 Q352 256 416 256 L416 232"
+        fill="none" stroke="#3D63C9" stroke-width="62" stroke-linecap="round" stroke-linejoin="round" opacity="0.35" transform="translate(6,10)"/>
+  <path d="M64 480 L288 480 Q352 480 352 416 L352 320 Q352 256 416 256 L416 232"
+        fill="none" stroke="#4674E9" stroke-width="62" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="416" cy="220" r="40" fill="#4674E9"/>
+  <!-- eyes looking at the apple -->
+  <circle cx="400" cy="204" r="13" fill="#FFFFFF"/>
+  <circle cx="432" cy="204" r="13" fill="#FFFFFF"/>
+  <circle cx="401" cy="199" r="6" fill="#17142E"/>
+  <circle cx="433" cy="199" r="6" fill="#17142E"/>
+  <!-- tongue -->
+  <path d="M416 180 L416 162 M416 162 L408 152 M416 162 L424 152" fill="none" stroke="#E7471D" stroke-width="8" stroke-linecap="round"/>
+</svg>

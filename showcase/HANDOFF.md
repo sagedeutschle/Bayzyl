@@ -1,5 +1,72 @@
 # prismet.xyz — handoff (2026-10-03)
 
+## Arcade overhaul: motion for every game, a 3D Rubik's Cube, the library in the app's voice — 2026-10-24
+
+Sage asked for an update to the Arcade: every game overhauled with animations, a 3D version of the Rubik's Cube,
+"as pretty as the app version of Prismet Arcade", and pushed live when done. Everything stays inside
+`pages/arcade.html`, `pages/arcade/` and the checks; no engine rule, save format, route, API, editor or `site.css`
+change. Spec: `~/Desktop/GtrktscrB/docs/superpowers/specs/2026-10-24-prismet-arcade-overhaul-design.md` (Sage's Mac).
+
+**Library (`/arcade`).** The iOS Home's structure with the site's tokens: the lens iris (the app's six-hue wheel,
+`.iris`, turning once a minute) beside "Prismet · turn the lens."; the search field with a Clear button; an
+"On the cabinet" strip (`#cabinet`) that offers the three most recent local saves with moves to resume (portable
+saves only while still in play, `resumeItems` in `app-shell.js`); favorites with a star on every card, kept in
+`localStorage` under `prismet.arcade.favorites.v1` and shown under "Your favorites"; categories as the app names
+them. Cards are shaped like the app's tiles: the art on top, title, one-line subtitle, 18px corners, a keyline in the
+game's accent, no drop shadows; they rise in once, staggered. Wording is unchanged.
+
+**Tile art.** The app's own SVG tiles (`ios/IconSources/game-tiles` in the app repo) replace the 128px WebPs under
+`pages/arcade/art/*.svg`; two new tiles in the same isometric voice for Settler Scramble (`catan.svg`) and Uncle
+Scam (`unclescam.svg`), which had none. `catalog.js` also carries each game's accent (`GameCard.accent` in the app).
+
+**Game shell.** `showGameArt` (app-shell.js) puts the tile beside the title and sets `--accent` on the page: the play
+panel's glow, selected cells, focus rings and the outcome line follow it. Mode links read as one segmented control.
+The score pops when it changes. A win adds `.celebrate` to the board for 1.7 s: one sheen sweeps across and the
+accent glows once.
+
+**Motion (`motion.js`, used by `arcade.js` and `extended.js`), always answering the move just made:** 2048 tiles
+slide their real paths (`slides2048` reproduces the engine's merge order), then merges and the spawned tile pop;
+Minesweeper reveals cascade outward from the pressed square (`cascadeDelays`), a struck mine shakes the field and the
+mines appear in turn; Lights Out flips the five lights; chess, checkers and Sliding‑15 pieces travel from their old
+square (keyed FLIP: `data-key` per piece, `matchMoved` pairs pieces that stayed put first, then the nearest
+leftover); Connect Four discs drop down their column; Reversi discs flip over (the colour blends through the turn)
+and new discs settle; Sea Battle hits burst and misses ripple; Snake's head glows and the apple pulses; Wordgame rows
+flip letter by letter; Sudoku, Nonogram, Gomoku and Brick Bench entries settle; Solitaire, Spider and Crazy 8 cards fly
+between piles (keyed by rank and suit); Settler Scramble buildings settle in and roads draw. Every effect is off under
+`prefers-reduced-motion` (the last block of `arcade.css`).
+
+**The 3D cube (`cube3d.js`, geometry in `cube-math.js`).** CSS 3D, no dependency (the CSP allows no CDN): 26 cubies
+of six faces each, stickers coloured by the engine's colour order with a plastic chamfer and a gloss, shaded by how
+each face meets the light under the current orbit (`--dim`). The engine's state drives the scene the way the app's
+SceneKit view does: `movesBetween` diffs the move history, one appended move or one undo plays as a sequential layer
+turn on a pivot (160 ms, 256 ms for a half turn; at most six queued), the affected cubies snap onto the exact model
+matrices when the turn ends, and anything else (scramble, restart, import) snaps. Interaction as in the app: drag a
+sticker to turn its layer (`resolveDrag` picks the face turn whose on-screen motion best matches the drag, through the
+orbit), drag beside the cube to orbit, arrow keys orbit, Home resets the view, letter keys turn (`keymap` in
+`games/rubiks-cube.js`: lowercase as the engine defines the move, Shift for the prime), and the 18 move buttons stay as
+a keypad laid out by face (`.engine-controls.kind-cube`) with Undo turn under them. The flat six-face net remains under
+the cube as "Flat view" (`.cube-net`) and carries the accessible state; the scene is `aria-hidden`. Model space is
+y‑up, z toward the viewer; CSS flips y, so model rotations about x and z play with the opposite sign and rotations
+about y keep theirs (`cssMatrix`, `turnAngle`). The engine and its native-parity fixtures are unchanged.
+
+**Checks.** New `tools/tests/arcade-motion-check.mjs` (in `site.yml`): 51 assertions over the pure helpers (slide
+maps, spawn, cell diffs, cascades, FLIP pairing, cube matrices, turn angles, orbit projection, drag resolution,
+history diffs, shading, resume items, relative times). `site-check.mjs` now also opens `/arcade`,
+`/arcade/rubiks-cube`, `/arcade/2048`, `/arcade/chess` and `/arcade/solitaire` at 1440, 390 and 375 (its static
+server maps the Arcade routes and answers `/api/arcade/config` with sync off), and checks the library's 23 cards and
+tiles, a star under Your favorites and back, search and Clear, the cube's 26 cubies, 54 stickers, flat view, a key
+turn and Undo settling the pivot, the 19-button keypad, 2048 arrow keys and spawns, and chess's 64 squares and 32 keyed
+pieces. `gate.sh` checks the three new modules and five SVG tiles. `arcade-shell-check` still finds its three CSS
+strings.
+
+**Evidence before the push (Sage's Mac, 2026-10-24 evening):** build/verify clean; all 24 node check scripts pass;
+the local gate passes; `site-check` 138 of 138 in Chromium 1194 at 1440, 390 and 375; in the built-in browser at
+1440: library, cube (key turn caught mid-rotation, orbit drag, sticker drag turning the top layer, keypad, Undo),
+2048, chess, solitaire, Lights Out, Minesweeper; at 390: library, cube with keypad, chess. Light theme viewed on the
+library. Not viewed by hand: every one of the other game pages, Firefox and Safari (CSS 3D with `preserve-3d` is
+standard in all three), a touch device (pointer events with `touch-action: none` on the stage).
+
+
 ## Margin instruments beside every rendered page — 2026-10-21
 
 Sage asked for decorative art in the empty bands either side of the column on wide windows, in the site's own
