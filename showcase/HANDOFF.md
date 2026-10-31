@@ -19,6 +19,10 @@ This entry describes a review-branch candidate, not a production deployment.
 No public products or data were removed. Deploy through the existing workflow only;
 rollback is a normal revert of this change, with no source-history rewrite.
 
+The first branch CI run passed build/gates but could not install its pinned
+Playwright on the new ubuntu-latest (26.04). The browser job now uses the compatible
+ubuntu-24.04 image; this does not change the production application or browser version.
+
 ## Arcade overhaul: motion for every game, a 3D Rubik's Cube, the library in the app's voice — 2026-10-24
 
 Sage asked for an update to the Arcade: every game overhauled with animations, a 3D version of the Rubik's Cube,
