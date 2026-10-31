@@ -20,6 +20,10 @@ const MAX_FRAME_BYTES = 64 * 1024; // cap signaling frame size (SDP/ICE payloads
 const MAX_ROOMS = 10_000; // defense-in-depth ceiling on top of per-IP rate limiting
 const MAX_TEXT_LENGTH = 128;
 const REROLL_ATTEMPTS = 50;
+const ALLOWED_BROWSER_ORIGINS = new Set([
+  'https://prismet.xyz',
+  'https://www.prismet.xyz',
+]);
 
 const CONTROL_UPPER_BOUND = 32; // codepoints below this are ASCII control chars (0x00-0x1F)
 const DEL_CODE = 127;
@@ -387,6 +391,14 @@ export function createSignaling({
   });
 
   function handleUpgrade(req, socket, head) {
+    // Native clients omit Origin. Browsers must present an exact production origin;
+    // explicit empty/null, malformed and duplicate values are never native requests.
+    const origin = req.headers.origin;
+    if (origin !== undefined && !ALLOWED_BROWSER_ORIGINS.has(origin)) {
+      socket.once('finish', () => socket.destroy());
+      socket.end('HTTP/1.1 403 Forbidden\r\nConnection: close\r\nContent-Length: 0\r\n\r\n');
+      return;
+    }
     wss.handleUpgrade(req, socket, head, (ws) => {
       wss.emit('connection', ws, req);
     });

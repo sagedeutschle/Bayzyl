@@ -1,5 +1,28 @@
 # prismet.xyz — handoff (2026-10-03)
 
+## WebSocket Origin validation — 2026-10-31 candidate
+
+`signaling.js` now rejects browser upgrade requests unless Origin is exactly
+`https://prismet.xyz` or `https://www.prismet.xyz`. Native clients that omit Origin
+keep working. Explicit empty/null values, duplicate headers, alternate ports,
+insecure origins and hostname/path spoofs are rejected with HTTP 403 before upgrade.
+Rejected sockets are destroyed after the response finishes, including peers that
+retain a writable TCP half. This is browser-origin validation, not client authentication.
+
+`signaling-origin-check.mjs` exercises real local WebSocket connections and a raw
+half-open client. Its 12 cases and the existing signaling checks pass; the check is
+wired into the site workflow. The site build and 25 check scripts pass, as do the
+138 headless page checks and the editor browser smoke test. The three route checks
+require the same built-site copy under `server/site` that CI creates.
+
+This entry describes a review-branch candidate, not a production deployment.
+No public products or data were removed. Deploy through the existing workflow only;
+rollback is a normal revert of this change, with no source-history rewrite.
+
+The first branch CI run passed build/gates but could not install its pinned
+Playwright on the new ubuntu-latest (26.04). The browser job now uses the compatible
+ubuntu-24.04 image; this does not change the production application or browser version.
+
 ## Project inventory refresh — 2026-10-31
 
 The portfolio now has 60 project records (58 visible, two hidden) under the same six category IDs. All 18 previous records were reviewed; 42 records were added from source evidence, with worktrees/mirrors/supporting components consolidated. Westeros and Helix Research Desk are visible development records with editor/nonclinical research limits; Decree and WoW remain hidden archives. Command Helm editor, current phone companion, historical Helm remote and KDE desktop are separate records. Current Prismet Arcade 1.3 App Store and Bayzyl alpha.2 prerelease facts were independently checked against the official store/release endpoints.
