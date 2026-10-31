@@ -1,5 +1,24 @@
 # prismet.xyz — handoff (2026-10-03)
 
+## WebSocket Origin validation — 2026-10-31 candidate
+
+`signaling.js` now rejects browser upgrade requests unless Origin is exactly
+`https://prismet.xyz` or `https://www.prismet.xyz`. Native clients that omit Origin
+keep working. Explicit empty/null values, duplicate headers, alternate ports,
+insecure origins and hostname/path spoofs are rejected with HTTP 403 before upgrade.
+Rejected sockets are destroyed after the response finishes, including peers that
+retain a writable TCP half. This is browser-origin validation, not client authentication.
+
+`signaling-origin-check.mjs` exercises real local WebSocket connections and a raw
+half-open client. Its 12 cases and the existing signaling checks pass; the check is
+wired into the site workflow. The site build and 25 check scripts pass, as do the
+138 headless page checks and the editor browser smoke test. The three route checks
+require the same built-site copy under `server/site` that CI creates.
+
+This entry describes a review-branch candidate, not a production deployment.
+No public products or data were removed. Deploy through the existing workflow only;
+rollback is a normal revert of this change, with no source-history rewrite.
+
 ## Arcade overhaul: motion for every game, a 3D Rubik's Cube, the library in the app's voice — 2026-10-24
 
 Sage asked for an update to the Arcade: every game overhauled with animations, a 3D version of the Rubik's Cube,
