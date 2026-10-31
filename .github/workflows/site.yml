@@ -59,6 +59,7 @@ jobs:
           ../tools/deploy/gate.sh http://127.0.0.1:18081 local || { cat /tmp/server.log; exit 1; }
       - name: Product hub rules, saves, APIs, data and route regressions (blocking)
         run: |
+          python3 showcase/tools/tests/deploy-catalog-check.py
           node showcase/tools/tests/portfolio-check.mjs
           node showcase/tools/tests/portfolio-stories-check.mjs
           node showcase/tools/tests/arcade-check.mjs

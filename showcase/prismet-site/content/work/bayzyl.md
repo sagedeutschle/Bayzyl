@@ -11,6 +11,7 @@ WorldEdit is the foundation. Various tweaks to make it easier for beginners to l
 Paper Minecraft plugin
 
 ## status
+
 Alpha · open source (MIT)
 
 ## year
@@ -20,19 +21,21 @@ Alpha · open source (MIT)
 Author
 
 ## summary
-Selections, shapes, brushes, clipboards, persistent undo, shared kits, and builder profiles, in one consistent command set. Every option uses option:value syntax, tab-completion knows about masks and block distributions, and big edits ask for confirmation first. It runs alongside WorldEdit and FastAsyncWorldEdit, and falls back to its own implementations when neither is installed.
+
+Selections, shapes, brushes, clipboards, persistent undo, shared kits, and builder profiles, in one consistent command set. Options use option:value syntax, with tab completion for masks and block distributions and confirmation around large edits. It integrates with WorldEdit and FastAsyncWorldEdit while retaining native implementations for core building workflows.
 
 ## facts
-- Commands: 100+ registered
-- Brushes: 25+ types
-- Help: 16-page in-game guide
-- Version: 0.2.0-alpha.1
+- Release: 0.2.0-alpha.2 · public prerelease
+- Target: Paper 1.21.11 · Java 21
+- Language: Java
+- License: MIT
 
 ## highlights
-- Per-player undo history that survives restarts, plus /oops to undo and tell the team
-- Shared builder kits with themes, icons, aliases, and notes
-- Formula-driven /generate and /generatebiome
-- Quality-of-life tools: ghost hand, auto-unstick, ruler, surface/ascend/descend
+- Durable clipboard recovery and /resume for interrupted copies in the published alpha.2
+- Read-only Redstone Audit for inspecting a loaded selection
+- Per-player persistent undo and /oops for recovering an edit
+- Shared builder kits with themes, icons, aliases and notes
+- Formula generation, detail and terrain brushes alongside selections, shapes and clipboard tools
 
 <!-- Proposed engineering-story wording, added by an agent on 2026-10-04 for Sage’s review.
      Existing authored wording above is preserved. Edit these fields through /edit. -->
@@ -56,7 +59,8 @@ Bound recovery work
 Undo history persists between sessions, with a cap on per-action block data. Oversized actions keep metadata rather than making restart recovery unbounded.
 
 ## story.outcome
-The in-game sequence shows the commands producing a dome, tower, sandstone pyramid and formula-driven copper ring in one demonstration world.
+
+The historical in-game sequence shows Bayzyl commands producing a dome, tower, sandstone pyramid and formula-driven copper ring in one demonstration world. It records that build, rather than the current server installation.
 
 ## story.evidence
 In-game captures

@@ -5,10 +5,12 @@
 The Wizard King's Decree
 
 ## subtitle
-Can chat models call the news before it happens?
+
+An archived experiment in model forecasts and verification
 
 ## status
-Running daily
+
+Retired · archived experiment
 
 ## year
 2026
@@ -17,14 +19,17 @@ Running daily
 Design + engineering
 
 ## summary
-A council of two chat models must agree on a no-hedge prophecy about upcoming news. A separate, search-grounded Court Historian grades each decree against reality with at least two independent sources, and wrong calls trigger public corrections on an escalating ladder. Under the robes it is an auditable forecasting experiment with hit rates, bootstrap confidence intervals, and calibration.
+
+The Wizard King’s Decree explored a council of chat models making forecasts about upcoming news, with a separate historian grading outcomes and recording corrections. It was retired in October 2026. This is a historical source record, not an active daily service or a current Prismet lens.
 
 ## facts
-- Models: Claude + GPT council, Gemini judge
-- Tests: 237, fully offline
-- Output: decrees.json → Prismet's Oracle lens
+
+- Historical stack: Python · SQLite
+- Design: Model council and separate grading
+- Status: Retired in October 2026
 
 ## highlights
-- Every SDK, clock, and network call sits behind an injectable seam, so the whole suite runs with no keys and no network
-- Append-only rulings and corrections in SQLite
-- Static-site chronicle generated with the standard library only
+
+- Injectable SDK, clock and network boundaries for offline checks
+- Append-only rulings and corrections
+- A standard-library chronicle generator

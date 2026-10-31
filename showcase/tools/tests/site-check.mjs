@@ -19,7 +19,7 @@ const CHROMIUM = process.env.CHROMIUM || '/opt/pw-browsers/chromium-1194/chrome-
 const DIST = process.argv[2] || join(dirname(fileURLToPath(import.meta.url)), '../../prismet-site/dist');
 const CSP = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.steampowered.com https://store.steampowered.com https://api.fiscaldata.treasury.gov https://api.usaspending.gov; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'";
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
-const PAGES = ['index.html', 'work/bayzyl.html', 'work/prismet-app.html', 'work/the-helm.html', 'bayzyl.html', 'arcade', 'arcade/rubiks-cube', 'arcade/2048', 'arcade/chess', 'arcade/solitaire'];
+const PAGES = ['index.html', 'work/bayzyl.html', 'work/prismet-app.html', 'work/the-helm.html', 'work/command-helm.html', 'work/command-helm-remote.html', 'work/castra.html', 'work/music-helm.html', 'work/taberna.html', 'work/helix-research-desk.html', 'work/westeros-uebs2.html', 'work/uncle-scam.html', 'bayzyl.html', 'arcade', 'arcade/rubiks-cube', 'arcade/2048', 'arcade/chess', 'arcade/solitaire'];
 const SIZES = [[1440, 900, 1], [390, 844, 3], [375, 812, 3]];
 
 const server = createServer(async (req, res) => {

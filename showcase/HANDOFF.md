@@ -1,5 +1,17 @@
 # prismet.xyz — handoff (2026-10-03)
 
+## Project inventory refresh — 2026-10-31
+
+The portfolio now has 60 project records (58 visible, two hidden) under the same six category IDs. All 18 previous records were reviewed; 42 records were added from source evidence, with worktrees/mirrors/supporting components consolidated. Westeros and Helix Research Desk are visible development records with editor/nonclinical research limits; Decree and WoW remain hidden archives. Command Helm editor, current phone companion, historical Helm remote and KDE desktop are separate records. Current Prismet Arcade 1.3 App Store and Bayzyl alpha.2 prerelease facts were independently checked against the official store/release endpoints.
+
+All original 40 curated views remain. Four reviewed images add an installed iPhone Prismet home, installed Music Helm standby, cropped historical Castra interface and Labienus preparation monitor. The Castra crop omits machine/session details. Physical-device, historical and preflight labels travel with the images. Other new records can remain text-only; no synthetic interface screenshots were invented.
+
+The legacy `/api/projects` catalog is refreshed to 60 entries while retaining schemaVersion 1, existing IDs and its older category enum. The image overlay now explicitly packages only `app/data/projects.json`; `deploy-catalog-check.py` verifies its exact bytes and excludes sibling state. The blocking build job runs this regression test.
+
+The larger catalog exposed a real editor reload limit: loading each content file independently exceeded the unchanged 120-request budget. The editor now uses an authenticated, server-selected bounded bundle for load/history/reload. PIN and session protections and the original per-file APIs remain. Browser smoke verifies two loads use two bundle requests and preserve the full edit, reload, publish and history workflow.
+
+Bayzyl Next-step navigation and roadmap use separate wording keys (`bench.next_step` and `bench.next`). The previous duplicated key silently substituted roadmap prose for the button label. Gallery contracts now cover 44 views/11 curated portfolios; browser page checks include eight new representative project pages.
+
 ## Arcade overhaul: motion for every game, a 3D Rubik's Cube, the library in the app's voice — 2026-10-24
 
 Sage asked for an update to the Arcade: every game overhauled with animations, a 3D version of the Rubik's Cube,

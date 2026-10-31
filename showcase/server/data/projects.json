@@ -1,299 +1,919 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-07-26T03:00:00.000Z",
+  "updatedAt": "2026-10-31T13:54:15Z",
   "projects": [
     {
       "id": "prismet",
-      "title": "Prismet / Kaleidoscope",
-      "summary": "A native Apple playground where games, daily rituals, and useful data lenses share one shifting home.",
+      "title": "Prismet Arcade",
+      "summary": "Co-developed with Ben, Prismet brings classic games and useful data lenses into one library.",
       "history": "Chess Hotswap began as the archived origin of Kaleidoscope, built to hot-swap between 2D and 3D chess.",
       "category": "apps",
-      "status": "Live + Building",
-      "platforms": ["iPhone", "Mac", "Watch"],
+      "status": "iPhone build installed · in development",
+      "platforms": [
+        "iPhone",
+        "iPad",
+        "Mac"
+      ],
       "art": "prismet",
       "layout": "wide",
       "featured": true,
       "action": "https://apps.apple.com/us/app/kaleidescope/id6785993194",
       "repo": "sagedeutschle/kaleidoscope",
-      "shots": [
-        { "src": "prismet-1", "w": 461, "h": 1000, "alt": "Kaleidoscope home screen on iPhone: a Daily section with Wordgame, then puzzle tiles for 2048, Snake, Minesweeper, and Sudoku." },
-        { "src": "prismet-2", "w": 461, "h": 1000, "alt": "The 2D chess board inside Kaleidoscope, mid-game on iPhone." },
-        { "src": "prismet-3", "w": 461, "h": 1000, "alt": "Kaleidoscope's Sea Battle grid on iPhone." },
-        { "src": "prismet-4", "w": 461, "h": 1000, "alt": "Solitaire laid out in Kaleidoscope on iPhone." },
-        { "src": "prismet-5", "w": 1000, "h": 773, "alt": "The 3D Catan board in its meadow theme, rendered in Kaleidoscope." }
-      ]
+      "updatedAt": "2026-10-31T13:54:15Z"
     },
     {
       "id": "the-long-now",
       "title": "The Long Now",
-      "summary": "An evolving desktop game world where courts, campaigns, and small human decisions accumulate over time.",
+      "summary": "The Long Now explores colony-simulation storytelling with civilization-scale technological progression. Above the settlement is the floating castle of The Wizard, with rooms, small games and secrets to discover. Moving between the castle and the mortals below is the core idea.",
       "category": "games",
-      "status": "Building",
-      "platforms": ["Desktop"],
+      "status": "Game prototype · in development",
+      "platforms": [
+        "Desktop"
+      ],
       "art": "long-now",
       "layout": "tall",
       "featured": false,
-      "version": "0.2.0-charter-of-the-vale",
-      "shots": [
-        { "src": "the-long-now-1", "w": 1000, "h": 563, "alt": "The medieval era of The Long Now: a pixel-art river crossing with tents, a campfire, and a stone keep in the trees." },
-        { "src": "the-long-now-2", "w": 1000, "h": 563, "alt": "The same world dressed for its industrial era." },
-        { "src": "the-long-now-3", "w": 1000, "h": 563, "alt": "The far-future Dyson era of the world's dressing pass." }
-      ]
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/the-long-now.html"
     },
     {
       "id": "prismcode",
       "title": "PrismCode",
-      "summary": "A Mac-native coding workspace exploring a calmer relationship between projects, terminals, and AI collaborators.",
+      "summary": "PrismCode developed the engineering workspace for Claude Code, Codex and DeepSeek: agent panes, transcripts, approvals, terminals, files, Git, diffs, sessions and usage tracking. Its worktree comparison workflow puts proposed changes side by side before adoption.",
       "category": "apps",
-      "status": "Building",
-      "platforms": ["Mac"],
+      "status": "Local workbench · evolving",
+      "platforms": [
+        "Mac"
+      ],
       "art": "prismcode",
       "layout": "standard",
       "featured": false,
-      "version": "0.1.0",
-      "shots": [
-        { "src": "prismcode-1", "w": 1000, "h": 625, "alt": "PrismCode's Mission Control on a fresh launch, offering to add a DeepSeek, Claude, or Codex pane, with a file sidebar and a prompt bar across the bottom." }
-      ]
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/prismcode.html"
     },
     {
       "id": "steam-rewind",
       "title": "Steam Rewind",
-      "summary": "A playful set of lenses that turns a sprawling Steam library into stories about time, value, and unfinished adventures.",
+      "summary": "A set of lenses for exploring a Steam library through playtime, value and the games left waiting. The browser tool offers a built-in demonstration library, so the interface can be explored without connecting a personal account.",
       "category": "tools",
-      "status": "Live",
-      "platforms": ["Web", "Mac", "iPhone"],
+      "status": "Available on the web",
+      "platforms": [
+        "Web",
+        "Mac",
+        "iPhone"
+      ],
       "art": "steam",
       "layout": "wide",
       "featured": false,
       "action": "/steam",
-      "shots": [
-        { "src": "steam-rewind-1", "w": 1000, "h": 730, "alt": "Steam Rewind's most-played lens over the demo fixture, listing games with hours played, price, and Deck time." },
-        { "src": "steam-rewind-2", "w": 1000, "h": 730, "alt": "The same library re-sorted by the cost-per-hour lens." }
-      ]
+      "updatedAt": "2026-10-31T13:54:15Z"
     },
     {
       "id": "debt-clock",
       "title": "Accessible Debt Clock",
-      "summary": "A calm, screen-reader-friendly view of the U.S. national debt using current Treasury data.",
+      "summary": "An accessible debt clock that grew into a public financial-data explorer.",
       "category": "tools",
-      "status": "Live",
-      "platforms": ["Web", "iPhone"],
+      "status": "Available on the web",
+      "platforms": [
+        "Web",
+        "iPhone"
+      ],
       "art": "debt",
       "layout": "standard",
       "featured": false,
       "action": "/debt",
-      "shots": [
-        { "src": "debt-clock-1", "w": 1000, "h": 695, "alt": "The debt clock showing the gross U.S. national debt in large green figures, with a spoken-value button, a pause-motion button, and per-citizen and per-taxpayer cards below." }
-      ]
+      "updatedAt": "2026-10-31T13:54:15Z"
     },
     {
       "id": "cicero",
       "title": "Cicero",
-      "summary": "A desktop council app with a native iPhone companion for the Forum, Historian, and a consensus-gated inbox.",
+      "summary": "The earlier Cicero council interface brought a Curia transcript, Legion panel, All-Hands fleet and verdict into one view. Its council ideas later joined the PrismCode engineering workspace in a unified Cicero desktop source tree.",
       "category": "experiments",
-      "status": "Building",
-      "platforms": ["Desktop", "iPhone"],
+      "status": "Historical prototype",
+      "platforms": [
+        "Desktop",
+        "iPhone"
+      ],
       "art": "cicero",
       "layout": "tall",
       "featured": false,
-      "shots": [
-        { "src": "cicero-1", "w": 1000, "h": 705, "alt": "Cicero's council floor: a Legion panel, a running transcript of the Curia, an All-Hands fleet panel, and a long verdict under the heading Cicero Speaks." }
-      ]
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/cicero.html"
     },
     {
       "id": "helix-research-desk",
       "title": "Helix Research Desk",
-      "summary": "A local-first desktop workbench for transparent genetics research.",
+      "summary": "A local-first macOS workbench for personal, non-clinical genetics research. Its source adapters bring public evidence into a common view with identity checks, provenance, dates and visible conflicts. A local notebook keeps research snapshots and notes.",
       "category": "systems",
-      "status": "Building",
-      "platforms": ["Desktop"],
+      "status": "Local research workbench",
+      "platforms": [
+        "Desktop"
+      ],
       "art": "helix",
       "layout": "tall",
-      "featured": false
+      "featured": false,
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/helix-research-desk.html"
     },
     {
       "id": "axiomextd",
-      "title": "AxiomEXTD",
-      "summary": "A Minecraft extension experiment that preserves Conquest block states and improves rotated Smart Paste.",
+      "title": "Axiom Extension experiments",
+      "summary": "Parallel Minecraft Axiom-extension experiments with separate Claude and Codex source trees.",
       "category": "experiments",
-      "status": "Experiment",
-      "platforms": ["Minecraft"],
+      "status": "Historical experiments",
+      "platforms": [
+        "Minecraft"
+      ],
       "art": "axiom",
       "layout": "standard",
       "featured": false,
-      "shots": [
-        { "src": "axiomextd-1", "w": 1000, "h": 693, "alt": "A detailed Minecraft build on the server this extension targets: a dark spire above the clouds, ringed by towers and terraced ground." }
-      ]
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/axiomextd.html"
     },
     {
       "id": "qr-scanner",
-      "title": "QR Scanner",
-      "summary": "A tiny browser QR scanner using camera APIs and native BarcodeDetector, with a bundled fallback.",
+      "title": "QR Scanner & pocket tools",
+      "summary": "Four small browser projects: a camera-based QR scanner, a phone-declutter checklist, a home-screen planner and an Apple Music playlist experiment.",
       "category": "tools",
-      "status": "Live",
-      "platforms": ["Web"],
+      "status": "Published on GitHub Pages",
+      "platforms": [
+        "Web"
+      ],
       "art": "qr",
       "layout": "standard",
       "featured": false,
       "action": "https://sagedeutschle.github.io/qr-scanner/",
       "repo": "sagedeutschle/qr-scanner",
-      "shots": [
-        { "src": "qr-scanner-1", "w": 1000, "h": 730, "alt": "The QR scanner before camera access: a start button, a camera picker, the framing reticle, and a field where decoded text appears." }
-      ]
+      "updatedAt": "2026-10-31T13:54:15Z"
     },
     {
       "id": "screen-protection",
       "title": "Screen Protection",
-      "summary": "A desktop privacy concept for hiding sensitive content when macOS screen recording is active.",
+      "summary": "An archived screen-protection placeholder. The inventory did not establish substantive source or a finished application.",
       "category": "tools",
-      "status": "Concept",
-      "platforms": ["Mac"],
+      "status": "Archived placeholder",
+      "platforms": [
+        "Mac"
+      ],
       "art": "screen",
       "layout": "wide",
-      "featured": false
+      "featured": false,
+      "updatedAt": "2026-10-31T13:54:15Z"
     },
     {
       "id": "escape-revert",
       "title": "Escape Revert",
-      "summary": "A Mac utility that turns three rapid Escape presses into Cmd+[ to recover from wrong screens and loading states.",
+      "summary": "A macOS utility that turns three rapid Escape presses into the standard Back keyboard shortcut.",
       "category": "tools",
-      "status": "Working",
-      "platforms": ["Mac"],
+      "status": "Local utility",
+      "platforms": [
+        "Mac"
+      ],
       "art": "escape",
       "layout": "standard",
-      "featured": false
+      "featured": false,
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/esc-revert.html"
     },
     {
       "id": "hoi4-war-room",
       "title": "HOI4 AI War Room",
-      "summary": "A local Mac cockpit combining a live game stream with a control and standings board.",
+      "summary": "A local cockpit project for following Hearts of Iron IV through a game stream and a separate control and standings interface. The existing captures show the game and its own observer console; they do not show the complete cockpit or establish autonomous agent play.",
       "category": "systems",
-      "status": "Working",
-      "platforms": ["Mac", "LAN web"],
+      "status": "Local experiment",
+      "platforms": [
+        "Mac",
+        "LAN web"
+      ],
       "art": "war-room",
       "layout": "wide-tall",
       "featured": false,
-      "shots": [
-        { "src": "hoi4-war-room-1", "w": 1000, "h": 563, "alt": "The Hearts of Iron IV map the war room streams, showing central Europe in March 1936 with division counters and theatre panels." },
-        { "src": "hoi4-war-room-2", "w": 1000, "h": 563, "alt": "The same game in 1940 with the observer console open in the corner, logging the AI agents' turns." }
-      ]
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/hoi4-war-room.html"
     },
     {
       "id": "civ5-mod-profiles",
       "title": "Civilization V Mod Profiles",
-      "summary": "A Mac launcher workflow for moving between distinct Civilization V mod setups with less friction.",
+      "summary": "A Mac workflow for switching Civilization V between a conservative mod stack and an experimental native-compatible stack. The project evolved from the photographed Choose Your Build menu into separate Stable and Risky launcher buttons.",
       "category": "tools",
-      "status": "Working",
-      "platforms": ["Mac"],
+      "status": "Local launcher workflow",
+      "platforms": [
+        "Mac"
+      ],
       "art": "civ",
       "layout": "standard",
       "featured": false,
-      "shots": [
-        { "src": "civ5-mod-profiles-1", "w": 965, "h": 1000, "alt": "The launcher's Choose Your Build window: a green Stable Build card and a red Risky Build card, each listing the mods in its stack." }
-      ]
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/civ5-mod-profiles.html"
     },
     {
       "id": "yggdrasil",
       "title": "Yggdrasil",
-      "summary": "A project to unify the FromSoft catalog inside one Elden Ring instance, starting with a Dark Souls III port.",
+      "summary": "Yggdrasil explores bringing FromSoftware worlds into one Elden Ring installation, starting with Dark Souls III. Map conversion, collision, materials, lighting and progression all need to work together.",
       "category": "experiments",
-      "status": "Building",
-      "platforms": ["Games"],
+      "status": "Experimental mod · in development",
+      "platforms": [
+        "Games"
+      ],
       "art": "yggdrasil",
       "layout": "tall",
       "featured": false,
-      "version": "M1"
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/yggdrasil.html"
     },
     {
       "id": "wow-sidepanel",
       "title": "WoW Sidepanel",
-      "summary": "A World of Warcraft addon that reserves a partial right-side UI strip for multi-monitor layouts.",
+      "summary": "A World of Warcraft addon prototype exploring a reserved right-side UI strip for ultrawide or multi-monitor arrangements.",
       "category": "tools",
-      "status": "Working",
-      "platforms": ["WoW Addon"],
+      "status": "Archived addon prototype",
+      "platforms": [
+        "WoW Addon"
+      ],
       "art": "wow",
       "layout": "wide",
       "featured": false,
-      "version": "1.0.0",
-      "shots": [
-        { "src": "wow-sidepanel-1", "w": 1000, "h": 338, "alt": "World of Warcraft filling an ultrawide display, with the character roster held in the narrow right-hand strip the addon reserves." }
-      ]
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/wow-sidepanel.html"
     },
     {
       "id": "usage-tracker",
       "title": "Usage Tracker",
-      "summary": "An always-on local dashboard for agent-session usage, daily account totals, and estimated equivalent costs.",
+      "summary": "A local dashboard that aggregates coding-agent usage and shows estimated API-equivalent cost.",
       "category": "systems",
-      "status": "Building",
-      "platforms": ["Desktop"],
+      "status": "Local utility",
+      "platforms": [
+        "Desktop"
+      ],
       "art": "generic",
       "layout": "standard",
       "featured": false,
-      "shots": [
-        { "src": "usage-tracker-1", "w": 1000, "h": 679, "alt": "The usage dashboard: token totals per provider and account, a weekly limit meter, and a seven-day combined chart with estimated API-equivalent costs." }
-      ]
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/usage-tracker.html"
     },
     {
       "id": "helm",
       "title": "Helm",
-      "summary": "A native iPhone master remote for home services, lifecycle controls, backups, consoles, and quick actions.",
+      "summary": "Helm is a custom KDE Plasma desktop: native QML instruments for clocks, CPU, GPU, network and storage, alongside small arcade games and controls for arranging the workspace. Shared panel components and palette tokens give the instruments one visual language.",
       "category": "systems",
-      "status": "Working",
-      "platforms": ["iPhone"],
+      "status": "Personal desktop environment",
+      "platforms": [
+        "iPhone"
+      ],
       "art": "generic",
       "layout": "wide",
       "featured": false,
-      "shots": [
-        { "src": "helm-1", "w": 462, "h": 1000, "alt": "Helm's Mesh tab on iPhone, listing hosts and Minecraft servers with live status dots, resource use, and a tap-to-wake action." },
-        { "src": "helm-2", "w": 462, "h": 1000, "alt": "Helm's PlexSquish tab, showing the media optimizer's queue and progress." },
-        { "src": "helm-3", "w": 462, "h": 1000, "alt": "Helm's Misc tab of quick actions." }
-      ]
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/the-helm.html"
     },
     {
       "id": "plexsquish",
       "title": "PlexSquish",
-      "summary": "A Mac and Windows media optimizer with scanning, HEVC conversion, verification, atomic replacement, and live progress.",
+      "summary": "PlexSquish pairs a Mac control panel with a Go service for preparing HEVC media encodes, following progress and verifying output before replacement. Its recorded acceptance used synthetic clips; current operation on a personal media library is not established.",
       "category": "tools",
-      "status": "Working",
-      "platforms": ["Mac", "Windows"],
+      "status": "Historical prototype",
+      "platforms": [
+        "Mac",
+        "Windows"
+      ],
       "art": "generic",
       "layout": "wide",
       "featured": false,
-      "version": "v0"
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/plexsquish.html"
     },
     {
       "id": "airhorn",
       "title": "Airhorn",
-      "summary": "A deliberately simple offline desktop app: one large button and an attributed air-horn recording.",
+      "summary": "A deliberately small Electron app for Mac: one large red button plays a bundled air-horn recording. Space triggers the same action, and repeated presses can overlap. The recording is “Air Horn” by Mike Koenig, credited under CC BY 3.0.",
       "category": "apps",
-      "status": "Complete",
-      "platforms": ["Desktop"],
+      "status": "Small desktop app",
+      "platforms": [
+        "Desktop"
+      ],
       "art": "generic",
       "layout": "standard",
       "featured": false,
-      "shots": [
-        { "src": "airhorn-1", "w": 1000, "h": 667, "alt": "The whole app: the word AIRHORN over one big red button, and a line noting you can press Space instead." }
-      ]
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/airhorn.html"
     },
     {
       "id": "bayzyl",
       "title": "Bayzyl",
-      "summary": "An in-game building toolkit for Paper servers with selections, brushes, shapes, shared kits, and builder profiles.",
+      "summary": "Selections, shapes, brushes, clipboards, persistent undo, shared kits, and builder profiles, in one consistent command set.",
       "category": "tools",
-      "status": "Alpha",
-      "platforms": ["Minecraft"],
+      "status": "Alpha · open source (MIT)",
+      "platforms": [
+        "Minecraft"
+      ],
       "art": "generic",
       "layout": "tall",
       "featured": false,
       "action": "https://github.com/sagedeutschle/Bayzyl",
       "repo": "sagedeutschle/Bayzyl",
-      "version": "0.1.0-alpha",
       "language": "Java",
       "release": "v0.1.0-alpha",
-      "shots": [
-        { "src": "bayzyl-1", "w": 1000, "h": 693, "alt": "A cherry-blossom village built on the Paper server this toolkit runs on, lit up at night." },
-        { "src": "bayzyl-2", "w": 1000, "h": 693, "alt": "Another build from the same server, seen from above the cloud layer." }
-      ]
+      "updatedAt": "2026-10-31T13:54:15Z"
+    },
+    {
+      "id": "quark",
+      "category": "systems",
+      "platforms": [
+        "Desktop"
+      ],
+      "art": "quark",
+      "layout": "standard",
+      "featured": false,
+      "title": "Quark",
+      "summary": "A personal-hub prototype for bringing mail, calendars, code and files into one tabbed desktop window.",
+      "status": "Private prototype",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/quark.html"
+    },
+    {
+      "id": "westeros-uebs2",
+      "category": "games",
+      "platforms": [
+        "Desktop"
+      ],
+      "art": "westeros-uebs2",
+      "layout": "standard",
+      "featured": false,
+      "title": "Westeros for UEBS 2",
+      "summary": "A Westeros-inspired map project for Ultimate Epic Battle Simulator 2. The retained local candidate has editor and native-tool evidence. In-game battle behavior and a public Workshop release have not been established for this record.",
+      "status": "Local map-editor candidate",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/westeros-uebs2.html"
+    },
+    {
+      "id": "command-helm",
+      "category": "systems",
+      "platforms": [
+        "Desktop"
+      ],
+      "art": "command-helm",
+      "layout": "standard",
+      "featured": false,
+      "title": "Command Helm",
+      "summary": "Command Helm is a personal VSCodium-based editor shaped around coding-agent work, custom panels and terminal continuity. A separate public-preview candidate explores a cleaner first-run experience; it is not presented as a public or notarized release.",
+      "status": "Personal fork",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/command-helm.html"
+    },
+    {
+      "id": "command-helm-remote",
+      "category": "apps",
+      "platforms": [
+        "Native app"
+      ],
+      "art": "command-helm-remote",
+      "layout": "standard",
+      "featured": false,
+      "title": "Command Helm Remote",
+      "summary": "An iPhone companion for sending coding tasks to two computers and following reports, questions, and project status.",
+      "status": "Installed development companion",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/command-helm-remote.html"
+    },
+    {
+      "id": "castra",
+      "category": "experiments",
+      "platforms": [
+        "Development tooling"
+      ],
+      "art": "castra",
+      "layout": "standard",
+      "featured": false,
+      "title": "Castra",
+      "summary": "Castra brings agent activity, plain-language orders and their reports into a shared development desk.",
+      "status": "In development",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/castra.html"
+    },
+    {
+      "id": "prismet-station",
+      "category": "experiments",
+      "platforms": [
+        "Development tooling"
+      ],
+      "art": "prismet-station",
+      "layout": "standard",
+      "featured": false,
+      "title": "Prismet Station",
+      "summary": "Prismet Station organizes an agent-assisted art-print experiment into rooms, tasks and drafts. Its current manual and dry-run workflows support preparation and review without claiming autonomous income, public listings or completed fulfillment.",
+      "status": "Manual prototype",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/prismet-station.html"
+    },
+    {
+      "id": "account-helm",
+      "category": "systems",
+      "platforms": [
+        "Desktop"
+      ],
+      "art": "account-helm",
+      "layout": "standard",
+      "featured": false,
+      "title": "Account Helm",
+      "summary": "A menu-bar launcher for up to four separately configured coding CLI sessions, keeping each terminal's launch identity stable.",
+      "status": "Local macOS app",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/account-helm.html"
+    },
+    {
+      "id": "block-by-block",
+      "category": "tools",
+      "platforms": [
+        "Minecraft"
+      ],
+      "art": "block-by-block",
+      "layout": "standard",
+      "featured": false,
+      "title": "Block by Block",
+      "summary": "An educational Minecraft platform with checkable lessons, saved progress, achievements, and a server-independent lesson engine.",
+      "status": "First vertical slice",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/block-by-block.html"
+    },
+    {
+      "id": "blue-team",
+      "category": "systems",
+      "platforms": [
+        "Desktop"
+      ],
+      "art": "blue-team",
+      "layout": "standard",
+      "featured": false,
+      "title": "Blue Team",
+      "summary": "Read-only device posture and drift audits, with staged hardening and rollback-aware operations.",
+      "status": "Personal defensive tooling",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/blue-team.html"
+    },
+    {
+      "id": "paige",
+      "category": "experiments",
+      "platforms": [
+        "Development tooling"
+      ],
+      "art": "paige",
+      "layout": "standard",
+      "featured": false,
+      "title": "Paige",
+      "summary": "A local console for preparing customer-message drafts with a knowledge pack, pricing rules, and review gates.",
+      "status": "Local prototype",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/paige.html"
+    },
+    {
+      "id": "cohort",
+      "category": "experiments",
+      "platforms": [
+        "Development tooling"
+      ],
+      "art": "cohort",
+      "layout": "standard",
+      "featured": false,
+      "title": "Cohort",
+      "summary": "A coding-agent orchestrator with provider discovery, cost restrictions, repository preservation, and review and verification steps.",
+      "status": "Testing build",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/cohort.html"
+    },
+    {
+      "id": "prismet-lab",
+      "category": "apps",
+      "platforms": [
+        "Native app"
+      ],
+      "art": "prismet-lab",
+      "layout": "standard",
+      "featured": false,
+      "title": "Prismet Lab",
+      "summary": "A native STEM workspace combining formulas, units, statistics, figures, citations, and report composition in local project packages.",
+      "status": "In development",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/prismet-lab.html"
+    },
+    {
+      "id": "council-room",
+      "category": "experiments",
+      "platforms": [
+        "Development tooling"
+      ],
+      "art": "council-room",
+      "layout": "standard",
+      "featured": false,
+      "title": "Council Room",
+      "summary": "Council Room is an earlier native Mac interface for streaming conversations with local-model personas. A sequential council mode lets each reply build on earlier turns. It belongs to the history of the later Castra assistant workflow.",
+      "status": "Historical prototype",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/council-room.html"
+    },
+    {
+      "id": "helmscanner",
+      "category": "systems",
+      "platforms": [
+        "Desktop"
+      ],
+      "art": "helmscanner",
+      "layout": "standard",
+      "featured": false,
+      "title": "HelmScanner",
+      "summary": "A native macOS network dashboard and widget with connection sightings, local evidence views, manual checks, and Windscribe status controls.",
+      "status": "Local macOS app",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/helmscanner.html"
+    },
+    {
+      "id": "spelltower-mc",
+      "category": "tools",
+      "platforms": [
+        "Minecraft"
+      ],
+      "art": "spelltower-mc",
+      "layout": "standard",
+      "featured": false,
+      "title": "Spelltower MC",
+      "summary": "A private Minecraft server operations toolkit with backups and a native Mac control surface.",
+      "status": "Personal operations toolkit",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/spelltower-mc.html"
+    },
+    {
+      "id": "cicero-ios",
+      "category": "apps",
+      "platforms": [
+        "Native app"
+      ],
+      "art": "cicero-ios",
+      "layout": "standard",
+      "featured": false,
+      "title": "Cicero for iOS",
+      "summary": "An iPhone council companion with a forum dashboard, historian, and durable request inbox.",
+      "status": "Historical prototype",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/cicero-ios.html"
+    },
+    {
+      "id": "kyzer",
+      "category": "experiments",
+      "platforms": [
+        "Development tooling"
+      ],
+      "art": "kyzer",
+      "layout": "standard",
+      "featured": false,
+      "title": "KYZER",
+      "summary": "KYZER explored a Python assistant built around locally hosted models, explicit memory and a command-line/API workflow. It established an early scaffold for later local-agent work. The original service was retired in favor of Castra, and its unfinished roadmap remains historical.",
+      "status": "Historical prototype",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/kyzer.html"
+    },
+    {
+      "id": "labienus-qlora",
+      "category": "experiments",
+      "platforms": [
+        "Development tooling"
+      ],
+      "art": "labienus-qlora",
+      "layout": "standard",
+      "featured": false,
+      "title": "Labienus QLoRA",
+      "summary": "Labienus QLoRA explores adapting a locally hosted Nemotron assistant to development and operations work.",
+      "status": "Experimental research",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/labienus-qlora.html"
+    },
+    {
+      "id": "helix-med",
+      "category": "experiments",
+      "platforms": [
+        "Development tooling"
+      ],
+      "art": "helix-med",
+      "layout": "standard",
+      "featured": false,
+      "title": "Helix Medical Model Research",
+      "summary": "Helix medical-model research combines parameter-efficient training scripts, dataset preparation and evaluation tooling.",
+      "status": "Research prototype",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/helix-med.html"
+    },
+    {
+      "id": "alexei-chat-v2",
+      "category": "apps",
+      "platforms": [
+        "Native app"
+      ],
+      "art": "alexei-chat-v2",
+      "layout": "standard",
+      "featured": false,
+      "title": "AlexeiChat",
+      "summary": "A two-person translation messenger with Electron clients, a WebSocket relay, and server-side translation.",
+      "status": "Cross-platform prototype",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/alexei-chat-v2.html"
+    },
+    {
+      "id": "fable-skills",
+      "category": "experiments",
+      "platforms": [
+        "Development tooling"
+      ],
+      "art": "fable-skills",
+      "layout": "standard",
+      "featured": false,
+      "title": "Fable clean-room skills",
+      "summary": "A collection of agent workflows for clean-room research, compatibility checks, and systems implementation.",
+      "status": "Agent workflow suite",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/fable-skills.html"
+    },
+    {
+      "id": "yggdrasil-launch-menu",
+      "category": "systems",
+      "platforms": [
+        "Desktop"
+      ],
+      "art": "yggdrasil-launch-menu",
+      "layout": "standard",
+      "featured": false,
+      "title": "YGGDRASIL Launch Menu",
+      "summary": "A native in-game launch-menu preview with guarded handoff and isolated test modes.",
+      "status": "Additive preview",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/yggdrasil-launch-menu.html"
+    },
+    {
+      "id": "rimworld-pack",
+      "category": "games",
+      "platforms": [
+        "Desktop"
+      ],
+      "art": "rimworld-pack",
+      "layout": "standard",
+      "featured": false,
+      "title": "RimWorld Vanilla+ pack",
+      "summary": "A curated RimWorld 1.6 preset with dependency auditing, installation records, and reproducible load-order notes.",
+      "status": "Curated mod preset",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/rimworld-pack.html"
+    },
+    {
+      "id": "spltwr",
+      "category": "systems",
+      "platforms": [
+        "Desktop"
+      ],
+      "art": "spltwr",
+      "layout": "standard",
+      "featured": false,
+      "title": "SplTwr",
+      "summary": "A personal compatibility toolkit for running Windows games and mod managers on macOS, with launch recipes and recorded experiments.",
+      "status": "Personal research toolkit",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/spltwr.html"
+    },
+    {
+      "id": "helm-ios",
+      "category": "apps",
+      "platforms": [
+        "Native app"
+      ],
+      "art": "helm-ios",
+      "layout": "standard",
+      "featured": false,
+      "title": "Helm iOS prototype",
+      "summary": "An early iPhone home-network control surface with mesh, media-compression, and quick-action views.",
+      "status": "Historical installed prototype",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/helm-ios.html"
+    },
+    {
+      "id": "alarmclock",
+      "category": "apps",
+      "platforms": [
+        "Native app"
+      ],
+      "art": "alarmclock",
+      "layout": "standard",
+      "featured": false,
+      "title": "AlarmClock",
+      "summary": "A SwiftUI alarm-clock prototype with alarm editing, weekday selection, settings, and notification service code.",
+      "status": "Installed prototype",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/alarmclock.html"
+    },
+    {
+      "id": "server-monitor",
+      "category": "systems",
+      "platforms": [
+        "Desktop"
+      ],
+      "art": "server-monitor",
+      "layout": "standard",
+      "featured": false,
+      "title": "Minecraft mesh monitor",
+      "summary": "A Python dashboard for watching a personal Minecraft server mesh.",
+      "status": "Personal utility",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/server-monitor.html"
+    },
+    {
+      "id": "music-helm",
+      "category": "apps",
+      "platforms": [
+        "Native app"
+      ],
+      "art": "music-helm",
+      "layout": "standard",
+      "featured": false,
+      "title": "Music Helm",
+      "summary": "Music Helm explores building a listening route around the order of a chosen playlist or album. The installed app opened to a ready Now screen. A newer Route Studio source adds review, replacement and undo for suggested discoveries; that source is distinct from the installed app.",
+      "status": "Installed prototype and newer source",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/music-helm.html"
+    },
+    {
+      "id": "meshrecall",
+      "category": "tools",
+      "platforms": [
+        "Minecraft"
+      ],
+      "art": "meshrecall",
+      "layout": "standard",
+      "featured": false,
+      "title": "MeshRecall",
+      "summary": "Two cooperating Minecraft plugins that remember a player's last server and position across a Velocity mesh.",
+      "status": "Minecraft plugin pair",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/meshrecall.html"
+    },
+    {
+      "id": "bayzylbridge",
+      "category": "tools",
+      "platforms": [
+        "Minecraft"
+      ],
+      "art": "bayzylbridge",
+      "layout": "standard",
+      "featured": false,
+      "title": "BayzylBridge",
+      "summary": "A separate Minecraft chat bridge with plugin and client components for the personal server workflow.",
+      "status": "Minecraft integration prototype",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/bayzylbridge.html"
+    },
+    {
+      "id": "atv-remote",
+      "category": "systems",
+      "platforms": [
+        "Desktop"
+      ],
+      "art": "atv-remote",
+      "layout": "standard",
+      "featured": false,
+      "title": "ATV Remote customization",
+      "summary": "A customized Apple TV remote interface with navigation, text input, volume controls, and app launching.",
+      "status": "Third-party app customization",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/atv-remote.html"
+    },
+    {
+      "id": "spellbook-deck",
+      "category": "systems",
+      "platforms": [
+        "Desktop"
+      ],
+      "art": "spellbook-deck",
+      "layout": "standard",
+      "featured": false,
+      "title": "Spellbook Deck",
+      "summary": "A lightweight Mac desktop panel with clock, calendar, battery, memory and storage cards, plus a remote-screen shortcut.",
+      "status": "Personal desktop utility",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/spellbook-deck.html"
+    },
+    {
+      "id": "taberna",
+      "category": "experiments",
+      "platforms": [
+        "Development tooling"
+      ],
+      "art": "taberna",
+      "layout": "standard",
+      "featured": false,
+      "title": "Taberna",
+      "summary": "Taberna is an installable web app where three local AI residents take turns in a shared conversation. A chess table extends the room with legal-move handling, spectators, ratings and saved game history. Current remote access and notification delivery remain unverified.",
+      "status": "Development prototype",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/taberna.html"
+    },
+    {
+      "id": "local-persona-agents",
+      "category": "experiments",
+      "platforms": [
+        "Development tooling"
+      ],
+      "art": "local-persona-agents",
+      "layout": "standard",
+      "featured": false,
+      "title": "Local Persona Agents",
+      "summary": "This sidecar gives several local-model assistants shared context, research helpers and consistent terminal launchers.",
+      "status": "Development tooling",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/local-persona-agents.html"
+    },
+    {
+      "id": "helm-vm",
+      "category": "systems",
+      "platforms": [
+        "Desktop"
+      ],
+      "art": "helm-vm",
+      "layout": "standard",
+      "featured": false,
+      "title": "HELM VM Image Tooling",
+      "summary": "HELM VM Image Tooling builds an ARM Linux guest filesystem and packages the kernel, initial RAM filesystem and compressed root image. A checksum manifest records the generated artifacts. A successful guest boot has not been verified.",
+      "status": "Infrastructure prototype",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/helm-vm.html"
+    },
+    {
+      "id": "audio-transcription",
+      "category": "experiments",
+      "platforms": [
+        "Development tooling"
+      ],
+      "art": "audio-transcription",
+      "layout": "standard",
+      "featured": false,
+      "title": "Audio Transcription Pipeline",
+      "summary": "A GPU-backed transcription experiment records progress for individual audio items and checks output completeness before treating a batch as finished. The recorded batch stopped when a timestamp validation failed. Human review and complete delivery remain outstanding.",
+      "status": "Experimental pipeline",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/audio-transcription.html"
+    },
+    {
+      "id": "uncle-scam",
+      "category": "tools",
+      "platforms": [
+        "Web"
+      ],
+      "art": "uncle-scam",
+      "layout": "standard",
+      "featured": false,
+      "title": "Uncle Scam",
+      "summary": "Uncle Scam turns a salary and ZIP code into an estimated tax receipt, with federal, state and supported local calculations. Spending breakdowns, source dates and partial-estimate labels make the result inspectable; the calculations run in the browser.",
+      "status": "Live web tool",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/uncle-scam.html"
+    },
+    {
+      "id": "linkedin-connect",
+      "category": "tools",
+      "platforms": [
+        "Web"
+      ],
+      "art": "linkedin-connect",
+      "layout": "standard",
+      "featured": false,
+      "title": "LinkedIn Connect",
+      "summary": "A personal browser-automation prototype for LinkedIn connection workflows. It is retained as development work; this portfolio makes no claim of customer outcomes or messages sent.",
+      "status": "Personal prototype",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/linkedin-connect.html"
+    },
+    {
+      "id": "local-api-proxy",
+      "category": "experiments",
+      "platforms": [
+        "Development tooling"
+      ],
+      "art": "local-api-proxy",
+      "layout": "standard",
+      "featured": false,
+      "title": "Local API Proxy",
+      "summary": "A local API proxy experiment with configurable response filtering and retry handling. Its source explores request and response behavior; this record does not claim improved model quality or a safety guarantee.",
+      "status": "Experimental utility",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/local-api-proxy.html"
+    },
+    {
+      "id": "audiobookshelf-ios-build",
+      "category": "apps",
+      "platforms": [
+        "Native app"
+      ],
+      "art": "audiobookshelf-ios-build",
+      "layout": "standard",
+      "featured": false,
+      "title": "Audiobookshelf iOS Development Build",
+      "summary": "This project adapts the upstream Audiobookshelf mobile app for a personal iPhone development installation.",
+      "status": "Personal development build",
+      "updatedAt": "2026-10-31T13:54:15Z",
+      "action": "https://prismet.xyz/work/audiobookshelf-ios-build.html"
     }
   ]
 }

@@ -33,6 +33,8 @@ const check = (name, cond, detail = '') => { console.log(`${cond ? '✓' : '✗'
 const browser = await chromium.launch({ executablePath: CHROMIUM });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 page.on('pageerror', (e) => errors.push(`pageerror ${e.message}`));
+const sourceRequests = [];
+page.on('request', (r) => { const path = new URL(r.url()).pathname; if (r.method() === 'GET' && /^\/api\/edit\/(bundle|file|files)$/.test(path)) sourceRequests.push(path); });
 page.on('response', (r) => { if (r.status() === 404) errors.push(`404 ${r.url().replace(base, '')}`); });
 page.on('console', (m) => { if (m.type() === 'error' && !/status of 401/.test(m.text())) errors.push(`console ${m.text()}`); });   // the wrong-PIN step answers 401 on purpose
 const until = async (fn, arg, ms = 10000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await page.evaluate(fn, arg).catch(() => false)) return true; await new Promise((r) => setTimeout(r, 100)); } return false; };
@@ -55,6 +57,10 @@ try {
   check('the right PIN unlocks and lists the site', (await page.$$('#tree .row')).length > 20 && await page.isHidden('#connect'));
   check('the preview is the site, rendered in the page under the live CSP', await until(() => document.getElementById('frame').contentDocument?.querySelector('[data-edit="hero.lede"]') && document.getElementById('frame').contentDocument.fonts !== undefined));
   check('the inspector lists the selection\'s words', (await page.$$('#inspector .field')).length > 5);
+
+  await page.frameLocator('#frame').locator('html.pe-on').waitFor({ state: 'attached' });
+  await page.frameLocator('#frame').locator('body').evaluate(async (body) => { await body.ownerDocument.fonts.ready; });
+  check('the iframe load hook and fonts are ready before inline editing', await inFrame((d) => d.documentElement.classList.contains('pe-on') && d.fonts.status === 'loaded'));
 
   // type on the page
   const before = parseSections(siteText)['hero.lede'];
@@ -116,6 +122,7 @@ try {
   // the draft survives a reload
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('#tree .row', { timeout: 15000 });
   check('the draft survives a reload', await until(() => /Publish 5 files/.test(document.getElementById('save').textContent)), await page.textContent('#save'));
+  check('loading and reloading the complete catalog use two bounded source requests', sourceRequests.length === 2 && sourceRequests.every((path) => path === '/api/edit/bundle'), JSON.stringify(sourceRequests));
 
   // publish
   await page.click('#save');
@@ -146,6 +153,6 @@ try {
   await page.click('#lock'); await page.waitForSelector('#pin-form:visible', { timeout: 10000 });
   check('Lock ends the session', (await (await fetch(`${base}/api/edit/status`)).json()).authed === false);
   check('no console or page errors', errors.length === 0, errors.join('; '));
-} catch (e) { check('the flow completed', false, e.message); console.error(serverLog.slice(-600)); }
+} catch (e) { check('the flow completed', false, e.message); console.error(serverLog.slice(-600)); console.log('failure-state', JSON.stringify(await page.evaluate(() => ({ready:document.readyState,visibility:document.visibilityState,treeRows:document.querySelectorAll('#tree .row').length,connectHidden:document.querySelector('#connect')?.hidden,pinStatus:document.querySelector('#pin-status')?.textContent,status:document.querySelector('#status')?.textContent,save:document.querySelector('#save')?.textContent,treeBox:document.querySelector('#tree')?.getBoundingClientRect().toJSON()})))); console.log('browser-errors', JSON.stringify(errors)); }
 await browser.close(); server.kill(); ghServer.close();
 console.log(ok ? '✓ edit-smoke: all checks passed' : '✗ edit-smoke: failures above'); process.exit(ok ? 0 : 1);

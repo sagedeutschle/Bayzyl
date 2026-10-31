@@ -12,7 +12,7 @@ const options={data,site,work,assets,urls:{css:'site.css',js:'site.js',og:'https
 const expected=['bayzyl','prismet-app','the-helm','prismcode'];
 let count=0;const check=(value,label)=>{assert.ok(value,label);count++;};
 check(JSON.stringify(data.projects.filter(p=>p.story).map(p=>p.slug).sort())===JSON.stringify([...expected].sort()),'only four agreed flagships have stories');
-check(data.projects.reduce((n,p)=>n+(p.portfolio?.length||0),0)===40,'40 original portfolio views retained');
+check(data.projects.reduce((n,p)=>n+(p.portfolio?.length||0),0)===44,'40 original portfolio views and four reviewed additions retained');
 const escape=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 for(const mode of ['live','edit','preview']){
  const output=renderSite({...options,...(mode==='live'?{}:{[mode]:true})});

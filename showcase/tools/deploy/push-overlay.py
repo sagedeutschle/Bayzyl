@@ -4,6 +4,7 @@
 usage: push-overlay.py <deploy-dir> <new-tag>
 <deploy-dir> holds server.js and site/ (required), and optionally:
   public/        files to add or replace under /app/public (e.g. a scrubbed steam.html)
+  data/projects.json  the public project catalog to replace under /app/data
   whiteouts.txt  one path per line, relative to /app, to DELETE from the image (OCI whiteout
                  entries, e.g. `public/shots` removes the old capture folder and everything in it)
 Needs FLY_API_TOKEN. Prints the image ref to pass to `fly deploy --image`.
@@ -65,6 +66,11 @@ with tarfile.open(fileobj=raw, mode='w', format=tarfile.PAX_FORMAT) as tar:
         path = os.path.join(deploy_dir, name)
         if name.endswith('.js') and os.path.isfile(path):
             add(path, f'app/{name}')
+    # Package only the reviewed public catalog, not arbitrary server state.
+    catalog = os.path.join(deploy_dir, 'data', 'projects.json')
+    if os.path.isfile(catalog):
+        add(os.path.dirname(catalog), 'app/data')
+        add(catalog, 'app/data/projects.json')
     site = os.path.join(deploy_dir, 'site')
     for root, dirs, files in os.walk(site):
         dirs.sort()

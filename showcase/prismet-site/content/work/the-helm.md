@@ -5,10 +5,12 @@
 Helm
 
 ## subtitle
-A command bridge for the home fleet.
+
+A KDE desktop built like a command bridge.
 
 ## status
-Daily driver
+
+Personal desktop environment
 
 ## year
 2026
@@ -17,25 +19,27 @@ Daily driver
 Design + engineering
 
 ## summary
-Helm runs the machines at home. On the desktop it is a full KDE Plasma 6 system: 28 native QML widgets for telemetry, network, storage, and arcade games, fullscreen app overlays, floating toys, a live packet scope, and a widget locker that docks and deploys faces on command. One helm command drives it all, and a written design-language spec keeps every face consistent.
 
-In your pocket it is a native iPhone master remote for home services, lifecycle controls, backups, consoles, and quick actions.
+Helm is a custom KDE Plasma desktop: native QML instruments for clocks, CPU, GPU, network and storage, alongside small arcade games and controls for arranging the workspace. Shared panel components and palette tokens give the instruments one visual language.
+
+This record covers the Linux desktop and its widget design. Command Helm, the separately developed editor and phone companion, has its own project history.
 
 ## facts
-- Widgets: 28 QML faces
-- Remote: native iPhone app
-- VSCODIUM: Custom built IDE
-- Install: Best on Mac or Linux
+
+- Platform: KDE Plasma 6 on Linux
+- Interface: Native QML widgets
+- Gallery: Standalone renders with sample data
+- Role: Desktop design and automation
 
 ## highlights
-- The iPhone Mesh tab lists hosts and Minecraft servers with live status dots, resource use, and tap-to-wake
-- Faces render standalone with sample data, so every widget can be previewed and screenshotted headless
-- Shared chrome and palette tokens synced into every widget
-- Arcade faces (Breakout, Minesweeper, Snake, Orbital Defense) next to CPU, GPU, and fleet telemetry
+
+- Clocks, system instruments and small games in a shared panel language
+- Standalone rendering for inspecting individual QML faces
+- Shared chrome and palette tokens across the widget family
+- Layout controls for arranging and recalling the workspace
 
 <!-- Proposed engineering-story wording, added by an agent on 2026-10-04 for Sage’s review.
      Existing authored wording above is preserved. Edit these fields through /edit. -->
-
 ## story.focus
 A design system for useful instruments.
 
@@ -55,7 +59,8 @@ Make each face inspectable
 Standalone sample-data rendering lets individual QML faces be previewed outside a full desktop session, including offscreen capture.
 
 ## story.outcome
-The gallery shows rendered clock, CPU, GPU, storage and process views. These specimens demonstrate the interface and sample-data presentation, rather than a live machine reading.
+
+The gallery shows standalone clock, CPU, GPU, storage and instrument renders with sample data. They demonstrate the widget design; the displayed values are not current machine readings.
 
 ## story.evidence
 Rendered widgets · sample data

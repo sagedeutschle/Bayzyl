@@ -5,10 +5,12 @@
 Civilization V Mod Profiles
 
 ## subtitle
-Pick a stable or a risky mod build before you launch
+
+Separate stable and experimental mod stacks on Mac
 
 ## status
-Working
+
+Local launcher workflow
 
 ## year
 2026
@@ -17,10 +19,19 @@ Working
 Design + engineering
 
 ## summary
-A Mac launcher workflow for moving between distinct Civilization V mod setups with less friction.
+
+A Mac workflow for switching Civilization V between a conservative mod stack and an experimental native-compatible stack. The project evolved from the photographed Choose Your Build menu into separate Stable and Risky launcher buttons.
+
+The launchers manage available mod files; enabling mods inside the game and compatibility with an individual save remain separate steps.
 
 ## facts
-- Platforms: Mac
+
+- Platform: Native Mac Civilization V
+- Profiles: Stable · experimental · vanilla
+- Gallery: Earlier menu launcher
 
 ## highlights
-- A Choose Your Build window lists the mods in each stack
+
+- Distinct launchers for stable and experimental stacks
+- Native-Mac mod selection that excludes Windows gamecore DLLs
+- A separate vanilla profile for a clean baseline

@@ -79,9 +79,9 @@
       "beam": "minecraft",
       "stack": [
         "Java 21",
-        "Paper 1.21",
+        "Paper 1.21.11",
         "Gradle",
-        "FAWE-aware"
+        "WorldEdit integration"
       ],
       "links": [
         {
@@ -257,7 +257,7 @@
       "links": [
         {
           "label": "App Store",
-          "href": "https://apps.apple.com/us/app/kaleidescope/id6785993194"
+          "href": "https://apps.apple.com/us/app/prismet-arcade/id6785993194"
         }
       ],
       "cover": "assets/prismet/iphone-home.webp",
@@ -373,6 +373,12 @@
       ],
       "doorCover": "assets/prismet/iphone-home.webp",
       "portfolio": [
+        {
+          "src": "assets/portfolio/inventory-20261031/prismet-home.webp",
+          "alt": "Prismet running on an iPhone, with search, favorites, Continue Playing and a 25-entry Arcade library.",
+          "caption": "Current installed development build, captured on an iPhone; older iPhone and iPad views follow.",
+          "evidence": "Physical iPhone runtime · 31 October 2026"
+        },
         {
           "src": "assets/prismet/iphone-home.webp",
           "alt": "Prismet iPhone home screen with game and puzzle tiles.",
@@ -1194,9 +1200,7 @@
       "links": [],
       "cover": null,
       "gallery": [],
-      "todo": true,
       "fiverrGig": null,
-      "hidden": true,
       "room": "cabinet",
       "tier": "cabinet",
       "related": []
@@ -1212,10 +1216,845 @@
       "gallery": [],
       "shotAlts": [],
       "fiverrGig": null,
-      "hidden": true,
       "room": "cabinet",
       "tier": "cabinet",
       "related": []
+    },
+    {
+      "slug": "command-helm",
+      "beam": "desktop",
+      "stack": [
+        "VSCodium",
+        "TypeScript",
+        "Electron",
+        "Shell"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "command-helm-remote",
+        "account-helm"
+      ],
+      "aliases": []
+    },
+    {
+      "slug": "command-helm-remote",
+      "beam": "apps",
+      "stack": [
+        "SwiftUI",
+        "Python",
+        "JavaScript",
+        "HTTPS"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "command-helm",
+        "helm-ios"
+      ],
+      "aliases": []
+    },
+    {
+      "slug": "castra",
+      "beam": "ai",
+      "stack": [
+        "Python",
+        "Tk",
+        "tmux",
+        "Ollama"
+      ],
+      "links": [],
+      "cover": "assets/portfolio/inventory-20261031/castra-interface-excerpt.webp",
+      "gallery": [
+        "assets/portfolio/inventory-20261031/castra-interface-excerpt.webp"
+      ],
+      "shotAlts": [
+        "Cropped Castra development interface with its camp navigation, Labienus panel and work-order guidance."
+      ],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "labienus-qlora",
+        "kyzer"
+      ],
+      "aliases": [],
+      "portfolio": [
+        {
+          "src": "assets/portfolio/inventory-20261031/castra-interface-excerpt.webp",
+          "alt": "Cropped Castra development interface with its camp navigation, Labienus panel and work-order guidance.",
+          "caption": "October development interface excerpt; machine details omitted.",
+          "evidence": "Historical runtime · 14 October 2026"
+        }
+      ]
+    },
+    {
+      "slug": "prismet-station",
+      "beam": "ai",
+      "stack": [
+        "TypeScript",
+        "HTML",
+        "CSS",
+        "ComfyUI"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "account-helm",
+      "beam": "desktop",
+      "stack": [
+        "Swift",
+        "SwiftUI",
+        "Shell"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "block-by-block",
+      "beam": "minecraft",
+      "stack": [
+        "Java",
+        "Paper",
+        "Gradle",
+        "SQLite"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "bayzyl"
+      ],
+      "aliases": []
+    },
+    {
+      "slug": "blue-team",
+      "beam": "desktop",
+      "stack": [
+        "Shell",
+        "Python",
+        "launchd",
+        "systemd"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "paige",
+      "beam": "ai",
+      "stack": [
+        "TypeScript",
+        "HTML",
+        "Bun"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "cohort",
+      "beam": "ai",
+      "stack": [
+        "TypeScript",
+        "Node.js",
+        "OpenCode"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "prismet-lab",
+      "beam": "apps",
+      "stack": [
+        "Swift",
+        "SwiftUI",
+        "Swift Package Manager"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "council-room",
+      "beam": "ai",
+      "stack": [
+        "Swift",
+        "WKWebView",
+        "Python",
+        "Server-Sent Events",
+        "Ollama"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "helmscanner",
+      "beam": "desktop",
+      "stack": [
+        "Swift",
+        "SwiftUI",
+        "WidgetKit"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "spelltower-mc",
+      "beam": "minecraft",
+      "stack": [
+        "SwiftUI",
+        "Python",
+        "Shell",
+        "Paper",
+        "systemd"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "cicero-ios",
+      "beam": "apps",
+      "stack": [
+        "SwiftUI",
+        "Swift",
+        "XcodeGen"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "cicero",
+        "prismcode"
+      ],
+      "aliases": []
+    },
+    {
+      "slug": "esc-revert",
+      "beam": "desktop",
+      "stack": [
+        "Swift",
+        "AppKit",
+        "CoreGraphics"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "usage-tracker",
+      "beam": "desktop",
+      "stack": [
+        "Python",
+        "HTML",
+        "HTTP",
+        "pywebview"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "axiomextd",
+      "beam": "minecraft",
+      "stack": [
+        "Java",
+        "Fabric",
+        "Gradle"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "kyzer",
+      "beam": "ai",
+      "stack": [
+        "Python",
+        "FastAPI",
+        "SQLite",
+        "Ollama"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "castra",
+        "council-room",
+        "local-persona-agents"
+      ],
+      "aliases": []
+    },
+    {
+      "slug": "labienus-qlora",
+      "beam": "ai",
+      "stack": [
+        "Python",
+        "PyTorch",
+        "Transformers",
+        "PEFT",
+        "QLoRA",
+        "SDPA"
+      ],
+      "links": [],
+      "cover": "assets/portfolio/inventory-20261031/labienus-preparation.webp",
+      "gallery": [
+        "assets/portfolio/inventory-20261031/labienus-preparation.webp"
+      ],
+      "shotAlts": [
+        "Labienus QLoRA monitor showing preparation, steps pending and an empty loss trace."
+      ],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "castra"
+      ],
+      "aliases": [],
+      "portfolio": [
+        {
+          "src": "assets/portfolio/inventory-20261031/labienus-preparation.webp",
+          "alt": "Labienus QLoRA monitor showing preparation, steps pending and an empty loss trace.",
+          "caption": "A preflight monitor before training updates; this is not a completed training result.",
+          "evidence": "Historical preflight · 26 October 2026"
+        }
+      ]
+    },
+    {
+      "slug": "helix-med",
+      "beam": "ai",
+      "stack": [
+        "Python",
+        "PyTorch",
+        "Transformers",
+        "PEFT",
+        "TRL",
+        "bitsandbytes",
+        "QLoRA"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "helix-research-desk"
+      ],
+      "aliases": []
+    },
+    {
+      "slug": "alexei-chat-v2",
+      "beam": "apps",
+      "stack": [
+        "Electron",
+        "Node.js",
+        "WebSocket",
+        "SQLite"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "fable-skills",
+      "beam": "ai",
+      "stack": [
+        "Markdown",
+        "Agent workflows"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "yggdrasil-launch-menu",
+      "beam": "desktop",
+      "stack": [
+        "C++",
+        "Python",
+        "Shell",
+        "Wine",
+        "Proton"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "yggdrasil"
+      ],
+      "aliases": []
+    },
+    {
+      "slug": "rimworld-pack",
+      "beam": "worlds",
+      "stack": [
+        "Python",
+        "RimWorld",
+        "XML",
+        "HTML"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "spltwr",
+      "beam": "desktop",
+      "stack": [
+        "Shell",
+        "Python",
+        "Wine",
+        "Game Porting Toolkit"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "helm-ios",
+      "beam": "apps",
+      "stack": [
+        "SwiftUI",
+        "Swift",
+        "Go",
+        "XcodeGen"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "the-helm",
+        "command-helm-remote",
+        "plexsquish"
+      ],
+      "aliases": []
+    },
+    {
+      "slug": "alarmclock",
+      "beam": "apps",
+      "stack": [
+        "SwiftUI",
+        "Swift",
+        "UserNotifications",
+        "XcodeGen"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "server-monitor",
+      "beam": "desktop",
+      "stack": [
+        "Python",
+        "HTTP",
+        "HTML"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "music-helm",
+      "beam": "apps",
+      "stack": [
+        "Swift",
+        "SwiftUI",
+        "MusicKit",
+        "XcodeGen"
+      ],
+      "links": [],
+      "cover": "assets/portfolio/inventory-20261031/music-helm-now.webp",
+      "gallery": [
+        "assets/portfolio/inventory-20261031/music-helm-now.webp"
+      ],
+      "shotAlts": [
+        "Installed Music Helm Now screen with its personal listening command and Current Watch in standby."
+      ],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": [],
+      "portfolio": [
+        {
+          "src": "assets/portfolio/inventory-20261031/music-helm-now.webp",
+          "alt": "Installed Music Helm Now screen with its personal listening command and Current Watch in standby.",
+          "caption": "The installed 1.0 prototype opened on an iPhone. Newer Route Studio source is a separate candidate.",
+          "evidence": "Physical iPhone runtime · 31 October 2026"
+        }
+      ]
+    },
+    {
+      "slug": "meshrecall",
+      "beam": "minecraft",
+      "stack": [
+        "Java",
+        "Velocity",
+        "Paper",
+        "Gradle"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "bayzylbridge"
+      ],
+      "aliases": []
+    },
+    {
+      "slug": "bayzylbridge",
+      "beam": "minecraft",
+      "stack": [
+        "Java",
+        "Paper",
+        "Fabric",
+        "Python",
+        "Gradle"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "bayzyl",
+        "meshrecall"
+      ],
+      "aliases": []
+    },
+    {
+      "slug": "atv-remote",
+      "beam": "desktop",
+      "stack": [
+        "Electron",
+        "JavaScript",
+        "Python",
+        "Companion protocol"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "spellbook-deck",
+      "beam": "desktop",
+      "stack": [
+        "Swift",
+        "AppKit",
+        "Shell"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "plexsquish",
+      "beam": "desktop",
+      "stack": [
+        "Swift",
+        "AppKit",
+        "Go",
+        "FFmpeg",
+        "NVENC"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "taberna",
+      "beam": "ai",
+      "stack": [
+        "Python",
+        "FastAPI",
+        "SQLite",
+        "JavaScript",
+        "PWA",
+        "Ollama"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "local-persona-agents"
+      ],
+      "aliases": []
+    },
+    {
+      "slug": "local-persona-agents",
+      "beam": "ai",
+      "stack": [
+        "Python",
+        "Shell",
+        "Ollama"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "taberna",
+        "kyzer"
+      ],
+      "aliases": []
+    },
+    {
+      "slug": "helm-vm",
+      "beam": "desktop",
+      "stack": [
+        "Shell",
+        "Arch Linux ARM",
+        "ext4",
+        "zstd",
+        "SHA-256"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "audio-transcription",
+      "beam": "ai",
+      "stack": [
+        "Python",
+        "GPU processing",
+        "JSON status tracking"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "uncle-scam",
+      "beam": "web",
+      "stack": [
+        "JavaScript",
+        "HTML",
+        "CSS",
+        "Public data"
+      ],
+      "links": [
+        {
+          "label": "Open the receipt",
+          "href": "/scam"
+        }
+      ],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "debt-clock",
+        "prismet-app"
+      ],
+      "aliases": []
+    },
+    {
+      "slug": "linkedin-connect",
+      "beam": "web",
+      "stack": [
+        "Browser automation",
+        "Python"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "local-api-proxy",
+      "beam": "ai",
+      "stack": [
+        "Python",
+        "HTTP",
+        "API tooling"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
+    },
+    {
+      "slug": "audiobookshelf-ios-build",
+      "beam": "apps",
+      "stack": [
+        "Nuxt",
+        "Vue",
+        "Capacitor",
+        "iOS",
+        "Shell",
+        "Xcode"
+      ],
+      "links": [],
+      "cover": null,
+      "gallery": [],
+      "shotAlts": [],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [],
+      "aliases": []
     }
   ],
   "skills": [
