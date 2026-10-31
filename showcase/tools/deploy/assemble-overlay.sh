@@ -14,6 +14,8 @@ dist="$root/showcase/prismet-site/dist"
 grep -q "editor.js\|data-edit" "$dist/index.html" && { echo "assemble-overlay: dist contains the preview editor; refusing" >&2; exit 1; }
 rm -rf "$out"; mkdir -p "$out/public"
 cp "$root/showcase/server/"*.js "$out/"
+mkdir -p "$out/data"
+cp "$root/showcase/server/data/projects.json" "$out/data/projects.json"
 cp -r "$dist" "$out/site"
 for asset in steam.html steam.js debt.html debt.js debt.css debt-metrics.js debt-estimate.js debt-discovery.js; do
   cp "$root/showcase/server/public/$asset" "$out/public/"

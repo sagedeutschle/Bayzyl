@@ -5,10 +5,12 @@
 QR Scanner & pocket tools
 
 ## subtitle
-One-file web tools that never phone home
+
+Small browser tools with local state and clear boundaries
 
 ## status
-Live on GitHub Pages
+
+Published on GitHub Pages
 
 ## year
 2026
@@ -17,13 +19,17 @@ Live on GitHub Pages
 Author
 
 ## summary
-A QR scanner that runs from a single HTML file with no backend and no build step, plus three siblings: a phone declutter checklist with 46 tasks across 11 zones, a home-screen planner that sorts 300+ apps into verb-named folders on a live phone mockup, and an Apple Music playlist maker built on your real listening history.
+
+Four small browser projects: a camera-based QR scanner, a phone-declutter checklist, a home-screen planner and an Apple Music playlist experiment. The scanner decodes in the browser, and the checklist and planner keep their progress on the device. The music tool has separate Apple Music setup and network requirements.
 
 ## facts
-- Tools: 4, each one HTML file
-- Backend: none, works offline
-- Apps catalog: 300+
+
+- Tools: QR scanner · checklist · planner · playlist maker
+- Interface: HTML · CSS · JavaScript
+- Local state: Checklist and home-screen plans
 
 ## highlights
-- Native BarcodeDetector first, vendored jsQR fallback everywhere else
-- Progress and plans saved on-device only
+
+- Native BarcodeDetector with a bundled jsQR fallback
+- On-device progress for the checklist and planner
+- A phone-layout preview organized around app categories

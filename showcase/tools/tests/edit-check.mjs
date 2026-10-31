@@ -51,6 +51,7 @@ const pageFetch = async (url, init = {}) => {
     : url.endsWith('/api/edit/files') ? { ok: true, files: ['showcase/prismet-site/content/site.md'] }
     : init.method === 'PUT' ? { ok: true, commit: { sha: 'c0ffee1' }, content: { sha: 'newsha' } }
     : url.includes('/api/edit/run?') ? { ok: true, run: { status: 'completed', conclusion: 'success', html_url: 'https://github.com/x' } }
+    : url.includes('/api/edit/bundle') ? { ok: true, files: [{ path: 'showcase/prismet-site/content/site.md', sha: 'a'.repeat(40), text: '## title\nBayzyl ✓ é\n' }] }
     : url.includes('/api/edit/file?') ? { ok: true, path: 'showcase/prismet-site/content/site.md', sha: 'a'.repeat(40), text: '## title\nBayzyl ✓ é\n' }
     : { ok: true };
   return { ok: true, status: 200, json: async () => body };
@@ -61,6 +62,7 @@ await c.unlock('123456');
 assert.deepEqual(await c.listFiles(), ['showcase/prismet-site/content/site.md']);
 const f = await c.getFile('showcase/prismet-site/content/site.md');
 assert.equal(f.text, '## title\nBayzyl ✓ é\n');
+assert.deepEqual(await c.getBundle('d'.repeat(40)), [{path:f.path,sha:f.sha,text:f.text}], 'the client reads source files through one bundle request'); checks++;
 const put = await c.putFile(f.path, '## title\nNew ✓ é\n', f.sha, 'msg');
 assert.equal(put.commit.sha, 'c0ffee1');
 assert.equal((await c.runFor('c0ffee1')).conclusion, 'success');
@@ -247,10 +249,51 @@ assert.equal(stripTheme('a{}' + css), 'a{}'); assert.equal(safeValue('url(x)'), 
     sendJSON: (q, res, status, payload, headers = {}) => { res.status = status; res.body = payload; res.headers = headers; } });
   const call2 = async (method, path, opts) => { const res = {}; await api2.handle(req(method, path, opts), res, new URL(path, 'http://x'), method); return res; };
   const sid3 = (await call2('POST', '/api/edit/session', { body: { pin: '123456' } })).headers['set-cookie'].split(';')[0];
+  assert.equal((await call2('GET', '/api/edit/bundle')).status, 401, 'a bundle requires an editor session'); checks++;
+  const beforeRejected = gh2.calls.length;
+  assert.equal((await call2('GET', '/api/edit/bundle?path=showcase/server/server.js', { cookie: sid3 })).status, 400, 'a bundle cannot select a private path');
+  assert.equal(gh2.calls.length, beforeRejected, 'invalid bundle queries never reach GitHub'); checks += 2;
+  const bundle = await call2('GET', '/api/edit/bundle', { cookie: sid3 });
+  assert.equal(bundle.status, 200, JSON.stringify(bundle.body));
+  assert.equal(bundle.body.files.length, files.length + 4, 'the entire content catalog and four source JSON files fit one request');
+  assert.equal(new Set(bundle.body.files.map(f => f.path)).size, bundle.body.files.length);
+  assert.equal(bundle.body.files.find(f => f.path === SITE_PATH).text, disk('content/site.md').text, 'bundle preserves UTF-8 text'); checks += 4;
+  const revision = 'd'.repeat(40), callStart = gh2.calls.length;
+  assert.equal((await call2('GET', `/api/edit/bundle?ref=${revision}`, { cookie: sid3 })).status, 200);
+  assert.ok(gh2.calls.slice(callStart).every(c => c.query === `?ref=${revision}`), 'every bundle file uses the requested revision'); checks += 2;
+  // Bounds apply before returning any partial source set, without weakening rate or PIN limits.
+  for (const scenario of ['count', 'file-bytes', 'total-bytes', 'optional-missing', 'moving-branch', 'bad-head']) {
+    let bodyReads = 0, branchHead = 'a'.repeat(40);
+    const contentRefs = [];
+    const fixtureFetch = async (url) => {
+      const u = new URL(url);
+      if (u.pathname.includes('/git/ref/heads/')) return {ok:true,status:200,text:async()=>JSON.stringify({object:{sha:scenario === 'bad-head' ? 'not-a-commit' : branchHead}})};
+      contentRefs.push(u.searchParams.get('ref'));
+      if (new URL(url).pathname.endsWith('/content/work')) {
+        if (scenario === 'moving-branch') branchHead = 'b'.repeat(40);
+        const n = scenario === 'count' ? 128 : scenario === 'total-bytes' ? 12 : 1;
+        return {ok:true,status:200,text:async()=>JSON.stringify(Array.from({length:n},(_,i)=>({type:'file',name:`fixture-${i}.md`,path:`showcase/prismet-site/content/work/fixture-${i}.md`})))};
+      }
+      bodyReads++;
+      if (scenario === 'optional-missing' && /data\/(theme|styles|pages)\.json/.test(url)) return {ok:false,status:404,text:async()=>'{}'};
+      const text = scenario === 'file-bytes' ? 'x'.repeat(512 * 1024 + 1) : scenario === 'total-bytes' ? 'x'.repeat(200 * 1024) : 'source';
+      return {ok:true,status:200,text:async()=>JSON.stringify({sha:'a'.repeat(40),content:Buffer.from(text).toString('base64')})};
+    };
+    const bounded = createEditApi({env:{EDIT_GITHUB_TOKEN:'fixture',EDIT_PIN:'123456'},fetchImpl:fixtureFetch,clientAddress:()=> '5.5.5.5',sendJSON:(q,res,status,body,headers={})=>Object.assign(res,{status,body,headers})});
+    const invoke = async (method,path,opts) => {const res={};await bounded.handle(req(method,path,opts),res,new URL(path,'http://x'),method);return res;};
+    const cookie=(await invoke('POST','/api/edit/session',{body:{pin:'123456'}})).headers['set-cookie'].split(';')[0];
+    const result=await invoke('GET','/api/edit/bundle',{cookie});
+    assert.equal(result.status, ['optional-missing','moving-branch'].includes(scenario) ? 200 : scenario === 'bad-head' ? 502 : 413, scenario);
+    if (scenario === 'count') assert.equal(bodyReads,0,'file-count overflow is rejected before file reads');
+    if (scenario === 'optional-missing') assert.equal(result.body.files.length,3,'optional JSON may be absent but site, work and projects are retained');
+    if (scenario === 'moving-branch') assert.ok(contentRefs.length > 1 && contentRefs.every(ref => ref === 'a'.repeat(40)), 'branch advancement cannot mix revisions within the bundle');
+    if (scenario === 'bad-head') assert.equal(contentRefs.length,0,'a malformed branch SHA is rejected before listing or reading source');
+    checks++;
+  }
   const get = async (path) => (await call2('GET', `/api/edit/file?path=${path}`, { cookie: sid3 })).body;
   assert.equal((await get(PROJECTS_FILE)).text, disk('data/projects.json').text, 'the data files can be read'); checks++;
   const real = createStore({ storage: memory() });
-  real.load(await Promise.all([...files.map((f) => `showcase/prismet-site/${f}`), PROJECTS_FILE, THEME_FILE, 'showcase/prismet-site/data/styles.json', 'showcase/prismet-site/data/pages.json'].map(get)));
+  real.load(bundle.body.files);
   real.setText('hero.lede', 'Published lede.'); real.change('Hide plate', (d) => { d.projects.layout.hiddenSections = ['plate']; });
   real.change('New record', (d) => { d.projects.projects.push({ slug: 'new-record', beam: 'web', stack: [], hidden: true }); d.work['new-record'] = { title: 'New', subtitle: 's', status: 'x', year: '2026', role: 'r', summary: 's', facts: '- a: b', highlights: '- c' }; });
   const batch = real.changedFiles().map(({ path, text, sha }) => ({ path, text, sha }));

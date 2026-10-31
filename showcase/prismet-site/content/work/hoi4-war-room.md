@@ -5,10 +5,12 @@
 HOI4 AI War Room
 
 ## subtitle
-Watch AI agents play Hearts of Iron IV
+
+A local cockpit experiment around Hearts of Iron IV
 
 ## status
-Working
+
+Local experiment
 
 ## year
 2026
@@ -17,11 +19,16 @@ Working
 Design + engineering
 
 ## summary
-A local Mac cockpit combining a live game stream with a control and standings board.
+
+A local cockpit project for following Hearts of Iron IV through a game stream and a separate control and standings interface. The existing captures show the game and its own observer console; they do not show the complete cockpit or establish autonomous agent play.
 
 ## facts
-- Platforms: Mac · LAN web
+
+- Intended interface: Mac · local web
+- Stage: Experiment
+- Gallery: Historical game captures
 
 ## highlights
-- Streams the live game map next to a control and standings board
-- An observer console logs each AI agent’s turns
+
+- A game-stream and control-board concept
+- Historical map captures for the project’s visual context

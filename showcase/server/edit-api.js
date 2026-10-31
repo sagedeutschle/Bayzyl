@@ -37,6 +37,7 @@ const PIN_WINDOW_MS = 15 * 60 * 1000, PIN_MAX_PER_IP = 5;     // 5 wrong guesses
 const LOCK_WINDOW_MS = 60 * 60 * 1000, LOCK_AFTER = 25;        // 25 wrong guesses from anywhere in an hour locks the PIN for an hour
 const API_WINDOW_MS = 60 * 1000, API_MAX_PER_IP = 120;
 const BODY_LIMIT = 512 * 1024;
+const BUNDLE_MAX_FILES = 128, BUNDLE_MAX_BYTES = 2 * 1024 * 1024;
 const COOKIE = 'edit_session';
 
 const sha256 = (s) => createHash('sha256').update(String(s)).digest();
@@ -156,6 +157,52 @@ export function createEditApi({ env = process.env, fetchImpl = globalThis.fetch,
       if (!r.ok || !Array.isArray(r.body)) return upstream(res, req, r, 'reading the history'), true;
       sendJSON(req, res, 200, { ok: true, revisions: r.body.filter((c) => /^[0-9a-f]{40}$/.test(c?.sha || '')).map((c) => ({ sha: c.sha, date: clean(c.commit?.committer?.date, 40), message: clean(String(c.commit?.message || '').split('\n')[0], 200) })) });
       return true;
+    }
+    if (p === '/api/edit/bundle' && method === 'GET') {
+      // The server selects the files, so this cannot become an arbitrary-path read proxy.
+      if ([...url.searchParams.keys()].some((key) => key !== 'ref')) {
+        sendJSON(req, res, 400, { ok: false, error: 'Only a revision can be requested.' }); return true;
+      }
+      const requested = url.searchParams.get('ref') || '';
+      let ref = requested;
+      if (!/^[0-9a-f]{40}$/.test(requested)) {
+        const head = await github(`/repos/${REPO}/git/ref/heads/${encodeURIComponent(BRANCH)}`);
+        if (!head.ok || !/^[0-9a-f]{40}$/.test(head.body?.object?.sha || '')) {
+          return upstream(res, req, head, 'resolving the branch'), true;
+        }
+        ref = head.body.object.sha;
+      }
+      const listing = await github(`/repos/${REPO}/contents/${CONTENT_ROOT}work?ref=${ref}`);
+      if (!listing.ok || !Array.isArray(listing.body)) return upstream(res, req, listing, 'listing the files'), true;
+      const work = listing.body.filter((f) => f.type === 'file' && /\.md$/.test(f.name)).map((f) => f.path).filter(allowedPath).sort();
+      const paths = [...new Set([`${CONTENT_ROOT}site.md`, ...work, ...DATA_FILES])];
+      if (paths.length > BUNDLE_MAX_FILES) {
+        sendJSON(req, res, 413, { ok: false, error: 'The editor source bundle has too many files.' }); return true;
+      }
+      const optional = new Set([...DATA_FILES].filter((path) => !path.endsWith('/projects.json')));
+      const files = new Array(paths.length);
+      let next = 0, bytes = 0, failure = null;
+      const worker = async () => {
+        while (!failure && next < paths.length) {
+          const index = next++, path = paths[index];
+          const r = await github(`/repos/${REPO}/contents/${path}?ref=${ref}`);
+          if (r.status === 404 && optional.has(path)) continue;
+          if (!r.ok || typeof r.body?.content !== 'string' || !/^[0-9a-f]{40}$/.test(r.body.sha || '')) {
+            failure ||= { upstream: r }; continue;
+          }
+          const text = Buffer.from(r.body.content.replace(/\s/g, ''), 'base64').toString('utf8');
+          const file = { path, sha: r.body.sha, text };
+          bytes += Buffer.byteLength(JSON.stringify(file), 'utf8');
+          if (Buffer.byteLength(text, 'utf8') > BODY_LIMIT || bytes > BUNDLE_MAX_BYTES) {
+            failure ||= { large: true }; continue;
+          }
+          files[index] = file;
+        }
+      };
+      await Promise.all(Array.from({ length: Math.min(8, paths.length) }, worker));
+      if (failure?.large) { sendJSON(req, res, 413, { ok: false, error: 'The editor source bundle is too large.' }); return true; }
+      if (failure) return upstream(res, req, failure.upstream, 'reading the file'), true;
+      sendJSON(req, res, 200, { ok: true, files: files.filter(Boolean) }); return true;
     }
     if (p === '/api/edit/files' && method === 'GET') {
       const r = await github(`/repos/${REPO}/contents/${CONTENT_ROOT}work?ref=${refOf(url)}`);

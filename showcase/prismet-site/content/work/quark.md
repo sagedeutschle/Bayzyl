@@ -8,7 +8,8 @@ Quark
 A personal hub for mail, calendars, code, and files
 
 ## status
-Private build
+
+Private prototype
 
 ## year
 2026
@@ -17,11 +18,16 @@ Private build
 Design + engineering
 
 ## summary
-One window with a tab strip for every service in a busy week, each tab in its own isolated session so sign-ins never collide. Sign-ins persist across restarts, saved credentials live in an OS-encrypted vault, and a built-in Files tab edits a shared local workspace.
+
+A personal-hub prototype for bringing mail, calendars, code and files into one tabbed desktop window. Its design explores separate browser sessions and an OS-backed credential vault. The current portfolio image is the app icon; it does not demonstrate connected accounts or current runtime behavior.
 
 ## facts
-- Tabs: 11 services
-- Storage: OS-encrypted vault
+
+- Stack: Electron · JavaScript
+- Scope: Personal desktop hub
+- Gallery: App icon
 
 ## highlights
-- All views stay attached, so captchas and WebGL keep rendering when you switch tabs
+
+- A tabbed workspace for personal services
+- Separate-session and credential-vault design

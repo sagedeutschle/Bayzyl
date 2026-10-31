@@ -2,44 +2,49 @@
      *gold highlight*, **bold**. Highlights are "- " lines. Facts are "- Label: Value" lines. -->
 
 ## title
-Prismet
+Prismet Arcade
 
 ## subtitle
-A calm home for classic games, on iPhone, iPad, and Mac
+
+A home for classic games and useful lenses, built for Apple devices
 
 ## status
-Live on the App Store
+
+iPhone build installed · in development
 
 ## year
 2026
 
 ## role
-Product, design, iOS + macOS engineering, release
+
+Co-development · product, design and Apple-platform engineering
 
 ## summary
-Nineteen classic games and three live-data lenses in one app, each game with its own hand-built look. Chess plays a tunable Stockfish engine in 2D or 3D, the Rubik's Cube is a real SceneKit cube, and friends can play Sea Battle, Checkers, Reversi, Connect Four, and Gomoku online. The Mac app ships at feature parity with iOS.
+
+Co-developed with Ben, Prismet brings classic games and useful data lenses into one library. The iPhone home includes search, favorites and a place to continue saved games. Its source spans iPhone, iPad and Mac, with separate browser adaptations you can play here. Each game keeps its own presentation, from chess boards and a 3D cube to Sudoku sheets and card tables.
 
 ## facts
-- Games: 19
-- Platforms: iPhone · iPad · Mac · Watch
-- Codebase: ≈81k lines Swift + Python
-- Tests: ≈640 Swift · 237 Python
+- App Store: Version 1.3 · released 13 October 2026
+- Installed iPhone: 1.3 (19), observed 31 October 2026
+- Native work: iPhone · iPad · Mac
+- Collaboration: Co-developed with Ben
 
 ## highlights
-- Shipped v1.0 to the App Store; v1.1 rebrand submitted with saves and Game Center continuity preserved
-- A 3D Catan board, rendered in its meadow theme
-- Daily Wordgame fed by a self-hosted endpoint on prismet.xyz
-- Light, parchment, and dark reading themes; sound and haptics on every move
-- Began as Chess Hotswap, built to hot-swap between 2D and 3D chess
+
+- An installed iPhone library with search, favorites and Continue
+- Chess with 2D and 3D presentation and Stockfish opponent controls
+- A SceneKit Rubik’s Cube and individually styled games
+- Daily Wordgame infrastructure shared with prismet.xyz
+- Began as Chess Hotswap, exploring a switch between 2D and 3D chess
 
 <!-- Proposed engineering-story wording, added by an agent on 2026-10-04 for Sage’s review.
      Existing authored wording above is preserved. Edit these fields through /edit. -->
-
 ## story.focus
 A collection with individual character.
 
 ## story.contribution
-Co-developed across product, design, iOS and macOS engineering, and release work.
+
+Co-developed across product, design, iOS and macOS engineering, and release work, alongside Ben.
 
 ## story.decision.1.title
 Give each game its own interface
@@ -54,7 +59,9 @@ Separate rules from presentation
 The browser ports expose game state and actions separately from rendering. Seeded replay fixtures compare 2048, Minesweeper and Lights Out with native results.
 
 ## story.outcome
-Explore the iPhone and iPad captures, then play the browser collection. Three portable browser save formats are checked against native fixtures; other facets keep browser-only saves.
+
+Explore the native captures, then play the browser collection. Selected browser rules and portable saves have native reference fixtures; the native and browser collections have their own feature and release histories.
 
 ## story.evidence
-Co-developed · native captures + browser play
+
+Co-developed · native captures + browser adaptations

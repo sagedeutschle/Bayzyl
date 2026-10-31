@@ -5,10 +5,12 @@
 PrismCode
 
 ## subtitle
-Mission control for Claude Code, Codex, and DeepSeek
+
+The engineering workbench behind the unified Cicero app
 
 ## status
-Building
+
+Local workbench · evolving
 
 ## year
 2026
@@ -17,22 +19,27 @@ Building
 Design + engineering
 
 ## summary
-A desktop IDE where three coding agents work side by side over one workspace, each normalized into a single event stream. PRISM A/B races Claude against Codex on the same prompt in separate git worktrees, then diffs the results so you keep the winner. Sessions resume, accounts hot-swap, and a usage tracker shows spend per account.
+
+PrismCode developed the engineering workspace for Claude Code, Codex and DeepSeek: agent panes, transcripts, approvals, terminals, files, Git, diffs, sessions and usage tracking. Its worktree comparison workflow puts proposed changes side by side before adoption.
+
+That foundation is now part of the unified Cicero workbench, whose source also includes advisory Opinion, Legion and Senate dispatch, campaign tracking and a Historian. The older council prototype and installed phone companion belong to the same project lineage.
 
 ## facts
-- Agents: Claude Code · Codex · DeepSeek
-- Platform: Mac
-- Version: 0.1.0
-- Tests: 51 passing (Vitest)
+
+- Source stack: Electron · React · TypeScript
+- Platform: Mac desktop
+- Current source name: Cicero
+- Gallery: Scripted interface demonstrations
 
 ## highlights
-- One adapter per agent, one AgentEvent contract: adding an agent needed no UI work
-- Git worktree racing with compare, apply-winner, and keep-both
-- Zero-token dev loop with a mock agent
+
+- Agent adapters normalize streamed activity into a shared interface
+- Separate Git worktrees support side-by-side comparison
+- A mock-agent development loop for interface work
+- Advisory and dispatch workflows brought together in the unified source
 
 <!-- Proposed engineering-story wording, added by an agent on 2026-10-04 for Sage’s review.
      Existing authored wording above is preserved. Edit these fields through /edit. -->
-
 ## story.focus
 Make agent work comparable.
 
@@ -52,7 +59,8 @@ Put review before adoption
 The comparison workflow presents proposed changes side by side with explicit choices to apply one result or keep both. A mock-agent loop supports interface development.
 
 ## story.outcome
-The scripted demonstrations show the comparison and diff views. They illustrate the review workflow; they do not establish real agent performance or production usage.
+
+The scripted demonstrations show the comparison and diff views from the engineering workbench. They illustrate that interface, rather than a benchmark or a fresh runtime test of the unified Cicero app.
 
 ## story.evidence
 Scripted demo

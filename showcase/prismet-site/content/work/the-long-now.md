@@ -5,10 +5,12 @@
 The Long Now
 
 ## subtitle
-A mix of colony sim style storytelling, civilization technological progression.
+
+A colony simulation below, a wizard’s castle above.
 
 ## status
-Building
+
+Game prototype · in development
 
 ## year
 2026
@@ -17,11 +19,20 @@ Building
 Design + engineering
 
 ## summary
-I am attempting to combine Rimworld mechanics with Civilization style tech progression, with a huge 'mini-game' floating wizard castle belonging to a deity-ish guy called The Wizard. His castle is in the sky overseeing the mortals below and you can jump between both creating a somewhat unique gameplay flow. Inside the castle there are lots of mini games and secret things to click on.
+
+The Long Now explores colony-simulation storytelling with civilization-scale technological progression. Above the settlement is the floating castle of The Wizard, with rooms, small games and secrets to discover. Moving between the castle and the mortals below is the core idea.
+
+The Godot project continues to evolve through pixel-art, animation and scenery work. The gallery preserves earlier prototypes, including the same river scene dressed for different eras and later castle and settlement interiors.
 
 ## facts
-- Platforms: Desktop
-- Version: 0.2.0-charter-of-the-vale
+
+- Platform: Desktop
+- Engine: Godot
+- Stage: Prototype
+- Gallery: Historical prototype captures
 
 ## highlights
-- Pixel-art world that is re-dressed for each era: medieval, industrial, and far-future Dyson
+
+- A settlement and a floating wizard castle within one game concept
+- Rooms, small games and interactive details in the castle
+- Historical medieval, industrial and far-future scene studies

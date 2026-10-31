@@ -5,10 +5,12 @@
 Accessible Debt Clock
 
 ## subtitle
-The national debt, readable by everyone
+
+Public financial data, with its dates and definitions in view
 
 ## status
-Live
+
+Available on the web
 
 ## year
 2026
@@ -17,11 +19,19 @@ Live
 Design + engineering
 
 ## summary
-A calm, screen-reader-friendly view of the U.S. national debt using current Treasury data.
+
+An accessible debt clock that grew into a public financial-data explorer. The site pairs its debt headline with measures of household finances, prices, wealth and federal revenue and interest costs. Source definitions, observation dates and data-status labels travel with the figures.
 
 ## facts
-- Platforms: Web · iPhone
+
+- Platform: Web
+- Expanded source catalog: 53 measures
+- Output: Charts · tables · CSV
+- Gallery: Historical clock interface
 
 ## highlights
-- Spoken-value button and a pause-motion control
-- Per-citizen and per-taxpayer figures from Treasury data
+
+- Read-aloud and pause-motion controls for the headline
+- Comparison presets for household burden, wealth and federal interest costs
+- Tables and CSV export retain the selected observation dates
+- Cached, stale and missing source states remain distinct

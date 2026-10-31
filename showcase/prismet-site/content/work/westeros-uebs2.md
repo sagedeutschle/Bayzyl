@@ -5,22 +5,29 @@
 Westeros for UEBS 2
 
 ## subtitle
-A Westeros battle map for Ultimate Epic Battle Simulator 2
+
+A Westeros-inspired battle-map project
 
 ## status
-TODO: Workshop status
+
+Local map-editor candidate
 
 ## year
-TODO
+
+2026
 
 ## role
 Map design
 
 ## summary
-TODO: two or three sentences from Sage on scale, landmarks, and how it plays. Add Workshop link and 3–6 screenshots to showcase/assets/worlds/.
+
+A Westeros-inspired map project for Ultimate Epic Battle Simulator 2. The retained local candidate has editor and native-tool evidence. In-game battle behavior and a public Workshop release have not been established for this record.
 
 ## facts
+
 - Game: Ultimate Epic Battle Simulator 2
+- Stage: Local editor candidate
 
 ## highlights
 
+- Terrain and landmark work for a large battle-map concept

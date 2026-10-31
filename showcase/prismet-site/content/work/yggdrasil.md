@@ -5,10 +5,12 @@
 Yggdrasil
 
 ## subtitle
-The FromSoft catalog inside one Elden Ring instance
+
+Rebuilding Dark Souls III spaces inside Elden Ring
 
 ## status
-Building
+
+Experimental mod · in development
 
 ## year
 2026
@@ -17,12 +19,20 @@ Building
 Design + engineering
 
 ## summary
-A project to unify the FromSoft catalog inside one Elden Ring instance, starting with a Dark Souls III port.
+
+Yggdrasil explores bringing FromSoftware worlds into one Elden Ring installation, starting with Dark Souls III. Map conversion, collision, materials, lighting and progression all need to work together.
+
+The current runthrough scope groups Cemetery of Ash, Firelink Shrine, the High Wall of Lothric and Undead Settlement into one chunk for refinement. The High Wall capture records an earlier in-game build; route, rendering and boss-detail work remain in progress.
 
 ## facts
-- Platforms: Games
-- Version: M1
+
+- Host game: Elden Ring
+- First world: Dark Souls III
+- Stage: Experimental conversion and integration
+- Gallery: Historical in-game High Wall capture
 
 ## highlights
-- Dark Souls III's High Wall of Lothric, walkable end to end inside a running Elden Ring
 
+- Dark Souls III environment geometry rendered inside a running Elden Ring
+- Conversion work across maps, collision, materials and supporting game data
+- A four-area runthrough scope with ongoing visual and route checks

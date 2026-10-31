@@ -21,10 +21,10 @@ const galleries = (html) => [...html.matchAll(/<ol class="gallery-track"[\s\S]*?
 const links = (html) => [...html.matchAll(/<a class="gallery-image" href="([^"]+)"[^>]*>/g)].map((m) => m[1]);
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 check(data.featuredOrder.length === 6 && galleries(home).filter((g) => g.includes('id="portfolio-')).length === 6, 'all six principal projects have galleries');
-check(data.projects.filter((p) => p.portfolio).length === 8, 'eight curated portfolios');
+check(data.projects.filter((p) => p.portfolio).length === 11, 'eleven curated portfolios');
 const minecraftGallery = galleries(home).find((g) => g.includes('id="minecraft-build-gallery"'));
 check(!!minecraftGallery && links(minecraftGallery).length === 8, 'eight separately curated Minecraft plate views');
-check(data.projects.reduce((n, p) => n + (p.portfolio?.length || 0), 0) === 40, 'all forty curated views retained');
+check(data.projects.reduce((n, p) => n + (p.portfolio?.length || 0), 0) === 44, 'forty-four curated views including four reviewed additions');
 for (const p of data.projects.filter((p) => p.portfolio)) {
   const html = live.pages.get(`work/${p.slug}.html`), gallery = galleries(html)[0];
   check(links(gallery).length === p.portfolio.length, `${p.slug}: entire selected sequence`);

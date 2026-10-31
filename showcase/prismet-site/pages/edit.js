@@ -38,6 +38,7 @@ export function makeClient(fetchImpl = globalThis.fetch, base = '') {
     lock: () => call('/api/edit/session', { method: 'DELETE' }),
     listFiles: async (ref = '') => (await call(`/api/edit/files${ref ? `?ref=${ref}` : ''}`)).files,
     getFile: (path, ref = '') => call(`/api/edit/file?path=${encodeURIComponent(path)}${ref ? `&ref=${ref}` : ''}`),
+    getBundle: async (ref = '') => (await call(`/api/edit/bundle${ref ? `?ref=${encodeURIComponent(ref)}` : ''}`)).files,
     history: async () => (await call('/api/edit/history')).revisions,
     putFile: (path, text, sha, message) => call('/api/edit/file', { method: 'PUT', body: JSON.stringify({ path, text, sha, message }) }),
     /** Publish: [{ path, text, sha }] in one commit. */
@@ -90,15 +91,13 @@ async function init() {
   async function load() {
     say('Loading the site…');
     try {
-      const optional = (p) => client.getFile(p).catch((e) => (e.status === 404 ? null : Promise.reject(e)));
-      const [paths, projects, theme, styles, sitePages, manifest, css] = await Promise.all([
-        client.listFiles(), client.getFile(PROJECTS_FILE), optional(THEME_FILE), optional(STYLES_FILE), optional(PAGES_FILE),
+      const [source, manifest, css] = await Promise.all([
+        client.getBundle(),
         fetch('edit/assets.json', { cache: 'no-cache' }).then((r) => r.json()),
         fetch('site.css', { cache: 'no-cache' }).then((r) => r.text()),
       ]);
-      const words = await Promise.all(paths.map((p) => client.getFile(p)));
       if (!preview) { media = await createMedia({ manifest, say }); start(manifest, stripTheme(css)); }
-      store.load([...words, projects, theme, styles, sitePages].filter(Boolean));
+      store.load(source);
       if (remote.on) await pullDraft();
     } catch (err) {
       if (err.status === 401) return askPin('The session ended. Enter the PIN again.');
@@ -207,10 +206,7 @@ async function init() {
   async function openRevision(r) {
     say(`Opening the site as of ${when(r.date)}…`);
     try {
-      const optional = (p) => client.getFile(p, r.sha).catch((e) => (e.status === 404 ? null : Promise.reject(e)));
-      const [paths, ...data] = await Promise.all([client.listFiles(r.sha), optional(PROJECTS_FILE), optional(THEME_FILE), optional(STYLES_FILE), optional(PAGES_FILE)]);
-      const words = await Promise.all(paths.map((p) => client.getFile(p, r.sha)));
-      const took = store.restore(when(r.date), [...words, ...data].filter(Boolean));
+      const took = store.restore(when(r.date), await client.getBundle(r.sha));
       say(took ? `This is the site as of ${when(r.date)}, as a draft. Undo comes back; Publish restores it.` : 'That revision is what the draft already shows.', took ? 'ok' : '');
     } catch (err) { if (err.status === 401) askPin('The session ended. Enter the PIN again.'); else say(`Could not open that revision: ${err.message}`, 'warn'); }
   }

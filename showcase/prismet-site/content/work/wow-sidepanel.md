@@ -8,7 +8,8 @@ WoW Sidepanel
 A World of Warcraft addon for ultrawide and multi-monitor setups
 
 ## status
-Working
+
+Archived addon prototype
 
 ## year
 2026
@@ -17,11 +18,14 @@ Working
 Design + engineering
 
 ## summary
-A World of Warcraft addon that reserves a partial right-side UI strip for multi-monitor layouts.
+
+A World of Warcraft addon prototype exploring a reserved right-side UI strip for ultrawide or multi-monitor arrangements. The source is retained as a historical project; current game-version compatibility and an in-game panel demonstration have not been established for this record.
 
 ## facts
-- Platforms: WoW Addon
-- Version: 1.0.0
+
+- Platform: World of Warcraft addon
+- Stage: Historical prototype
 
 ## highlights
 
+- A side-panel layout experiment for wide displays
