@@ -26,6 +26,13 @@ try {
     assert.match(page.headers.get('content-type'), /text\/html/);
     assert.match(await page.text(), /Prismet/);
   }
+  for (const route of ['/shorepact/privacy', '/shorepact/support']) {
+    const page = await fetch(base + route);
+    assert.equal(page.status, 200, `${route} has a static destination`);
+    assert.match(page.headers.get('content-type'), /text\/html/);
+    assert.match(await page.text(), /Shorepact/);
+  }
+  assert.equal((await fetch(base + '/shorepact/legal.css')).status, 200, 'Shorepact pages load their stylesheet');
   const association = await fetch(base + '/.well-known/apple-app-site-association');
   assert.equal(association.status, 200);
   assert.match(association.headers.get('content-type'), /application\/json/);
