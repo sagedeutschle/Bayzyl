@@ -63,6 +63,7 @@ const MIME = {
   '.jpg': 'image/jpeg',
   '.webp': 'image/webp',
   '.woff2': 'font/woff2',
+  '.mp4': 'video/mp4',
 };
 
 const SECURITY_HEADERS = {
@@ -304,6 +305,7 @@ function safeStaticPath(urlPath, staticRoot) {
   if (/^arcade\/(2048|minesweeper|lights-out|wordle|rubiks-cube|snake|sudoku|sliding-15|nonogram|chess|reversi|checkers|connect-four|gomoku|sea-battle|solitaire|spider|crazy-8|catan|brick-bench)\/?$/.test(rel)) rel = 'arcade/game.html';
   if (rel === 'edit' || rel === 'privacy' || rel === 'support' || rel === 'scam') rel = `${rel}.html`;   // pages shipped by the site build (site/)
   if (/^shorepact\/(privacy|support)\/?$/.test(rel)) rel = `${rel.replace(/\/$/, '')}.html`;   // App Store privacy and support pages (pages/shorepact/)
+  if (/^shorepact\/?$/.test(rel)) rel = 'shorepact.html';
   if (/^bayzyl\/?$/.test(rel)) rel = 'bayzyl.html';   // Build Big with Bayzyl (pages/bayzyl.html; its assets live under bayzyl/)
   rel = rel.split('?')[0].split('#')[0];
   if (/%/i.test(rel)) {

@@ -28,7 +28,7 @@ try {
     assert.match(page.headers.get('content-type'), /text\/html/);
     assert.match(await page.text(), /Prismet/);
   }
-  for (const route of ['/shorepact/privacy', '/shorepact/support']) {
+  for (const route of ['/shorepact', '/shorepact/', '/shorepact/privacy', '/shorepact/support']) {
     const page = await fetch(base + route);
     assert.equal(page.status, 200, `${route} has a static destination`);
     assert.match(page.headers.get('content-type'), /text\/html/);
