@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { createPrismetServer } from '../../server/server.js';
 
 // A missing route or failure to use the injected service makes this fail without
@@ -47,3 +49,10 @@ try {
   server.closeAllConnections();
   await new Promise((resolve) => server.close(resolve));
 }
+
+// This script already gates the site's main workflow. Keep the date-specific
+// daily service and HTTP regressions in that gate without a separate CI path.
+execFileSync(process.execPath, ['--test',
+  fileURLToPath(new URL('../../server/test/wordle-daily.test.js', import.meta.url)),
+  fileURLToPath(new URL('../../server/test/wordle-routes.test.js', import.meta.url)),
+], { stdio: 'inherit' });

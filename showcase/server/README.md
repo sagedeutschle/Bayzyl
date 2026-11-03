@@ -13,8 +13,21 @@ signalling over WebSocket), `/healthz`. Extracted from the deployed image on 202
 
 Run it locally: `npm ci --omit=dev`, copy `../prismet-site/dist` to `site/`, `PORT=18081 node server.js`, then
 `../tools/deploy/gate.sh http://127.0.0.1:18081 local`. Env: `PORT`, `GITHUB_USER`, `STEAM_API_KEY` (Steam search),
-`WORDLE_DAILY_URL`, `PROJECTS_URL` (optional gist; the bundled `data/projects.json` is the fallback). No secrets live
+`WORDLE_TIMEOUT_MS`, `WORDLE_CACHE_MS`, `PROJECTS_URL` (optional gist; the bundled `data/projects.json` is the fallback). No secrets live
 here; `node_modules/` and `site/` are ignored.
+
+The daily-word candidate fetches the date-addressed public Wordle JSON response directly,
+validates its five-letter solution and exact `print_date`, and returns only the existing
+`{answer,date,sourceName}` contract. `/api/wordle` keeps the New York date for existing clients;
+`/api/wordle?date=YYYY-MM-DD` selects the player's local date. Only dates currently active
+somewhere from UTC-12 to UTC+14 are accepted; malformed, duplicate, nonexistent or inactive
+dates return 400. HEAD validates the date without fetching. Successful replies are cached
+by date for at most five minutes, with at most three entries and three in-flight requests;
+failures are not cached. The default request deadline is six seconds (maximum ten seconds),
+and upstream bodies are limited to 32 KiB while streaming. Unavailable or mismatched data
+returns 502, never an unrelated local puzzle. The old `WORDLE_DAILY_URL` broker override is
+not used. The existing broker service is unchanged. Run `npm test` after building/copying
+`site/`; the site workflow's existing product-route check runs these tests before deployment.
 
 The 2026-10-04 product hub adds `/arcade`, 20 playable destinations, `/tools`, and `/api/debt` (43 dated,
 source-attributed metrics with independent stale/missing states). `debt-data.js` fetches upstream observations

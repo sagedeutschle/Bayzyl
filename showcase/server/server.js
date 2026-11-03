@@ -6,7 +6,7 @@ import { extname, normalize, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { serializePublicCatalog, validateCatalog } from './project-catalog.js';
 import { createProjectFeed } from './project-feed.js';
-import { readCurrentDailyWordCache, sanitizeDailyWordPayload } from './wordle-daily.js';
+import { createDailyWordService } from './wordle-daily.js';
 import { createSignaling } from './signaling.js';
 import { createEditApi } from './edit-api.js';
 import { createArcadeApi } from './arcade-api.js';
@@ -23,15 +23,11 @@ const BUNDLED_CATALOG = validateCatalog(JSON.parse(
 ));
 const PORT = Number(process.env.PORT || 8080);
 const KEY = process.env.STEAM_WEB_API_KEY || '';
-const WORDLE_URL = process.env.WORDLE_DAILY_URL
-  || 'https://cmufcjysgbiqhohozkrf.supabase.co/storage/v1/object/public/kaleidoscope-public/wordle/daily.json';
 const CC = 'us';
 const API = 'https://api.steampowered.com';
 const STORE = 'https://store.steampowered.com/api/appdetails';
 
 const REQUEST_TIMEOUT_MS = Math.max(2_000, Number(process.env.REQUEST_TIMEOUT_MS || 8_000));
-const WORDLE_TIMEOUT_MS = Math.max(1_000, Number(process.env.WORDLE_TIMEOUT_MS || 6_000));
-const WORDLE_CACHE_MS = Math.max(10_000, Number(process.env.WORDLE_CACHE_MS || 5 * 60 * 1000));
 const MAX_QUERY_LENGTH = 128;
 const MAX_GAME_NAME_LENGTH = 64;
 const MAX_STEAM_GAMES = 500;
@@ -134,7 +130,6 @@ const RATE_LIMITS = {
   static: { max: 600, windowMs: 60_000 },   // one visit is ~70 requests (fonts, plates, tiles); 75 cut real visitors off
   rtc: { max: 20, windowMs: 60_000 },
 };
-let cachedWordle = { expiresAt: 0, payload: null };
 
 function securityHeaders(overrides = {}) {
   return {
@@ -571,18 +566,6 @@ async function buildSnapshot(input) {
   };
 }
 
-async function getWordlePayload() {
-  const cached = readCurrentDailyWordCache(cachedWordle);
-  if (cached) return cached;
-  const payload = await fetchJSON(WORDLE_URL, WORDLE_TIMEOUT_MS);
-  const cleaned = sanitizeDailyWordPayload(payload);
-  cachedWordle = {
-    payload: cleaned,
-    expiresAt: Date.now() + WORDLE_CACHE_MS,
-  };
-  return cleaned;
-}
-
 const ERR = {
   empty: 'Type a Steam ID, vanity name, or profile URL.',
   notFound: "Couldn't find that profile — check the ID or vanity URL.",
@@ -595,6 +578,7 @@ const ERR = {
   wordleFetch: 'Could not load today\'s daily word right now.',
   wordleFormat: 'The daily word payload is not valid.',
   wordleStale: 'Today\'s daily word is still refreshing.',
+  wordleDate: 'Choose a valid date that is currently active in your time zone.',
   badInput: 'Invalid request input.',
 };
 
@@ -612,20 +596,23 @@ async function handleSteam(req, res, url) {
   }
 }
 
-async function handleWordle(req, res) {
-  if (rateLimited('wordle', req, res)) {
-    sendJSON(req, res, 429, { ok: false, error: ERR.rateLimited });
-    return;
-  }
+async function handleWordle(req, res, url, wordleService) {
   try {
-    const payload = await getWordlePayload();
+    const dates = url.searchParams.getAll('date');
+    if (dates.length > 1) throw { code: 'wordleDate' };
+    const date = wordleService.resolveDate(dates.length ? dates[0] : undefined);
+    if (req.method === 'HEAD') return sendJSON(req, res, 200, {}, { 'cache-control': 'no-store' });
+    if (rateLimited('wordle', req, res)) {
+      return sendJSON(req, res, 429, { ok: false, error: 'Too many daily puzzle requests. Try again in a minute.' }, { 'cache-control': 'no-store' });
+    }
+    const payload = await wordleService.getDailyWord(date);
     sendJSON(req, res, 200, payload, { 'cache-control': 'no-store' });
   } catch (e) {
-    sendJSON(req, res, 502, { ok: false, error: ERR[e?.code] || ERR.wordleFetch });
+    sendJSON(req, res, e?.code === 'wordleDate' ? 400 : 502, { ok: false, error: ERR[e?.code] || ERR.wordleFetch }, { 'cache-control': 'no-store' });
   }
 }
 
-async function routeRequest(req, res, projectFeed, debtService, arcadeApi) {
+async function routeRequest(req, res, projectFeed, debtService, arcadeApi, wordleService) {
   if (!req.url) return sendText(req, res, 400, 'Bad request.');
   setCorsIfAllowed(req, res);
 
@@ -696,7 +683,7 @@ async function routeRequest(req, res, projectFeed, debtService, arcadeApi) {
     return handleSteam(req, res, url);
   }
   if (url.pathname === '/api/wordle') {
-    return handleWordle(req, res);
+    return handleWordle(req, res, url, wordleService);
   }
   if (url.pathname === '/api/debt') {
     if (method === 'HEAD') return sendJSON(req, res, 200, {}, { 'cache-control': 'no-store' });
@@ -724,7 +711,7 @@ async function routeRequest(req, res, projectFeed, debtService, arcadeApi) {
   return serveStatic(req, res, url.pathname, /^[0-9a-f]{6,}$/.test(url.searchParams.get('v') || ''));
 }
 
-export function createPrismetServer({ feed, signaling, debt, arcade } = {}) {
+export function createPrismetServer({ feed, signaling, debt, arcade, wordle } = {}) {
   const projectFeed = feed ?? createProjectFeed({
     bundledCatalog: BUNDLED_CATALOG,
     projectsUrl: process.env.PROJECTS_URL || undefined,
@@ -749,7 +736,11 @@ export function createPrismetServer({ feed, signaling, debt, arcade } = {}) {
     return (await debtModule).getSnapshot(options);
   } };
   const arcadeApi = arcade ?? createArcadeApi({ sendJSON, rateLimited });
-  const server = createServer((req, res) => routeRequest(req, res, projectFeed, debtService, arcadeApi));
+  const wordleService = wordle ?? createDailyWordService({
+    timeoutMs: process.env.WORDLE_TIMEOUT_MS,
+    cacheMs: process.env.WORDLE_CACHE_MS,
+  });
+  const server = createServer((req, res) => routeRequest(req, res, projectFeed, debtService, arcadeApi, wordleService));
 
   // Stateless WebRTC signaling sibling route — /rtc — alongside the HTTP handling
   // above. No table, no row, no persisted game state (universal-room-system

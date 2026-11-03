@@ -1,5 +1,37 @@
 # prismet.xyz — handoff (2026-10-03)
 
+## Exact daily puzzle — 2026-11-02 local candidate
+
+The daily endpoint candidate reads the public date-addressed Wordle JSON response
+directly instead of waiting for the Supabase news-consensus broker. It validates
+the exact requested `print_date` and five ASCII letters, then preserves the
+shipping `{answer,date,sourceName:"Daily"}` JSON shape. No credentials, account,
+paywall access or archive are involved. The existing broker service is unchanged.
+
+Existing `/api/wordle` clients keep the New York date. New clients should request
+`/api/wordle?date=YYYY-MM-DD` with the player's current local date; only dates
+currently active somewhere from UTC-12 through UTC+14 are accepted. Each date has
+an independent positive cache entry, so local midnight cannot return yesterday's
+cached word. Upstream errors and date mismatches return an unavailable response;
+no unrelated puzzle is substituted. The client must also validate the response
+date and distinguish unavailable Daily from local/practice play.
+
+This is a local candidate based on main `553c879`, not a production deployment.
+Local evidence: 13 new service/HTTP tests passed after red-green reproduction;
+the site build/verification, all 25 existing workflow regression scripts and the
+594-check editor contract passed. A real local HTTP request for the already-active
+next calendar date returned the matching released answer in a combined 631 ms
+including an independent upstream comparison; the answer was not printed.
+The checks do not establish Fly-to-upstream availability or reliability at midnight.
+
+Release through the existing approved main-branch workflow only after owner
+authorization; its existing product-route check now runs the daily tests. No dependency,
+secret, migration or service retirement is required. `WORDLE_TIMEOUT_MS` and
+`WORDLE_CACHE_MS` remain bounded tuning options; `WORDLE_DAILY_URL` is no longer
+used. Confirm both the default date and an active explicit date against the
+upstream after deployment, then verify foreground/midnight behavior in the native
+next-release client. A normal revert restores the previous endpoint behavior.
+
 ## WebSocket Origin validation — 2026-10-31 candidate
 
 `signaling.js` now rejects browser upgrade requests unless Origin is exactly
