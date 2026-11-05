@@ -5,6 +5,8 @@
 // changes a token, moves a section, undoes it, publishes, and checks that GitHub receives one commit holding exactly
 // what writeSections produces. Exits 1 on any failure.
 import { spawn } from 'node:child_process';
+import { randomBytes } from 'node:crypto';
+import { checkPlaytestForm } from './shorepact-browser-form.mjs';
 import { readFileSync, existsSync, rmSync, cpSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -23,7 +25,8 @@ const gh = fakeGitHub({ root: ROOT }), ghServer = await gh.listen();
 // the real server, with the fresh build as site/
 rmSync(join(SERVER, 'site'), { recursive: true, force: true }); cpSync(DIST, join(SERVER, 'site'), { recursive: true });
 const port = 18200 + Math.floor(Math.random() * 90);
-const server = spawn(process.execPath, ['server.js'], { cwd: SERVER, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, PORT: String(port), EDIT_GITHUB_TOKEN: 'github_pat_FAKE', EDIT_PIN: '123456', EDIT_GITHUB_API: ghServer.url, EDIT_COOKIE_SECURE: '0', EDIT_DRAFT_REPO: 'sagedeutschle/prismet-drafts' } });
+const playtestKey = randomBytes(32);
+const server = spawn(process.execPath, ['server.js'], { cwd: SERVER, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, PORT: String(port), SHOREPACT_SITE_KEY:playtestKey.toString('base64'), EDIT_GITHUB_TOKEN: 'github_pat_FAKE', EDIT_PIN: '123456', EDIT_GITHUB_API: ghServer.url, EDIT_COOKIE_SECURE: '0', EDIT_DRAFT_REPO: 'sagedeutschle/prismet-drafts' } });
 let serverLog = ''; server.stdout.on('data', (d) => serverLog += d); server.stderr.on('data', (d) => serverLog += d);
 const base = `http://127.0.0.1:${port}`;
 for (let i = 0; i < 100; i++) { try { if ((await fetch(`${base}/healthz`)).ok) break; } catch {} await new Promise((r) => setTimeout(r, 100)); }
@@ -42,6 +45,7 @@ const inFrame = (fn, arg) => page.evaluate(`(${fn})(document.getElementById('fra
 const sections = () => inFrame((d) => [...d.querySelectorAll('#main > [data-section]')].map((s) => s.dataset.section).join(','));
 const row = (name) => page.locator('#tree .row', { has: page.locator('.name', { hasText: new RegExp(`^${name}$`) }) });
 try {
+  await checkPlaytestForm(browser, base, playtestKey);
   const st = await (await fetch(`${base}/api/edit/status`)).json();
   check('the server reports the editor configured and locked', st.configured === true && st.authed === false, JSON.stringify(st));
   check('the edit API needs a session', (await fetch(`${base}/api/edit/files`)).status === 401 && (await fetch(`${base}/api/edit/commit`, { method: 'POST', headers: { 'x-prismet-edit': '1' }, body: '{}' })).status === 401);
