@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { serializePublicCatalog, validateCatalog } from './project-catalog.js';
 import { createProjectFeed } from './project-feed.js';
 import { createDailyWordService } from './wordle-daily.js';
+import { createMetricsServer, createPageViews, isArcadeGamePath } from './page-views.js';
 import { createSignaling } from './signaling.js';
 import { createEditApi } from './edit-api.js';
 import { createArcadeApi } from './arcade-api.js';
@@ -302,7 +303,7 @@ function safeStaticPath(urlPath, staticRoot) {
   if (rel === 'steam') rel = 'steam.html';
   if (rel === 'debt') rel = 'debt.html';
   if (/^(arcade|tools)\/?$/.test(rel)) rel = `${rel.replace(/\/$/, '')}.html`;
-  if (/^arcade\/(2048|minesweeper|lights-out|wordle|rubiks-cube|snake|sudoku|sliding-15|nonogram|chess|reversi|checkers|connect-four|gomoku|sea-battle|solitaire|spider|crazy-8|catan|brick-bench)\/?$/.test(rel)) rel = 'arcade/game.html';
+  if (isArcadeGamePath('/' + rel)) rel = 'arcade/game.html';
   if (rel === 'edit' || rel === 'privacy' || rel === 'support' || rel === 'scam') rel = `${rel}.html`;   // pages shipped by the site build (site/)
   if (/^shorepact\/(privacy|support)\/?$/.test(rel)) rel = `${rel.replace(/\/$/, '')}.html`;   // App Store privacy and support pages (pages/shorepact/)
   if (/^shorepact\/?$/.test(rel)) rel = 'shorepact.html';
@@ -323,7 +324,7 @@ function safeStaticPath(urlPath, staticRoot) {
   return file;
 }
 
-async function serveStatic(req, res, urlPath, versioned = false) {
+async function serveStatic(req, res, urlPath, versioned, pageViews) {
   // The old site's capture folder (public/shots/) is retired: nothing links it and some
   // captures showed host names. The folder is removed from the image; refuse the path too.
   if (urlPath === '/shots' || urlPath.startsWith('/shots/')) {
@@ -342,6 +343,7 @@ async function serveStatic(req, res, urlPath, versioned = false) {
     } catch {
       continue;
     }
+    if (extname(file) === '.html') pageViews?.observe(req, res, urlPath);
     return sendResponse(req, res, 200, data, {
       'content-type': file.endsWith('/.well-known/apple-app-site-association') ? 'application/json; charset=utf-8' : MIME[extname(file)] || 'application/octet-stream',
       'cache-control': versioned && file.startsWith(SITE_ROOT) ? VERSIONED_CACHE_CONTROL : file.startsWith(SHOTS_ROOT) ? SHOTS_CACHE_CONTROL : DEFAULT_CACHE_CONTROL,
@@ -614,7 +616,7 @@ async function handleWordle(req, res, url, wordleService) {
   }
 }
 
-async function routeRequest(req, res, projectFeed, debtService, arcadeApi, wordleService) {
+async function routeRequest(req, res, projectFeed, debtService, arcadeApi, wordleService, pageViews) {
   if (!req.url) return sendText(req, res, 400, 'Bad request.');
   setCorsIfAllowed(req, res);
 
@@ -710,10 +712,10 @@ async function routeRequest(req, res, projectFeed, debtService, arcadeApi, wordl
     return;
   }
 
-  return serveStatic(req, res, url.pathname, /^[0-9a-f]{6,}$/.test(url.searchParams.get('v') || ''));
+  return serveStatic(req, res, url.pathname, /^[0-9a-f]{6,}$/.test(url.searchParams.get('v') || ''), pageViews);
 }
 
-export function createPrismetServer({ feed, signaling, debt, arcade, wordle } = {}) {
+export function createPrismetServer({ feed, signaling, debt, arcade, wordle, pageViews } = {}) {
   const projectFeed = feed ?? createProjectFeed({
     bundledCatalog: BUNDLED_CATALOG,
     projectsUrl: process.env.PROJECTS_URL || undefined,
@@ -742,7 +744,7 @@ export function createPrismetServer({ feed, signaling, debt, arcade, wordle } = 
     timeoutMs: process.env.WORDLE_TIMEOUT_MS,
     cacheMs: process.env.WORDLE_CACHE_MS,
   });
-  const server = createServer((req, res) => routeRequest(req, res, projectFeed, debtService, arcadeApi, wordleService));
+  const server = createServer((req, res) => routeRequest(req, res, projectFeed, debtService, arcadeApi, wordleService, pageViews));
 
   // Stateless WebRTC signaling sibling route — /rtc — alongside the HTTP handling
   // above. No table, no row, no persisted game state (universal-room-system
@@ -771,7 +773,24 @@ const isMainModule = process.argv[1]
   && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 
 if (isMainModule) {
-  const server = createPrismetServer();
+  let pageViews;
+  if (process.env.PRISMET_METRICS_PORT) {
+    const metricsPort = Number(process.env.PRISMET_METRICS_PORT);
+    // Never let a telemetry misconfiguration take the public HTTP port or prevent site startup.
+    if (Number.isInteger(metricsPort) && metricsPort > 0 && metricsPort <= 65535 && metricsPort !== PORT) {
+      try {
+        pageViews = createPageViews(SITE_ROOT);
+        const metrics = createMetricsServer(pageViews);
+        metrics.on('error', error => console.error('Private page metrics unavailable:', error.code));
+        metrics.listen(metricsPort, '0.0.0.0');
+      } catch (error) {
+        console.error('Private page metrics unavailable:', error.code);
+      }
+    } else {
+      console.error('Private page metrics require a separate valid port.');
+    }
+  }
+  const server = createPrismetServer({ pageViews });
   server.listen(PORT, () => {
     console.log(`prismet listening on :${PORT} (steam key: ${KEY ? 'set' : 'MISSING'})`);
   });
