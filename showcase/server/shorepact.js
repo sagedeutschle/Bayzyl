@@ -43,6 +43,7 @@ function limited(req,action,max){
 }
 export async function serveShorepact(req,res,url){
   function send(status,body='',extra={}){res.writeHead(status,{...headers,...extra});res.end(req.method==='HEAD'?'':body)}
+  if(limited(req,'asset',600))return send(429,'Too many requests. Try again shortly.',{'Retry-After':'60'});
   if(url.pathname===root.slice(0,-1))return send(308,'',{Location:root+url.search});
   if(url.pathname===root+'socket')return send(426,'WebSocket connection required.',{Upgrade:'websocket'});
   const file=url.pathname.slice(root.length)||'index.html';
@@ -73,7 +74,10 @@ export async function serveShorepact(req,res,url){
 export function shorepactRooms(){
   const broker=new Broker(),wss=new WebSocketServer({noServer:true,maxPayload:maxFrameBytes,perMessageDeflate:false});
   const active=new Map();
-  const timer=setInterval(()=>broker.sweep(),15000);timer.unref();
+  const timer=setInterval(()=>{
+    broker.sweep(); const now=Date.now();
+    for (const [id,budget] of limits) if (budget.until<=now) limits.delete(id);
+  },15000);timer.unref();
   return {upgrade(req,socket,head){
     const abort=(status,extra='')=>socket.end('HTTP/1.1 '+status+'\r\n'+extra+'Connection: close\r\nContent-Length: 0\r\n\r\n');
     const origin=req.headers.origin;

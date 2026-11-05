@@ -631,7 +631,6 @@ async function routeRequest(req, res, projectFeed, debtService, arcadeApi, wordl
   const method = req.method?.toUpperCase() || 'GET';
 
   if (url.pathname === '/shorepact/play' || url.pathname.startsWith('/shorepact/play/')) {
-    if (rateLimited('static', req, res)) return sendText(req, res, 429, 'Too many requests. Try again shortly.');
     return serveShorepact(req, res, url);
   }
 
