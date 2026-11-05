@@ -8,6 +8,7 @@ import { serializePublicCatalog, validateCatalog } from './project-catalog.js';
 import { createProjectFeed } from './project-feed.js';
 import { createDailyWordService } from './wordle-daily.js';
 import { createMetricsServer, createPageViews, isArcadeGamePath } from './page-views.js';
+import { serveShorepact, shorepactRooms } from './shorepact.js';
 import { createSignaling } from './signaling.js';
 import { createEditApi } from './edit-api.js';
 import { createArcadeApi } from './arcade-api.js';
@@ -629,6 +630,10 @@ async function routeRequest(req, res, projectFeed, debtService, arcadeApi, wordl
   }
   const method = req.method?.toUpperCase() || 'GET';
 
+  if (url.pathname === '/shorepact/play' || url.pathname.startsWith('/shorepact/play/')) {
+    return serveShorepact(req, res, url);
+  }
+
   if (url.pathname.startsWith('/api/arcade/') && method !== 'OPTIONS') {
     if (await arcadeApi.handle(req, res, url, method)) return;
   }
@@ -749,6 +754,7 @@ export function createPrismetServer({ feed, signaling, debt, arcade, wordle, pag
   // Stateless WebRTC signaling sibling route — /rtc — alongside the HTTP handling
   // above. No table, no row, no persisted game state (universal-room-system
   // design spec §5.4/§16.1); rooms live only in signaling.js's in-memory maps.
+  const rooms = shorepactRooms();
   server.on('upgrade', (req, socket, head) => {
     let pathname;
     try {
@@ -757,13 +763,14 @@ export function createPrismetServer({ feed, signaling, debt, arcade, wordle, pag
       socket.destroy();
       return;
     }
+    if (pathname === '/shorepact/play/socket') return rooms.upgrade(req, socket, head);
     if (pathname !== '/rtc') {
       socket.destroy();
       return;
     }
     rtcSignaling.handleUpgrade(req, socket, head);
   });
-  server.on('close', () => rtcSignaling.close());
+  server.on('close', () => { rooms.close(); rtcSignaling.close(); });
   server.rtcSignaling = rtcSignaling;
 
   return server;

@@ -16,6 +16,7 @@ rm -rf "$out"; mkdir -p "$out/public"
 cp "$root/showcase/server/"*.js "$out/"
 mkdir -p "$out/data"
 cp "$root/showcase/server/data/projects.json" "$out/data/projects.json"
+cp "$root/showcase/server/data/shorepact.pack" "$out/data/"
 cp -r "$dist" "$out/site"
 for asset in steam.html steam.js debt.html debt.js debt.css debt-metrics.js debt-estimate.js debt-discovery.js; do
   cp "$root/showcase/server/public/$asset" "$out/public/"

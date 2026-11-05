@@ -2,6 +2,7 @@ app = "prismet-site-restless-horizon-217"
 primary_region = "iad"
 
 [env]
+  SHOREPACT_ROOM_MACHINE = "48e64d7b2d0278"
   PORT = "8080"
   PRISMET_METRICS_PORT = "9091"
   GITHUB_USER = "sagedeutschle"
