@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#0a0a0c">
 <title>Privacy Policy — Shorepact</title>
-<meta name="description" content="How Shorepact handles data: no account, no ads, no tracking, and no data collected by the developer.">
+<meta name="description" content="Learn what stays on your device, what a crossplay host and relay receive, and how optional Apple and Discord services handle a table.">
 <link rel="icon" href="/prismet-mark.svg">
 <link rel="stylesheet" href="/shorepact/legal.css">
 </head>
@@ -22,40 +22,27 @@
   </header>
   <main id="main">
     <h1>Shorepact Privacy Policy</h1>
-    <p class="meta">Shorepact for iPhone and Mac · Published by Sage Deutschle · Last updated November 1, 2026</p>
+    <p class="meta">Published by Sage Deutschle · Updated November 5, 2026</p>
+    <p>This policy covers the <a href="/shorepact/play/">Shorepact browser playtest</a> and compatible crossplay clients, as well as the existing Apple game. How your game uses data depends on the table you choose.</p>
 
-    <p>Shorepact is a hex-tile building and trading board game. It is built to need as little data as possible. This page explains what the app does with data, in plain terms.</p>
+    <h2>Playtest access</h2>
+    <p>The browser playtest verifies an invite pass on the server. If accepted, the server sets an expiring, HTTP-only session cookie for playtest access. Browser scripts cannot read this cookie. Clearing site data removes it. The pass admits you to the playtest, while a lobby code identifies a particular private table.</p>
 
-    <h2>The short version</h2>
-    <div class="card">
-      <ul>
-        <li>No account, email address or phone number is required to play.</li>
-        <li>The developer collects no data from the app. There is no analytics, crash reporting or advertising in Shorepact.</li>
-        <li>The app does not track you and does not request permission to track you.</li>
-        <li>We do not sell personal information.</li>
-      </ul>
-    </div>
+    <h2>Crossplay tables</h2>
+    <p>When you create a table, enter a code or request a random match, your device connects to our matchmaking service. It processes the connection origin, requested table size, seat, lobby code when applicable, and whether you are waiting, playing or disconnected. The service assigns the seats and routes game commands and board updates between the host and guests.</p>
+    <p>One player’s device hosts the rules and holds the whole game, including the shuffled deck and every hand. Each guest receives a board view containing their own hand and public information about the other seats. The relay operator can read the messages it routes, including the private hand in each guest’s board update. An encrypted connection protects these messages in transit. A player with a private table’s code can take an available seat, so share it only with the people you want to play with.</p>
+    <p>Some private tables can connect peers directly when their devices and networks allow it. Connection setup can exchange network addresses through the relay and with peers. Random matchmaking and the Discord Activity use the relay. Playtest rooms are held in service memory. Leaving a running match ends it for the table.</p>
 
-    <h2>What stays on your device</h2>
-    <p>Your current table, the names and playing styles of the bots at your table, your chosen theme and board view, your idle-animation setting and your last table setup are stored on your device. Deleting the app removes them.</p>
+    <h2>On your device</h2>
+    <p>The browser saves your selected artwork in local storage. A browser practice game and an online game last for the current session. Clearing site data removes the browser’s saved preference. Native local tables can also store saves, settings and bot details in app storage. Use the app’s local or cloud save controls as appropriate before removing it.</p>
 
-    <h2>Game Center and online play</h2>
-    <p>Playing with friends is optional and uses Apple’s Game Center. When you invite or join friends, Apple’s GameKit sends game moves between the players’ devices, and the other players at your table can see your Game Center display name. The app may use your local network to connect with nearby players. Game Center is governed by Apple’s privacy policy. Shorepact does not run its own game server and does not receive your Apple ID, your game moves or your player information.</p>
+    <h2>Apple and Discord</h2>
+    <p>Apple builds offering Game Center use Apple’s matchmaking and GameKit for those matches. Your Game Center name can be visible to other players. Optional iCloud saved games are stored in your Apple account. Older versions that offer Game Center alone cannot join a crossplay code table. See <a href="https://www.apple.com/legal/privacy/">Apple’s privacy policy</a>.</p>
+    <p>When launched within Discord, the Activity runs inside Discord’s client and network proxy. Its invitation control passes the lobby code and invitation text to Discord’s share dialog. Discord handles the account, delivery and link. Browser play outside Discord does not require a Discord login. See <a href="https://discord.com/privacy">Discord’s privacy policy</a>.</p>
 
-    <h2>iCloud saves</h2>
-    <p>If you are signed in to Game Center, you can choose to save a table to iCloud and restore it later. These saves are stored by Apple in your account’s saved games. They are not sent to the developer.</p>
-
-    <h2>This website</h2>
-    <p>Like any website, prismet.xyz may appear in routine server logs (for example your IP address and the time of a request) at our hosting provider, Fly.io. The Shorepact privacy and support pages contain no scripts, cookies or trackers.</p>
-
-    <h2>Children</h2>
-    <p>Shorepact contains no chat, no user-generated content, no ads and no purchases. We do not knowingly collect any information from anyone, including children.</p>
-
-    <h2>Your choices</h2>
-    <p>Because the app collects nothing, there is nothing for us to delete or export. To clear local data, delete the app. To manage Game Center data or iCloud saves, use your Apple account settings.</p>
-
-    <h2>Changes</h2>
-    <p>If our practices change, we will update this page and the “Last updated” date before the change takes effect.</p>
+    <h2>Website and support</h2>
+    <p>Prismet’s host and network providers process connections needed to deliver the website and relay. Routine operational records can include an IP address, request path and time, browser information and error status. If you email support, the message and your reply address reach the publisher. The game does not use advertising or sell personal information.</p>
+    <p>You can play against a bot instead of joining an online table, clear saved browser data, or manage Game Center and iCloud through your Apple account. Contact the publisher about a privacy question or request. Include the general platform and date, and keep passwords and active private table codes out of your message.</p>
 
     <h2>Contact</h2>
     <p>Email: sagedeutschle@pm.me</p>

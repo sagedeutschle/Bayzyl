@@ -56,3 +56,6 @@ execFileSync(process.execPath, ['--test',
   fileURLToPath(new URL('../../server/test/wordle-daily.test.js', import.meta.url)),
   fileURLToPath(new URL('../../server/test/wordle-routes.test.js', import.meta.url)),
 ], { stdio: 'inherit' });
+
+// Check the separately hosted Shorepact room and invitation routes in the release gate.
+await import('./shorepact-rooms-check.mjs');

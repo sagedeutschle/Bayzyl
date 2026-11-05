@@ -23,7 +23,7 @@ import { fileURLToPath } from 'node:url';
 
 const RESERVED_FILES = ['style.css', 'steam.js', 'debt.js', 'icon.svg', 'manifest.webmanifest', 'og-image.png'];
 const RESERVED_ROOT = ['shots', 'api', 'steam', 'steam.html', 'debt', 'debt.html', 'rtc', 'healthz'];
-const ROUTES = new Set(['/steam', '/debt', '/edit', '/privacy', '/support', '/scam', '/shorepact/privacy', '/shorepact/support']);            // served by the live server, not by this build
+const ROUTES = new Set(['/steam', '/debt', '/edit', '/privacy', '/support', '/scam', '/shorepact/privacy', '/shorepact/support', '/shorepact/play/', '/shorepact/play']);            // served by the live server, not by this build
 const STATIC_ALIASES = new Map([
   ['/shorepact', 'shorepact.html'], ['/shorepact/', 'shorepact.html'],
   ['/arcade', 'arcade.html'], ['/arcade/', 'arcade.html'], ['/tools', 'tools.html'], ['/tools/', 'tools.html'], ['/bayzyl', 'bayzyl.html'], ['/bayzyl/', 'bayzyl.html'],

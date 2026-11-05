@@ -71,6 +71,9 @@ with tarfile.open(fileobj=raw, mode='w', format=tarfile.PAX_FORMAT) as tar:
     if os.path.isfile(catalog):
         add(os.path.dirname(catalog), 'app/data')
         add(catalog, 'app/data/projects.json')
+    pack = os.path.join(deploy_dir, 'data', 'shorepact.pack')
+    if os.path.isfile(pack):
+        add(pack, 'app/data/shorepact.pack')
     site = os.path.join(deploy_dir, 'site')
     for root, dirs, files in os.walk(site):
         dirs.sort()
