@@ -58,4 +58,4 @@ execFileSync(process.execPath, ['--test',
 ], { stdio: 'inherit' });
 
 // Check the separately hosted Shorepact room and invitation routes in the release gate.
-await import('./shorepact-rooms-check.mjs');
+execFileSync(process.execPath, [fileURLToPath(new URL('./shorepact-rooms-check.mjs', import.meta.url))], {stdio:'inherit'});
