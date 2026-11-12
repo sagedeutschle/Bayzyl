@@ -19,7 +19,7 @@ Prismet Arcade brings puzzles, board games, card tables and studio tools into on
 The gallery leads with the newer illustrated design, captured in local builds on 9 November 2026. Woodcut game covers, original deck backs and clearer boards are part of that preview; these images are not a promise that every detail is already in the App Store version. Native Apple builds and the browser collection have separate release histories.
 
 ## facts
-- Apple platforms: iPhone · iPad · Mac development
+- Apple platforms: iPhone · iPad · Mac
 - Illustrated preview: Local captures · 9 November 2026
 - Browser collection: Playable on this site
 - Collaboration: Co-developed with Ben
