@@ -1,67 +1,56 @@
-<!-- Wording for the "Prismet" project page and its card. Edit the text under each heading; keep the "## " lines.
-     *gold highlight*, **bold**. Highlights are "- " lines. Facts are "- Label: Value" lines. -->
-
 ## title
 Prismet Arcade
 
 ## subtitle
-
-A home for classic games and useful lenses, built for Apple devices
+Classic games, each with a character of its own.
 
 ## status
-
-iPhone build installed · in development
+On the App Store · illustrated design preview
 
 ## year
 2026
 
 ## role
-
-Co-development · product, design and Apple-platform engineering
+Co-development with Ben across product, design and Apple-platform engineering.
 
 ## summary
+Prismet Arcade brings puzzles, board games, card tables and studio tools into one library. Find a game, keep favorites close and return to a saved round. Chess, Sudoku, Solitaire, Sea Battle and the rest keep their own controls and visual character within a shared home.
 
-Co-developed with Ben, Prismet brings classic games and useful data lenses into one library. The iPhone home includes search, favorites and a place to continue saved games. Its source spans iPhone, iPad and Mac, with separate browser adaptations you can play here. Each game keeps its own presentation, from chess boards and a 3D cube to Sudoku sheets and card tables.
+The gallery leads with the newer illustrated design, captured in local builds on 9 November 2026. Woodcut game covers, original deck backs and clearer boards are part of that preview; these images are not a promise that every detail is already in the App Store version. Native Apple builds and the browser collection have separate release histories.
 
 ## facts
-- App Store: Version 1.3 · released 13 October 2026
-- Installed iPhone: 1.3 (19), observed 31 October 2026
-- Native work: iPhone · iPad · Mac
+- Apple platforms: iPhone · iPad · Mac development
+- Illustrated preview: Local captures · 9 November 2026
+- Browser collection: Playable on this site
 - Collaboration: Co-developed with Ben
 
 ## highlights
+- A shared library with search, favorites and Continue
+- Chess with opponent controls and both flat and 3D presentation
+- Puzzles, board games, card games and an interactive cube
+- Game-specific woodcut illustrations and deck backs in the newer design preview
+- Browser adaptations that can be played from this site
 
-- An installed iPhone library with search, favorites and Continue
-- Chess with 2D and 3D presentation and Stockfish opponent controls
-- A SceneKit Rubik’s Cube and individually styled games
-- Daily Wordgame infrastructure shared with prismet.xyz
-- Began as Chess Hotswap, exploring a switch between 2D and 3D chess
-
-<!-- Proposed engineering-story wording, added by an agent on 2026-10-04 for Sage’s review.
-     Existing authored wording above is preserved. Edit these fields through /edit. -->
 ## story.focus
 A collection with individual character.
 
 ## story.contribution
-
 Co-developed across product, design, iOS and macOS engineering, and release work, alongside Ben.
 
 ## story.decision.1.title
 Give each game its own interface
 
 ## story.decision.1.text
-Chess exposes opponent and board controls; Sudoku uses a number sheet; Solitaire keeps the card table. A shared library brings those distinct experiences together.
+Chess exposes opponent and board controls; Sudoku uses a number sheet; Solitaire keeps the card table. The illustrated preview adds covers and deck backs that make those different games easier to recognize.
 
 ## story.decision.2.title
-Separate rules from presentation
+Make the boards easier to read
 
 ## story.decision.2.text
-The browser ports expose game state and actions separately from rendering. Seeded replay fixtures compare 2048, Minesweeper and Lights Out with native results.
+The new interface pass gives puzzle values more space, distinguishes legal moves and keeps controls within reach on small screens. Each game receives its own treatment, with larger layouts for tablets and Mac.
 
 ## story.outcome
-
-Explore the native captures, then play the browser collection. Selected browser rules and portable saves have native reference fixtures; the native and browser collections have their own feature and release histories.
+Browse the local design preview, visit the App Store listing, or play the browser collection. The captions identify the platform and preview date for each image.
 
 ## story.evidence
-
-Co-developed · native captures + browser adaptations
+Co-developed · local native and browser design previews

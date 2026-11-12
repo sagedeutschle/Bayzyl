@@ -20,8 +20,10 @@
     "hiddenSections": []
   },
   "featuredOrder": [
-    "bayzyl",
+    "shorepact",
     "prismet-app",
+    "bayzyl",
+    "command-helm-remote",
     "the-helm",
     "prismcode",
     "the-long-now",
@@ -244,6 +246,173 @@
       }
     },
     {
+      "slug": "shorepact",
+      "beam": "apps",
+      "stack": [
+        "SwiftUI",
+        "Swift",
+        "Game Center",
+        "WebSocket"
+      ],
+      "links": [
+        {
+          "label": "Meet Shorepact",
+          "href": "/shorepact"
+        },
+        {
+          "label": "Invite-only browser playtest",
+          "href": "/shorepact/play/"
+        }
+      ],
+      "cover": "assets/portfolio/refresh-20261111/shorepact/board-blockprint.webp",
+      "gallery": [
+        "assets/portfolio/refresh-20261111/shorepact/board-blockprint.webp",
+        "assets/portfolio/refresh-20261111/shorepact/board-neon.webp",
+        "assets/portfolio/refresh-20261111/shorepact/board-stainedglass.webp",
+        "assets/portfolio/refresh-20261111/shorepact/01-home-blockprint.webp",
+        "assets/portfolio/refresh-20261111/shorepact/03-breakwater-neon.webp",
+        "assets/portfolio/refresh-20261111/shorepact/02-library-paintedwood.webp",
+        "assets/portfolio/refresh-20261111/shorepact/iphone-coast.webp"
+      ],
+      "shotAlts": [
+        "Original Shorepact on Mac in Block Print: textured sea, illustrated terrain, settlements, player standings and resource cards.",
+        "Original Shorepact on Mac in the neon theme, with glowing terrain edges, bright settlements and matching resource cards.",
+        "Original Shorepact on Mac in Stained Glass, with colored panes for terrain, architectural pieces and a patterned sea.",
+        "Shorepact Mac home in the Block Print theme, with an illustrated coast, resource cards and the four-game library.",
+        "Breakwater Run in the neon theme, with three rolled dice and cargo choices in a local sample round.",
+        "Shorepact Mac library in Painted Wood, showing the original game, Harbor Charter, Breakwater Run and Lantern Bluff.",
+        "Shorepact on iPhone with a raised island board, player standings and resource cards."
+      ],
+      "portfolio": [
+        {
+          "src": "assets/portfolio/refresh-20261111/shorepact/board-blockprint.webp",
+          "alt": "Original Shorepact on Mac in Block Print: textured sea, illustrated terrain, settlements, player standings and resource cards.",
+          "caption": "The original coast in Block Print",
+          "evidence": "Native Mac 1.1 candidate · legal sample game"
+        },
+        {
+          "src": "assets/portfolio/refresh-20261111/shorepact/board-neon.webp",
+          "alt": "Original Shorepact on Mac in the neon theme, with glowing terrain edges, bright settlements and matching resource cards.",
+          "caption": "The coast, lit in neon",
+          "evidence": "Native Mac 1.1 candidate · legal sample game"
+        },
+        {
+          "src": "assets/portfolio/refresh-20261111/shorepact/board-stainedglass.webp",
+          "alt": "Original Shorepact on Mac in Stained Glass, with colored panes for terrain, architectural pieces and a patterned sea.",
+          "caption": "A table of Stained Glass",
+          "evidence": "Native Mac 1.1 candidate · legal sample game"
+        },
+        {
+          "src": "assets/portfolio/refresh-20261111/shorepact/01-home-blockprint.webp",
+          "alt": "Shorepact Mac home in the Block Print theme, with an illustrated coast, resource cards and the four-game library.",
+          "caption": "A game night in Block Print",
+          "evidence": "Native Mac 1.1 candidate · sample game state"
+        },
+        {
+          "src": "assets/portfolio/refresh-20261111/shorepact/03-breakwater-neon.webp",
+          "alt": "Breakwater Run in the neon theme, with three rolled dice and cargo choices in a local sample round.",
+          "caption": "Push your luck in Breakwater Run",
+          "evidence": "Native Mac 1.1 candidate · sample game state"
+        },
+        {
+          "src": "assets/portfolio/refresh-20261111/shorepact/02-library-paintedwood.webp",
+          "alt": "Shorepact Mac library in Painted Wood, showing the original game, Harbor Charter, Breakwater Run and Lantern Bluff.",
+          "caption": "Four ways to gather around the table",
+          "evidence": "Native Mac 1.1 candidate · sample game state"
+        },
+        {
+          "src": "assets/portfolio/refresh-20261111/shorepact/iphone-coast.webp",
+          "alt": "Shorepact on iPhone with a raised island board, player standings and resource cards.",
+          "caption": "The same coast, in your hand",
+          "evidence": "Native iPhone 1.1 candidate · simulator"
+        }
+      ],
+      "room": "cabinet",
+      "tier": "flagship",
+      "related": [
+        "prismet-app",
+        "command-helm-remote"
+      ],
+      "aliases": [
+        "hextable",
+        "tabletop",
+        "board game",
+        "harbor charter",
+        "breakwater run",
+        "lantern bluff",
+        "crossplay"
+      ],
+      "story": {
+        "decisions": [
+          1,
+          2
+        ]
+      },
+      "doorFacts": [
+        0,
+        1
+      ]
+    },
+    {
+      "slug": "savepoint",
+      "beam": "apps",
+      "stack": [
+        "SwiftUI",
+        "Swift"
+      ],
+      "links": [],
+      "cover": "assets/portfolio/refresh-20261111/savepoint/savepoint-studio-wide-light.webp",
+      "gallery": [
+        "assets/portfolio/refresh-20261111/savepoint/savepoint-studio-wide-light.webp",
+        "assets/portfolio/refresh-20261111/savepoint/savepoint-home-wide-dark.webp",
+        "assets/portfolio/refresh-20261111/savepoint/savepoint-ideas-phone-dark.webp"
+      ],
+      "shotAlts": [
+        "Savepoint native studio component preview showing six connected pieces of the sample project The Lantern Atlas.",
+        "Savepoint native home component preview in dark colors with sample studios connected around a central Savepoint emblem.",
+        "Savepoint compact ideas component preview showing sample drawing, writing, research and craft ideas around The Lantern Atlas."
+      ],
+      "portfolio": [
+        {
+          "src": "assets/portfolio/refresh-20261111/savepoint/savepoint-studio-wide-light.webp",
+          "alt": "Savepoint native studio component preview showing six connected pieces of the sample project The Lantern Atlas.",
+          "caption": "A constellation inside a studio",
+          "evidence": "Native component preview · sample project · November 2026"
+        },
+        {
+          "src": "assets/portfolio/refresh-20261111/savepoint/savepoint-home-wide-dark.webp",
+          "alt": "Savepoint native home component preview in dark colors with sample studios connected around a central Savepoint emblem.",
+          "caption": "A home for unfinished ideas",
+          "evidence": "Native component preview · sample project · November 2026"
+        },
+        {
+          "src": "assets/portfolio/refresh-20261111/savepoint/savepoint-ideas-phone-dark.webp",
+          "alt": "Savepoint compact ideas component preview showing sample drawing, writing, research and craft ideas around The Lantern Atlas.",
+          "caption": "See what comes next",
+          "evidence": "Native component preview · sample project · November 2026"
+        }
+      ],
+      "room": "cabinet",
+      "tier": "record",
+      "related": [
+        "prismet-app",
+        "music-helm"
+      ],
+      "aliases": [
+        "creative studio",
+        "ideas",
+        "writing",
+        "worldbuilding",
+        "drawing"
+      ],
+      "story": {
+        "decisions": [
+          1,
+          2
+        ]
+      }
+    },
+    {
       "slug": "prismet-app",
       "beam": "apps",
       "stack": [
@@ -260,7 +429,7 @@
           "href": "https://apps.apple.com/us/app/prismet-arcade/id6785993194"
         }
       ],
-      "cover": "assets/prismet/iphone-home.webp",
+      "cover": "assets/portfolio/refresh-20261111/prismet/library-screens--mac.webp",
       "gallery": [
         "assets/prismet/iphone-home.webp",
         "assets/prismet/iphone-chess2d.webp",
@@ -289,6 +458,7 @@
       "room": "arcade",
       "tier": "flagship",
       "related": [
+        "shorepact",
         "steam-rewind",
         "debt-clock"
       ],
@@ -371,67 +541,37 @@
       "doorFacts": [
         2
       ],
-      "doorCover": "assets/prismet/iphone-home.webp",
+      "doorCover": "assets/portfolio/refresh-20261111/prismet/library-screens--mac.webp",
       "portfolio": [
         {
-          "src": "assets/portfolio/inventory-20261031/prismet-home.webp",
-          "alt": "Prismet running on an iPhone, with search, favorites, Continue Playing and a 25-entry Arcade library.",
-          "caption": "Current installed development build, captured on an iPhone; older iPhone and iPad views follow.",
-          "evidence": "Physical iPhone runtime · 31 October 2026"
+          "src": "assets/portfolio/refresh-20261111/prismet/library-screens--mac.webp",
+          "alt": "Prismet Arcade Mac library with woodcut game illustrations and a selected 2048 preview.",
+          "caption": "A new illustrated arcade",
+          "evidence": "Local Mac design preview · 9 November 2026"
         },
         {
-          "src": "assets/prismet/iphone-home.webp",
-          "alt": "Prismet iPhone home screen with game and puzzle tiles.",
-          "caption": "A pocket arcade",
-          "evidence": "Co-developed"
+          "src": "assets/portfolio/refresh-20261111/prismet/solitaire--phone.webp",
+          "alt": "Prismet Solitaire on iPhone with illustrated deck backs, a green card table and Draw, Collect and New Game controls.",
+          "caption": "An original deck on green felt",
+          "evidence": "Local iPhone design preview · 9 November 2026"
         },
         {
-          "src": "assets/prismet/iphone-chess2d.webp",
-          "alt": "Prismet chess board with Stockfish opponent settings and board themes.",
-          "caption": "Chess with adjustable opposition",
-          "evidence": "Co-developed"
+          "src": "assets/portfolio/refresh-20261111/prismet/sudoku--mac.webp",
+          "alt": "Prismet Sudoku on Mac with a paper-style grid and number controls.",
+          "caption": "A quiet Sudoku sheet",
+          "evidence": "Local Mac design preview · 9 November 2026"
         },
         {
-          "src": "assets/prismet/iphone-seabattle.webp",
-          "alt": "Prismet Sea Battle ship-placement screen with a ten-by-ten ocean grid.",
-          "caption": "Place a fleet",
-          "evidence": "Co-developed"
+          "src": "assets/portfolio/refresh-20261111/prismet/seabattle--web-desktop.webp",
+          "alt": "Prismet Sea Battle in a desktop browser with a nautical placement board and ship controls.",
+          "caption": "A browser table for Sea Battle",
+          "evidence": "Local browser design preview · 9 November 2026"
         },
         {
-          "src": "assets/prismet/iphone-sudoku.webp",
-          "alt": "Prismet Sudoku interface with difficulty controls and a number pad.",
-          "caption": "A daily Sudoku sheet",
-          "evidence": "Co-developed"
-        },
-        {
-          "src": "assets/prismet/iphone-solitaire.webp",
-          "alt": "Prismet Solitaire interface with a dealt card tableau and game controls.",
-          "caption": "Cards on green felt",
-          "evidence": "Co-developed"
-        },
-        {
-          "src": "assets/prismet/raw-checkers.webp",
-          "alt": "Prismet checkers board with opponent controls.",
-          "caption": "Checkers in red and black",
-          "evidence": "Co-developed"
-        },
-        {
-          "src": "assets/prismet/raw-snake.webp",
-          "alt": "Prismet Snake interface with a green snake and pink target.",
-          "caption": "Snake after dark",
-          "evidence": "Co-developed"
-        },
-        {
-          "src": "assets/portfolio/prismet-app/ipad-library.webp",
-          "alt": "Prismet iPad library with puzzles, board games and card games arranged in wide rows.",
-          "caption": "Room for the whole collection",
-          "evidence": "Co-developed"
-        },
-        {
-          "src": "assets/portfolio/prismet-app/ipad-chess.webp",
-          "alt": "Prismet iPad chess screen with a centered board, theme choices and opponent controls.",
-          "caption": "Chess on a larger canvas",
-          "evidence": "Co-developed"
+          "src": "assets/portfolio/refresh-20261111/prismet/2048--phone.webp",
+          "alt": "Prismet 2048 on iPhone with large serif tile values and score controls.",
+          "caption": "A clearer number puzzle",
+          "evidence": "Local iPhone design preview · 9 November 2026"
         }
       ],
       "story": {
@@ -1250,17 +1390,78 @@
         "JavaScript",
         "HTTPS"
       ],
-      "links": [],
-      "cover": null,
-      "gallery": [],
-      "shotAlts": [],
+      "links": [
+        {
+          "label": "App Store",
+          "href": "https://apps.apple.com/us/app/command-helm/id6829226962"
+        }
+      ],
+      "cover": "assets/portfolio/refresh-20261111/command-helm/05-your-computers.webp",
+      "gallery": [
+        "assets/portfolio/refresh-20261111/command-helm/05-your-computers.webp",
+        "assets/portfolio/refresh-20261111/command-helm/01-task-console.webp",
+        "assets/portfolio/refresh-20261111/command-helm/06-agent-question.webp",
+        "assets/portfolio/refresh-20261111/command-helm/03-saved-report.webp",
+        "assets/portfolio/refresh-20261111/command-helm/04-persistent-terminal.webp"
+      ],
+      "shotAlts": [
+        "Command Helm iPhone computer list showing sample hosts and connection information.",
+        "Command Helm task console on iPhone with a sample dispatch form and queue counts.",
+        "Command Helm on iPhone showing a question from an agent and response controls.",
+        "Command Helm on iPhone showing a saved task report.",
+        "Command Helm persistent terminal on iPhone showing a sample session."
+      ],
       "room": "cabinet",
-      "tier": "record",
+      "tier": "featured",
       "related": [
         "command-helm",
         "helm-ios"
       ],
-      "aliases": []
+      "aliases": [
+        "command helm iphone",
+        "remote terminal",
+        "coding agent",
+        "ssh",
+        "mobile companion"
+      ],
+      "portfolio": [
+        {
+          "src": "assets/portfolio/refresh-20261111/command-helm/05-your-computers.webp",
+          "alt": "Command Helm iPhone computer list showing sample hosts and connection information.",
+          "caption": "Keep your computers close",
+          "evidence": "Native iPhone capture · built-in sample data"
+        },
+        {
+          "src": "assets/portfolio/refresh-20261111/command-helm/01-task-console.webp",
+          "alt": "Command Helm task console on iPhone with a sample dispatch form and queue counts.",
+          "caption": "Give a task, follow its progress",
+          "evidence": "Native iPhone capture · built-in sample data"
+        },
+        {
+          "src": "assets/portfolio/refresh-20261111/command-helm/06-agent-question.webp",
+          "alt": "Command Helm on iPhone showing a question from an agent and response controls.",
+          "caption": "Answer when the work needs you",
+          "evidence": "Native iPhone capture · built-in sample data"
+        },
+        {
+          "src": "assets/portfolio/refresh-20261111/command-helm/03-saved-report.webp",
+          "alt": "Command Helm on iPhone showing a saved task report.",
+          "caption": "Keep the result with the task",
+          "evidence": "Native iPhone capture · built-in sample data"
+        },
+        {
+          "src": "assets/portfolio/refresh-20261111/command-helm/04-persistent-terminal.webp",
+          "alt": "Command Helm persistent terminal on iPhone showing a sample session.",
+          "caption": "Return to a running terminal",
+          "evidence": "Native iPhone capture · built-in sample data"
+        }
+      ],
+      "story": {
+        "decisions": [
+          1,
+          2
+        ]
+      }
     },
     {
       "slug": "castra",
