@@ -68,8 +68,14 @@ const MIME = {
   '.mp4': 'video/mp4',
 };
 
+function siteContentSecurityPolicy(connectSources) {
+  return `default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data: https:; connect-src ${connectSources}; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none';`;
+}
+
+const EDITOR_CSP = siteContentSecurityPolicy("'self'");
+
 const SECURITY_HEADERS = {
-  'content-security-policy': "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.steampowered.com https://store.steampowered.com https://api.fiscaldata.treasury.gov https://api.usaspending.gov; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none';",
+  'content-security-policy': siteContentSecurityPolicy("'self' https://api.steampowered.com https://store.steampowered.com https://api.fiscaldata.treasury.gov https://api.usaspending.gov"),
   'strict-transport-security': 'max-age=31536000; includeSubDomains',
   'referrer-policy': 'strict-origin-when-cross-origin',
   'x-content-type-options': 'nosniff',
@@ -346,6 +352,7 @@ async function serveStatic(req, res, urlPath, versioned, pageViews) {
     }
     if (extname(file) === '.html') pageViews?.observe(req, res, urlPath);
     return sendResponse(req, res, 200, data, {
+      ...(file === resolve(staticRoot, 'edit.html') && { 'content-security-policy': EDITOR_CSP }),
       'content-type': file.endsWith('/.well-known/apple-app-site-association') ? 'application/json; charset=utf-8' : MIME[extname(file)] || 'application/octet-stream',
       'cache-control': versioned && file.startsWith(SITE_ROOT) ? VERSIONED_CACHE_CONTROL : file.startsWith(SHOTS_ROOT) ? SHOTS_CACHE_CONTROL : DEFAULT_CACHE_CONTROL,
     });
