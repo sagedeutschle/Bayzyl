@@ -49,7 +49,16 @@ try {
   const st = await (await fetch(`${base}/api/edit/status`)).json();
   check('the server reports the editor configured and locked', st.configured === true && st.authed === false, JSON.stringify(st));
   check('the edit API needs a session', (await fetch(`${base}/api/edit/files`)).status === 401 && (await fetch(`${base}/api/edit/commit`, { method: 'POST', headers: { 'x-prismet-edit': '1' }, body: '{}' })).status === 401);
-  check('the CSP allows connections to the site only', !(await fetch(`${base}/edit`)).headers.get('content-security-policy').includes('api.github.com'));
+  // Check the effective directive so wildcard and unrelated hosts cannot slip through.
+  for (const editorPath of ['/edit', '/edit.html']) {
+    const response = await fetch(base + editorPath);
+    const policy = response.headers.get('content-security-policy') || '';
+    const directives = policy.split(';').map((value) => value.trim().split(/\s+/));
+    const connectionRule = directives.find(([name]) => name.toLowerCase() === 'connect-src')
+      ?? directives.find(([name]) => name.toLowerCase() === 'default-src');
+    check(`${editorPath} restricts connections to the same origin`,
+      response.ok && connectionRule?.length === 2 && connectionRule[1] === "'self'", policy);
+  }
 
   await page.goto(`${base}/edit`, { waitUntil: 'networkidle' });
   check('the page loads under the live CSP without errors', errors.length === 0, errors.join('; '));
